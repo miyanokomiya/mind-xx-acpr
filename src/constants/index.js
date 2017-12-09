@@ -1,0 +1,2 @@
+export const INTERVAL_CLICK = 300
+export const INTERVAL_DOUBLE_CLICK = 300

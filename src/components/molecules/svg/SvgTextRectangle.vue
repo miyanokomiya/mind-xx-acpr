@@ -1,16 +1,16 @@
 <template>
-  <g>
-    <SvgRectangle :x="x" :y="y" :width="textWidth" :height="height" :stroke="stroke" :fill="fill"/>
-    <SvgText
-      v-for="(l, i) in text.split(/\n|\r\n/)"
-      :key="i"
-      :x="textX"
-      :y="textY + textHeight * (i + 1)"
-      :font-size="fontSize"
-      :text="l"
-      @calcBox="calcBox"
-    />
-  </g>
+<g>
+  <SvgRectangle :x="x" :y="y" :width="textWidth" :height="height" :stroke-width="strokeWidth" :stroke="stroke" :fill="fill"/>
+  <SvgText
+    v-for="(l, i) in text.split(/\n|\r\n/)"
+    :key="i"
+    :x="textX"
+    :y="textY + textHeight * (i + 1)"
+    :font-size="fontSize"
+    :text="l"
+    @calcBox="calcBox"
+  />
+</g>
 </template>
 
 <script>
@@ -41,6 +41,10 @@ export default {
     fontSize: {
       type: Number,
       default: 10
+    },
+    strokeWidth: {
+      type: Number,
+      default: 2
     },
     stroke: {
       type: String,

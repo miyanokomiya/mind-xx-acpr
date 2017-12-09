@@ -1,5 +1,5 @@
 <template>
-  <rect :x="x" :y="y" :rx="rx" :ry="ry" :width="width" :height="height" :stroke="stroke" :stroke-width="strokeWidth" :fill="fill"/>
+<rect :x="x" :y="y" :rx="rx" :ry="ry" :width="width" :height="height" :stroke="stroke" :stroke-width="strokeWidth" :fill="fill"/>
 </template>
 
 <script>

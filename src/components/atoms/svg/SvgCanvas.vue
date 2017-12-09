@@ -4,10 +4,12 @@
 >
   <svg
     :viewBox="`${x} ${y} ${canvasWidth} ${canvasHeight}`"
-    @mousedown.self="canvasCursorDown"
-    @mouseup.self="canvasCursorUp"
+    @mousedown="canvasCursorDown"
+    @mouseup="canvasCursorUp"
     @mousemove.prevent="canvasCursorMove"
     @mousewheel.prevent="canvasWheel"
+    @mousedown.self="canvasCursorDownSelf"
+    @mouseup.self="canvasCursorUpSelf"
   >
     <slot />
   </svg>
@@ -16,10 +18,16 @@
 
 <script>
 import * as canvasUtils from '@/utils/canvas'
+import {INTERVAL_CLICK, INTERVAL_DOUBLE_CLICK} from '@/constants'
+
 export default {
   data: () => ({
     startDownP: null,
-    beforeMoveP: null
+    beforeMoveP: null,
+    downStart: 0,
+    clickLast: 0,
+    movingTimer: 0,
+    progressiveMove: {x: 0, y: 0}
   }),
   props: {
     x: {
@@ -74,11 +82,22 @@ export default {
       }
     },
     canvasCursorDown (e) {
+      if (this.movingTimer > 0) {
+        clearTimeout(this.movingTimer)
+        this.movingTimer = 0
+      }
+      this.progressiveMove = {
+        x: 0,
+        y: 0
+      }
       const p = canvasUtils.getPoint(e)
       this.startDownP = Object.assign({}, p)
       this.beforeMoveP = Object.assign({}, p)
     },
     canvasCursorUp (e) {
+      this.movingTimer = setTimeout(() => {
+        this.movingLoop()
+      }, 25)
       this.startDownP = null
       this.beforeMoveP = null
     },
@@ -94,6 +113,11 @@ export default {
           y: this.y + dif.y,
         })
         this.beforeMoveP = Object.assign({}, p)
+        this.progressiveMove = {
+          // limit too fast moving
+          x: Math.min(dif.x, 5),
+          y: Math.min(dif.y, 5)
+        }
       }
     },
     canvasWheel (e) {
@@ -107,6 +131,44 @@ export default {
         x: this.x + (svgP.x - nextSvgP.x),
         y: this.y + (svgP.y - nextSvgP.y)
       })
+    },
+    canvasCursorDownSelf (e) {
+      this.downStart = Date.now()
+    },
+    canvasCursorUpSelf (e) {
+      const now = Date.now()
+      if (now - this.downStart < INTERVAL_CLICK) {
+        if (now - this.clickLast < INTERVAL_DOUBLE_CLICK) {
+          // double click
+          this.$emit('doubleClick', e)
+        } else {
+          // single click
+          this.$emit('click', e)
+        }
+        this.clickLast = now
+      }
+    },
+    movingLoop () {
+      if (this.movingTimer > 0) {
+        const dif = this.progressiveMove
+        this.$emit('move', {
+          x: this.x + dif.x,
+          y: this.y + dif.y,
+        })
+        dif.x *= 0.98
+        dif.y *= 0.98
+        if (Math.abs(dif.x) + Math.abs(dif.y) > 1) {
+          this.movingTimer = setTimeout(() => {
+            this.movingLoop()
+          }, 25)
+        } else {
+          this.movingTimer = 0
+          this.progressiveMove = {
+            x: 0,
+            y: 0
+          }
+        }
+      }
     }
   }
 }
