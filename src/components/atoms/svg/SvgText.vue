@@ -1,5 +1,5 @@
 <template>
-  <text :x="x" :y="y" :font-size="fontSize" :fill="fill">
+  <text ref="text" :x="x" :y="y" :font-size="fontSize" :fill="fill">
     {{text}}
   </text>
 </template>
@@ -26,6 +26,20 @@ export default {
     fill: {
       type: String,
       default: 'black'
+    }
+  },
+  watch: {
+    text () {
+      this.calcBox()
+    }
+  },
+  mounted () {
+    this.calcBox()
+  },
+  methods: {
+    calcBox () {
+      var bbox = this.$refs.text.getBBox()
+      this.$emit('calcBox', bbox)
     }
   }
 }
