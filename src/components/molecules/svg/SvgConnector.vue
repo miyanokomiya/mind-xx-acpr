@@ -29,7 +29,7 @@ export default {
       return this.sx * 3 / 10 + this.cx * 7 / 10
     },
     qy1 () {
-      return this.sy * 5 / 10 + this.cy * 5 / 10
+      return this.sy * 7 / 10 + this.cy * 3 / 10
     },
     cx () {
       return (this.sx + this.ex) / 2

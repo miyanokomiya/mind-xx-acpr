@@ -1,4 +1,8 @@
-import { NODE_MARGIN_X, NODE_MARGIN_Y } from '@/constants'
+import {
+  NODE_MARGIN_X,
+  NODE_MARGIN_Y,
+  NODE_ADDITIONAL_MARGIN_X_RATE
+} from '@/constants'
 
 export const createNode = obj =>
   Object.assign(
@@ -30,7 +34,11 @@ export function calcFamilyPositions ({
   const parentPosition = positions[parentKey]
   if (parentNode.children.length > 0) {
     const familySize = familySizes[parentKey]
-    const left = parentPosition.x + sizes[parentKey].width + NODE_MARGIN_X
+    const left =
+      parentPosition.x +
+      sizes[parentKey].width +
+      NODE_MARGIN_X +
+      familySize.height * NODE_ADDITIONAL_MARGIN_X_RATE
     let top =
       parentPosition.y - familySize.height / 2 + sizes[parentKey].height / 2
     // let top = parentPosition.y - familySize.height / 2
@@ -71,9 +79,10 @@ export function calcFamilySizes ({ nodes, sizes, familySizes, parentKey }) {
       }
     )
     size.height += NODE_MARGIN_Y * (parentNode.children.length - 1)
+    const familyHeight = Math.max(sizes[parentKey].height, size.height)
     familySizes[parentKey] = {
       width: sizes[parentKey].width + size.width + NODE_MARGIN_X,
-      height: Math.max(sizes[parentKey].height, size.height)
+      height: familyHeight
     }
   } else {
     // this node does not have children

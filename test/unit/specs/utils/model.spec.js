@@ -1,5 +1,9 @@
 import * as modelUtils from '@/utils/model'
-import { NODE_MARGIN_X, NODE_MARGIN_Y } from '@/constants'
+import {
+  NODE_MARGIN_X,
+  NODE_MARGIN_Y,
+  NODE_ADDITIONAL_MARGIN_X_RATE
+} from '@/constants'
 
 describe('utils/model', () => {
   describe('calcFamilyPositions', () => {
@@ -64,15 +68,23 @@ describe('utils/model', () => {
         y: 0
       })
       expect(positions.b).toMatchObject({
-        x: 10 + NODE_MARGIN_X,
+        x: 10 + NODE_MARGIN_X + (500 + 400) * NODE_ADDITIONAL_MARGIN_X_RATE,
         y: -200 / 2 + 100 / 2
       })
       expect(positions.c).toMatchObject({
-        x: 10 + 20 + NODE_MARGIN_X * 2,
+        x:
+          10 +
+          20 +
+          NODE_MARGIN_X * 2 +
+          (500 + 400) * NODE_ADDITIONAL_MARGIN_X_RATE * 2,
         y: -200 / 2 + 100 / 2 - (500 + 400) / 2 + 200 / 2
       })
       expect(positions.d).toMatchObject({
-        x: 10 + 20 + NODE_MARGIN_X * 2,
+        x:
+          10 +
+          20 +
+          NODE_MARGIN_X * 2 +
+          (500 + 400) * NODE_ADDITIONAL_MARGIN_X_RATE * 2,
         y: -200 / 2 + 100 / 2 - (500 + 400) / 2 + 200 / 2 + 500 + NODE_MARGIN_Y
       })
     })
