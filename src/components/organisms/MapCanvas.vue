@@ -10,6 +10,14 @@
     @zoom="zoom"
     @click="clearSelect"
   >
+    <SvgConnector
+      v-for="(connector, i) in connectors"
+      :key="i"
+      :sx="connector.sx"
+      :sy="connector.sy"
+      :ex="connector.ex"
+      :ey="connector.ey"
+    />
     <SvgTextRectangle
       class="mind-node"
       v-for="(node, key) in nodes"
@@ -50,6 +58,7 @@ import { createNode, calcPositions } from '@/utils/model'
 
 import SvgCanvas from '@/components/atoms/svg/SvgCanvas'
 import SvgTextRectangle from '@/components/molecules/svg/SvgTextRectangle'
+import SvgConnector from '@/components/molecules/svg/SvgConnector'
 import FloatTextInput from '@/components/molecules/FloatTextInput'
 import FloatEditMenu from '@/components/molecules/FloatEditMenu'
 
@@ -57,6 +66,7 @@ export default {
   components: {
     SvgCanvas,
     SvgTextRectangle,
+    SvgConnector,
     FloatTextInput,
     FloatEditMenu
   },
@@ -110,6 +120,27 @@ export default {
         sizes[k] = this.nodeSizes[k] || Object.assign({}, size)
       })
       return calcPositions({nodes: this.nodes, sizes, parentKey: 'root'})
+    },
+    connectors () {
+      const ret = {}
+      Object.keys(this.nodes).forEach(parentKey => {
+        const parent = this.nodes[parentKey]
+        const parentPosition = this.nodePositions[parentKey]
+        const parentSize = this.nodeSizes[parentKey]
+        parent.children.forEach(childKey => {
+          const childPosition = this.nodePositions[childKey]
+          const childSize = this.nodeSizes[childKey]
+          if (parentSize && childSize) {
+            ret[`${parentKey}-${childKey}`] = {
+              sx: parentPosition.x + parentSize.width - 10,
+              sy: parentPosition.y + parentSize.height / 2,
+              ex: childPosition.x + 10,
+              ey: childPosition.y + childSize.height / 2
+            }
+          }
+        })
+      })
+      return ret
     }
   },
   methods: {
