@@ -2,21 +2,12 @@ import { storiesOf } from '@storybook/vue'
 
 import MapCanvas from '@/components/organisms/MapCanvas'
 
-const createNode = obj =>
-  Object.assign(
-    {},
-    {
-      text: 'abcd',
-      x: 0,
-      y: 0,
-      children: []
-    },
-    obj
-  )
+import { createNode } from '@/utils/model'
 
 storiesOf('organisms/MapCanvas', module).add('story', () => {
   const root = createNode({
-    children: ['a', 'b']
+    text: 'root',
+    children: ['a', 'b', 'c']
   })
   return {
     components: { MapCanvas },
@@ -25,19 +16,25 @@ storiesOf('organisms/MapCanvas', module).add('story', () => {
         :nodes="nodes"
         :selectKeys="selectKeys"
         @updateNode="updateNode"
+        @createNode="createNode"
       />
     `,
     data: () => ({
       nodes: {
         root,
-        a: createNode({ x: 20, y: 30 }),
-        b: createNode({ x: 20, y: 60 })
+        a: createNode({ text: 'aaaa', children: ['d'] }),
+        b: createNode({ text: 'bbbb' }),
+        c: createNode({ text: 'cccc' }),
+        d: createNode({ text: 'dddd' })
       },
       selectKeys: {}
     }),
     methods: {
       updateNode (nextNodes) {
         this.nodes = Object.assign({}, this.nodes, nextNodes)
+      },
+      createNode (createNodes) {
+        this.nodes = Object.assign({}, this.nodes, createNodes)
       }
     }
   }

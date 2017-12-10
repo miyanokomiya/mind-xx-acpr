@@ -1,0 +1,82 @@
+import { NODE_MARGIN_X, NODE_MARGIN_Y } from '@/constants'
+
+export const createNode = obj =>
+  Object.assign(
+    {},
+    {
+      text: '',
+      children: []
+    },
+    obj
+  )
+
+export const calcPositions = ({ nodes, sizes, parentKey }) => {
+  const positions = {}
+  positions[parentKey] = { x: 0, y: 0 }
+  const familySizes = {}
+  calcFamilySizes({ nodes, sizes, familySizes, parentKey })
+  calcFamilyPositions({ nodes, sizes, familySizes, parentKey, positions })
+  return positions
+}
+
+export function calcFamilyPositions ({
+  nodes,
+  sizes,
+  familySizes,
+  parentKey,
+  positions
+}) {
+  const parentNode = nodes[parentKey]
+  const parentPosition = positions[parentKey]
+  if (parentNode.children.length > 0) {
+    const familySize = familySizes[parentKey]
+    const left = parentPosition.x + sizes[parentKey].width + NODE_MARGIN_X
+    let top =
+      parentPosition.y - familySize.height / 2 + sizes[parentKey].height / 2
+    // let top = parentPosition.y - familySize.height / 2
+    parentNode.children.forEach(childKey => {
+      positions[childKey] = {
+        x: left,
+        y: top + familySizes[childKey].height / 2 - sizes[childKey].height / 2
+      }
+      top += familySizes[childKey].height + NODE_MARGIN_Y
+      calcFamilyPositions({
+        nodes,
+        sizes,
+        familySizes,
+        parentKey: childKey,
+        positions
+      })
+    })
+  }
+}
+
+export function calcFamilySizes ({ nodes, sizes, familySizes, parentKey }) {
+  const parentNode = nodes[parentKey]
+  if (parentNode.children.length > 0) {
+    parentNode.children.forEach(childKey => {
+      calcFamilySizes({ nodes, sizes, familySizes, parentKey: childKey })
+    })
+    const size = parentNode.children.reduce(
+      (p, c) => {
+        const childSize = familySizes[c]
+        return {
+          width: Math.max(p.width, childSize.width),
+          height: p.height + childSize.height
+        }
+      },
+      {
+        width: 0,
+        height: 0
+      }
+    )
+    size.height += NODE_MARGIN_Y * (parentNode.children.length - 1)
+    familySizes[parentKey] = {
+      width: sizes[parentKey].width + size.width + NODE_MARGIN_X,
+      height: Math.max(sizes[parentKey].height, size.height)
+    }
+  } else {
+    // this node does not have children
+    familySizes[parentKey] = sizes[parentKey]
+  }
+}

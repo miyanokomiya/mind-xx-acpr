@@ -15,14 +15,16 @@
       v-for="(node, key) in nodes"
       :key="key"
       :ref="`node_${key}`"
-      :x="node.x"
-      :y="node.y"
+      :x="nodePositions[key].x"
+      :y="nodePositions[key].y"
       :text="node.text"
       :strokeWidth="selectedKeys[key] ? 4 : 2"
       :stroke="selectedKeys[key] ? 'blue' : 'black'"
       fill="yellow"
+      @calcSize="size => calcSize({key, size})"
       @mousedown.native="nodeCursorDown"
       @mouseup.native="nodeCursorUp(key)"
+      @keyup.native="$emit('createNode', {from: key})"
     />
   </SvgCanvas>
   <FloatTextInput
@@ -32,21 +34,31 @@
     :y="editTextTargetPosition.y"
     @blur="doneEditText"
   />
+  <FloatEditMenu
+    v-if="editMenuTarget"
+    :x="editMenuTargetPosition.x"
+    :y="editMenuTargetPosition.y"
+    @add="createNode"
+  />
 </div>
 </template>
 
 <script>
 import Vue from 'vue'
 import {INTERVAL_CLICK, INTERVAL_DOUBLE_CLICK} from '@/constants'
+import { createNode, calcPositions } from '@/utils/model'
+
 import SvgCanvas from '@/components/atoms/svg/SvgCanvas'
 import SvgTextRectangle from '@/components/molecules/svg/SvgTextRectangle'
 import FloatTextInput from '@/components/molecules/FloatTextInput'
+import FloatEditMenu from '@/components/molecules/FloatEditMenu'
 
 export default {
   components: {
     SvgCanvas,
     SvgTextRectangle,
-    FloatTextInput
+    FloatTextInput,
+    FloatEditMenu
   },
   data: () => ({
     x: 0,
@@ -55,8 +67,11 @@ export default {
     nodeCursorDownStart: 0,
     nodeCursorClickLast: 0,
     selectedKeys: {},
+    nodeSizes: {},
+
     editTextTarget: null,
-    editingText: ''
+    editingText: '',
+    editMenuTarget: null
   }),
   props: {
     width: {
@@ -74,11 +89,27 @@ export default {
   },
   computed: {
     editTextTargetPosition () {
-      const node = this.nodes[this.editTextTarget]
+      const position = this.nodePositions[this.editTextTarget]
       return {
-        x: (node.x - this.x) * this.scale,
-        y: (node.y - this.y) * this.scale
+        x: (position.x - this.x) * this.scale,
+        y: (position.y - this.y) * this.scale
       }
+    },
+    editMenuTargetPosition () {
+      const position = this.nodePositions[this.editMenuTarget]
+      const nodeHeight = this.$refs[`node_${this.editMenuTarget}`][0].height
+      return {
+        x: (position.x - this.x) * this.scale - 5,
+        y: (position.y - this.y) * this.scale + nodeHeight + 5
+      }
+    },
+    nodePositions () {
+      const size = { width: 50, height: 20 }
+      const sizes = {}
+      Object.keys(this.nodes).forEach(k => {
+        sizes[k] = this.nodeSizes[k] || Object.assign({}, size)
+      })
+      return calcPositions({nodes: this.nodes, sizes, parentKey: 'root'})
     }
   },
   methods: {
@@ -104,6 +135,7 @@ export default {
           this.editTextTarget = key
           this.editingText = this.nodes[key].text
           Vue.set(this.selectedKeys, key, true)
+          this.editMenuTarget = null
         } else {
           // single click
           this.toggleSelectNode(key)
@@ -114,13 +146,29 @@ export default {
     clearSelect () {
       this.selectedKeys = {}
       this.editTextTarget = null
+      this.editMenuTarget = null
+      this.editingText = null
+    },
+    selectNode (key) {
+      this.selectedKeys = {
+        [key]: true
+      }
+      this.editMenuTarget = key
     },
     toggleSelectNode (key) {
       if (this.selectedKeys[key]) {
-        Vue.delete(this.selectedKeys, key)
+        this.clearSelect()
       } else {
-        Vue.set(this.selectedKeys, key, true)
+        this.selectNode(key)
       }
+    },
+    readyEditText (key) {
+      this.selectedKeys = {
+        [key]: true
+      }
+      this.editTextTarget = key
+      this.editingText = this.nodes[key] ? this.nodes[key].text : ''
+      this.editMenuTarget = null
     },
     doneEditText () {
       const target = this.nodes[this.editTextTarget]
@@ -130,8 +178,24 @@ export default {
       this.$emit('updateNode', {
         [this.editTextTarget]: next
       })
-      this.editingText = null
-      this.editTextTarget = null
+      this.clearSelect()
+    },
+    createNode () {
+      const node = createNode()
+      const key = `key_${Math.random()}`
+      const parent = this.nodes[this.editMenuTarget]
+      const nextChildren = parent.children.concat()
+      nextChildren.push(key)
+      this.$emit('updateNode', {
+        [key]: node,
+        [this.editMenuTarget]: Object.assign({}, parent, {
+          children: nextChildren
+        })
+      })
+      this.readyEditText(key)
+    },
+    calcSize ({key, size}) {
+      Vue.set(this.nodeSizes, key, size)
     }
   }
 }

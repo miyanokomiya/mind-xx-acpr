@@ -86,6 +86,10 @@ export default {
   methods: {
     calcBox (bbox) {
       this.textWidth = Math.max(this.textWidth, (bbox.width + this.textPaddingX * 2))
+      this.$emit('calcSize', {
+        width: this.textWidth,
+        height: this.height
+      })
     }
   }
 }
