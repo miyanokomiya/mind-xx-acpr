@@ -121,7 +121,9 @@ export default {
       }
     },
     canvasWheel (e) {
-      const scale = this.scale * Math.pow(1.001, e.wheelDeltaY)
+      let scale = this.scale * Math.pow(1.001, e.wheelDeltaY)
+      scale = Math.min(scale, 10)
+      scale = Math.max(scale, 0.1)
       // zoom based at cursor position
       const domP = canvasUtils.getPoint(e)
       const svgP = this.dom2svg(domP)

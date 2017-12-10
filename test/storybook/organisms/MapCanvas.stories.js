@@ -1,4 +1,5 @@
 import { storiesOf } from '@storybook/vue'
+import Vue from 'vue'
 
 import MapCanvas from '@/components/organisms/MapCanvas'
 
@@ -23,7 +24,7 @@ storiesOf('organisms/MapCanvas', module).add('story', () => {
       nodes: {
         root,
         a: createNode({ text: 'aaaa', children: ['d'] }),
-        b: createNode({ text: 'bbbb' }),
+        b: createNode({ text: 'bbbbbbbbbbbbbbbbbbbbbbbbb' }),
         c: createNode({ text: 'cccc' }),
         d: createNode({ text: 'dddd' })
       },
@@ -31,7 +32,10 @@ storiesOf('organisms/MapCanvas', module).add('story', () => {
     }),
     methods: {
       updateNode (nextNodes) {
-        this.nodes = Object.assign({}, this.nodes, nextNodes)
+        // this.nodes = Object.assign({}, this.nodes, nextNodes)
+        Object.keys(nextNodes).forEach(key => {
+          Vue.set(this.nodes, key, nextNodes[key])
+        })
       },
       createNode (createNodes) {
         this.nodes = Object.assign({}, this.nodes, createNodes)

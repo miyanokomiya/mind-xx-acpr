@@ -23,7 +23,7 @@ export default {
     SvgRectangle
   },
   data: () => ({
-    textWidth: 100
+    textWidth: 50
   }),
   props: {
     text: {
@@ -80,7 +80,7 @@ export default {
   },
   watch: {
     text () {
-      this.textWidth = 100
+      this.textWidth = 50
     }
   },
   methods: {

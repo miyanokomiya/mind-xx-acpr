@@ -149,11 +149,9 @@ export default {
       this.y = y
     },
     zoom ({ scale, x, y }) {
-      if (0.1 < scale && scale < 10) {
-        this.scale = scale
-        this.x = x
-        this.y = y
-      }
+      this.scale = scale
+      this.x = x
+      this.y = y
     },
     nodeCursorDown (e) {
       this.nodeCursorDownStart = Date.now()

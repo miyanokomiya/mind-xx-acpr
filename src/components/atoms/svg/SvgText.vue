@@ -30,7 +30,9 @@ export default {
   },
   watch: {
     text () {
-      this.calcBox()
+      this.$nextTick().then(() => {
+        this.calcBox()
+      })
     }
   },
   mounted () {
