@@ -1,6 +1,16 @@
 <template>
 <g>
-  <SvgRectangle :x="x" :y="y" :width="textWidth" :height="height" :stroke-width="strokeWidth" :stroke="stroke" :fill="fill"/>
+  <SvgRectangle
+    :x="x"
+    :y="y"
+    :rx="3"
+    :ry="3"
+    :width="textWidth"
+    :height="height"
+    :stroke-width="strokeWidth"
+    :stroke="stroke"
+    :fill="fill"
+  />
   <SvgText
     v-for="(l, i) in text.split(/\n|\r\n/)"
     :key="i"
@@ -44,7 +54,7 @@ export default {
     },
     strokeWidth: {
       type: Number,
-      default: 2
+      default: 1
     },
     stroke: {
       type: String,

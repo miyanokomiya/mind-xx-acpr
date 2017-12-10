@@ -31,7 +31,7 @@ export default {
     },
     strokeWidth: {
       type: Number,
-      default: 2
+      default: 1
     },
     stroke: {
       type: String,

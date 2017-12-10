@@ -26,7 +26,7 @@
       :x="nodePositions[key].x"
       :y="nodePositions[key].y"
       :text="node.text"
-      :strokeWidth="selectedKeys[key] ? 4 : 2"
+      :strokeWidth="selectedKeys[key] ? 2 : 1"
       :stroke="selectedKeys[key] ? 'blue' : 'black'"
       fill="yellow"
       @calcSize="size => calcSize({key, size})"
