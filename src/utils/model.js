@@ -80,3 +80,80 @@ export function calcFamilySizes ({ nodes, sizes, familySizes, parentKey }) {
     familySizes[parentKey] = sizes[parentKey]
   }
 }
+
+export function getParentKey ({ nodes, childKey }) {
+  const ret = Object.keys(nodes).find(key => {
+    const node = nodes[key]
+    return node.children.indexOf(childKey) !== -1
+  })
+  return ret || null
+}
+
+export function getFamilyKeys ({ nodes, parentKey }) {
+  let familyKeys = []
+  const parent = nodes[parentKey]
+  parent.children.forEach(childKey => {
+    familyKeys.push(childKey)
+    const childFamilyKeys = getFamilyKeys({ nodes, parentKey: childKey })
+    familyKeys = familyKeys.concat(childFamilyKeys)
+  })
+  return familyKeys
+}
+
+export function getUpdatedNodesWhenCreateChildNode ({
+  nodes,
+  parentKey,
+  newKey = `key_${Math.random()}`
+}) {
+  const node = createNode()
+  const key = newKey
+  const parent = nodes[parentKey]
+  const nextChildren = parent.children.concat()
+  nextChildren.push(key)
+  const updatedNodes = {
+    [key]: node,
+    [parentKey]: Object.assign({}, parent, {
+      children: nextChildren
+    })
+  }
+  return updatedNodes
+}
+
+export function getUpdatedNodesWhenCreateBrotherdNode ({
+  nodes,
+  brotherKey,
+  newKey = `key_${Math.random()}`
+}) {
+  const parentKey = getParentKey({ nodes, childKey: brotherKey })
+  const updatedNodes = getUpdatedNodesWhenCreateChildNode({
+    nodes,
+    parentKey,
+    newKey
+  })
+  // replace newKey after brotherKey
+  const parent = updatedNodes[parentKey]
+  parent.children.pop()
+  const brotherIndex = parent.children.indexOf(brotherKey)
+  parent.children.splice(brotherIndex + 1, 0, newKey)
+  return updatedNodes
+}
+
+export function getUpdatedNodesWhenDeleteNode ({ nodes, deleteKey }) {
+  const familyKeys = getFamilyKeys({ nodes: nodes, parentKey: deleteKey })
+  const updatedNodes = {
+    [deleteKey]: null
+  }
+  familyKeys.forEach(key => {
+    updatedNodes[key] = null
+  })
+  const parentKey = getParentKey({ nodes: nodes, childKey: deleteKey })
+  if (parentKey) {
+    const parentNode = nodes[parentKey]
+    const nextParentNode = Object.assign({}, parentNode)
+    nextParentNode.children = nextParentNode.children.filter(
+      key => key !== deleteKey
+    )
+    updatedNodes[parentKey] = nextParentNode
+  }
+  return updatedNodes
+}

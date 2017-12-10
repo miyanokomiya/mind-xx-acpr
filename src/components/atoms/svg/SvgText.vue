@@ -1,6 +1,6 @@
 <template>
   <text ref="text" :x="x" :y="y" :font-size="fontSize" :fill="fill">
-    {{text}}
+    {{text || '-XXACPR-'}}
   </text>
 </template>
 

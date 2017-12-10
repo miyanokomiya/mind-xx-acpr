@@ -228,4 +228,152 @@ describe('utils/model', () => {
       })
     })
   })
+
+  describe('getParentKey', () => {
+    const a = modelUtils.createNode({
+      children: ['b']
+    })
+    const b = modelUtils.createNode({
+      children: ['c', 'd']
+    })
+    const c = modelUtils.createNode()
+    const d = modelUtils.createNode()
+    const nodes = { a, b, c, d }
+    it('should get correct parent key', () => {
+      const parentKey = modelUtils.getParentKey({
+        nodes,
+        childKey: 'c'
+      })
+      expect(parentKey).toBe('b')
+    })
+    it('should get null when no parent ', () => {
+      const parentKey = modelUtils.getParentKey({
+        nodes,
+        childKey: 'a'
+      })
+      expect(parentKey).toBe(null)
+    })
+  })
+
+  describe('getFamilyKeys', () => {
+    const a = modelUtils.createNode({
+      children: ['b', 'e']
+    })
+    const b = modelUtils.createNode({
+      children: ['c', 'd']
+    })
+    const c = modelUtils.createNode()
+    const d = modelUtils.createNode()
+    const e = modelUtils.createNode()
+    const nodes = { a, b, c, d, e }
+    it('should get correct keys', () => {
+      const familyKeys = modelUtils.getFamilyKeys({
+        nodes,
+        parentKey: 'b'
+      })
+      expect(familyKeys).toEqual(['c', 'd'])
+    })
+    it('should get no keys when no children', () => {
+      const familyKeys = modelUtils.getFamilyKeys({
+        nodes,
+        parentKey: 'c'
+      })
+      expect(familyKeys).toEqual([])
+    })
+  })
+
+  describe('getUpdatedNodesWhenCreateChildNode', () => {
+    const a = modelUtils.createNode({
+      children: ['c']
+    })
+    const c = modelUtils.createNode()
+    const nodes = { a, c }
+    it('should get correct nodes when creating child node', () => {
+      const updatedNodes = modelUtils.getUpdatedNodesWhenCreateChildNode({
+        nodes,
+        parentKey: 'a',
+        newKey: 'b'
+      })
+      expect(updatedNodes).toEqual({
+        a: Object.assign({}, a, {
+          children: ['c', 'b']
+        }),
+        b: modelUtils.createNode()
+      })
+    })
+  })
+
+  describe('getUpdatedNodesWhenCreateBrotherdNode', () => {
+    const a = modelUtils.createNode({
+      children: ['b', 'c']
+    })
+    const b = modelUtils.createNode()
+    const c = modelUtils.createNode()
+    const nodes = { a, b, c }
+    it('should get correct nodes when creating middle brother node', () => {
+      const updatedNodes = modelUtils.getUpdatedNodesWhenCreateBrotherdNode({
+        nodes,
+        brotherKey: 'b',
+        newKey: 'd'
+      })
+      expect(updatedNodes).toEqual({
+        a: Object.assign({}, a, {
+          children: ['b', 'd', 'c']
+        }),
+        d: modelUtils.createNode()
+      })
+    })
+    it('should get correct nodes when creating last brother node', () => {
+      const updatedNodes = modelUtils.getUpdatedNodesWhenCreateBrotherdNode({
+        nodes,
+        brotherKey: 'c',
+        newKey: 'd'
+      })
+      expect(updatedNodes).toEqual({
+        a: Object.assign({}, a, {
+          children: ['b', 'c', 'd']
+        }),
+        d: modelUtils.createNode()
+      })
+    })
+  })
+
+  describe('getUpdatedNodesWhenDeleteNode', () => {
+    const a = modelUtils.createNode({
+      children: ['b', 'e']
+    })
+    const b = modelUtils.createNode({
+      children: ['c', 'd']
+    })
+    const c = modelUtils.createNode()
+    const d = modelUtils.createNode()
+    const e = modelUtils.createNode()
+    const nodes = { a, b, c, d, e }
+    it('should get correct nodes when deleting a node has no children', () => {
+      const updatedNodes = modelUtils.getUpdatedNodesWhenDeleteNode({
+        nodes,
+        deleteKey: 'c'
+      })
+      expect(updatedNodes).toEqual({
+        b: Object.assign({}, b, {
+          children: ['d']
+        }),
+        c: null
+      })
+    })
+    it('should get correct nodes when deleting a node has children', () => {
+      const updatedNodes = modelUtils.getUpdatedNodesWhenDeleteNode({
+        nodes,
+        deleteKey: 'b'
+      })
+      expect(updatedNodes).toEqual({
+        a: Object.assign({}, a, {
+          children: ['e']
+        }),
+        b: null,
+        c: null,
+        d: null
+      })
+    })
+  })
 })

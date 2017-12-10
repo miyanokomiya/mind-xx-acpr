@@ -32,9 +32,12 @@ storiesOf('organisms/MapCanvas', module).add('story', () => {
     }),
     methods: {
       updateNode (nextNodes) {
-        // this.nodes = Object.assign({}, this.nodes, nextNodes)
         Object.keys(nextNodes).forEach(key => {
-          Vue.set(this.nodes, key, nextNodes[key])
+          if (nextNodes[key]) {
+            Vue.set(this.nodes, key, nextNodes[key])
+          } else {
+            Vue.delete(this.nodes, key)
+          }
         })
       },
       createNode (createNodes) {

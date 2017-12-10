@@ -46,15 +46,17 @@
     v-if="editMenuTarget"
     :x="editMenuTargetPosition.x"
     :y="editMenuTargetPosition.y"
-    @add="createNode"
+    @addBrother="createNode(true)"
+    @addChild="createNode(false)"
+    @delete="deleteNode"
   />
 </div>
 </template>
 
 <script>
 import Vue from 'vue'
-import {INTERVAL_CLICK, INTERVAL_DOUBLE_CLICK} from '@/constants'
-import { createNode, calcPositions } from '@/utils/model'
+import { INTERVAL_CLICK, INTERVAL_DOUBLE_CLICK } from '@/constants'
+import { createNode, calcPositions, getParentKey, getFamilyKeys, getUpdatedNodesWhenDeleteNode, getUpdatedNodesWhenCreateChildNode, getUpdatedNodesWhenCreateBrotherdNode } from '@/utils/model'
 
 import SvgCanvas from '@/components/atoms/svg/SvgCanvas'
 import SvgTextRectangle from '@/components/molecules/svg/SvgTextRectangle'
@@ -132,9 +134,9 @@ export default {
           const childSize = this.nodeSizes[childKey]
           if (parentSize && childSize) {
             ret[`${parentKey}-${childKey}`] = {
-              sx: parentPosition.x + parentSize.width - 10,
+              sx: parentPosition.x + parentSize.width,
               sy: parentPosition.y + parentSize.height / 2,
-              ex: childPosition.x + 10,
+              ex: childPosition.x,
               ey: childPosition.y + childSize.height / 2
             }
           }
@@ -209,19 +211,17 @@ export default {
       })
       this.clearSelect()
     },
-    createNode () {
+    createNode (brother = false) {
       const node = createNode()
       const key = `key_${Math.random()}`
-      const parent = this.nodes[this.editMenuTarget]
-      const nextChildren = parent.children.concat()
-      nextChildren.push(key)
-      this.$emit('updateNode', {
-        [key]: node,
-        [this.editMenuTarget]: Object.assign({}, parent, {
-          children: nextChildren
-        })
-      })
+      const updatedNodes = brother ? getUpdatedNodesWhenCreateBrotherdNode({ nodes: this.nodes, brotherKey: this.editMenuTarget, newKey: key }) : getUpdatedNodesWhenCreateChildNode({ nodes: this.nodes, parentKey: this.editMenuTarget, newKey: key })
+      this.$emit('updateNode', updatedNodes)
       this.readyEditText(key)
+    },
+    deleteNode () {
+      const updatedNodes = getUpdatedNodesWhenDeleteNode({ nodes: this.nodes, deleteKey: this.editMenuTarget })
+      this.$emit('updateNode', updatedNodes)
+      this.clearSelect()
     },
     calcSize ({key, size}) {
       Vue.set(this.nodeSizes, key, size)
