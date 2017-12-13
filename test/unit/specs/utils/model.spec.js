@@ -38,19 +38,23 @@ describe('utils/model', () => {
       const familySizes = {
         a: {
           width: 10 + 20 + 50,
-          height: 500 + 400
+          height: 500 + 400,
+          othersHeight: 500 + 400
         },
         b: {
           width: 20 + 50,
-          height: 500 + 400
+          height: 500 + 400,
+          othersHeight: 500 + 400
         },
         c: {
           width: 50,
-          height: 500
+          height: 500,
+          othersHeight: 0
         },
         d: {
           width: 40,
-          height: 400
+          height: 400,
+          othersHeight: 0
         }
       }
       const positions = {
@@ -88,6 +92,91 @@ describe('utils/model', () => {
         y: -200 / 2 + 100 / 2 - (500 + 400) / 2 + 200 / 2 + 500 + NODE_MARGIN_Y
       })
     })
+    it('should calc correct position of a node that is the highest in the family', () => {
+      const a = modelUtils.createNode({
+        children: ['b']
+      })
+      const b = modelUtils.createNode({
+        children: ['c', 'd']
+      })
+      const c = modelUtils.createNode()
+      const d = modelUtils.createNode()
+      const nodes = { a, b, c, d }
+      const sizes = {
+        a: {
+          width: 10,
+          height: 1000
+        },
+        b: {
+          width: 20,
+          height: 200
+        },
+        c: {
+          width: 50,
+          height: 500
+        },
+        d: {
+          width: 40,
+          height: 400
+        }
+      }
+      const familySizes = {
+        a: {
+          width: 10 + 20 + 50,
+          height: 1000,
+          othersHeight: 900
+        },
+        b: {
+          width: 20 + 50,
+          height: 500 + 400,
+          othersHeight: 500 + 400
+        },
+        c: {
+          width: 50,
+          height: 500,
+          othersHeight: 0
+        },
+        d: {
+          width: 40,
+          height: 400,
+          othersHeight: 0
+        }
+      }
+      const positions = {
+        a: { x: 0, y: 0 }
+      }
+      modelUtils.calcFamilyPositions({
+        nodes,
+        sizes,
+        familySizes,
+        parentKey: 'a',
+        positions
+      })
+      expect(positions.a).toMatchObject({
+        x: 0,
+        y: 0
+      })
+      expect(positions.b).toMatchObject({
+        x: 10 + NODE_MARGIN_X + 1000 * NODE_ADDITIONAL_MARGIN_X_RATE,
+        y: 500 - 200 / 2
+      })
+      expect(positions.c).toMatchObject({
+        x:
+          10 +
+          20 +
+          NODE_MARGIN_X * 2 +
+          (1000 + 500 + 400) * NODE_ADDITIONAL_MARGIN_X_RATE,
+        y: 500 - (500 + 400) / 2
+      })
+      expect(positions.d).toMatchObject({
+        x:
+          10 +
+          20 +
+          NODE_MARGIN_X * 2 +
+          (1000 + 500 + 400) * NODE_ADDITIONAL_MARGIN_X_RATE,
+        y: 500 - (500 + 400) / 2 + 500 + NODE_MARGIN_Y
+      })
+    })
   })
 
   describe('calcFamilySizes', () => {
@@ -107,7 +196,8 @@ describe('utils/model', () => {
       expect(familySizes).toEqual({
         a: {
           width: 10,
-          height: 100
+          height: 100,
+          othersHeight: 0
         }
       })
     })
@@ -135,11 +225,13 @@ describe('utils/model', () => {
       expect(familySizes).toEqual({
         a: {
           width: 10 + 20 + NODE_MARGIN_X,
-          height: 200
+          height: 200,
+          othersHeight: 200
         },
         b: {
           width: 20,
-          height: 200
+          height: 200,
+          othersHeight: 0
         }
       })
     })
@@ -174,19 +266,23 @@ describe('utils/model', () => {
       expect(familySizes).toEqual({
         a: {
           width: 10 + 50 + NODE_MARGIN_X,
-          height: 200 + 500 + 400 + NODE_MARGIN_Y * 2
+          height: 200 + 500 + 400 + NODE_MARGIN_Y * 2,
+          othersHeight: 200 + 500 + 400 + NODE_MARGIN_Y * 2
         },
         b: {
           width: 20,
-          height: 200
+          height: 200,
+          othersHeight: 0
         },
         c: {
           width: 50,
-          height: 500
+          height: 500,
+          othersHeight: 0
         },
         d: {
           width: 40,
-          height: 400
+          height: 400,
+          othersHeight: 0
         }
       })
     })
@@ -223,19 +319,23 @@ describe('utils/model', () => {
       expect(familySizes).toEqual({
         a: {
           width: 10 + 20 + 50 + NODE_MARGIN_X * 2,
-          height: 500 + 400 + NODE_MARGIN_Y
+          height: 500 + 400 + NODE_MARGIN_Y,
+          othersHeight: 500 + 400 + NODE_MARGIN_Y
         },
         b: {
           width: 20 + 50 + NODE_MARGIN_X,
-          height: 500 + 400 + NODE_MARGIN_Y
+          height: 500 + 400 + NODE_MARGIN_Y,
+          othersHeight: 500 + 400 + NODE_MARGIN_Y
         },
         c: {
           width: 50,
-          height: 500
+          height: 500,
+          othersHeight: 0
         },
         d: {
           width: 40,
-          height: 400
+          height: 400,
+          othersHeight: 0
         }
       })
     })
