@@ -1,6 +1,6 @@
 <template>
   <text ref="text" :x="x" :y="y" :font-size="fontSize" :fill="fill">
-    {{text || '-XXACPR-'}}
+    {{text}}
   </text>
 </template>
 
@@ -28,20 +28,9 @@ export default {
       default: 'black'
     }
   },
-  watch: {
-    text () {
-      this.$nextTick().then(() => {
-        this.calcBox()
-      })
-    }
-  },
-  mounted () {
-    this.calcBox()
-  },
   methods: {
-    calcBox () {
-      var bbox = this.$refs.text.getBBox()
-      this.$emit('calcBox', bbox)
+    getBBox () {
+      return this.$refs.text.getBBox()
     }
   }
 }

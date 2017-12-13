@@ -13,12 +13,15 @@ storiesOf('organisms/MapCanvas', module).add('story', () => {
   return {
     components: { MapCanvas },
     template: `
+    <div>
       <MapCanvas
         :nodes="nodes"
         :selectKeys="selectKeys"
         @updateNode="updateNode"
         @createNode="createNode"
       />
+      <textarea>{{JSON.stringify(nodes)}}</textarea>
+    </div>
     `,
     data: () => ({
       nodes: {

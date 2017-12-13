@@ -12,13 +12,20 @@
     :fill="fill"
   />
   <SvgText
-    v-for="(l, i) in text.split(/\n|\r\n/)"
+    v-for="(l, i) in lines"
+    :ref="`line_${i}`"
     :key="i"
     :x="textX"
     :y="textY + textHeight * (i + 1)"
     :font-size="fontSize"
     :text="l"
-    @calcBox="calcBox"
+  />
+  <SvgText
+    v-if="!text"
+    text="-XXACPR-"
+    :x="textX"
+    :y="textY + textHeight"
+    :font-size="fontSize"
   />
 </g>
 </template>
@@ -90,12 +97,21 @@ export default {
   },
   watch: {
     text () {
-      this.textWidth = 50
+      this.$nextTick().then(() => {
+        this.adjustTextWidth()
+      })
     }
   },
+  mounted () {
+    this.adjustTextWidth()
+  },
   methods: {
-    calcBox (bbox) {
-      this.textWidth = Math.max(this.textWidth, (bbox.width + this.textPaddingX * 2))
+    adjustTextWidth () {
+      const width = this.lines.reduce((p, c, i) => {
+        const width = this.$refs[`line_${i}`][0].getBBox().width
+        return Math.max(p, width)
+      }, 50)
+      this.textWidth = width + this.textPaddingX * 2
       this.$emit('calcSize', {
         width: this.textWidth,
         height: this.height
