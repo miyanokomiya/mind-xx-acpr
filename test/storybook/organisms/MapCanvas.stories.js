@@ -29,15 +29,17 @@ storiesOf('organisms/MapCanvas', module)
     return {
       components: { MapCanvas },
       template: `
-    <div>
-      <MapCanvas
-        :nodes="nodes"
-        :selectKeys="selectKeys"
-        @updateNode="updateNode"
-        @createNode="createNode"
-      />
-    </div>
-    `,
+      <v-app>
+        <div>
+          <MapCanvas
+            :nodes="nodes"
+            :selectKeys="selectKeys"
+            @updateNode="updateNode"
+            @createNode="createNode"
+          />
+        </div>
+      </v-app>
+      `,
       data: () => ({
         nodes: {
           root,
@@ -55,15 +57,19 @@ storiesOf('organisms/MapCanvas', module)
     return {
       components: { MapCanvas },
       template: `
-    <div>
-      <MapCanvas
-        :nodes="nodes"
-        :selectKeys="selectKeys"
-        @updateNode="updateNode"
-        @createNode="createNode"
-      />
-    </div>
-    `,
+      <v-app>
+        <div>
+          <MapCanvas
+            :width="600"
+            :height="500"
+            :nodes="nodes"
+            :selectKeys="selectKeys"
+            @updateNode="updateNode"
+            @createNode="createNode"
+          />
+        </div>
+      </v-app>
+      `,
       data: () => ({
         nodes: {
           root: {

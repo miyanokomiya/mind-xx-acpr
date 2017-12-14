@@ -1,18 +1,20 @@
 <template>
-<div
-  :style="{width: `${width}px`, height: `${height}px`}"
->
-  <svg
-    :viewBox="`${x} ${y} ${canvasWidth} ${canvasHeight}`"
-    @mousedown="canvasCursorDown"
-    @mouseup="canvasCursorUp"
-    @mousemove.prevent="canvasCursorMove"
-    @mousewheel.prevent="canvasWheel"
-    @mousedown.self="canvasCursorDownSelf"
-    @mouseup.self="canvasCursorUpSelf"
-  >
-    <slot />
-  </svg>
+<div class="svg-canvas-wrapper" :style="{width: `${width}px`, height: `${height}px`}">
+  <!-- <div
+    :style="{width: `${1000}px`, height: `${1000}px`}"
+  > -->
+    <svg
+      :viewBox="`${x} ${y} ${canvasWidth} ${canvasHeight}`"
+      @mousedown="canvasCursorDown"
+      @mouseup="canvasCursorUp"
+      @mousemove.prevent="canvasCursorMove"
+      @mousedown.self="canvasCursorDownSelf"
+      @mouseup.self="canvasCursorUpSelf"
+      @mousewheel.prevent="canvasWheel"
+    >
+      <slot />
+    </svg>
+  <!-- </div> -->
 </div>
 </template>
 
@@ -95,9 +97,9 @@ export default {
       this.beforeMoveP = Object.assign({}, p)
     },
     canvasCursorUp (e) {
-      this.movingTimer = setTimeout(() => {
-        this.movingLoop()
-      }, 25)
+      // this.movingTimer = setTimeout(() => {
+      //   this.movingLoop()
+      // }, 25)
       this.startDownP = null
       this.beforeMoveP = null
     },
@@ -121,17 +123,11 @@ export default {
       }
     },
     canvasWheel (e) {
-      let scale = this.scale * Math.pow(1.001, e.wheelDeltaY)
-      scale = Math.min(scale, 10)
-      scale = Math.max(scale, 0.1)
-      // zoom based at cursor position
-      const domP = canvasUtils.getPoint(e)
-      const svgP = this.dom2svg(domP)
-      const nextSvgP = this.dom2svg(domP, scale)
-      this.$emit('zoom', {
-        scale,
-        x: this.x + (svgP.x - nextSvgP.x),
-        y: this.y + (svgP.y - nextSvgP.y)
+      const dx = e.wheelDeltaX
+      const dy = e.wheelDeltaY
+      this.$emit('move', {
+        x: this.x - dx / 3 / this.scale,
+        y: this.y - dy / 3 / this.scale,
       })
     },
     canvasCursorDownSelf (e) {
@@ -171,7 +167,27 @@ export default {
           }
         }
       }
+    },
+    getPostionAfterChangeScale (nextScale) {
+      // zoom based at cursor position
+      const domP = {
+        x: this.width / 2,
+        y: this.height / 2
+      }
+      const svgP = this.dom2svg(domP)
+      const nextSvgP = this.dom2svg(domP, nextScale)
+      return {
+        x: this.x + (svgP.x - nextSvgP.x),
+        y: this.y + (svgP.y - nextSvgP.y)
+      }
     }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.svg-canvas-wrapper {
+  // overflow: auto;
+}
+</style>
+

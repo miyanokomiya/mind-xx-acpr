@@ -1,6 +1,7 @@
 <template>
 <div class="map-canvas-wrapper">
   <SvgCanvas style="border: 1px solid #000;"
+    ref="svgCanvas"
     :x="x"
     :y="y"
     :width="width"
@@ -42,6 +43,14 @@
     :y="editTextTargetPosition.y"
     @blur="doneEditText"
   />
+  <div class="scale-slider-wrapper" :style="{width: `${width}px`}">
+    <v-slider
+      v-model="scaleRate"
+      :step="0.1"
+      :min="-10"
+      :max="10"
+    />
+  </div>
   <FloatEditMenu
     v-if="editMenuTarget"
     :x="editMenuTargetPosition.x"
@@ -75,7 +84,7 @@ export default {
   data: () => ({
     x: 0,
     y: 0,
-    scale: 1,
+    scaleRate: 0,
     nodeCursorDownStart: 0,
     nodeCursorClickLast: 0,
     selectedKeys: {},
@@ -100,6 +109,9 @@ export default {
     }
   },
   computed: {
+    scale () {
+      return Math.pow(1.1, this.scaleRate)
+    },
     editTextTargetPosition () {
       const position = this.nodePositions[this.editTextTarget]
       return {
@@ -143,6 +155,13 @@ export default {
         })
       })
       return ret
+    }
+  },
+  watch: {
+    scale (from, to) {
+      const position = this.$refs.svgCanvas.getPostionAfterChangeScale(this.scale)
+      this.x = position.x
+      this.y = position.y
     }
   },
   methods: {
@@ -238,6 +257,11 @@ export default {
   }
   .node-text-input {
     position: absolute;
+  }
+  .scale-slider-wrapper {
+    position: relative;
+    top: -48px;
+    left: 8px;
   }
 }
 </style>
