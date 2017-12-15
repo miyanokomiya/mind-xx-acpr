@@ -107,15 +107,19 @@ export default {
   },
   methods: {
     adjustTextWidth () {
+      const bbox = this.getBBox()
+      this.textWidth = bbox.width
+      this.$emit('calcSize', bbox)
+    },
+    getBBox () {
       const width = this.lines.reduce((p, c, i) => {
         const width = this.$refs[`line_${i}`][0].getBBox().width
         return Math.max(p, width)
       }, 50)
-      this.textWidth = width + this.textPaddingX * 2
-      this.$emit('calcSize', {
-        width: this.textWidth,
+      return {
+        width: width + this.textPaddingX * 2,
         height: this.height
-      })
+      }
     }
   }
 }

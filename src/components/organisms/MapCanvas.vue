@@ -43,12 +43,11 @@
     :y="editTextTargetPosition.y"
     @blur="doneEditText"
   />
-  <div class="scale-slider-wrapper" :style="{width: `${width}px`}">
-    <v-slider
-      v-model="scaleRate"
-      :step="0.1"
-      :min="-10"
-      :max="10"
+  <div class="scale-tool">
+    <ScaleToolBox
+      :scaleRate="scaleRate"
+      @changeScaleRate="val => scaleRate = val"
+      @clearZoom="clearZoom"
     />
   </div>
   <FloatEditMenu
@@ -66,12 +65,17 @@
 import Vue from 'vue'
 import { INTERVAL_CLICK, INTERVAL_DOUBLE_CLICK } from '@/constants'
 import { createNode, calcPositions, getParentKey, getFamilyKeys, getUpdatedNodesWhenDeleteNode, getUpdatedNodesWhenCreateChildNode, getUpdatedNodesWhenCreateBrotherdNode } from '@/utils/model'
+import { getCoveredRectangle } from '@/utils/geometry'
 
 import SvgCanvas from '@/components/atoms/svg/SvgCanvas'
 import SvgTextRectangle from '@/components/molecules/svg/SvgTextRectangle'
 import SvgConnector from '@/components/molecules/svg/SvgConnector'
 import FloatTextInput from '@/components/molecules/FloatTextInput'
 import FloatEditMenu from '@/components/molecules/FloatEditMenu'
+import ScaleToolBox from '@/components/molecules/ScaleToolBox'
+
+const MIN_SCALE_RATE = Math.pow(1.1, -10)
+const MAX_SCALE_RATE = Math.pow(1.1, 10)
 
 export default {
   components: {
@@ -79,7 +83,8 @@ export default {
     SvgTextRectangle,
     SvgConnector,
     FloatTextInput,
-    FloatEditMenu
+    FloatEditMenu,
+    ScaleToolBox
   },
   data: () => ({
     x: 0,
@@ -108,9 +113,26 @@ export default {
       default: () => ({})
     }
   },
+  mounted () {
+    this.$nextTick().then(() => {
+      this.clearZoom()
+    })
+  },
   computed: {
-    scale () {
-      return Math.pow(1.1, this.scaleRate)
+    scale: {
+      get () {
+        return Math.pow(1.1, this.scaleRate)
+      },
+      set (val) {
+        let rate = Math.log(val) / Math.log(1.1)
+        if (rate < MIN_SCALE_RATE) {
+          rate = MIN_SCALE_RATE
+        }
+        if (rate > MAX_SCALE_RATE) {
+          rate = MAX_SCALE_RATE
+        }
+        this.scaleRate = rate
+      }
     },
     editTextTargetPosition () {
       const position = this.nodePositions[this.editTextTarget]
@@ -173,6 +195,29 @@ export default {
       this.scale = scale
       this.x = x
       this.y = y
+    },
+    clearZoom () {
+      const coveredRec = getCoveredRectangle({
+        positions: this.nodePositions,
+        sizes: this.nodeSizes
+      })
+      coveredRec.x -= 20
+      coveredRec.y -= 20
+      coveredRec.width += 40
+      coveredRec.height += 40
+      const widthRate = this.width / coveredRec.width
+      const heightRate = this.height / coveredRec.height
+      this.scale = Math.min(widthRate, heightRate)
+      this.$nextTick().then(() => {
+        this.x = coveredRec.x
+        this.y = coveredRec.y
+        if (widthRate < heightRate) {
+          this.y -= (this.height / this.scale - coveredRec.height) / 2
+        } else {
+          this.x -= (this.width / this.scale - coveredRec.width) / 2
+        }
+      })
+
     },
     nodeCursorDown (e) {
       this.nodeCursorDownStart = Date.now()
@@ -252,16 +297,18 @@ export default {
 <style lang="scss" scoped>
 .map-canvas-wrapper {
   position: relative;
+  display: inline-block;
   .mind-node {
     cursor: pointer;
   }
   .node-text-input {
     position: absolute;
   }
-  .scale-slider-wrapper {
-    position: relative;
-    top: -48px;
-    left: 8px;
+  .scale-tool {
+    position: absolute;
+    bottom: 5px;
+    width: 100%;
+    padding: 0 15px 0 5px;
   }
 }
 </style>
