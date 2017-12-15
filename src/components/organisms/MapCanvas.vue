@@ -45,6 +45,9 @@
   />
   <div class="scale-tool">
     <ScaleToolBox
+      :min="MIN_SCALE_RATE"
+      :max="MAX_SCALE_RATE"
+      :step="0.1"
       :scaleRate="scaleRate"
       @changeScaleRate="val => scaleRate = val"
       @clearZoom="clearZoom"
@@ -73,9 +76,6 @@ import SvgConnector from '@/components/molecules/svg/SvgConnector'
 import FloatTextInput from '@/components/molecules/FloatTextInput'
 import FloatEditMenu from '@/components/molecules/FloatEditMenu'
 import ScaleToolBox from '@/components/molecules/ScaleToolBox'
-
-const MIN_SCALE_RATE = Math.pow(1.1, -10)
-const MAX_SCALE_RATE = Math.pow(1.1, 10)
 
 export default {
   components: {
@@ -119,17 +119,19 @@ export default {
     })
   },
   computed: {
+    MIN_SCALE_RATE () { return -10 },
+    MAX_SCALE_RATE () { return 10 },
     scale: {
       get () {
         return Math.pow(1.1, this.scaleRate)
       },
       set (val) {
         let rate = Math.log(val) / Math.log(1.1)
-        if (rate < MIN_SCALE_RATE) {
-          rate = MIN_SCALE_RATE
+        if (rate < this.MIN_SCALE_RATE) {
+          rate = this.MIN_SCALE_RATE
         }
-        if (rate > MAX_SCALE_RATE) {
-          rate = MAX_SCALE_RATE
+        if (rate > this.MAX_SCALE_RATE) {
+          rate = this.MAX_SCALE_RATE
         }
         this.scaleRate = rate
       }
