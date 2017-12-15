@@ -1,5 +1,6 @@
 const path = require('path')
 const utils = require('../build/utils')
+const config = require('../config')
 
 function resolve(dir) {
   return path.join(__dirname, '..', dir)
@@ -15,6 +16,16 @@ module.exports = {
   },
   module: {
     rules: [
+      {
+        test: /\.(js|vue)$/,
+        loader: 'eslint-loader',
+        enforce: 'pre',
+        include: [resolve('src'), resolve('test')],
+        options: {
+          formatter: require('eslint-friendly-formatter'),
+          emitWarning: !config.dev.showEslintErrorsInOverlay
+        }
+      },
       {
         test: /\.(scss|css)$/,
         loaders: ['style-loader', 'css-loader', 'sass-loader']
