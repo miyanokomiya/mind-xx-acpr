@@ -1,6 +1,6 @@
 <template>
 <div class="map-canvas-wrapper">
-  <SvgCanvas style="border: 1px solid #000;"
+  <SvgCanvas
     ref="svgCanvas"
     :x="x"
     :y="y"
@@ -37,7 +37,7 @@
     />
   </SvgCanvas>
   <FloatTextInput
-    v-if="editTextTarget"
+    v-if="editTextTargetNode"
     v-model="editingText"
     :x="editTextTargetPosition.x"
     :y="editTextTargetPosition.y"
@@ -55,6 +55,7 @@
   </div>
   <FloatEditMenu
     v-if="editMenuTarget"
+    :root="editMenuTarget === 'root'"
     :x="editMenuTargetPosition.x"
     :y="editMenuTargetPosition.y"
     @addBrother="createNode(true)"
@@ -67,7 +68,7 @@
 <script>
 import Vue from 'vue'
 import { INTERVAL_CLICK, INTERVAL_DOUBLE_CLICK } from '@/constants'
-import { createNode, calcPositions, getParentKey, getFamilyKeys, getUpdatedNodesWhenDeleteNode, getUpdatedNodesWhenCreateChildNode, getUpdatedNodesWhenCreateBrotherdNode } from '@/utils/model'
+import { calcPositions, getUpdatedNodesWhenDeleteNode, getUpdatedNodesWhenCreateChildNode, getUpdatedNodesWhenCreateBrotherdNode } from '@/utils/model'
 import { getCoveredRectangle } from '@/utils/geometry'
 
 import SvgCanvas from '@/components/atoms/svg/SvgCanvas'
@@ -120,7 +121,10 @@ export default {
   },
   computed: {
     MIN_SCALE_RATE () { return -10 },
-    MAX_SCALE_RATE () { return 10 },
+    MAX_SCALE_RATE () { return 25 },
+    canvasHeight () {
+      return this.$window.height - 64
+    },
     scale: {
       get () {
         return Math.pow(1.1, this.scaleRate)
@@ -135,6 +139,9 @@ export default {
         }
         this.scaleRate = rate
       }
+    },
+    editTextTargetNode () {
+      return this.nodes[this.editTextTarget]
     },
     editTextTargetPosition () {
       const position = this.nodePositions[this.editTextTarget]
@@ -219,7 +226,6 @@ export default {
           this.x -= (this.width / this.scale - coveredRec.width) / 2
         }
       })
-
     },
     nodeCursorDown (e) {
       this.nodeCursorDownStart = Date.now()
@@ -278,7 +284,6 @@ export default {
       this.clearSelect()
     },
     createNode (brother = false) {
-      const node = createNode()
       const key = `key_${Math.random()}`
       const updatedNodes = brother ? getUpdatedNodesWhenCreateBrotherdNode({ nodes: this.nodes, brotherKey: this.editMenuTarget, newKey: key }) : getUpdatedNodesWhenCreateChildNode({ nodes: this.nodes, parentKey: this.editMenuTarget, newKey: key })
       this.$emit('updateNode', updatedNodes)

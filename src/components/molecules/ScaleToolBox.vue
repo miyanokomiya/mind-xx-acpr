@@ -1,5 +1,5 @@
 <template>
-<div class="scale-tools-wrapper">
+<div class="scale-tool-wrapper">
   <div class="scale-slider-wrapper">
     <v-slider
       hide-details
@@ -40,6 +40,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.scale-tool-wrapper {
+  text-align: left;
+}
 .scale-slider-wrapper {
   padding: 0 0 0 42px;
   height: 0;

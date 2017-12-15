@@ -3,13 +3,21 @@
   class="float-edit-menu-wrapper"
   :style="{top: `${y}px`, left: `${x}px`}"
 >
-  <v-btn icon small outline color="indigo" class="list-item" @click="$emit('addBrother')">
+  <v-btn icon small outline color="indigo" class="list-item"
+    v-if="!root"
+    @click="$emit('addBrother')"
+  >
     <v-icon>add</v-icon>
   </v-btn
-  ><v-btn icon small outline color="indigo" class="list-item" @click="$emit('addChild')">
+  ><v-btn icon small outline color="indigo" class="list-item"
+    @click="$emit('addChild')"
+  >
     <v-icon>subdirectory_arrow_right</v-icon>
   </v-btn
-  ><v-btn icon small outline color="indigo" class="list-item" @click="$emit('delete')">
+  ><v-btn icon small outline color="indigo" class="list-item"
+    v-if="!root"
+    @click="$emit('delete')"
+  >
     <v-icon>delete</v-icon>
   </v-btn
   >
@@ -26,6 +34,10 @@ export default {
     y: {
       type: Number,
       default: 0
+    },
+    root: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {

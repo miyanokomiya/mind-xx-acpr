@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import AppMaps from '@/components/pages/AppMaps'
+// import AppMaps from '@/components/pages/AppMaps'
+import AppCommonLayout from '@/components/pages/AppCommonLayout'
+import MapCanvasContainer from '@/components/containers/MapCanvasContainer'
 
 Vue.use(Router)
 
@@ -9,8 +11,17 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'AppMaps',
-      component: AppMaps
+      name: '',
+      component: AppCommonLayout,
+      children: [
+        {
+          path: '',
+          name: 'Root',
+          components: {
+            content: MapCanvasContainer
+          }
+        }
+      ]
     }
   ]
 })

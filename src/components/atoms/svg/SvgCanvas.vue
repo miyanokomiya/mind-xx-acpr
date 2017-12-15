@@ -112,7 +112,7 @@ export default {
         })
         this.$emit('move', {
           x: this.x + dif.x,
-          y: this.y + dif.y,
+          y: this.y + dif.y
         })
         this.beforeMoveP = Object.assign({}, p)
         this.progressiveMove = {
@@ -127,7 +127,7 @@ export default {
       const dy = e.wheelDeltaY
       this.$emit('move', {
         x: this.x - dx / 3 / this.scale,
-        y: this.y - dy / 3 / this.scale,
+        y: this.y - dy / 3 / this.scale
       })
     },
     canvasCursorDownSelf (e) {
@@ -151,7 +151,7 @@ export default {
         const dif = this.progressiveMove
         this.$emit('move', {
           x: this.x + dif.x,
-          y: this.y + dif.y,
+          y: this.y + dif.y
         })
         dif.x *= 0.98
         dif.y *= 0.98

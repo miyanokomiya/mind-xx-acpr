@@ -33,7 +33,6 @@ storiesOf('organisms/MapCanvas', module)
         <div>
           <MapCanvas
             :nodes="nodes"
-            :selectKeys="selectKeys"
             @updateNode="updateNode"
             @createNode="createNode"
           />
@@ -47,8 +46,7 @@ storiesOf('organisms/MapCanvas', module)
           b: createNode({ text: 'bbbbbbbbbbbbbbbbbbbbbbbbb' }),
           c: createNode({ text: 'cccc' }),
           d: createNode({ text: 'dddd' })
-        },
-        selectKeys: {}
+        }
       }),
       methods
     }
