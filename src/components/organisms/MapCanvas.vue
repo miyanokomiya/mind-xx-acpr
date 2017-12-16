@@ -391,12 +391,12 @@ export default {
     adjustParentWithMoving (commit) {
       if (this.movingNodeCount > 0) {
         const targetKey = Object.keys(this.movingNodePositions)[0]
-        const positions = Object.assign({}, this.nodePositions, this.movingNodePositions)
         const nodes = getUpdatedNodesWhenFitClosestParent({
           nodes: this.nodes,
           sizes: this.nodeSizes,
-          positions,
-          targetKey
+          positions: this.nodePositions,
+          targetKey,
+          movingPositions: this.movingNodePositions
         })
         const newParentKey = getParentKey({ nodes, childKey: targetKey })
         const newParentNode = nodes[newParentKey]

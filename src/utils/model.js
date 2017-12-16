@@ -224,7 +224,8 @@ export function getUpdatedNodesWhenFitClosestParent ({
   nodes,
   sizes,
   positions,
-  targetKey
+  targetKey,
+  movingPositions
 }) {
   const rectangles = {}
   const familyKeys = getFamilyKeys({ nodes, parentKey: targetKey })
@@ -245,7 +246,20 @@ export function getUpdatedNodesWhenFitClosestParent ({
       height: sizes[key].height
     }
   })
-  const targetRectangle = rectangles[targetKey]
+  const targetRectangle = {
+    x: movingPositions[targetKey].x,
+    y: movingPositions[targetKey].y,
+    width: sizes[targetKey].width,
+    height: sizes[targetKey].height
+  }
+  const targetCenter = geometry.getCenterOfRectangle(targetRectangle)
+  const originalTargetCenter = geometry.getCenterOfRectangle(
+    rectangles[targetKey]
+  )
+  if (geometry.getDistance(targetCenter, originalTargetCenter) < 15) {
+    return nodes
+  }
+
   delete rectangles[targetKey]
   const closestKey = geometry.getClosestRectangle({
     rectangles,
@@ -254,7 +268,6 @@ export function getUpdatedNodesWhenFitClosestParent ({
 
   const closestNode = nodes[closestKey]
   const closestRectangle = rectangles[closestKey]
-  const targetCenter = geometry.getCenterOfRectangle(targetRectangle)
 
   const closestHasNoChildOrHasTarget =
     closestNode.children.length === 0 ||
