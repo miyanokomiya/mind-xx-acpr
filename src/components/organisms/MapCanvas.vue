@@ -125,6 +125,9 @@ export default {
     canvasHeight () {
       return this.$window.height - 64
     },
+    nodeCount () {
+      return Object.keys(this.nodes).length
+    },
     scale: {
       get () {
         return Math.pow(1.1, this.scaleRate)
@@ -210,10 +213,12 @@ export default {
         positions: this.nodePositions,
         sizes: this.nodeSizes
       })
-      coveredRec.x -= 20
-      coveredRec.y -= 20
-      coveredRec.width += 40
-      coveredRec.height += 40
+      // TODO brush better margin
+      const margin = Math.max(100 - Math.pow(this.nodeCount, 2), 20)
+      coveredRec.x -= margin
+      coveredRec.y -= margin
+      coveredRec.width += margin * 2
+      coveredRec.height += margin * 2
       const widthRate = this.width / coveredRec.width
       const heightRate = this.height / coveredRec.height
       this.scale = Math.min(widthRate, heightRate)

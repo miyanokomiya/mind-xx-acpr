@@ -4,7 +4,8 @@
     fixed
     clipped
     app
-    v-model="drawer"
+    :value="leftDrawer"
+    @input="val => setLeftDrawer({ leftDrawer: val })"
   >
     <!-- <v-list dense>
     </v-list> -->
@@ -19,7 +20,7 @@
     dense
   >
     <v-toolbar-title :style="$vuetify.breakpoint.smAndUp ? 'width: 300px; min-width: 250px' : 'min-width: 72px'" class="ml-0 pl-3">
-      <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+      <v-toolbar-side-icon @click.stop="setLeftDrawer({ leftDrawer: !leftDrawer })"></v-toolbar-side-icon>
       <span class="hidden-xs-only">MindXXACPR</span>
     </v-toolbar-title>
     <div class="d-flex align-center" style="margin-left: auto">
@@ -50,11 +51,24 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
+import { getterTypes, actionTypes } from '@/store/layouts/types'
+
 export default {
   data: () => ({
-    drawer: null
+    // leftDrawer: null
   }),
   props: {
+  },
+  computed: {
+    ...mapGetters('layouts', {
+      leftDrawer: getterTypes.LEFT_DRAWER
+    })
+  },
+  methods: {
+    ...mapActions('layouts', {
+      setLeftDrawer: actionTypes.SET_LEFT_DRAWER
+    })
   }
 }
 </script>
