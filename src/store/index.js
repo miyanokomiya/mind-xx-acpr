@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import layouts from './layouts'
+import nodes from './nodes'
 
 Vue.use(Vuex)
 
@@ -9,7 +10,8 @@ export default new Vuex.Store({
   namespaced: true,
   state: {},
   modules: {
-    layouts
+    layouts,
+    nodes
   },
   mutations: {}
 })

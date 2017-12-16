@@ -1,0 +1,14 @@
+export const getterTypes = {
+  NODES: 'NODES',
+  SELECTED_NODES: 'SELECTED_NODES'
+}
+
+export const actionTypes = {
+  UPDATE_NODES: 'UPDATE_NODES',
+  UPDATE_SELECTED_NODES: 'UPDATE_SELECTED_NODES'
+}
+
+export const mutationTypes = {
+  UPDATE_NODES: 'UPDATE_NODES',
+  UPDATE_SELECTED_NODES: 'UPDATE_SELECTED_NODES'
+}

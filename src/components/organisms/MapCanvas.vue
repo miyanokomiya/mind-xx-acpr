@@ -283,7 +283,7 @@ export default {
       const next = Object.assign({}, target, {
         text: this.editingText
       })
-      this.$emit('updateNode', {
+      this.$emit('updateNodes', {
         [this.editTextTarget]: next
       })
       this.clearSelect()
@@ -291,12 +291,12 @@ export default {
     createNode (brother = false) {
       const key = `key_${Math.random()}`
       const updatedNodes = brother ? getUpdatedNodesWhenCreateBrotherdNode({ nodes: this.nodes, brotherKey: this.editMenuTarget, newKey: key }) : getUpdatedNodesWhenCreateChildNode({ nodes: this.nodes, parentKey: this.editMenuTarget, newKey: key })
-      this.$emit('updateNode', updatedNodes)
+      this.$emit('updateNodes', updatedNodes)
       this.readyEditText(key)
     },
     deleteNode () {
       const updatedNodes = getUpdatedNodesWhenDeleteNode({ nodes: this.nodes, deleteKey: this.editMenuTarget })
-      this.$emit('updateNode', updatedNodes)
+      this.$emit('updateNodes', updatedNodes)
       this.clearSelect()
     },
     calcSize ({key, size}) {

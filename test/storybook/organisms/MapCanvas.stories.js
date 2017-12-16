@@ -6,7 +6,7 @@ import MapCanvas from '@/components/organisms/MapCanvas'
 import { createNode } from '@/utils/model'
 
 const methods = {
-  updateNode (nextNodes) {
+  updateNodes (nextNodes) {
     Object.keys(nextNodes).forEach(key => {
       if (nextNodes[key]) {
         Vue.set(this.nodes, key, nextNodes[key])
@@ -33,7 +33,7 @@ storiesOf('organisms/MapCanvas', module)
         <div>
           <MapCanvas
             :nodes="nodes"
-            @updateNode="updateNode"
+            @updateNodes="updateNodes"
             @createNode="createNode"
           />
         </div>
@@ -62,7 +62,7 @@ storiesOf('organisms/MapCanvas', module)
             :height="500"
             :nodes="nodes"
             :selectKeys="selectKeys"
-            @updateNode="updateNode"
+            @updateNodes="updateNodes"
             @createNode="createNode"
           />
         </div>
