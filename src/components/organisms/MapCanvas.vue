@@ -341,7 +341,9 @@ export default {
           x: fromNodeDomP.x + nodeDomP.x,
           y: fromNodeDomP.y + nodeDomP.y
         }
-        Vue.set(this.movingNodePositions, key, Object.assign({}, this.nodePositions[key]))
+        this.movingNodePositions = {
+          [key]: Object.assign({}, this.nodePositions[key])
+        }
       }
     },
     nodeCursorUp (key) {
