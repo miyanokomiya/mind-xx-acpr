@@ -262,7 +262,7 @@ export function getUpdatedNodesWhenFitClosestParent ({
       closestNode.children.indexOf(targetCenter) === -1)
   if (
     closestHasNoChildOrHasTarget &&
-    closestRectangle.x + closestRectangle.width < targetRectangle.x
+    closestRectangle.x + closestRectangle.width / 2 < targetRectangle.x
   ) {
     // add child to closest node
     return getUpdatedNodesWhenChangeParent({

@@ -49,6 +49,24 @@
       :stroke="selectedNodes[key] ? 'blue' : 'black'"
       fill="yellow"
     />
+    <g v-if="connectorOfMovingNodes" class="inserting-marker">
+      <SvgConnector
+        :sx="connectorOfMovingNodes.sx"
+        :sy="connectorOfMovingNodes.sy"
+        :ex="connectorOfMovingNodes.ex"
+        :ey="connectorOfMovingNodes.ey"
+      />
+      <SvgRectangle
+        :x="connectorOfMovingNodes.ex"
+        :y="connectorOfMovingNodes.ey - NODE_MARGIN_Y / 3 / 2"
+        :rx="5"
+        :ry="5"
+        :width="50"
+        :height="NODE_MARGIN_Y / 3"
+        stroke="none"
+        fill="blue"
+      />
+    </g>
   </SvgCanvas>
   <div class="scale-tool">
     <ScaleToolBox
@@ -81,18 +99,20 @@
 
 <script>
 import Vue from 'vue'
-import { INTERVAL_CLICK, INTERVAL_DOUBLE_CLICK } from '@/constants'
+import { INTERVAL_CLICK, INTERVAL_DOUBLE_CLICK, NODE_MARGIN_X, NODE_MARGIN_Y } from '@/constants'
 import {
   calcPositions,
   getUpdatedNodesWhenDeleteNode,
   getUpdatedNodesWhenCreateChildNode,
   getUpdatedNodesWhenCreateBrotherdNode,
-  getUpdatedNodesWhenFitClosestParent
+  getUpdatedNodesWhenFitClosestParent,
+  getParentKey
 } from '@/utils/model'
 import { getCoveredRectangle } from '@/utils/geometry'
 import * as canvasUtils from '@/utils/canvas'
 
 import SvgCanvas from '@/components/atoms/svg/SvgCanvas'
+import SvgRectangle from '@/components/atoms/svg/SvgRectangle'
 import SvgTextRectangle from '@/components/molecules/svg/SvgTextRectangle'
 import SvgConnector from '@/components/molecules/svg/SvgConnector'
 import FloatTextInput from '@/components/molecules/FloatTextInput'
@@ -102,6 +122,7 @@ import ScaleToolBox from '@/components/molecules/ScaleToolBox'
 export default {
   components: {
     SvgCanvas,
+    SvgRectangle,
     SvgTextRectangle,
     SvgConnector,
     FloatTextInput,
@@ -122,7 +143,8 @@ export default {
     editingText: '',
     editMenuTarget: null,
 
-    adjustParentWithMovingTimer: null
+    adjustParentWithMovingTimer: null,
+    insertInformationOfMovingNodes: null
   }),
   props: {
     width: {
@@ -148,6 +170,7 @@ export default {
     })
   },
   computed: {
+    NODE_MARGIN_Y () { return NODE_MARGIN_Y },
     MIN_SCALE_RATE () { return -10 },
     MAX_SCALE_RATE () { return 25 },
     canvasHeight () {
@@ -220,6 +243,52 @@ export default {
         })
       })
       return ret
+    },
+    connectorOfMovingNodes () {
+      const info = this.insertInformationOfMovingNodes
+      if (!info) {
+        return
+      }
+      const movingKey = Object.keys(this.movingNodePositions)[0]
+      const parentNode = this.nodes[info.parentKey]
+      if (parentNode.children[info.order] === movingKey) {
+        return
+      }
+      const parentPosition = this.nodePositions[info.parentKey]
+      const parentSize = this.nodeSizes[info.parentKey]
+      const start = {
+        sx: parentPosition.x + parentSize.width,
+        sy: parentPosition.y + parentSize.height / 2
+      }
+      if (parentNode.children.length === 0) {
+        return Object.assign({}, start, {
+          ex: start.sx + NODE_MARGIN_X,
+          ey: start.sy
+        })
+      }
+      let order = info.order
+      const movingTargetIndex = parentNode.children.indexOf(movingKey)
+      if (movingTargetIndex !== -1) {
+        if (movingTargetIndex < order) {
+          order++
+        }
+      }
+      if (parentNode.children.length > order) {
+        const youngerBrotherKey = parentNode.children[order]
+        const youngerBrotherPosition = this.nodePositions[youngerBrotherKey]
+        return Object.assign({}, start, {
+          ex: youngerBrotherPosition.x,
+          ey: youngerBrotherPosition.y - NODE_MARGIN_Y / 2
+        })
+      } else {
+        const elderBrotherKey = parentNode.children[order - 1]
+        const elderBrotherPosition = this.nodePositions[elderBrotherKey]
+        const elderBrotherSize = this.nodeSizes[elderBrotherKey]
+        return Object.assign({}, start, {
+          ex: elderBrotherPosition.x,
+          ey: elderBrotherPosition.y + elderBrotherSize.height + NODE_MARGIN_Y / 2
+        })
+      }
     }
   },
   watch: {
@@ -313,19 +382,31 @@ export default {
       }
     },
     canvasCursorUp (e) {
+      this.adjustParentWithMoving(true)
       this.beforeMoveP = null
       this.movingNodePositions = {}
     },
-    adjustParentWithMoving () {
+    adjustParentWithMoving (commit) {
       if (this.movingNodeCount > 0) {
+        const targetKey = Object.keys(this.movingNodePositions)[0]
         const positions = Object.assign({}, this.nodePositions, this.movingNodePositions)
         const nodes = getUpdatedNodesWhenFitClosestParent({
           nodes: this.nodes,
           sizes: this.nodeSizes,
           positions,
-          targetKey: Object.keys(this.movingNodePositions)[0]
+          targetKey
         })
-        this.$emit('updateNodes', nodes)
+        const newParentKey = getParentKey({ nodes, childKey: targetKey })
+        const newParentNode = nodes[newParentKey]
+        this.insertInformationOfMovingNodes = {
+          parentKey: newParentKey,
+          order: newParentNode.children.indexOf(targetKey)
+        }
+
+        if (commit) {
+          this.$emit('updateNodes', nodes)
+          this.insertInformationOfMovingNodes = null
+        }
       }
     },
     clearSelect () {
@@ -395,6 +476,9 @@ export default {
   .mind-node.moving-copy {
     opacity: 0.5;
     pointer-events: none;
+  }
+  .inserting-marker {
+    opacity: 0.5;
   }
   .node-text-input {
     position: absolute;
