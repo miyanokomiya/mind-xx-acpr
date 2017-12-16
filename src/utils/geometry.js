@@ -44,3 +44,33 @@ export function getCoveredRectangle ({ positions, sizes }) {
     height: recS.height
   }
 }
+
+export function getCenterOfRectangle (rectangle) {
+  return {
+    x: rectangle.x + rectangle.width / 2,
+    y: rectangle.y + rectangle.height / 2
+  }
+}
+
+export function getDistance (p1, p2) {
+  return Math.pow(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2), 1 / 2)
+}
+
+export function getClosestRectangle ({ rectangles, target }) {
+  const keys = Object.keys(rectangles)
+  if (keys.length === 0) {
+    return null
+  }
+  let ret = null
+  let minD = Number.POSITIVE_INFINITY
+  const targetCenter = getCenterOfRectangle(target)
+  keys.forEach(key => {
+    const center = getCenterOfRectangle(rectangles[key])
+    const d = getDistance(center, targetCenter)
+    if (d < minD) {
+      ret = key
+      minD = d
+    }
+  })
+  return ret
+}

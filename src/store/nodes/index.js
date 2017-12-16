@@ -6,7 +6,7 @@ export default {
   namespaced: true,
   state: {
     nodes: {
-      root: { x: 0, y: 0, text: '', children: [] }
+      root: { text: '', children: [] }
     },
     selectedNodes: {}
   },

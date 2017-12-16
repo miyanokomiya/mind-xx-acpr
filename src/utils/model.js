@@ -4,6 +4,8 @@ import {
   NODE_ADDITIONAL_MARGIN_X_RATE
 } from '@/constants'
 
+import * as geometry from './geometry'
+
 export const createNode = obj =>
   Object.assign(
     {},
@@ -180,4 +182,105 @@ export function getUpdatedNodesWhenDeleteNode ({ nodes, deleteKey }) {
     updatedNodes[parentKey] = nextParentNode
   }
   return updatedNodes
+}
+
+export function copyNode (node) {
+  return Object.assign({}, node, {
+    children: node.children.concat()
+  })
+}
+
+export function getUpdatedNodesWhenChangeParent ({
+  nodes,
+  targetKey,
+  newParentKey,
+  order = 0
+}) {
+  // exit current familly
+  const currentParentKey = getParentKey({ nodes, childKey: targetKey })
+  const updatedCurrentParent = copyNode(nodes[currentParentKey])
+  const currentChildIndex = updatedCurrentParent.children.indexOf(targetKey)
+  updatedCurrentParent.children.splice(currentChildIndex, 1)
+  if (currentParentKey === newParentKey) {
+    if (order <= currentChildIndex) {
+      updatedCurrentParent.children.splice(order, 0, targetKey)
+    } else {
+      updatedCurrentParent.children.splice(order - 1, 0, targetKey)
+    }
+    return Object.assign({}, nodes, {
+      [currentParentKey]: updatedCurrentParent
+    })
+  } else {
+    const updatedParent = copyNode(nodes[newParentKey])
+    updatedParent.children.splice(order, 0, targetKey)
+    return Object.assign({}, nodes, {
+      [currentParentKey]: updatedCurrentParent,
+      [newParentKey]: updatedParent
+    })
+  }
+}
+
+export function getUpdatedNodesWhenFitClosestParent ({
+  nodes,
+  sizes,
+  positions,
+  targetKey
+}) {
+  const rectangles = {}
+  const familyKeys = getFamilyKeys({ nodes, parentKey: targetKey })
+  const keys = Object.keys(nodes)
+  keys.forEach(key => {
+    // remove root
+    if (!getParentKey({ nodes, childKey: key })) {
+      return
+    }
+    // remove family
+    if (familyKeys.indexOf(key) > -1) {
+      return
+    }
+    rectangles[key] = {
+      x: positions[key].x,
+      y: positions[key].y,
+      width: sizes[key].width,
+      height: sizes[key].height
+    }
+  })
+  const targetRectangle = rectangles[targetKey]
+  delete rectangles[targetKey]
+  const closestKey = geometry.getClosestRectangle({
+    rectangles,
+    target: targetRectangle
+  })
+
+  const closestNode = nodes[closestKey]
+  const closestRectangle = rectangles[closestKey]
+  const targetCenter = geometry.getCenterOfRectangle(targetRectangle)
+
+  const closestHasNoChildOrHasTarget =
+    closestNode.children.length === 0 ||
+    (closestNode.children.length === 1 &&
+      closestNode.children.indexOf(targetCenter) === -1)
+  if (
+    closestHasNoChildOrHasTarget &&
+    closestRectangle.x + closestRectangle.width < targetRectangle.x
+  ) {
+    // add child to closest node
+    return getUpdatedNodesWhenChangeParent({
+      nodes,
+      targetKey,
+      newParentKey: closestKey,
+      order: 0
+    })
+  } else {
+    const isElder =
+      targetCenter.y < closestRectangle.y + closestRectangle.height
+    const closestParentKey = getParentKey({ nodes, childKey: closestKey })
+    const childIndex = nodes[closestParentKey].children.indexOf(closestKey)
+    return getUpdatedNodesWhenChangeParent({
+      nodes,
+      targetKey,
+      newParentKey: closestParentKey,
+      order: childIndex + (isElder ? 0 : 1)
+    })
+  }
 }

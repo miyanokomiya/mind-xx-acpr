@@ -10,6 +10,8 @@
     @move="move"
     @zoom="zoom"
     @click="clearSelect"
+    @mousemove.native="canvasCursorMove"
+    @mouseup.native="canvasCursorUp"
   >
     <SvgConnector
       v-for="(connector, i) in connectors"
@@ -21,6 +23,7 @@
     />
     <SvgTextRectangle
       class="mind-node"
+      :class="{ 'moving-origin': movingNodePositions[key] }"
       v-for="(node, key) in nodes"
       :key="key"
       :ref="`node_${key}`"
@@ -31,18 +34,22 @@
       :stroke="selectedNodes[key] ? 'blue' : 'black'"
       fill="yellow"
       @calcSize="size => calcSize({key, size})"
-      @mousedown.native="nodeCursorDown"
+      @mousedown.native="e => nodeCursorDown(e, key)"
       @mouseup.native="nodeCursorUp(key)"
       @keyup.native="$emit('createNode', {from: key})"
     />
+    <SvgTextRectangle
+      class="mind-node moving-copy"
+      v-for="(positions, key) in movingNodePositions"
+      :key="`moving_${key}`"
+      :x="positions.x"
+      :y="positions.y"
+      :text="nodes[key].text"
+      :strokeWidth="selectedNodes[key] ? 2 : 1"
+      :stroke="selectedNodes[key] ? 'blue' : 'black'"
+      fill="yellow"
+    />
   </SvgCanvas>
-  <FloatTextInput
-    v-if="editTextTargetNode"
-    v-model="editingText"
-    :x="editTextTargetPosition.x"
-    :y="editTextTargetPosition.y"
-    @blur="doneEditText"
-  />
   <div class="scale-tool">
     <ScaleToolBox
       :min="MIN_SCALE_RATE"
@@ -53,8 +60,15 @@
       @clearZoom="clearZoom"
     />
   </div>
+  <FloatTextInput
+    v-if="editTextTargetNode && movingNodeCount === 0"
+    v-model="editingText"
+    :x="editTextTargetPosition.x"
+    :y="editTextTargetPosition.y"
+    @blur="doneEditText"
+  />
   <FloatEditMenu
-    v-if="editMenuTarget"
+    v-if="editMenuTarget && movingNodeCount === 0"
     :root="editMenuTarget === 'root'"
     :x="editMenuTargetPosition.x"
     :y="editMenuTargetPosition.y"
@@ -68,8 +82,15 @@
 <script>
 import Vue from 'vue'
 import { INTERVAL_CLICK, INTERVAL_DOUBLE_CLICK } from '@/constants'
-import { calcPositions, getUpdatedNodesWhenDeleteNode, getUpdatedNodesWhenCreateChildNode, getUpdatedNodesWhenCreateBrotherdNode } from '@/utils/model'
+import {
+  calcPositions,
+  getUpdatedNodesWhenDeleteNode,
+  getUpdatedNodesWhenCreateChildNode,
+  getUpdatedNodesWhenCreateBrotherdNode,
+  getUpdatedNodesWhenFitClosestParent
+} from '@/utils/model'
 import { getCoveredRectangle } from '@/utils/geometry'
+import * as canvasUtils from '@/utils/canvas'
 
 import SvgCanvas from '@/components/atoms/svg/SvgCanvas'
 import SvgTextRectangle from '@/components/molecules/svg/SvgTextRectangle'
@@ -94,10 +115,14 @@ export default {
     nodeCursorDownStart: 0,
     nodeCursorClickLast: 0,
     nodeSizes: {},
+    beforeMoveP: null,
+    movingNodePositions: {},
 
     editTextTarget: null,
     editingText: '',
-    editMenuTarget: null
+    editMenuTarget: null,
+
+    adjustParentWithMovingTimer: null
   }),
   props: {
     width: {
@@ -130,6 +155,9 @@ export default {
     },
     nodeCount () {
       return Object.keys(this.nodes).length
+    },
+    movingNodeCount () {
+      return Object.keys(this.movingNodePositions).length
     },
     scale: {
       get () {
@@ -235,8 +263,17 @@ export default {
         }
       })
     },
-    nodeCursorDown (e) {
+    nodeCursorDown (e, key) {
       this.nodeCursorDownStart = Date.now()
+      if (key !== 'root') {
+        const fromNodeDomP = canvasUtils.getPoint(e)
+        const nodeDomP = this.$refs.svgCanvas.svg2dom(this.nodePositions[key])
+        this.beforeMoveP = {
+          x: fromNodeDomP.x + nodeDomP.x,
+          y: fromNodeDomP.y + nodeDomP.y
+        }
+        Vue.set(this.movingNodePositions, key, Object.assign({}, this.nodePositions[key]))
+      }
     },
     nodeCursorUp (key) {
       const now = Date.now()
@@ -252,6 +289,43 @@ export default {
           this.toggleSelectNode(key)
         }
         this.nodeCursorClickLast = now
+      }
+    },
+    canvasCursorMove (e) {
+      if (this.beforeMoveP) {
+        const p = canvasUtils.getPoint(e)
+        const dif = this.$refs.svgCanvas.dom2svgScale({
+          x: this.beforeMoveP.x - p.x,
+          y: this.beforeMoveP.y - p.y
+        })
+        Object.keys(this.movingNodePositions).forEach(key => {
+          this.movingNodePositions[key].x -= dif.x
+          this.movingNodePositions[key].y -= dif.y
+        })
+        this.beforeMoveP = Object.assign({}, p)
+        // reduce frequency of swiching positions
+        if (!this.adjustParentWithMovingTimer) {
+          this.adjustParentWithMovingTimer = setTimeout(() => {
+            this.adjustParentWithMoving()
+            this.adjustParentWithMovingTimer = null
+          }, 250)
+        }
+      }
+    },
+    canvasCursorUp (e) {
+      this.beforeMoveP = null
+      this.movingNodePositions = {}
+    },
+    adjustParentWithMoving () {
+      if (this.movingNodeCount > 0) {
+        const positions = Object.assign({}, this.nodePositions, this.movingNodePositions)
+        const nodes = getUpdatedNodesWhenFitClosestParent({
+          nodes: this.nodes,
+          sizes: this.nodeSizes,
+          positions,
+          targetKey: Object.keys(this.movingNodePositions)[0]
+        })
+        this.$emit('updateNodes', nodes)
       }
     },
     clearSelect () {
@@ -314,6 +388,13 @@ export default {
   overflow: hidden;
   .mind-node {
     cursor: pointer;
+  }
+  .mind-node.moving-origin {
+    opacity: 0.2;
+  }
+  .mind-node.moving-copy {
+    opacity: 0.5;
+    pointer-events: none;
   }
   .node-text-input {
     position: absolute;

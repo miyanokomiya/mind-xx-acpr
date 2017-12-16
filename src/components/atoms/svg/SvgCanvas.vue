@@ -1,20 +1,16 @@
 <template>
 <div class="svg-canvas-wrapper" :style="{width: `${width}px`, height: `${height}px`}">
-  <!-- <div
-    :style="{width: `${1000}px`, height: `${1000}px`}"
-  > -->
-    <svg
-      :viewBox="`${x} ${y} ${canvasWidth} ${canvasHeight}`"
-      @mousedown="canvasCursorDown"
-      @mouseup="canvasCursorUp"
-      @mousemove.prevent="canvasCursorMove"
-      @mousedown.self="canvasCursorDownSelf"
-      @mouseup.self="canvasCursorUpSelf"
-      @mousewheel.prevent="canvasWheel"
-    >
-      <slot />
-    </svg>
-  <!-- </div> -->
+  <svg
+    :viewBox="`${x} ${y} ${canvasWidth} ${canvasHeight}`"
+    @mousedown="canvasCursorDown"
+    @mouseup="canvasCursorUp"
+    @mousemove.prevent="canvasCursorMove"
+    @mousedown.self="canvasCursorDownSelf"
+    @mouseup.self="canvasCursorUpSelf"
+    @mousewheel.prevent="canvasWheel"
+  >
+    <slot />
+  </svg>
 </div>
 </template>
 
@@ -24,12 +20,9 @@ import {INTERVAL_CLICK, INTERVAL_DOUBLE_CLICK} from '@/constants'
 
 export default {
   data: () => ({
-    startDownP: null,
     beforeMoveP: null,
     downStart: 0,
-    clickLast: 0,
-    movingTimer: 0,
-    progressiveMove: {x: 0, y: 0}
+    clickLast: 0
   }),
   props: {
     x: {
@@ -83,25 +76,17 @@ export default {
         y: p.y / this.scale
       }
     },
+    svg2dom (p, scale = this.scale) {
+      return {
+        x: (p.x - this.x) * scale,
+        y: (p.y - this.y) * scale
+      }
+    },
     canvasCursorDown (e) {
-      if (this.movingTimer > 0) {
-        clearTimeout(this.movingTimer)
-        this.movingTimer = 0
-      }
-      this.progressiveMove = {
-        x: 0,
-        y: 0
-      }
-      const p = canvasUtils.getPoint(e)
-      this.startDownP = Object.assign({}, p)
-      this.beforeMoveP = Object.assign({}, p)
+      // const p = canvasUtils.getPoint(e)
     },
     canvasCursorUp (e) {
-      // this.movingTimer = setTimeout(() => {
-      //   this.movingLoop()
-      // }, 25)
-      this.startDownP = null
-      this.beforeMoveP = null
+      // this.beforeMoveP = null
     },
     canvasCursorMove (e) {
       if (this.beforeMoveP) {
@@ -115,11 +100,6 @@ export default {
           y: this.y + dif.y
         })
         this.beforeMoveP = Object.assign({}, p)
-        this.progressiveMove = {
-          // limit too fast moving
-          x: Math.min(dif.x, 5),
-          y: Math.min(dif.y, 5)
-        }
       }
     },
     canvasWheel (e) {
@@ -132,9 +112,12 @@ export default {
     },
     canvasCursorDownSelf (e) {
       this.downStart = Date.now()
+      const p = canvasUtils.getPoint(e)
+      this.beforeMoveP = Object.assign({}, p)
     },
     canvasCursorUpSelf (e) {
       const now = Date.now()
+      this.beforeMoveP = null
       if (now - this.downStart < INTERVAL_CLICK) {
         if (now - this.clickLast < INTERVAL_DOUBLE_CLICK) {
           // double click
@@ -144,28 +127,6 @@ export default {
           this.$emit('click', e)
         }
         this.clickLast = now
-      }
-    },
-    movingLoop () {
-      if (this.movingTimer > 0) {
-        const dif = this.progressiveMove
-        this.$emit('move', {
-          x: this.x + dif.x,
-          y: this.y + dif.y
-        })
-        dif.x *= 0.98
-        dif.y *= 0.98
-        if (Math.abs(dif.x) + Math.abs(dif.y) > 1) {
-          this.movingTimer = setTimeout(() => {
-            this.movingLoop()
-          }, 25)
-        } else {
-          this.movingTimer = 0
-          this.progressiveMove = {
-            x: 0,
-            y: 0
-          }
-        }
       }
     },
     getPostionAfterChangeScale (nextScale) {

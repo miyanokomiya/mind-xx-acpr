@@ -488,4 +488,74 @@ describe('utils/model', () => {
       })
     })
   })
+
+  describe('copyNode', () => {
+    const origin = modelUtils.createNode()
+    it('should get complete copy', () => {
+      const copy = modelUtils.copyNode(origin)
+      expect(copy).toMatchObject(origin)
+    })
+    it('should do deep clone', () => {
+      const copy = modelUtils.copyNode(origin)
+      expect(copy).not.toBe(origin)
+      expect(copy.children).not.toBe(origin.children)
+    })
+  })
+
+  describe('getUpdatedNodesWhenChangeParent', () => {
+    const a = modelUtils.createNode({
+      children: ['b', 'e']
+    })
+    const b = modelUtils.createNode({
+      children: ['c', 'd']
+    })
+    const c = modelUtils.createNode()
+    const d = modelUtils.createNode()
+    const e = modelUtils.createNode()
+    const nodes = { a, b, c, d, e }
+    it('should get correct nodes, pattern 1', () => {
+      const updatedNodes = modelUtils.getUpdatedNodesWhenChangeParent({
+        nodes,
+        targetKey: 'c',
+        newParentKey: 'a',
+        order: 1
+      })
+      expect(updatedNodes).toMatchObject({
+        a: Object.assign({}, a, {
+          children: ['b', 'c', 'e']
+        }),
+        b: Object.assign({}, b, {
+          children: ['d']
+        }),
+        c,
+        d,
+        e
+      })
+    })
+    it('should get correct nodes, pattern 2', () => {
+      const updatedNodes = modelUtils.getUpdatedNodesWhenChangeParent({
+        nodes,
+        targetKey: 'e',
+        newParentKey: 'd',
+        order: 1
+      })
+      expect(updatedNodes).toMatchObject({
+        a: Object.assign({}, a, {
+          children: ['b']
+        }),
+        b,
+        c,
+        d: Object.assign({}, d, {
+          children: ['e']
+        }),
+        e
+      })
+    })
+  })
+
+  // describe('getUpdatedNodesWhenFitClosestParent', () => {
+  //   it('', () => {
+
+  //   })
+  // })
 })
