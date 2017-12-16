@@ -27,8 +27,8 @@
       :x="nodePositions[key].x"
       :y="nodePositions[key].y"
       :text="node.text"
-      :strokeWidth="selectedKeys[key] ? 2 : 1"
-      :stroke="selectedKeys[key] ? 'blue' : 'black'"
+      :strokeWidth="selectedNodes[key] ? 2 : 1"
+      :stroke="selectedNodes[key] ? 'blue' : 'black'"
       fill="yellow"
       @calcSize="size => calcSize({key, size})"
       @mousedown.native="nodeCursorDown"
@@ -93,7 +93,6 @@ export default {
     scaleRate: 0,
     nodeCursorDownStart: 0,
     nodeCursorClickLast: 0,
-    selectedKeys: {},
     nodeSizes: {},
 
     editTextTarget: null,
@@ -110,6 +109,10 @@ export default {
       default: 400
     },
     nodes: {
+      type: Object,
+      default: () => ({})
+    },
+    selectedNodes: {
       type: Object,
       default: () => ({})
     }
@@ -242,7 +245,7 @@ export default {
           // double click
           this.editTextTarget = key
           this.editingText = this.nodes[key].text
-          Vue.set(this.selectedKeys, key, true)
+          this.selectNode(key)
           this.editMenuTarget = null
         } else {
           // single click
@@ -252,28 +255,26 @@ export default {
       }
     },
     clearSelect () {
-      this.selectedKeys = {}
+      this.$emit('clearSelect')
       this.editTextTarget = null
       this.editMenuTarget = null
       this.editingText = null
     },
     selectNode (key) {
-      this.selectedKeys = {
+      this.$emit('setSelectedNodes', {
         [key]: true
-      }
+      })
       this.editMenuTarget = key
     },
     toggleSelectNode (key) {
-      if (this.selectedKeys[key]) {
+      if (this.selectedNodes[key]) {
         this.clearSelect()
       } else {
         this.selectNode(key)
       }
     },
     readyEditText (key) {
-      this.selectedKeys = {
-        [key]: true
-      }
+      this.selectNode(key)
       this.editTextTarget = key
       this.editingText = this.nodes[key] ? this.nodes[key].text : ''
       this.editMenuTarget = null
@@ -310,6 +311,7 @@ export default {
 .map-canvas-wrapper {
   position: relative;
   display: inline-block;
+  overflow: hidden;
   .mind-node {
     cursor: pointer;
   }

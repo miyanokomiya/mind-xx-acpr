@@ -3,7 +3,10 @@
     :width="canvasWidth"
     :height="canvasHeight"
     :nodes="nodes"
-    @updateNode="nodes => updateNodes({ nodes })"
+    :selectedNodes="selectedNodes"
+    @updateNodes="nodes => updateNodes({ nodes })"
+    @setSelectedNodes="selectedNodes => setSelectedNodes({ selectedNodes })"
+    @clearSelect="clearSelect"
   />
 </template>
 
@@ -25,7 +28,8 @@ export default {
       leftDrawer: layoutsGetterTypes.LEFT_DRAWER
     }),
     ...mapGetters('nodes', {
-      nodes: nodesGetterTypes.NODES
+      nodes: nodesGetterTypes.NODES,
+      selectedNodes: nodesGetterTypes.SELECTED_NODES
     }),
     canvasWidth () {
       return this.$window.width >= 1264 && this.leftDrawer ? this.$window.width - 300 - 20 : this.$window.width - 20
@@ -37,7 +41,8 @@ export default {
   methods: {
     ...mapActions('nodes', {
       updateNodes: nodesActionTypes.UPDATE_NODES,
-      updateSelectedNodes: nodesActionTypes.UPDATE_SELECTED_NODES
+      setSelectedNodes: nodesActionTypes.SET_SELECTED_NODES,
+      clearSelect: nodesActionTypes.CLEAR_SELECT
     })
   }
 }

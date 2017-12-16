@@ -17,6 +17,12 @@ const methods = {
   },
   createNode (createNodes) {
     this.nodes = Object.assign({}, this.nodes, createNodes)
+  },
+  setSelectedNodes (selectedNodes) {
+    this.selectedNodes = selectedNodes
+  },
+  clearSelect () {
+    this.selectedNodes = {}
   }
 }
 
@@ -33,8 +39,11 @@ storiesOf('organisms/MapCanvas', module)
         <div>
           <MapCanvas
             :nodes="nodes"
+            :selectedNodes="selectedNodes"
             @updateNodes="updateNodes"
             @createNode="createNode"
+            @setSelectedNodes="setSelectedNodes"
+            @clearSelect="clearSelect"
           />
         </div>
       </v-app>
@@ -46,7 +55,8 @@ storiesOf('organisms/MapCanvas', module)
           b: createNode({ text: 'bbbbbbbbbbbbbbbbbbbbbbbbb' }),
           c: createNode({ text: 'cccc' }),
           d: createNode({ text: 'dddd' })
-        }
+        },
+        selectedNodes: {}
       }),
       methods
     }
@@ -61,9 +71,11 @@ storiesOf('organisms/MapCanvas', module)
             :width="600"
             :height="500"
             :nodes="nodes"
-            :selectKeys="selectKeys"
+            :selectedNodes="selectedNodes"
             @updateNodes="updateNodes"
             @createNode="createNode"
+            @setSelectedNodes="setSelectedNodes"
+            @clearSelect="clearSelect"
           />
         </div>
       </v-app>
@@ -117,7 +129,7 @@ storiesOf('organisms/MapCanvas', module)
           'key_0.7776011738601232': { text: '', children: [] },
           'key_0.6229181115748166': { text: '', children: [] }
         },
-        selectKeys: {}
+        selectedNodes: {}
       }),
       methods
     }

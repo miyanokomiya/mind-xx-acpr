@@ -27,4 +27,21 @@ describe('store/nodes/mutations', () => {
       })
     })
   })
+  describe('SET_SELECTED_NODES', () => {
+    it('should set correct [selectedNodes]', () => {
+      const state = {
+        selectedNodes: {}
+      }
+      mutations[mutationTypes.SET_SELECTED_NODES](state, {
+        selectedNodes: {
+          a: true
+        }
+      })
+      expect(state).toMatchObject({
+        selectedNodes: {
+          a: true
+        }
+      })
+    })
+  })
 })
