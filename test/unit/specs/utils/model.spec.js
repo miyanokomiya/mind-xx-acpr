@@ -558,4 +558,97 @@ describe('utils/model', () => {
 
   //   })
   // })
+
+  describe('getNodeFrom', () => {
+    const a = modelUtils.createNode({
+      children: ['b']
+    })
+    const b = modelUtils.createNode({
+      children: ['c', 'd', 'e']
+    })
+    const c = modelUtils.createNode()
+    const d = modelUtils.createNode()
+    const e = modelUtils.createNode()
+    const nodes = { a, b, c, d, e }
+    it('should get correct key, left, has a parent', () => {
+      const res = modelUtils.getNodeFrom({
+        nodes,
+        to: 'left',
+        targetKey: 'b'
+      })
+      expect(res).toBe('a')
+    })
+    it('should get correct key, left, has no parent', () => {
+      const res = modelUtils.getNodeFrom({
+        nodes,
+        to: 'left',
+        targetKey: 'a'
+      })
+      expect(res).toBe(null)
+    })
+    it('should get correct key, right, has children', () => {
+      const res = modelUtils.getNodeFrom({
+        nodes,
+        to: 'right',
+        targetKey: 'b'
+      })
+      expect(res).toBe('c')
+    })
+    it('should get correct key, right, has no children', () => {
+      const res = modelUtils.getNodeFrom({
+        nodes,
+        to: 'right',
+        targetKey: 'e'
+      })
+      expect(res).toBe(null)
+    })
+    it('should get correct key, down, has no brothers', () => {
+      const res = modelUtils.getNodeFrom({
+        nodes,
+        to: 'down',
+        targetKey: 'b'
+      })
+      expect(res).toBe('b')
+    })
+    it('should get correct key, down, has younger brothers', () => {
+      const res = modelUtils.getNodeFrom({
+        nodes,
+        to: 'down',
+        targetKey: 'c'
+      })
+      expect(res).toBe('d')
+    })
+    it('should get correct key, down, has brothers, but has no younger brothers', () => {
+      const res = modelUtils.getNodeFrom({
+        nodes,
+        to: 'down',
+        targetKey: 'e'
+      })
+      expect(res).toBe('c')
+    })
+    it('should get correct key, up, has no brothers', () => {
+      const res = modelUtils.getNodeFrom({
+        nodes,
+        to: 'up',
+        targetKey: 'b'
+      })
+      expect(res).toBe('b')
+    })
+    it('should get correct key, up, has elder brothers', () => {
+      const res = modelUtils.getNodeFrom({
+        nodes,
+        to: 'up',
+        targetKey: 'd'
+      })
+      expect(res).toBe('c')
+    })
+    it('should get correct key, up, has brothers, but has no elder brothers', () => {
+      const res = modelUtils.getNodeFrom({
+        nodes,
+        to: 'up',
+        targetKey: 'c'
+      })
+      expect(res).toBe('e')
+    })
+  })
 })

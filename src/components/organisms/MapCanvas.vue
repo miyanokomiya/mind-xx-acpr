@@ -1,5 +1,14 @@
 <template>
-<div class="map-canvas-wrapper">
+<div
+  class="map-canvas-wrapper"
+  style="outline: none;"
+  tabindex="1"
+  @keyup.enter="keyupEnter"
+  @keyup.up="moveSelect('up')"
+  @keyup.down="moveSelect('down')"
+  @keyup.left="moveSelect('left')"
+  @keyup.right="moveSelect('right')"
+>
   <SvgCanvas
     ref="svgCanvas"
     :x="x"
@@ -106,7 +115,8 @@ import {
   getUpdatedNodesWhenCreateChildNode,
   getUpdatedNodesWhenCreateBrotherdNode,
   getUpdatedNodesWhenFitClosestParent,
-  getParentKey
+  getParentKey,
+  getNodeFrom
 } from '@/utils/model'
 import { getCoveredRectangle } from '@/utils/geometry'
 import * as canvasUtils from '@/utils/canvas'
@@ -447,6 +457,9 @@ export default {
       this.clearSelect()
     },
     createNode (brother = false) {
+      if (this.editMenuTarget === 'root') {
+        brother = false
+      }
       const key = `key_${Math.random()}`
       const updatedNodes = brother ? getUpdatedNodesWhenCreateBrotherdNode({ nodes: this.nodes, brotherKey: this.editMenuTarget, newKey: key }) : getUpdatedNodesWhenCreateChildNode({ nodes: this.nodes, parentKey: this.editMenuTarget, newKey: key })
       this.$emit('updateNodes', updatedNodes)
@@ -459,6 +472,20 @@ export default {
     },
     calcSize ({key, size}) {
       Vue.set(this.nodeSizes, key, size)
+    },
+    keyupEnter () {
+      if (this.editMenuTarget && !this.editTextTarget) {
+        this.createNode(true)
+      }
+    },
+    moveSelect (to) {
+      const targetKey = this.editMenuTarget
+      if (targetKey) {
+        const toKey = getNodeFrom({ nodes: this.nodes, to, targetKey })
+        if (toKey) {
+          this.selectNode(toKey)
+        }
+      }
     }
   }
 }

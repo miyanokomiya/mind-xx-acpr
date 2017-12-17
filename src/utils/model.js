@@ -300,3 +300,36 @@ export function getUpdatedNodesWhenFitClosestParent ({
     })
   }
 }
+
+export function getNodeFrom ({ nodes, to, targetKey }) {
+  let ret = null
+  const baseKey = targetKey
+  const baseNode = nodes[baseKey]
+  if (baseNode) {
+    if (to === 'right') {
+      if (baseNode.children.length > 0) {
+        ret = baseNode.children[0]
+      }
+    } else {
+      const parentKey = getParentKey({ nodes, childKey: baseKey })
+      if (parentKey) {
+        const parentNode = nodes[parentKey]
+        if (to === 'left') {
+          ret = parentKey
+        }
+        if (to === 'down') {
+          const index =
+            (parentNode.children.indexOf(baseKey) + 1) %
+            parentNode.children.length
+          ret = parentNode.children[index]
+        }
+        if (to === 'up') {
+          let index = parentNode.children.indexOf(baseKey) - 1
+          index = index < 0 ? parentNode.children.length - 1 : index
+          ret = parentNode.children[index]
+        }
+      }
+    }
+  }
+  return ret
+}
