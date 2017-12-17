@@ -1,6 +1,6 @@
 <template>
   <path stroke="black" stroke-width="1" fill="none"
-    :d="`M ${sx} ${sy} Q ${qx1} ${qy1} ${cx} ${cy} T ${ex} ${ey}`"
+    :d="`M ${sx} ${sy} Q ${qx} ${qy} ${ex} ${ey}`"
   />
 </template>
 
@@ -25,11 +25,11 @@ export default {
     }
   },
   computed: {
-    qx1 () {
-      return this.sx * 3 / 10 + this.cx * 7 / 10
+    qx () {
+      return this.sx * 7 / 10 + this.ex * 3 / 10
     },
-    qy1 () {
-      return this.sy * 7 / 10 + this.cy * 3 / 10
+    qy () {
+      return this.sy * 1 / 10 + this.ey * 9 / 10
     },
     cx () {
       return (this.sx + this.ex) / 2
