@@ -1,6 +1,7 @@
 <template>
 <div class="svg-canvas-wrapper" :style="{width: `${width}px`, height: `${height}px`}">
   <svg
+    font-family="sans-serif"
     :viewBox="`${x} ${y} ${canvasWidth} ${canvasHeight}`"
     @mousedown="canvasCursorDown"
     @mouseup="canvasCursorUp"

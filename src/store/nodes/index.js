@@ -2,11 +2,14 @@ import actions from './actions'
 import mutations from './mutations'
 import getters from './getters'
 
+import { ROOT_NODE } from '@/constants'
+import { createNode } from '@/utils/model'
+
 export default {
   namespaced: true,
   state: {
     nodes: {
-      root: { text: '', children: [] }
+      [ROOT_NODE]: createNode()
     },
     selectedNodes: {}
   },

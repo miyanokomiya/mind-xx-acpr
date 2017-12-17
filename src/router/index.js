@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import AppCommonLayout from '@/components/pages/AppCommonLayout'
 import MapCanvasContainer from '@/components/containers/MapCanvasContainer'
 import MapHelpDialog from '@/components/organisms/MapHelpDialog'
+import MapLeftDrawerContainer from '@/components/containers/MapLeftDrawerContainer'
 
 Vue.use(Router)
 
@@ -20,7 +21,8 @@ export default new Router({
           name: 'Root',
           components: {
             content: MapCanvasContainer,
-            headerIconList: MapHelpDialog
+            headerIconList: MapHelpDialog,
+            leftDrawer: MapLeftDrawerContainer
           }
         }
       ]

@@ -101,7 +101,7 @@
   />
   <FloatEditMenu
     v-if="editMenuTarget && movingNodeCount === 0"
-    :root="editMenuTarget === 'root'"
+    :root="editMenuTarget === ROOT_NODE"
     :x="editMenuTargetPosition.x"
     :y="editMenuTargetPosition.y"
     @addBrother="createNode(true)"
@@ -113,7 +113,7 @@
 
 <script>
 import Vue from 'vue'
-import { INTERVAL_CLICK, INTERVAL_DOUBLE_CLICK, NODE_MARGIN_X, NODE_MARGIN_Y } from '@/constants'
+import { INTERVAL_CLICK, INTERVAL_DOUBLE_CLICK, NODE_MARGIN_X, NODE_MARGIN_Y, ROOT_NODE } from '@/constants'
 import {
   calcPositions,
   getUpdatedNodesWhenDeleteNode,
@@ -173,7 +173,10 @@ export default {
     },
     nodes: {
       type: Object,
-      default: () => ({})
+      required: true,
+      validator: (value) => {
+        return (ROOT_NODE in value)
+      }
     },
     selectedNodes: {
       type: Object,
@@ -186,6 +189,7 @@ export default {
     })
   },
   computed: {
+    ROOT_NODE () { return ROOT_NODE },
     NODE_MARGIN_Y () { return NODE_MARGIN_Y },
     MIN_SCALE_RATE () { return -10 },
     MAX_SCALE_RATE () { return 25 },
@@ -237,7 +241,7 @@ export default {
       Object.keys(this.nodes).forEach(k => {
         sizes[k] = this.nodeSizes[k] || Object.assign({}, size)
       })
-      return calcPositions({nodes: this.nodes, sizes, parentKey: 'root'})
+      return calcPositions({nodes: this.nodes, sizes, parentKey: ROOT_NODE})
     },
     connectors () {
       const ret = {}
@@ -325,32 +329,37 @@ export default {
       this.y = y
     },
     clearZoom () {
-      const coveredRec = getCoveredRectangle({
-        positions: this.nodePositions,
-        sizes: this.nodeSizes
-      })
-      // TODO brush better margin
-      const margin = Math.max(100 - Math.pow(this.nodeCount, 2), 20)
-      coveredRec.x -= margin
-      coveredRec.y -= margin
-      coveredRec.width += margin * 2
-      coveredRec.height += margin * 2
-      const widthRate = this.width / coveredRec.width
-      const heightRate = this.height / coveredRec.height
-      this.scale = Math.min(widthRate, heightRate)
-      this.$nextTick().then(() => {
-        this.x = coveredRec.x
-        this.y = coveredRec.y
-        if (widthRate < heightRate) {
-          this.y -= (this.height / this.scale - coveredRec.height) / 2
-        } else {
-          this.x -= (this.width / this.scale - coveredRec.width) / 2
-        }
+      return new Promise(resolve => {
+        const coveredRec = getCoveredRectangle({
+          positions: this.nodePositions,
+          sizes: this.nodeSizes
+        })
+        // TODO brush better margin
+        const margin = Math.max(100 - Math.pow(this.nodeCount, 2), 20)
+        coveredRec.x -= margin
+        coveredRec.y -= margin
+        coveredRec.width += margin * 2
+        coveredRec.height += margin * 2
+        const widthRate = this.width / coveredRec.width
+        const heightRate = this.height / coveredRec.height
+        this.scale = Math.min(widthRate, heightRate)
+        this.$nextTick().then(() => {
+          this.x = coveredRec.x
+          this.y = coveredRec.y
+          if (widthRate < heightRate) {
+            this.y -= (this.height / this.scale - coveredRec.height) / 2
+          } else {
+            this.x -= (this.width / this.scale - coveredRec.width) / 2
+          }
+          this.$nextTick().then(() => {
+            resolve()
+          })
+        })
       })
     },
     nodeCursorDown (e, key) {
       this.nodeCursorDownStart = Date.now()
-      if (key !== 'root') {
+      if (key !== ROOT_NODE) {
         const fromNodeDomP = canvasUtils.getPoint(e)
         const nodeDomP = this.$refs.svgCanvas.svg2dom(this.nodePositions[key])
         this.beforeMoveP = {
@@ -465,7 +474,7 @@ export default {
       }
     },
     createNode (brother = false) {
-      if (this.editMenuTarget === 'root') {
+      if (this.editMenuTarget === ROOT_NODE) {
         brother = false
       }
       const key = `key_${Math.random()}`
