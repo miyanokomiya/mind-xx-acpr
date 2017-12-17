@@ -24,12 +24,13 @@
       <span class="hidden-xs-only">MindXXACPR</span>
     </v-toolbar-title>
     <div class="d-flex align-center" style="margin-left: auto">
-      <v-btn icon>
+      <router-view name="headerIconList"/>
+      <!-- <v-btn icon>
         <v-icon>apps</v-icon>
       </v-btn>
       <v-btn icon>
         <v-icon>notifications</v-icon>
-      </v-btn>
+      </v-btn> -->
       <v-btn icon large>
         <v-avatar size="32px" tile>
           <img

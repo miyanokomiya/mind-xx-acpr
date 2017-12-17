@@ -651,4 +651,65 @@ describe('utils/model', () => {
       expect(res).toBe('e')
     })
   })
+
+  describe('getUpdatedNodesWhenChangeChildOrder', () => {
+    const a = modelUtils.createNode({
+      children: ['b']
+    })
+    const b = modelUtils.createNode({
+      children: ['c', 'd', 'e']
+    })
+    const c = modelUtils.createNode()
+    const d = modelUtils.createNode()
+    const e = modelUtils.createNode()
+    const nodes = { a, b, c, d, e }
+    it('should get correct parent node, +1', () => {
+      const res = modelUtils.getUpdatedNodesWhenChangeChildOrder({
+        nodes,
+        childKey: 'c',
+        dif: 1
+      })
+      expect(res).toMatchObject({
+        b: Object.assign({}, b, {
+          children: ['d', 'c', 'e']
+        })
+      })
+    })
+    it('should get correct parent node, +1, from last', () => {
+      const res = modelUtils.getUpdatedNodesWhenChangeChildOrder({
+        nodes,
+        childKey: 'e',
+        dif: 1
+      })
+      expect(res).toMatchObject({
+        b: Object.assign({}, b, {
+          children: ['e', 'c', 'd']
+        })
+      })
+    })
+    it('should get correct parent node, -1', () => {
+      const res = modelUtils.getUpdatedNodesWhenChangeChildOrder({
+        nodes,
+        childKey: 'e',
+        dif: -1
+      })
+      expect(res).toMatchObject({
+        b: Object.assign({}, b, {
+          children: ['c', 'e', 'd']
+        })
+      })
+    })
+    it('should get correct parent node, -1, from 0', () => {
+      const res = modelUtils.getUpdatedNodesWhenChangeChildOrder({
+        nodes,
+        childKey: 'c',
+        dif: -1
+      })
+      expect(res).toMatchObject({
+        b: Object.assign({}, b, {
+          children: ['d', 'e', 'c']
+        })
+      })
+    })
+  })
 })

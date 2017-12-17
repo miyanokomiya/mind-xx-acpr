@@ -1,13 +1,18 @@
 <template>
 <div
   class="map-canvas-wrapper"
-  style="outline: none;"
   tabindex="1"
-  @keyup.enter="keyupEnter"
-  @keyup.up="moveSelect('up')"
-  @keyup.down="moveSelect('down')"
-  @keyup.left="moveSelect('left')"
-  @keyup.right="moveSelect('right')"
+  ref="svgCanvasWrapper"
+  @keydown.enter.exact="keydownEnter"
+  @keydown.enter.shift.exact="keydownShiftEnter"
+  @keydown.up.exact="moveSelect('up')"
+  @keydown.down.exact="moveSelect('down')"
+  @keydown.left.exact="moveSelect('left')"
+  @keydown.right.exact="moveSelect('right')"
+  @keydown.up.shift.exact="changeOrder(true)"
+  @keydown.down.shift.exact="changeOrder()"
+  @keydown.space.exact="keydownSpace"
+  @keydown.delete.exact="keydownDelete"
 >
   <SvgCanvas
     ref="svgCanvas"
@@ -45,7 +50,6 @@
       @calcSize="size => calcSize({key, size})"
       @mousedown.native="e => nodeCursorDown(e, key)"
       @mouseup.native="nodeCursorUp(key)"
-      @keyup.native="$emit('createNode', {from: key})"
     />
     <SvgTextRectangle
       class="mind-node moving-copy"
@@ -93,6 +97,7 @@
     :x="editTextTargetPosition.x"
     :y="editTextTargetPosition.y"
     @blur="doneEditText"
+    @done="doneEditText"
   />
   <FloatEditMenu
     v-if="editMenuTarget && movingNodeCount === 0"
@@ -116,7 +121,8 @@ import {
   getUpdatedNodesWhenCreateBrotherdNode,
   getUpdatedNodesWhenFitClosestParent,
   getParentKey,
-  getNodeFrom
+  getNodeFrom,
+  getUpdatedNodesWhenChangeChildOrder
 } from '@/utils/model'
 import { getCoveredRectangle } from '@/utils/geometry'
 import * as canvasUtils from '@/utils/canvas'
@@ -361,10 +367,7 @@ export default {
       if (now - this.nodeCursorDownStart < INTERVAL_CLICK) {
         if (now - this.nodeCursorClickLast < INTERVAL_DOUBLE_CLICK) {
           // double click
-          this.editTextTarget = key
-          this.editingText = this.nodes[key].text
-          this.selectNode(key)
-          this.editMenuTarget = null
+          this.readyEditText(key)
         } else {
           // single click
           this.toggleSelectNode(key)
@@ -423,8 +426,8 @@ export default {
     },
     clearSelect () {
       this.$emit('clearSelect')
-      this.editTextTarget = null
       this.editMenuTarget = null
+      this.editTextTarget = null
       this.editingText = null
     },
     selectNode (key) {
@@ -447,14 +450,19 @@ export default {
       this.editMenuTarget = null
     },
     doneEditText () {
-      const target = this.nodes[this.editTextTarget]
-      const next = Object.assign({}, target, {
-        text: this.editingText
-      })
-      this.$emit('updateNodes', {
-        [this.editTextTarget]: next
-      })
-      this.clearSelect()
+      if (this.editTextTarget) {
+        const target = this.nodes[this.editTextTarget]
+        const next = Object.assign({}, target, {
+          text: this.editingText
+        })
+        this.$emit('updateNodes', {
+          [this.editTextTarget]: next
+        })
+        this.editMenuTarget = this.editTextTarget
+        this.editTextTarget = null
+        this.editingText = null
+        this.$refs.svgCanvasWrapper.focus()
+      }
     },
     createNode (brother = false) {
       if (this.editMenuTarget === 'root') {
@@ -466,17 +474,32 @@ export default {
       this.readyEditText(key)
     },
     deleteNode () {
-      const updatedNodes = getUpdatedNodesWhenDeleteNode({ nodes: this.nodes, deleteKey: this.editMenuTarget })
-      this.$emit('updateNodes', updatedNodes)
+      if (this.editMenuTarget) {
+        const updatedNodes = getUpdatedNodesWhenDeleteNode({ nodes: this.nodes, deleteKey: this.editMenuTarget })
+        this.$emit('updateNodes', updatedNodes)
+      }
       this.clearSelect()
     },
     calcSize ({key, size}) {
       Vue.set(this.nodeSizes, key, size)
     },
-    keyupEnter () {
+    keydownEnter () {
       if (this.editMenuTarget && !this.editTextTarget) {
         this.createNode(true)
       }
+    },
+    keydownShiftEnter () {
+      if (this.editMenuTarget && !this.editTextTarget) {
+        this.createNode()
+      }
+    },
+    keydownSpace () {
+      if (this.editMenuTarget) {
+        this.readyEditText(this.editMenuTarget)
+      }
+    },
+    keydownDelete () {
+      this.deleteNode()
     },
     moveSelect (to) {
       const targetKey = this.editMenuTarget
@@ -486,6 +509,14 @@ export default {
           this.selectNode(toKey)
         }
       }
+    },
+    changeOrder (up = false) {
+      const updatedNodes = getUpdatedNodesWhenChangeChildOrder({
+        nodes: this.nodes,
+        childKey: this.editMenuTarget,
+        dif: up ? -1 : 1
+      })
+      this.$emit('updateNodes', updatedNodes)
     }
   }
 }
@@ -496,6 +527,7 @@ export default {
   position: relative;
   display: inline-block;
   overflow: hidden;
+  outline: none;
   .mind-node {
     cursor: pointer;
   }

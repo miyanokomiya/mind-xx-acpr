@@ -333,3 +333,21 @@ export function getNodeFrom ({ nodes, to, targetKey }) {
   }
   return ret
 }
+
+export function getUpdatedNodesWhenChangeChildOrder ({ nodes, childKey, dif }) {
+  const parentKey = getParentKey({ nodes, childKey })
+  if (!parentKey) {
+    return null
+  }
+  const parentNode = nodes[parentKey]
+  const currentIndex = parentNode.children.indexOf(childKey)
+  let nextIndex = currentIndex + dif
+  nextIndex = nextIndex < 0 ? parentNode.children.length - 1 : nextIndex
+  nextIndex %= parentNode.children.length
+  const updatedParent = copyNode(parentNode)
+  updatedParent.children.splice(currentIndex, 1)
+  updatedParent.children.splice(nextIndex, 0, childKey)
+  return Object.assign({}, nodes, {
+    [parentKey]: updatedParent
+  })
+}

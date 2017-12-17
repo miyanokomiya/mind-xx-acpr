@@ -10,6 +10,7 @@
     autofocus
     :rows="3"
     v-model="_value"
+    @keyup.esc="$emit('done')"
     @blur="e => $emit('blur', e)"
   />
 </div>
