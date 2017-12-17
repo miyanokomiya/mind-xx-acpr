@@ -22,7 +22,7 @@
   />
   <SvgText
     v-if="!text"
-    text="-XXACPR-"
+    text=""
     :x="textX"
     :y="textY + textHeight"
     :font-size="fontSize"
