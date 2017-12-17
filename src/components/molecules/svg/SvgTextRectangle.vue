@@ -13,7 +13,7 @@
   />
   <SvgText
     v-for="(l, i) in lines"
-    :ref="`line_${i}`"
+    :ref="`svgLine`"
     :key="i"
     :x="textX"
     :y="textY + textHeight * (i + 1)"
@@ -113,9 +113,9 @@ export default {
     },
     getBBox () {
       const width = this.lines.reduce((p, c, i) => {
-        const width = this.$refs[`line_${i}`][0].getBBox().width
+        const width = this.$refs[`svgLine`][i].getBBox().width
         return Math.max(p, width)
-      }, 50)
+      }, 46)
       return {
         width: width + this.textPaddingX * 2,
         height: this.height

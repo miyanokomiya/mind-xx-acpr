@@ -53,7 +53,7 @@ storiesOf('organisms/MapCanvas', module)
           root,
           a: createNode({ text: 'aaaa', children: ['d'] }),
           b: createNode({ text: 'bbbbbbbbbbbbbbbbbbbbbbbbb' }),
-          c: createNode({ text: 'cccc' }),
+          c: createNode({ text: 'cccccccccccccccccccccccccccccccccccc' }),
           d: createNode({ text: 'dddd' })
         },
         selectedNodes: {}
