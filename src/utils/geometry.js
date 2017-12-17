@@ -74,3 +74,84 @@ export function getClosestRectangle ({ rectangles, target }) {
   })
   return ret
 }
+
+export function getRelationBetweenRectangleAndPoint ({ rectangle, point }) {
+  if (point.x < rectangle.x) {
+    if (point.y < rectangle.y) {
+      return 1
+    } else if (point.y > rectangle.y + rectangle.height) {
+      return 7
+    } else {
+      return 4
+    }
+  } else if (point.x > rectangle.x + rectangle.width) {
+    if (point.y < rectangle.y) {
+      return 3
+    } else if (point.y > rectangle.y + rectangle.height) {
+      return 9
+    } else {
+      return 6
+    }
+  } else {
+    if (point.y < rectangle.y) {
+      return 2
+    } else if (point.y > rectangle.y + rectangle.height) {
+      return 8
+    } else {
+      return 5
+    }
+  }
+}
+
+export function getDistanceBetweenRectangleAndPoint ({ rectangle, point }) {
+  const relation = getRelationBetweenRectangleAndPoint({ rectangle, point })
+  switch (relation) {
+    case 1:
+      return getDistance(point, { x: rectangle.x, y: rectangle.y })
+    case 2:
+      return rectangle.y - point.y
+    case 3:
+      return getDistance(point, {
+        x: rectangle.x + rectangle.width,
+        y: rectangle.y
+      })
+    case 4:
+      return rectangle.x - point.x
+    case 5:
+      return 0
+    case 6:
+      return point.x - (rectangle.x + rectangle.width)
+    case 7:
+      return getDistance(point, {
+        x: rectangle.x,
+        y: rectangle.y + rectangle.height
+      })
+    case 8:
+      return point.y - (rectangle.y + rectangle.height)
+    case 9:
+      return getDistance(point, {
+        x: rectangle.x + rectangle.width,
+        y: rectangle.y + rectangle.height
+      })
+  }
+}
+
+export function getClosestRectangleByPoint ({ rectangles, point }) {
+  const keys = Object.keys(rectangles)
+  if (keys.length === 0) {
+    return null
+  }
+  let ret = null
+  let minD = Number.POSITIVE_INFINITY
+  keys.forEach(key => {
+    const d = getDistanceBetweenRectangleAndPoint({
+      rectangle: rectangles[key],
+      point
+    })
+    if (d < minD) {
+      ret = key
+      minD = d
+    }
+  })
+  return ret
+}

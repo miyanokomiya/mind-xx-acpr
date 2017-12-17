@@ -123,4 +123,185 @@ describe('utils/geometry', () => {
       expect(res).toBe('d')
     })
   })
+
+  describe('getRelationBetweenRectangleAndPoint', () => {
+    const rectangle = {
+      x: 0,
+      y: 0,
+      width: 10,
+      height: 10
+    }
+    it('should calc correct relation, 1', () => {
+      const point = { x: -5, y: -5 }
+      const res = geometry.getRelationBetweenRectangleAndPoint({
+        rectangle,
+        point
+      })
+      expect(res).toBe(1)
+    })
+    it('should calc correct relation, 2', () => {
+      const point = { x: 5, y: -5 }
+      const res = geometry.getRelationBetweenRectangleAndPoint({
+        rectangle,
+        point
+      })
+      expect(res).toBe(2)
+    })
+    it('should calc correct relation, 3', () => {
+      const point = { x: 15, y: -5 }
+      const res = geometry.getRelationBetweenRectangleAndPoint({
+        rectangle,
+        point
+      })
+      expect(res).toBe(3)
+    })
+    it('should calc correct relation, 4', () => {
+      const point = { x: -5, y: 5 }
+      const res = geometry.getRelationBetweenRectangleAndPoint({
+        rectangle,
+        point
+      })
+      expect(res).toBe(4)
+    })
+    it('should calc correct relation, 5', () => {
+      const point = { x: 8, y: 3 }
+      const res = geometry.getRelationBetweenRectangleAndPoint({
+        rectangle,
+        point
+      })
+      expect(res).toBe(5)
+    })
+    it('should calc correct relation, 6', () => {
+      const point = { x: 15, y: 5 }
+      const res = geometry.getRelationBetweenRectangleAndPoint({
+        rectangle,
+        point
+      })
+      expect(res).toBe(6)
+    })
+    it('should calc correct relation, 7', () => {
+      const point = { x: -5, y: 15 }
+      const res = geometry.getRelationBetweenRectangleAndPoint({
+        rectangle,
+        point
+      })
+      expect(res).toBe(7)
+    })
+    it('should calc correct relation, 8', () => {
+      const point = { x: 5, y: 15 }
+      const res = geometry.getRelationBetweenRectangleAndPoint({
+        rectangle,
+        point
+      })
+      expect(res).toBe(8)
+    })
+    it('should calc correct relation, 9', () => {
+      const point = { x: 15, y: 15 }
+      const res = geometry.getRelationBetweenRectangleAndPoint({
+        rectangle,
+        point
+      })
+      expect(res).toBe(9)
+    })
+  })
+
+  describe('getDistanceBetweenRectangleAndPoint', () => {
+    const rectangle = {
+      x: 0,
+      y: 0,
+      width: 10,
+      height: 10
+    }
+    it('should calc correct distance, 1', () => {
+      const point = { x: -3, y: -4 }
+      const res = geometry.getDistanceBetweenRectangleAndPoint({
+        rectangle,
+        point
+      })
+      expect(res).toBe(5)
+    })
+    it('should calc correct distance, 2', () => {
+      const point = { x: 5, y: -4 }
+      const res = geometry.getDistanceBetweenRectangleAndPoint({
+        rectangle,
+        point
+      })
+      expect(res).toBe(4)
+    })
+    it('should calc correct distance, 3', () => {
+      const point = { x: 13, y: -4 }
+      const res = geometry.getDistanceBetweenRectangleAndPoint({
+        rectangle,
+        point
+      })
+      expect(res).toBe(5)
+    })
+    it('should calc correct distance, 4', () => {
+      const point = { x: -3, y: 5 }
+      const res = geometry.getDistanceBetweenRectangleAndPoint({
+        rectangle,
+        point
+      })
+      expect(res).toBe(3)
+    })
+    it('should calc correct distance, 5', () => {
+      const point = { x: 3, y: 4 }
+      const res = geometry.getDistanceBetweenRectangleAndPoint({
+        rectangle,
+        point
+      })
+      expect(res).toBe(0)
+    })
+    it('should calc correct distance, 6', () => {
+      const point = { x: 13, y: 4 }
+      const res = geometry.getDistanceBetweenRectangleAndPoint({
+        rectangle,
+        point
+      })
+      expect(res).toBe(3)
+    })
+    it('should calc correct distance, 7', () => {
+      const point = { x: -3, y: 14 }
+      const res = geometry.getDistanceBetweenRectangleAndPoint({
+        rectangle,
+        point
+      })
+      expect(res).toBe(5)
+    })
+    it('should calc correct distance, 8', () => {
+      const point = { x: 3, y: 14 }
+      const res = geometry.getDistanceBetweenRectangleAndPoint({
+        rectangle,
+        point
+      })
+      expect(res).toBe(4)
+    })
+    it('should calc correct distance, 9', () => {
+      const point = { x: 13, y: 14 }
+      const res = geometry.getDistanceBetweenRectangleAndPoint({
+        rectangle,
+        point
+      })
+      expect(res).toBe(5)
+    })
+  })
+
+  describe('getClosestRectangleByPoint', () => {
+    const rectangles = {
+      a: { x: 0, y: 0, width: 10, height: 10 },
+      b: { x: 10, y: 10, width: 20, height: 20 },
+      c: { x: 20, y: 20, width: 30, height: 30 },
+      d: { x: 30, y: 30, width: 40, height: 40 }
+    }
+    it('should calc correct key, pattern 1', () => {
+      const point = { x: 35, y: 20 }
+      const res = geometry.getClosestRectangleByPoint({ rectangles, point })
+      expect(res).toBe('c')
+    })
+    it('should calc correct key, pattern 2', () => {
+      const point = { x: 15, y: 8 }
+      const res = geometry.getClosestRectangleByPoint({ rectangles, point })
+      expect(res).toBe('b')
+    })
+  })
 })

@@ -261,9 +261,12 @@ export function getUpdatedNodesWhenFitClosestParent ({
   }
 
   delete rectangles[targetKey]
-  const closestKey = geometry.getClosestRectangle({
+  const closestKey = geometry.getClosestRectangleByPoint({
     rectangles,
-    target: targetRectangle
+    point: {
+      x: targetRectangle.x + targetRectangle.width / 4,
+      y: targetRectangle.y + targetRectangle.height / 2
+    }
   })
 
   const closestNode = nodes[closestKey]
