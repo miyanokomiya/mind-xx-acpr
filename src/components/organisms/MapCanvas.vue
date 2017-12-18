@@ -98,6 +98,7 @@
     :y="editTextTargetPosition.y"
     @blur="doneEditText"
     @done="doneEditText"
+    @mousewheel.native.prevent="mousewheel"
   />
   <FloatEditMenu
     v-if="editMenuTarget && movingNodeCount === 0"
@@ -107,6 +108,7 @@
     @addBrother="createNode(true)"
     @addChild="createNode(false)"
     @delete="deleteNode"
+    @mousewheel.native.prevent="mousewheel"
   />
 </div>
 </template>
@@ -195,8 +197,13 @@ export default {
     NODE_MARGIN_Y () { return NODE_MARGIN_Y },
     MIN_SCALE_RATE () { return -10 },
     MAX_SCALE_RATE () { return 25 },
-    canvasHeight () {
-      return this.$window.height - 64
+    viewRectangle () {
+      return {
+        x: this.x,
+        y: this.y,
+        width: this.width / this.scale,
+        height: this.height / this.scale
+      }
     },
     nodeCount () {
       return Object.keys(this.nodes).length
@@ -397,6 +404,33 @@ export default {
         [key]: true
       })
       this.editMenuTarget = key
+      this.moveViewToSelectedNode(key)
+    },
+    moveViewToSelectedNode (key) {
+      const node = this.nodes[key]
+      if (!node) {
+        return
+      }
+      const position = this.nodePositions[key]
+      const size = this.nodeSizes[key]
+      if (size) {
+        const rec = this.viewRectangle
+        const margin = 30 / this.scale
+        if (size.width > rec.width || position.x < rec.x + margin) {
+          this.x = position.x - margin
+        } else if (position.x + size.width > rec.x + rec.width - margin) {
+          this.x = position.x + size.width + margin - rec.width
+        }
+        if (size.height > rec.height || position.y < rec.y + margin) {
+          this.y = position.y - margin
+        } else if (position.y + size.height > rec.y + rec.height - margin) {
+          this.y = position.y + size.height + margin - rec.height
+        }
+      } else {
+        this.$nextTick().then(() => {
+          this.moveViewToSelectedNode(key)
+        })
+      }
     },
     toggleSelectNode (key) {
       if (this.selectedNodes[key]) {
@@ -433,7 +467,9 @@ export default {
       const key = `key_${Math.random()}`
       const updatedNodes = brother ? getUpdatedNodesWhenCreateBrotherdNode({ nodes: this.nodes, brotherKey: this.editMenuTarget, newKey: key }) : getUpdatedNodesWhenCreateChildNode({ nodes: this.nodes, parentKey: this.editMenuTarget, newKey: key })
       this.$emit('updateNodes', updatedNodes)
-      this.readyEditText(key)
+      this.$nextTick().then(() => {
+        this.readyEditText(key)
+      })
     },
     deleteNode () {
       if (this.editMenuTarget) {
@@ -479,6 +515,9 @@ export default {
         dif: up ? -1 : 1
       })
       this.$emit('updateNodes', updatedNodes)
+    },
+    mousewheel (e) {
+      this.$refs.svgCanvas.canvasWheel(e)
     }
   }
 }
