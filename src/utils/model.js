@@ -378,3 +378,52 @@ export function getConnectors ({ nodes, positions, sizes }) {
   })
   return ret
 }
+
+export function getBetterConnector ({
+  nodes,
+  sizes,
+  positions,
+  targetKey,
+  newParentKey,
+  newChildOrder
+}) {
+  const parentNode = nodes[newParentKey]
+  if (parentNode.children[newChildOrder] === targetKey) {
+    return
+  }
+  const parentPosition = positions[newParentKey]
+  const parentSize = sizes[newParentKey]
+  const start = {
+    sx: parentPosition.x + parentSize.width,
+    sy: parentPosition.y + parentSize.height / 2
+  }
+  if (parentNode.children.length === 0) {
+    return Object.assign({}, start, {
+      ex: start.sx + NODE_MARGIN_X,
+      ey: start.sy
+    })
+  }
+  let order = newChildOrder
+  const movingTargetIndex = parentNode.children.indexOf(targetKey)
+  if (movingTargetIndex !== -1) {
+    if (movingTargetIndex < order) {
+      order++
+    }
+  }
+  if (parentNode.children.length > order) {
+    const youngerBrotherKey = parentNode.children[order]
+    const youngerBrotherPosition = positions[youngerBrotherKey]
+    return Object.assign({}, start, {
+      ex: youngerBrotherPosition.x,
+      ey: youngerBrotherPosition.y - NODE_MARGIN_Y / 2
+    })
+  } else {
+    const elderBrotherKey = parentNode.children[order - 1]
+    const elderBrotherPosition = positions[elderBrotherKey]
+    const elderBrotherSize = sizes[elderBrotherKey]
+    return Object.assign({}, start, {
+      ex: elderBrotherPosition.x,
+      ey: elderBrotherPosition.y + elderBrotherSize.height + NODE_MARGIN_Y / 2
+    })
+  }
+}

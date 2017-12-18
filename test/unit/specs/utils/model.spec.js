@@ -759,4 +759,95 @@ describe('utils/model', () => {
       })
     })
   })
+
+  describe('getBetterConnector', () => {
+    const a = modelUtils.createNode({
+      children: ['b', 'e']
+    })
+    const b = modelUtils.createNode({
+      children: ['c', 'd']
+    })
+    const c = modelUtils.createNode()
+    const d = modelUtils.createNode()
+    const e = modelUtils.createNode()
+    const nodes = { a, b, c, d, e }
+    const positions = {
+      a: { x: 0, y: 0 },
+      b: { x: 50, y: 50 },
+      c: { x: 100, y: -50 },
+      d: { x: 100, y: 500 },
+      e: { x: 50, y: 500 }
+    }
+    const sizes = {
+      a: { width: 10, height: 20 },
+      b: { width: 30, height: 50 },
+      c: { width: 50, height: 20 },
+      d: { width: 40, height: 40 },
+      e: { width: 40, height: 40 }
+    }
+    it('should get expected connectos, newChildOrder = elderest', () => {
+      const res = modelUtils.getBetterConnector({
+        nodes,
+        sizes,
+        positions,
+        targetKey: 'd',
+        newParentKey: 'a',
+        newChildOrder: 0
+      })
+      expect(res).toMatchObject({
+        sx: 10,
+        sy: 10,
+        ex: 50,
+        ey: 50 - NODE_MARGIN_Y / 2
+      })
+    })
+    it('should get expected connectos, newChildOrder is neither elderest nor youngest', () => {
+      const res = modelUtils.getBetterConnector({
+        nodes,
+        sizes,
+        positions,
+        targetKey: 'd',
+        newParentKey: 'a',
+        newChildOrder: 1
+      })
+      expect(res).toMatchObject({
+        sx: 10,
+        sy: 10,
+        ex: 50,
+        ey: 500 - NODE_MARGIN_Y / 2
+      })
+    })
+    it('should get expected connectos, newChildOrder is youngest', () => {
+      const res = modelUtils.getBetterConnector({
+        nodes,
+        sizes,
+        positions,
+        targetKey: 'd',
+        newParentKey: 'a',
+        newChildOrder: 2
+      })
+      expect(res).toMatchObject({
+        sx: 10,
+        sy: 10,
+        ex: 50,
+        ey: 500 + 40 + NODE_MARGIN_Y / 2
+      })
+    })
+    it('should get expected connectos, newParent has no children', () => {
+      const res = modelUtils.getBetterConnector({
+        nodes,
+        sizes,
+        positions,
+        targetKey: 'e',
+        newParentKey: 'c',
+        newChildOrder: 0
+      })
+      expect(res).toMatchObject({
+        sx: 150,
+        sy: -40,
+        ex: 150 + NODE_MARGIN_X,
+        ey: -40
+      })
+    })
+  })
 })

@@ -113,7 +113,7 @@
 
 <script>
 import Vue from 'vue'
-import { INTERVAL_CLICK, INTERVAL_DOUBLE_CLICK, NODE_MARGIN_X, NODE_MARGIN_Y, ROOT_NODE } from '@/constants'
+import { INTERVAL_CLICK, INTERVAL_DOUBLE_CLICK, NODE_MARGIN_Y, ROOT_NODE } from '@/constants'
 import {
   calcPositions,
   getUpdatedNodesWhenDeleteNode,
@@ -123,7 +123,8 @@ import {
   getParentKey,
   getNodeFrom,
   getUpdatedNodesWhenChangeChildOrder,
-  getConnectors
+  getConnectors,
+  getBetterConnector
 } from '@/utils/model'
 import { getCoveredRectangle } from '@/utils/geometry'
 import * as canvasUtils from '@/utils/canvas'
@@ -253,45 +254,14 @@ export default {
         return
       }
       const movingKey = Object.keys(this.movingNodePositions)[0]
-      const parentNode = this.nodes[info.parentKey]
-      if (parentNode.children[info.order] === movingKey) {
-        return
-      }
-      const parentPosition = this.nodePositions[info.parentKey]
-      const parentSize = this.nodeSizes[info.parentKey]
-      const start = {
-        sx: parentPosition.x + parentSize.width,
-        sy: parentPosition.y + parentSize.height / 2
-      }
-      if (parentNode.children.length === 0) {
-        return Object.assign({}, start, {
-          ex: start.sx + NODE_MARGIN_X,
-          ey: start.sy
-        })
-      }
-      let order = info.order
-      const movingTargetIndex = parentNode.children.indexOf(movingKey)
-      if (movingTargetIndex !== -1) {
-        if (movingTargetIndex < order) {
-          order++
-        }
-      }
-      if (parentNode.children.length > order) {
-        const youngerBrotherKey = parentNode.children[order]
-        const youngerBrotherPosition = this.nodePositions[youngerBrotherKey]
-        return Object.assign({}, start, {
-          ex: youngerBrotherPosition.x,
-          ey: youngerBrotherPosition.y - NODE_MARGIN_Y / 2
-        })
-      } else {
-        const elderBrotherKey = parentNode.children[order - 1]
-        const elderBrotherPosition = this.nodePositions[elderBrotherKey]
-        const elderBrotherSize = this.nodeSizes[elderBrotherKey]
-        return Object.assign({}, start, {
-          ex: elderBrotherPosition.x,
-          ey: elderBrotherPosition.y + elderBrotherSize.height + NODE_MARGIN_Y / 2
-        })
-      }
+      return getBetterConnector({
+        nodes: this.nodes,
+        sizes: this.nodeSizes,
+        positions: this.nodePositions,
+        targetKey: movingKey,
+        newParentKey: info.parentKey,
+        newChildOrder: info.order
+      })
     }
   },
   watch: {
