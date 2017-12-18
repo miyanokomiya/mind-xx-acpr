@@ -798,7 +798,7 @@ describe('utils/model', () => {
         sx: 10,
         sy: 10,
         ex: 50,
-        ey: 50 - NODE_MARGIN_Y / 2
+        ey: 50 - NODE_MARGIN_Y
       })
     })
     it('should get expected connectos, newChildOrder is neither elderest nor youngest', () => {
@@ -814,7 +814,7 @@ describe('utils/model', () => {
         sx: 10,
         sy: 10,
         ex: 50,
-        ey: 500 - NODE_MARGIN_Y / 2
+        ey: 300
       })
     })
     it('should get expected connectos, newChildOrder is youngest', () => {
@@ -830,7 +830,7 @@ describe('utils/model', () => {
         sx: 10,
         sy: 10,
         ex: 50,
-        ey: 500 + 40 + NODE_MARGIN_Y / 2
+        ey: 500 + 40 + NODE_MARGIN_Y
       })
     })
     it('should get expected connectos, newParent has no children', () => {

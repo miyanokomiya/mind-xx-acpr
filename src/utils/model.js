@@ -289,7 +289,7 @@ export function getUpdatedNodesWhenFitClosestParent ({
     })
   } else {
     const isElder =
-      targetCenter.y < closestRectangle.y + closestRectangle.height
+      targetCenter.y < closestRectangle.y + closestRectangle.height / 2
     const closestParentKey = getParentKey({ nodes, childKey: closestKey })
     const childIndex = nodes[closestParentKey].children.indexOf(closestKey)
     return getUpdatedNodesWhenChangeParent({
@@ -413,17 +413,29 @@ export function getBetterConnector ({
   if (parentNode.children.length > order) {
     const youngerBrotherKey = parentNode.children[order]
     const youngerBrotherPosition = positions[youngerBrotherKey]
-    return Object.assign({}, start, {
-      ex: youngerBrotherPosition.x,
-      ey: youngerBrotherPosition.y - NODE_MARGIN_Y / 2
-    })
+    if (order > 0) {
+      const elderBrotherKey = parentNode.children[order - 1]
+      const elderBrotherPosition = positions[elderBrotherKey]
+      const elderBrotherSize = sizes[elderBrotherKey]
+      const elderBrotherBottom =
+        elderBrotherPosition.y + elderBrotherSize.height
+      return Object.assign({}, start, {
+        ex: youngerBrotherPosition.x,
+        ey: (youngerBrotherPosition.y + elderBrotherBottom) / 2
+      })
+    } else {
+      return Object.assign({}, start, {
+        ex: youngerBrotherPosition.x,
+        ey: youngerBrotherPosition.y - NODE_MARGIN_Y
+      })
+    }
   } else {
     const elderBrotherKey = parentNode.children[order - 1]
     const elderBrotherPosition = positions[elderBrotherKey]
     const elderBrotherSize = sizes[elderBrotherKey]
     return Object.assign({}, start, {
       ex: elderBrotherPosition.x,
-      ey: elderBrotherPosition.y + elderBrotherSize.height + NODE_MARGIN_Y / 2
+      ey: elderBrotherPosition.y + elderBrotherSize.height + NODE_MARGIN_Y
     })
   }
 }
