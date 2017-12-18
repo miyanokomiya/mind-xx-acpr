@@ -426,7 +426,7 @@ export function getBetterConnector ({
     } else {
       return Object.assign({}, start, {
         ex: youngerBrotherPosition.x,
-        ey: youngerBrotherPosition.y - NODE_MARGIN_Y
+        ey: youngerBrotherPosition.y - NODE_MARGIN_Y / 2
       })
     }
   } else {
@@ -435,7 +435,7 @@ export function getBetterConnector ({
     const elderBrotherSize = sizes[elderBrotherKey]
     return Object.assign({}, start, {
       ex: elderBrotherPosition.x,
-      ey: elderBrotherPosition.y + elderBrotherSize.height + NODE_MARGIN_Y
+      ey: elderBrotherPosition.y + elderBrotherSize.height + NODE_MARGIN_Y / 2
     })
   }
 }
