@@ -351,3 +351,30 @@ export function getUpdatedNodesWhenChangeChildOrder ({ nodes, childKey, dif }) {
     [parentKey]: updatedParent
   })
 }
+
+export function getConnectors ({ nodes, positions, sizes }) {
+  const ret = {}
+  Object.keys(nodes).forEach(parentKey => {
+    const parent = nodes[parentKey]
+    const parentPosition = positions[parentKey]
+    const parentSize = sizes[parentKey]
+    parent.children.forEach(childKey => {
+      const childPosition = positions[childKey]
+      const childSize = sizes[childKey]
+      if (parentSize && childSize) {
+        const isChildLeftFromParent =
+          childPosition.x + childSize.width / 2 <
+          parentPosition.x + parentSize.width / 2
+        ret[`${parentKey}-${childKey}`] = {
+          sx: parentPosition.x + parentSize.width,
+          sy: parentPosition.y + parentSize.height / 2,
+          ex: isChildLeftFromParent
+            ? childPosition.x + childSize.width
+            : childPosition.x,
+          ey: childPosition.y + childSize.height / 2
+        }
+      }
+    })
+  })
+  return ret
+}

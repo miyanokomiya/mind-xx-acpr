@@ -712,4 +712,51 @@ describe('utils/model', () => {
       })
     })
   })
+
+  describe('getConnectors', () => {
+    const a = modelUtils.createNode({
+      children: ['b']
+    })
+    const b = modelUtils.createNode({
+      children: ['c', 'd']
+    })
+    const c = modelUtils.createNode()
+    const d = modelUtils.createNode()
+    const nodes = { a, b, c, d }
+    const positions = {
+      a: { x: 0, y: 0 },
+      b: { x: 50, y: 50 },
+      c: { x: -50, y: -50 },
+      d: { x: 100, y: 500 }
+    }
+    const sizes = {
+      a: { width: 10, height: 20 },
+      b: { width: 30, height: 50 },
+      c: { width: 50, height: 20 },
+      d: { width: 40, height: 40 }
+    }
+    it('should get correct connectors', () => {
+      const res = modelUtils.getConnectors({ nodes, positions, sizes })
+      expect(res).toMatchObject({
+        'a-b': {
+          sx: 10,
+          sy: 10,
+          ex: 50,
+          ey: 75
+        },
+        'b-c': {
+          sx: 80,
+          sy: 75,
+          ex: 0,
+          ey: -40
+        },
+        'b-d': {
+          sx: 80,
+          sy: 75,
+          ex: 100,
+          ey: 520
+        }
+      })
+    })
+  })
 })

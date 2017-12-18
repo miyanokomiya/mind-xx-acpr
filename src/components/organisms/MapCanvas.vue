@@ -122,7 +122,8 @@ import {
   getUpdatedNodesWhenFitClosestParent,
   getParentKey,
   getNodeFrom,
-  getUpdatedNodesWhenChangeChildOrder
+  getUpdatedNodesWhenChangeChildOrder,
+  getConnectors
 } from '@/utils/model'
 import { getCoveredRectangle } from '@/utils/geometry'
 import * as canvasUtils from '@/utils/canvas'
@@ -244,25 +245,7 @@ export default {
       return calcPositions({nodes: this.nodes, sizes, parentKey: ROOT_NODE})
     },
     connectors () {
-      const ret = {}
-      Object.keys(this.nodes).forEach(parentKey => {
-        const parent = this.nodes[parentKey]
-        const parentPosition = this.nodePositions[parentKey]
-        const parentSize = this.nodeSizes[parentKey]
-        parent.children.forEach(childKey => {
-          const childPosition = this.nodePositions[childKey]
-          const childSize = this.nodeSizes[childKey]
-          if (parentSize && childSize) {
-            ret[`${parentKey}-${childKey}`] = {
-              sx: parentPosition.x + parentSize.width,
-              sy: parentPosition.y + parentSize.height / 2,
-              ex: childPosition.x,
-              ey: childPosition.y + childSize.height / 2
-            }
-          }
-        })
-      })
-      return ret
+      return getConnectors({ nodes: this.nodes, positions: this.nodePositions, sizes: this.nodeSizes })
     },
     connectorOfMovingNodes () {
       const info = this.insertInformationOfMovingNodes
