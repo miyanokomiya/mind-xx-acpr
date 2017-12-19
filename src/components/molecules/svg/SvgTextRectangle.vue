@@ -113,7 +113,7 @@ export default {
     },
     getBBox () {
       const width = this.lines.reduce((p, c, i) => {
-        const width = this.$refs[`svgLine`][i].getBBox().width
+        const width = this.$refs['svgLine'][i].getBBox().width
         return Math.max(p, width)
       }, 46)
       return {

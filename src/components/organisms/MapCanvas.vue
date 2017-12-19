@@ -43,7 +43,7 @@
       :ref="`node_${key}`"
       :x="nodePositions[key].x"
       :y="nodePositions[key].y"
-      :text="node.text"
+      :text="key === editTextTarget ? editingText : node.text"
       :strokeWidth="selectedNodes[key] ? 2 : 1"
       :stroke="selectedNodes[key] ? 'blue' : 'black'"
       fill="yellow"
@@ -94,7 +94,6 @@
   <FloatTextInput
     v-if="editTextTargetNode && movingNodeCount === 0"
     v-model="editingText"
-    
     :x="editTextTargetPosition.x"
     :y="editTextTargetPosition.y"
     @blur="doneEditText"
@@ -207,7 +206,7 @@ export default {
       return NODE_MARGIN_Y
     },
     MIN_SCALE_RATE () {
-      return -10
+      return Math.min(Math.log(this.scaleCoveringAllNode) / Math.log(1.1) - 3, -5)
     },
     MAX_SCALE_RATE () {
       return 25
@@ -245,19 +244,10 @@ export default {
       return this.nodes[this.editTextTarget]
     },
     editTextTargetPosition () {
-      const position = this.nodePositions[this.editTextTarget]
-      return {
-        x: (position.x - this.x) * this.scale,
-        y: (position.y - this.y) * this.scale
-      }
+      return this.getFloatMenuPosition(this.editTextTarget, 120)
     },
     editMenuTargetPosition () {
-      const position = this.nodePositions[this.editMenuTarget]
-      const nodeHeight = this.$refs[`node_${this.editMenuTarget}`][0].height
-      return {
-        x: (position.x - this.x) * this.scale - 5,
-        y: (position.y - this.y) * this.scale + nodeHeight + 5
-      }
+      return this.getFloatMenuPosition(this.editMenuTarget, 80)
     },
     nodePositions () {
       const size = { width: 50, height: 20 }
@@ -288,6 +278,25 @@ export default {
         newParentKey: info.parentKey,
         newChildOrder: info.order
       })
+    },
+    rectangleCoveringAllNode () {
+      const coveredRec = getCoveredRectangle({
+        positions: this.nodePositions,
+        sizes: this.nodeSizes
+      })
+      // TODO brush better margin
+      const margin = Math.max(100 - Math.pow(this.nodeCount, 2), 20)
+      coveredRec.x -= margin
+      coveredRec.y -= margin
+      coveredRec.width += margin * 2
+      coveredRec.height += margin * 2
+      return coveredRec
+    },
+    scaleCoveringAllNode () {
+      const coveredRec = this.rectangleCoveringAllNode
+      const widthRate = this.width / coveredRec.width
+      const heightRate = this.height / coveredRec.height
+      return Math.min(widthRate, heightRate)
     }
   },
   watch: {
@@ -311,16 +320,7 @@ export default {
     },
     clearZoom () {
       return new Promise(resolve => {
-        const coveredRec = getCoveredRectangle({
-          positions: this.nodePositions,
-          sizes: this.nodeSizes
-        })
-        // TODO brush better margin
-        const margin = Math.max(100 - Math.pow(this.nodeCount, 2), 20)
-        coveredRec.x -= margin
-        coveredRec.y -= margin
-        coveredRec.width += margin * 2
-        coveredRec.height += margin * 2
+        const coveredRec = this.rectangleCoveringAllNode
         const widthRate = this.width / coveredRec.width
         const heightRate = this.height / coveredRec.height
         this.scale = Math.min(widthRate, heightRate)
@@ -425,9 +425,9 @@ export default {
         [key]: true
       })
       this.editMenuTarget = key
-      this.moveViewToSelectedNode(key)
+      this.moveViewToCoverSelectedNode(key)
     },
-    moveViewToSelectedNode (key) {
+    moveViewToCoverSelectedNode (key) {
       const node = this.nodes[key]
       if (!node) {
         return
@@ -445,11 +445,11 @@ export default {
         if (size.height > rec.height || position.y < rec.y + margin) {
           this.y = position.y - margin
         } else if (position.y + size.height > rec.y + rec.height - margin) {
-          this.y = position.y + size.height + margin - rec.height
+          this.y = position.y + size.height + margin * 3 - rec.height
         }
       } else {
         this.$nextTick().then(() => {
-          this.moveViewToSelectedNode(key)
+          this.moveViewToCoverSelectedNode(key)
         })
       }
     },
@@ -552,6 +552,21 @@ export default {
     },
     mousewheel (e) {
       this.$refs.svgCanvas.canvasWheel(e)
+    },
+    getFloatMenuPosition (key, bottom) {
+      const position = this.nodePositions[key]
+      const size = this.nodeSizes[key]
+      const viewBottom = (this.viewRectangle.y + this.viewRectangle.height - this.y) * this.scale
+      const nodeViewY = (position.y - this.y) * this.scale
+      const nodeViewBottom = (position.y - this.y + size.height) * this.scale
+      let y = Math.min(nodeViewBottom, viewBottom - bottom) + 5
+      y = Math.max(y, nodeViewY)
+      const viewLeft = (this.viewRectangle.x - this.x) * this.scale
+      const nodeViewX = (position.x - this.x) * this.scale
+      const nodeViewRight = (position.x + size.width - this.x) * this.scale
+      let x = Math.max(nodeViewX, viewLeft + 20) - 5
+      x = Math.min(x, nodeViewRight)
+      return { x, y }
     }
   }
 }
