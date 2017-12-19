@@ -94,6 +94,7 @@
   <FloatTextInput
     v-if="editTextTargetNode && movingNodeCount === 0"
     v-model="editingText"
+    
     :x="editTextTargetPosition.x"
     :y="editTextTargetPosition.y"
     @blur="doneEditText"
@@ -115,7 +116,12 @@
 
 <script>
 import Vue from 'vue'
-import { INTERVAL_CLICK, INTERVAL_DOUBLE_CLICK, NODE_MARGIN_Y, ROOT_NODE } from '@/constants'
+import {
+  INTERVAL_CLICK,
+  INTERVAL_DOUBLE_CLICK,
+  NODE_MARGIN_Y,
+  ROOT_NODE
+} from '@/constants'
 import {
   calcPositions,
   getUpdatedNodesWhenDeleteNode,
@@ -178,8 +184,8 @@ export default {
     nodes: {
       type: Object,
       required: true,
-      validator: (value) => {
-        return (ROOT_NODE in value)
+      validator: value => {
+        return ROOT_NODE in value
       }
     },
     selectedNodes: {
@@ -187,16 +193,25 @@ export default {
       default: () => ({})
     }
   },
+
   mounted () {
     this.$nextTick().then(() => {
       this.clearZoom()
     })
   },
   computed: {
-    ROOT_NODE () { return ROOT_NODE },
-    NODE_MARGIN_Y () { return NODE_MARGIN_Y },
-    MIN_SCALE_RATE () { return -10 },
-    MAX_SCALE_RATE () { return 25 },
+    ROOT_NODE () {
+      return ROOT_NODE
+    },
+    NODE_MARGIN_Y () {
+      return NODE_MARGIN_Y
+    },
+    MIN_SCALE_RATE () {
+      return -10
+    },
+    MAX_SCALE_RATE () {
+      return 25
+    },
     viewRectangle () {
       return {
         x: this.x,
@@ -250,10 +265,14 @@ export default {
       Object.keys(this.nodes).forEach(k => {
         sizes[k] = this.nodeSizes[k] || Object.assign({}, size)
       })
-      return calcPositions({nodes: this.nodes, sizes, parentKey: ROOT_NODE})
+      return calcPositions({ nodes: this.nodes, sizes, parentKey: ROOT_NODE })
     },
     connectors () {
-      return getConnectors({ nodes: this.nodes, positions: this.nodePositions, sizes: this.nodeSizes })
+      return getConnectors({
+        nodes: this.nodes,
+        positions: this.nodePositions,
+        sizes: this.nodeSizes
+      })
     },
     connectorOfMovingNodes () {
       const info = this.insertInformationOfMovingNodes
@@ -273,7 +292,9 @@ export default {
   },
   watch: {
     scale (from, to) {
-      const position = this.$refs.svgCanvas.getPostionAfterChangeScale(this.scale)
+      const position = this.$refs.svgCanvas.getPostionAfterChangeScale(
+        this.scale
+      )
       this.x = position.x
       this.y = position.y
     }
@@ -465,7 +486,17 @@ export default {
         brother = false
       }
       const key = `key_${Math.random()}`
-      const updatedNodes = brother ? getUpdatedNodesWhenCreateBrotherdNode({ nodes: this.nodes, brotherKey: this.editMenuTarget, newKey: key }) : getUpdatedNodesWhenCreateChildNode({ nodes: this.nodes, parentKey: this.editMenuTarget, newKey: key })
+      const updatedNodes = brother
+        ? getUpdatedNodesWhenCreateBrotherdNode({
+            nodes: this.nodes,
+            brotherKey: this.editMenuTarget,
+            newKey: key
+          })
+        : getUpdatedNodesWhenCreateChildNode({
+            nodes: this.nodes,
+            parentKey: this.editMenuTarget,
+            newKey: key
+          })
       this.$emit('updateNodes', updatedNodes)
       this.$nextTick().then(() => {
         this.readyEditText(key)
@@ -473,12 +504,15 @@ export default {
     },
     deleteNode () {
       if (this.editMenuTarget) {
-        const updatedNodes = getUpdatedNodesWhenDeleteNode({ nodes: this.nodes, deleteKey: this.editMenuTarget })
+        const updatedNodes = getUpdatedNodesWhenDeleteNode({
+          nodes: this.nodes,
+          deleteKey: this.editMenuTarget
+        })
         this.$emit('updateNodes', updatedNodes)
       }
       this.clearSelect()
     },
-    calcSize ({key, size}) {
+    calcSize ({ key, size }) {
       Vue.set(this.nodeSizes, key, size)
     },
     keydownEnter () {
