@@ -31,14 +31,22 @@
       <v-btn icon>
         <v-icon>notifications</v-icon>
       </v-btn> -->
-      <v-btn icon large>
-        <v-avatar size="32px" tile>
-          <img
-            src="https://vuetifyjs.com/static/doc-images/logo.svg"
-            alt="Vuetify"
-          >
+      <v-menu bottom left offset-y v-if="user">
+        <v-btn icon slot="activator" dark>
+          <v-avatar size="32px" tile>
+          <img :src="user.photoURL"/>
         </v-avatar>
-      </v-btn>
+        </v-btn>
+        <v-list>
+          <v-list-tile>
+            <v-list-tile-title>{{user.displayName}}</v-list-tile-title>
+          </v-list-tile>
+          <v-divider/>
+          <v-list-tile @click="signOut">
+            <v-list-tile-title>Sign out</v-list-tile-title>
+          </v-list-tile>
+        </v-list>
+      </v-menu>
     </div>
   </v-toolbar>
   <v-content ref="content">
@@ -54,6 +62,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import { getterTypes, actionTypes } from '@/store/layouts/types'
+import { getterTypes as userGetterTypes, actionTypes as userActionTypes } from '@/store/user/types'
 
 export default {
   data: () => ({
@@ -64,11 +73,17 @@ export default {
   computed: {
     ...mapGetters('layouts', {
       leftDrawer: getterTypes.LEFT_DRAWER
+    }),
+    ...mapGetters('user', {
+      user: userGetterTypes.USER
     })
   },
   methods: {
     ...mapActions('layouts', {
       setLeftDrawer: actionTypes.SET_LEFT_DRAWER
+    }),
+    ...mapActions('user', {
+      signOut: userActionTypes.SIGN_OUT
     })
   }
 }
