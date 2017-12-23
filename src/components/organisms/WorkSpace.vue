@@ -156,11 +156,7 @@ export default {
         const fileAuthority = this.fileAuthorities[fileKey]
         if (fileAuthority) {
           const authority = fileAuthority[uid]
-          if (authority instanceof Boolean) {
-            p[fileKey] = false
-          } else {
-            p[fileKey] = authority.write
-          }
+          p[fileKey] = authority.write
         } else {
           p[fileKey] = false
         }

@@ -211,11 +211,7 @@ export default {
     canWrite () {
       if (this.fileAuthority) {
         const authority = this.fileAuthority[this.user.uid]
-        if (authority instanceof Boolean) {
-          return false
-        } else {
-          return authority && authority.write
-        }
+        return authority && authority.write
       } else {
         return false
       }
