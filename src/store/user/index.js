@@ -10,7 +10,8 @@ export default {
       displayName: null,
       email: null,
       photoURL: null
-    }
+    },
+    authorityLoading: true
   },
   modules: {},
   actions,

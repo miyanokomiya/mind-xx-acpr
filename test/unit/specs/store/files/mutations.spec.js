@@ -27,4 +27,19 @@ describe('store/files/mutations', () => {
       })
     })
   })
+  describe('CLEAR_FILES', () => {
+    it('should make [files] empty Object', () => {
+      const state = {
+        files: {
+          a: { name: 'a' },
+          b: { name: 'b' },
+          c: { name: 'c' }
+        }
+      }
+      mutations[mutationTypes.CLEAR_FILES](state)
+      expect(state).toMatchObject({
+        files: {}
+      })
+    })
+  })
 })

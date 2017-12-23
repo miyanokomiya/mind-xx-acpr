@@ -5,7 +5,8 @@ describe('store/user/mutations', () => {
   describe('SET_USER', () => {
     it('should set correct user', () => {
       const state = {
-        user: null
+        user: null,
+        authorityLoading: true
       }
       mutations[mutationTypes.SET_USER](state, {
         uid: 'bbbb',
@@ -19,16 +20,39 @@ describe('store/user/mutations', () => {
           displayName: 'aaa',
           email: 'email',
           photoURL: 'photoURL'
-        }
+        },
+        authorityLoading: false
       })
     })
     it('should set null if arg is null', () => {
       const state = {
-        user: null
+        user: null,
+        authorityLoading: true
       }
       mutations[mutationTypes.SET_USER](state, null)
       expect(state).toMatchObject({
-        user: null
+        user: null,
+        authorityLoading: true
+      })
+    })
+  })
+  describe('SET_AUTHORITY_LOADING', () => {
+    it('should set true', () => {
+      const state = {
+        authorityLoading: false
+      }
+      mutations[mutationTypes.SET_AUTHORITY_LOADING](state, true)
+      expect(state).toMatchObject({
+        authorityLoading: true
+      })
+    })
+    it('should set false', () => {
+      const state = {
+        authorityLoading: true
+      }
+      mutations[mutationTypes.SET_AUTHORITY_LOADING](state, false)
+      expect(state).toMatchObject({
+        authorityLoading: false
       })
     })
   })

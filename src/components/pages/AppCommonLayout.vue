@@ -1,5 +1,5 @@
 <template>
-<v-app>
+<div>
   <v-navigation-drawer
     fixed
     clipped
@@ -51,12 +51,12 @@
   </v-toolbar>
   <v-content ref="content">
     <v-container fluid fill-height>
-      <v-layout justify-center align-center>
+      <v-layout justify-center>
         <router-view name="content"/>
       </v-layout>
     </v-container>
   </v-content>
-</v-app>
+</div>
 </template>
 
 <script>
@@ -65,9 +65,6 @@ import { getterTypes, actionTypes } from '@/store/layouts/types'
 import { getterTypes as userGetterTypes, actionTypes as userActionTypes } from '@/store/user/types'
 
 export default {
-  data: () => ({
-    // leftDrawer: null
-  }),
   props: {
   },
   computed: {
@@ -83,8 +80,13 @@ export default {
       setLeftDrawer: actionTypes.SET_LEFT_DRAWER
     }),
     ...mapActions('user', {
-      signOut: userActionTypes.SIGN_OUT
-    })
+      _signOut: userActionTypes.SIGN_OUT
+    }),
+    signOut () {
+      this._signOut().then().catch().then(() => {
+        location.reload()
+      })
+    }
   }
 }
 </script>

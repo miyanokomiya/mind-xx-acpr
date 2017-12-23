@@ -10,5 +10,8 @@ export default {
         Vue.delete(state.files, key)
       }
     })
+  },
+  [mutationTypes.CLEAR_FILES] (state) {
+    state.files = {}
   }
 }

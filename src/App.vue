@@ -1,8 +1,8 @@
 <template>
-  <div id="app">
-    <router-view/>
+  <v-app id="app">
+    <router-view v-if="!authorityLoading"/>
     <AuthDialog v-model="needAuth"/>
-  </div>
+  </v-app>
 </template>
 
 <script>
@@ -18,7 +18,8 @@ export default {
   },
   computed: {
     ...mapGetters('user', {
-      user: getterTypes.USER
+      user: getterTypes.USER,
+      authorityLoading: getterTypes.AUTHORITY_LOADING
     }),
     needAuth () {
       return !this.user

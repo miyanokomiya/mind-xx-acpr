@@ -9,8 +9,13 @@ export default {
         email: user.email,
         photoURL: user.photoURL
       }
+      state.authorityLoading = false
     } else {
       state.user = null
+      state.authorityLoading = true
     }
+  },
+  [mutationTypes.SET_AUTHORITY_LOADING] (state, val) {
+    state.authorityLoading = val
   }
 }

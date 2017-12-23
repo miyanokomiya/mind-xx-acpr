@@ -1,6 +1,49 @@
 {
   "rules": {
-    ".read": "auth != null",
-    ".write": "auth != null"
+    "file_authorities": {
+      "$file_id": {
+        ".read": "data.child(auth.uid).exists()",
+        ".write": "!data.exists() || data.child(auth.uid).exists()",
+
+        "$uid": {
+          ".validate": "newData.val() === true"
+        }
+      }
+    },
+    "work_spaces": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+
+        "files": {
+          "$file_id": {
+            ".write":
+              "root.child('file_authorities/' + $file_id + '/' + $uid).exists()",
+            ".validate": "newData.val() === true"
+          }
+        },
+
+        "$other": { ".validate": false }
+      }
+    },
+    "files": {
+      "$file_id": {
+        ".read":
+          "root.child('file_authorities/' + $file_id + '/' + auth.uid).exists()",
+        ".write":
+          "root.child('file_authorities/' + $file_id + '/' + auth.uid).exists()",
+
+        "name": {
+          ".validate": "newData.isString()"
+        },
+        "created": {
+          ".validate": "newData.isNumber()"
+        },
+        "updated": {
+          ".validate": "newData.isNumber()"
+        },
+
+        "$other": { ".validate": false }
+      }
+    }
   }
 }

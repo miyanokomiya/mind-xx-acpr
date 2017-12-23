@@ -8,10 +8,12 @@ storiesOf('organisms/WorkSpace', module).add('view', () => {
   return {
     components: { WorkSpace },
     template: `
-    <v-app>
+    <v-app style="padding-top: 40px;">
       <WorkSpace
         :files="files"
         @changeName="changeName"
+        @createFile="createFile"
+        @deleteFiles="deleteFiles"
       />
     </v-app>
     `,
@@ -30,11 +32,24 @@ storiesOf('organisms/WorkSpace', module).add('view', () => {
     methods: {
       changeName ({ files }) {
         Object.keys(files).forEach(key => {
-          if (files[key]) {
-            Vue.set(this.files, key, files[key])
-          } else {
-            Vue.delete(this.files, key)
-          }
+          Vue.set(this.files, key, files[key])
+        })
+      },
+      createFile () {
+        const key = Math.random()
+        Vue.set(
+          this.files,
+          key,
+          createFile({
+            name: key,
+            created: Date.now().toString(),
+            updated: Date.now().toString()
+          })
+        )
+      },
+      deleteFiles ({ files }) {
+        Object.keys(files).forEach(key => {
+          Vue.delete(this.files, key)
         })
       }
     }

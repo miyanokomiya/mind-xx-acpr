@@ -2,13 +2,15 @@
 <WorkSpace
   :files="files"
   @changeName="updateFiles"
+  @createFile="createFile"
+  @deleteFiles="deleteFiles"
 />
 </template>
 
 <script>
 import WorkSpace from '@/components/organisms/WorkSpace'
 
-import { mapGetter, mapActions } from '@/store/files'
+import { mapGetters, mapActions } from 'vuex'
 import { getterTypes, actionTypes } from '@/store/files/types'
 
 export default {
@@ -16,13 +18,19 @@ export default {
     WorkSpace
   },
   computed: {
-    ...mapGetter('files', {
+    ...mapGetters('files', {
       files: getterTypes.FILES
     })
   },
+  mounted () {
+    this.loadFiles()
+  },
   methods: {
     ...mapActions('files', {
-      updateFiles: actionTypes.UPDATE_FILES
+      loadFiles: actionTypes.LOAD_FILES,
+      updateFiles: actionTypes.UPDATE_FILES,
+      createFile: actionTypes.CREATE_FILE,
+      deleteFiles: actionTypes.DELETE_FILES
     })
   }
 }

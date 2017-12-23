@@ -5,6 +5,7 @@ import AppCommonLayout from '@/components/pages/AppCommonLayout'
 import MapCanvasContainer from '@/components/containers/MapCanvasContainer'
 import MapHelpDialog from '@/components/organisms/MapHelpDialog'
 import MapLeftDrawerContainer from '@/components/containers/MapLeftDrawerContainer'
+import WorkSpaceContainer from '@/components/containers/WorkSpaceContainer'
 
 Vue.use(Router)
 
@@ -18,7 +19,16 @@ export default new Router({
       children: [
         {
           path: '',
-          name: 'Root',
+          name: 'WorkSpace',
+          components: {
+            content: WorkSpaceContainer
+            // headerIconList: MapHelpDialog,
+            // leftDrawer: MapLeftDrawerContainer
+          }
+        },
+        {
+          path: 'map',
+          name: 'Map',
           components: {
             content: MapCanvasContainer,
             headerIconList: MapHelpDialog,
