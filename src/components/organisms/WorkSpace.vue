@@ -25,11 +25,11 @@
           <v-text-field
             slot="input"
             label="Edit"
-            :value="props.item.name"
-            @change="val => $emit('changeName', { key: props.item.key, name: val })"
             single-line
             counter
             :rules="[max25chars]"
+            :value="props.item.name"
+            @change="val => changeName({ key: props.item.key, name: val })"
           ></v-text-field>
         </v-edit-dialog>
       </td>
@@ -91,6 +91,14 @@ export default {
           updated: this.files[key].updated
         }
       })
+    }
+  },
+  methods: {
+    changeName ({ key, name }) {
+      const files = {
+        [key]: Object.assign({}, this.files[key], { name })
+      }
+      this.$emit('changeName', { files })
     }
   }
 }

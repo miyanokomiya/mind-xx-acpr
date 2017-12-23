@@ -1,4 +1,5 @@
 import { storiesOf } from '@storybook/vue'
+import Vue from 'vue'
 
 import WorkSpace from '@/components/organisms/WorkSpace'
 import { createFile } from '@/utils/model'
@@ -27,8 +28,14 @@ storiesOf('organisms/WorkSpace', module).add('view', () => {
       }
     }),
     methods: {
-      changeName ({ key, name }) {
-        this.files[key].name = name
+      changeName ({ files }) {
+        Object.keys(files).forEach(key => {
+          if (files[key]) {
+            Vue.set(this.files, key, files[key])
+          } else {
+            Vue.delete(this.files, key)
+          }
+        })
       }
     }
   }
