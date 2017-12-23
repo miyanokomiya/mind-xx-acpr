@@ -34,7 +34,16 @@
       expand
     >
     <template slot="items" slot-scope="props">
-      <td>
+      <td class="text-xs-left">
+        <v-btn
+          dark
+          fab
+          small
+          color="blue"
+          @click="$router.push({name: 'Map', params: { fileKey: props.item.key }})"
+        >
+          <v-icon>edit</v-icon>
+        </v-btn>
         <v-edit-dialog
           lazy
         >
@@ -50,8 +59,9 @@
           ></v-text-field>
         </v-edit-dialog>
       </td>
-      <td class="text-xs-right">{{ props.item.created }}</td>
-      <td class="text-xs-right">{{ props.item.updated }}</td>
+      <td class="text-xs-right">{{ props.item.nodeCount }}</td>
+      <td class="text-xs-right">{{ new Date(props.item.created).toLocaleString() }}</td>
+      <td class="text-xs-right">{{ new Date(props.item.updated).toLocaleString() }}</td>
       <td class="delete-button-cell">
         <v-btn
           dark
@@ -91,6 +101,7 @@ export default {
         align: 'left',
         value: 'name'
       },
+      { text: 'Count', value: 'nodeCount' },
       { text: 'Updated', value: 'updated' },
       { text: 'Created', value: 'created' },
       { text: '', value: '', sortable: false }
@@ -115,12 +126,7 @@ export default {
     },
     fileList () {
       return Object.keys(this.files).map(key => {
-        return {
-          key,
-          name: this.files[key].name,
-          created: this.files[key].created,
-          updated: this.files[key].updated
-        }
+        return Object.assign({}, this.files[key], { key })
       })
     }
   },

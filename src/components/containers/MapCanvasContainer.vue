@@ -23,6 +23,12 @@ export default {
   },
   data: () => ({
   }),
+  props: {
+    fileKey: {
+      type: String,
+      required: true
+    }
+  },
   computed: {
     ...mapGetters('layouts', {
       leftDrawer: layoutsGetterTypes.LEFT_DRAWER
@@ -38,11 +44,19 @@ export default {
       return this.$window.height - 72
     }
   },
+  mounted () {
+    this.loadNodes({ fileKey: this.fileKey })
+  },
+  destroyed () {
+    this.disconnect()
+  },
   methods: {
     ...mapActions('nodes', {
+      disconnect: nodesActionTypes.DISCONNECT,
       updateNodes: nodesActionTypes.UPDATE_NODES,
       setSelectedNodes: nodesActionTypes.SET_SELECTED_NODES,
-      clearSelect: nodesActionTypes.CLEAR_SELECT
+      clearSelect: nodesActionTypes.CLEAR_SELECT,
+      loadNodes: nodesActionTypes.LOAD_NODES
     })
   }
 }

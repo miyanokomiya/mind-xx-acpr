@@ -1,7 +1,8 @@
 import {
   NODE_MARGIN_X,
   NODE_MARGIN_Y,
-  NODE_ADDITIONAL_MARGIN_X_RATE
+  NODE_ADDITIONAL_MARGIN_X_RATE,
+  ROOT_NODE
 } from '@/constants'
 
 import * as geometry from './geometry'
@@ -16,11 +17,16 @@ export const createNode = obj =>
     obj
   )
 
+export const createDefaultNodes = () => ({
+  [ROOT_NODE]: createNode()
+})
+
 export const createFile = obj =>
   Object.assign(
     {},
     {
       name: 'file a',
+      nodeCount: 0,
       created: 'created',
       updated: 'updated'
     },

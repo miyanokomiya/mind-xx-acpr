@@ -1,5 +1,6 @@
 import mutations from '@/store/nodes/mutations'
 import { mutationTypes } from '@/store/nodes/types'
+import { createDefaultNodes } from '@/utils/model'
 
 describe('store/nodes/mutations', () => {
   describe('UPDATE_NODES', () => {
@@ -41,6 +42,34 @@ describe('store/nodes/mutations', () => {
         selectedNodes: {
           a: true
         }
+      })
+    })
+  })
+  describe('SET_FILE_KEY', () => {
+    it('should set correct [fileKey]', () => {
+      const state = {
+        fileKey: null
+      }
+      mutations[mutationTypes.SET_FILE_KEY](state, {
+        fileKey: 'abc'
+      })
+      expect(state).toMatchObject({
+        fileKey: 'abc'
+      })
+    })
+  })
+  describe('CLEAR_NODES', () => {
+    it('should set fileKey = null, nodes = {}, selectedNodes = {}', () => {
+      const state = {
+        fileKey: 'aaa',
+        nodes: { a: { text: 'aa' } },
+        selectedNodes: { a: true }
+      }
+      mutations[mutationTypes.CLEAR_NODES](state)
+      expect(state).toMatchObject({
+        fileKey: null,
+        nodes: createDefaultNodes(),
+        selectedNodes: {}
       })
     })
   })

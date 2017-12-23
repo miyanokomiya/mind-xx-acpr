@@ -8,6 +8,7 @@ import { createNode } from '@/utils/model'
 export default {
   namespaced: true,
   state: {
+    fileKey: null,
     nodes: {
       [ROOT_NODE]: createNode()
     },

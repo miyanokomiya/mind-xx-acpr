@@ -115,6 +115,7 @@
 
 <script>
 import Vue from 'vue'
+import firebase from '@/firebase'
 import {
   INTERVAL_CLICK,
   INTERVAL_DOUBLE_CLICK,
@@ -284,8 +285,9 @@ export default {
         positions: this.nodePositions,
         sizes: this.nodeSizes
       })
+      const max = Math.max(coveredRec.width, coveredRec.height)
       // TODO brush better margin
-      const margin = Math.max(100 - Math.pow(this.nodeCount, 2), 20)
+      const margin = max < 300 ? 200 : Math.max(100 - Math.pow(this.nodeCount, 2), 20)
       coveredRec.x -= margin
       coveredRec.y -= margin
       coveredRec.width += margin * 2
@@ -485,7 +487,10 @@ export default {
       if (this.editMenuTarget === ROOT_NODE) {
         brother = false
       }
-      const key = `key_${Math.random()}`
+      const key = firebase
+        .database()
+        .ref()
+        .push().getKey()
       const updatedNodes = brother
         ? getUpdatedNodesWhenCreateBrotherdNode({
             nodes: this.nodes,

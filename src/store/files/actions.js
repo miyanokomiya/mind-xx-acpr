@@ -93,6 +93,7 @@ export default {
     const updates = Object.keys(files).reduce((p, c) => {
       p[`/files/${c}`] = null
       p[`/work_spaces/${uid}/files/${c}`] = null
+      p[`/nodes/${c}`] = null
       return p
     }, {})
     firebase

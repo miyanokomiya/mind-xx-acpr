@@ -4,6 +4,8 @@ export const getterTypes = {
 }
 
 export const actionTypes = {
+  DISCONNECT: 'DISCONNECT',
+  LOAD_NODES: 'LOAD_NODES',
   UPDATE_NODES: 'UPDATE_NODES',
   SET_SELECTED_NODES: 'SET_SELECTED_NODES',
   CLEAR_SELECT: 'CLEAR_SELECT'
@@ -11,5 +13,7 @@ export const actionTypes = {
 
 export const mutationTypes = {
   UPDATE_NODES: 'UPDATE_NODES',
-  SET_SELECTED_NODES: 'SET_SELECTED_NODES'
+  SET_SELECTED_NODES: 'SET_SELECTED_NODES',
+  SET_FILE_KEY: 'SET_FILE_KEY',
+  CLEAR_NODES: 'CLEAR_NODES'
 }

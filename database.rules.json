@@ -35,6 +35,9 @@
         "name": {
           ".validate": "newData.isString()"
         },
+        "nodeCount": {
+          ".validate": "newData.isNumber()"
+        },
         "created": {
           ".validate": "newData.isNumber()"
         },
@@ -44,6 +47,21 @@
 
         "$other": { ".validate": false }
       }
-    }
+    },
+    "nodes": {
+      "$file_id": {
+        ".read":
+          "root.child('file_authorities/' + $file_id + '/' + auth.uid).exists()",
+        ".write":
+          "root.child('file_authorities/' + $file_id + '/' + auth.uid).exists()",
+
+        "text": {
+          ".validate": "newData.isString()"
+        },
+        "children": {}
+      }
+    },
+
+    "$other": { ".validate": false }
   }
 }

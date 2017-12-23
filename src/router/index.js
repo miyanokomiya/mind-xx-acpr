@@ -14,7 +14,6 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: '',
       component: AppCommonLayout,
       children: [
         {
@@ -27,12 +26,15 @@ export default new Router({
           }
         },
         {
-          path: 'map',
+          path: 'map/:fileKey',
           name: 'Map',
           components: {
             content: MapCanvasContainer,
             headerIconList: MapHelpDialog,
             leftDrawer: MapLeftDrawerContainer
+          },
+          props: {
+            content: true
           }
         }
       ]
