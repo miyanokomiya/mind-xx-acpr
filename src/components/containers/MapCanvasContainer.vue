@@ -4,6 +4,8 @@
     :height="canvasHeight"
     :nodes="nodes"
     :selectedNodes="selectedNodes"
+    :fileAuthority="fileAuthority"
+    :user="user"
     @updateNodes="nodes => updateNodes({ nodes })"
     @setSelectedNodes="selectedNodes => setSelectedNodes({ selectedNodes })"
     @clearSelect="clearSelect"
@@ -16,6 +18,8 @@ import MapCanvas from '@/components/organisms/MapCanvas'
 import { mapGetters, mapActions } from 'vuex'
 import { getterTypes as layoutsGetterTypes } from '@/store/layouts/types'
 import { getterTypes as nodesGetterTypes, actionTypes as nodesActionTypes } from '@/store/nodes/types'
+import { getterTypes as fileGetterTypes, actionTypes as fileActionTypes } from '@/store/files/types'
+import { getterTypes as userGetterTypes } from '@/store/user/types'
 
 export default {
   components: {
@@ -33,19 +37,29 @@ export default {
     ...mapGetters('layouts', {
       leftDrawer: layoutsGetterTypes.LEFT_DRAWER
     }),
+    ...mapGetters('user', {
+      user: userGetterTypes.USER
+    }),
     ...mapGetters('nodes', {
       nodes: nodesGetterTypes.NODES,
       selectedNodes: nodesGetterTypes.SELECTED_NODES
+    }),
+    ...mapGetters('files', {
+      fileAuthorities: fileGetterTypes.FILE_AUTHORITIES
     }),
     canvasWidth () {
       return this.$window.width >= 1264 && this.leftDrawer ? this.$window.width - 300 - 20 : this.$window.width - 20
     },
     canvasHeight () {
       return this.$window.height - 72
+    },
+    fileAuthority () {
+      return this.fileAuthorities[this.fileKey]
     }
   },
   mounted () {
     this.loadNodes({ fileKey: this.fileKey })
+    this.loadFile({ key: this.fileKey })
   },
   destroyed () {
     this.disconnect()
@@ -57,6 +71,9 @@ export default {
       setSelectedNodes: nodesActionTypes.SET_SELECTED_NODES,
       clearSelect: nodesActionTypes.CLEAR_SELECT,
       loadNodes: nodesActionTypes.LOAD_NODES
+    }),
+    ...mapActions('files', {
+      loadFile: fileActionTypes.LOAD_FILE
     })
   }
 }

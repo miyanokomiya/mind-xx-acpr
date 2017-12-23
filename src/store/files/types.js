@@ -4,6 +4,7 @@ export const getterTypes = {
 }
 
 export const actionTypes = {
+  LOAD_FILE: 'LOAD_FILE',
   LOAD_FILES: 'LOAD_FILES',
   UPDATE_FILES: 'UPDATE_FILES',
   CREATE_FILE: 'CREATE_FILE',

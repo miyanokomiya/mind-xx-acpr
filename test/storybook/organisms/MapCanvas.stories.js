@@ -3,7 +3,7 @@ import Vue from 'vue'
 
 import MapCanvas from '@/components/organisms/MapCanvas'
 
-import { createNode } from '@/utils/model'
+import { createNode, createUser } from '@/utils/model'
 
 const methods = {
   updateNodes (nextNodes) {
@@ -26,6 +26,11 @@ const methods = {
   }
 }
 
+const user = createUser({ uid: 'user' })
+const fileAuthority = {
+  user: { write: true }
+}
+
 storiesOf('organisms/MapCanvas', module)
   .add('some nodes', () => {
     const root = createNode({
@@ -40,6 +45,8 @@ storiesOf('organisms/MapCanvas', module)
           <MapCanvas
             :nodes="nodes"
             :selectedNodes="selectedNodes"
+            :fileAuthority="fileAuthority"
+            :user="user"
             @updateNodes="updateNodes"
             @createNode="createNode"
             @setSelectedNodes="setSelectedNodes"
@@ -56,7 +63,49 @@ storiesOf('organisms/MapCanvas', module)
           c: createNode({ text: 'cccccccccccccccccccccccccccccccccccc' }),
           d: createNode({ text: 'dddd' })
         },
-        selectedNodes: {}
+        selectedNodes: {},
+        user,
+        fileAuthority
+      }),
+      methods
+    }
+  })
+  .add('read only', () => {
+    const root = createNode({
+      text: 'root',
+      children: ['a', 'b', 'c']
+    })
+    return {
+      components: { MapCanvas },
+      template: `
+      <v-app>
+        <div>
+          <MapCanvas
+            :nodes="nodes"
+            :selectedNodes="selectedNodes"
+            :fileAuthority="fileAuthority"
+            :user="user"
+            @updateNodes="updateNodes"
+            @createNode="createNode"
+            @setSelectedNodes="setSelectedNodes"
+            @clearSelect="clearSelect"
+          />
+        </div>
+      </v-app>
+      `,
+      data: () => ({
+        nodes: {
+          root,
+          a: createNode({ text: 'aaaa', children: ['d'] }),
+          b: createNode({ text: 'bbbbbbbbbbbbbbbbbbbbbbbbb' }),
+          c: createNode({ text: 'cccccccccccccccccccccccccccccccccccc' }),
+          d: createNode({ text: 'dddd' })
+        },
+        selectedNodes: {},
+        user,
+        fileAuthority: {
+          user: {}
+        }
       }),
       methods
     }
@@ -72,6 +121,8 @@ storiesOf('organisms/MapCanvas', module)
             :height="500"
             :nodes="nodes"
             :selectedNodes="selectedNodes"
+            :fileAuthority="fileAuthority"
+            :user="user"
             @updateNodes="updateNodes"
             @createNode="createNode"
             @setSelectedNodes="setSelectedNodes"
@@ -129,7 +180,9 @@ storiesOf('organisms/MapCanvas', module)
           'key_0.7776011738601232': { text: '', children: [] },
           'key_0.6229181115748166': { text: '', children: [] }
         },
-        selectedNodes: {}
+        selectedNodes: {},
+        user,
+        fileAuthority
       }),
       methods
     }

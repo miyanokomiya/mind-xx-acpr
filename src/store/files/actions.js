@@ -3,6 +3,32 @@ import firebase from '@/firebase'
 import { createFile } from '@/utils/model'
 
 export default {
+  [actionTypes.LOAD_FILE] (context, { key }) {
+    firebase
+      .database()
+      .ref(`/file_authorities/${key}`)
+      .once('value')
+      .then(snapshot => {
+        const fileAuthority = snapshot.val()
+        context.commit(mutationTypes.UPDATE_FILE_AUTHORITIES, {
+          fileAuthorities: {
+            [key]: fileAuthority
+          }
+        })
+      })
+    firebase
+      .database()
+      .ref(`/files/${key}`)
+      .once('value')
+      .then(snapshot => {
+        const file = snapshot.val()
+        context.commit(mutationTypes.UPDATE_FILES, {
+          files: {
+            [key]: file
+          }
+        })
+      })
+  },
   [actionTypes.LOAD_FILES] (context, payload) {
     context.commit(mutationTypes.CLEAR_FILES)
 
@@ -73,6 +99,16 @@ export default {
         write: true
       })
       .then(() => {
+        // local commit the authority
+        context.commit(mutationTypes.UPDATE_FILE_AUTHORITIES, {
+          fileAuthorities: {
+            [fileKey]: {
+              [uid]: {
+                write: true
+              }
+            }
+          }
+        })
         // create the file
         const newFile = Object.assign({}, createFile(file), {
           created: firebase.database.ServerValue.TIMESTAMP,

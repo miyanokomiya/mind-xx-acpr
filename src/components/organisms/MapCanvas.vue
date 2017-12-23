@@ -1,7 +1,7 @@
 <template>
 <div
   class="map-canvas-wrapper"
-  tabindex="1"
+  :tabindex="canWrite ? '1' : ''"
   ref="svgCanvasWrapper"
   @keydown.self.enter.exact="keydownEnter"
   @keydown.self.enter.shift.exact="keydownShiftEnter"
@@ -14,6 +14,7 @@
   @keydown.self.space.self.exact="keydownSpace"
   @keydown.self.delete.exact="keydownDelete"
 >
+  <v-icon v-if="!canWrite" class="lock-button">lock</v-icon>
   <SvgCanvas
     ref="svgCanvas"
     :x="x"
@@ -48,8 +49,8 @@
       :stroke="selectedNodes[key] ? 'blue' : 'black'"
       fill="yellow"
       @calcSize="size => calcSize({key, size})"
-      @mousedown.native="e => nodeCursorDown(e, key)"
-      @mouseup.native="nodeCursorUp(key)"
+      @mousedown.native="e => canWrite ? nodeCursorDown(e, key) : ''"
+      @mouseup.native="canWrite ? nodeCursorUp(key) : ''"
     />
     <SvgTextRectangle
       class="mind-node moving-copy"
@@ -191,15 +192,34 @@ export default {
     selectedNodes: {
       type: Object,
       default: () => ({})
+    },
+    fileAuthority: {
+      type: Object,
+      default: () => ({})
+    },
+    user: {
+      type: Object,
+      default: () => ({})
     }
   },
-
   mounted () {
     this.$nextTick().then(() => {
       this.clearZoom()
     })
   },
   computed: {
+    canWrite () {
+      if (this.fileAuthority) {
+        const authority = this.fileAuthority[this.user.uid]
+        if (authority instanceof Boolean) {
+          return false
+        } else {
+          return authority && authority.write
+        }
+      } else {
+        return false
+      }
+    },
     ROOT_NODE () {
       return ROOT_NODE
     },
@@ -423,6 +443,9 @@ export default {
       this.editingText = null
     },
     selectNode (key) {
+      if (!this.canWrite) {
+        return
+      }
       this.$emit('setSelectedNodes', {
         [key]: true
       })
@@ -463,6 +486,9 @@ export default {
       }
     },
     readyEditText (key) {
+      if (!this.canWrite) {
+        return
+      }
       this.selectNode(key)
       this.editTextTarget = key
       this.editingText = this.nodes[key] ? this.nodes[key].text : ''
@@ -583,6 +609,11 @@ export default {
   display: inline-block;
   overflow: hidden;
   outline: none;
+  .lock-button {
+    position: absolute;
+    top: 10px;
+    right: 0;
+  }
   .mind-node {
     cursor: pointer;
   }
