@@ -89,12 +89,12 @@ export default {
   },
   [actionTypes.DELETE_FILES] (context, { files }) {
     const uid = firebase.auth().currentUser.uid
+    // delete files at first
     const updates = Object.keys(files).reduce((p, c) => {
       p[`/files/${c}`] = null
       p[`/work_spaces/${uid}/files/${c}`] = null
       return p
     }, {})
-    // delete files at first
     firebase
       .database()
       .ref()
@@ -102,25 +102,15 @@ export default {
       .then(() => {
         // commit
         context.commit(mutationTypes.UPDATE_FILES, { files })
-        Object.keys(files).forEach(fileKey => {
-          // load all users having the authority
-          firebase
-            .database()
-            .ref(`/file_authorities/${fileKey}`)
-            .once('value')
-            .then(snapshot => {
-              // delete the authority settings
-              const userKeys = snapshot.val()
-              const updates = Object.keys(userKeys).reduce((p, userKey) => {
-                p[`/file_authorities/${fileKey}/${userKey}`] = null
-                return p
-              }, {})
-              firebase
-                .database()
-                .ref()
-                .update(updates)
-            })
-        })
+        // delete authorities of files
+        const updates = Object.keys(files).reduce((p, c) => {
+          p[`/file_authorities/${c}`] = null
+          return p
+        }, {})
+        firebase
+          .database()
+          .ref()
+          .update(updates)
       })
   }
 }
