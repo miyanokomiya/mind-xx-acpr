@@ -16,6 +16,17 @@ export const createNode = obj =>
     obj
   )
 
+export const createFile = obj =>
+  Object.assign(
+    {},
+    {
+      name: 'file a',
+      created: 'created',
+      updated: 'updated'
+    },
+    obj
+  )
+
 export const calcPositions = ({ nodes, sizes, parentKey }) => {
   const positions = {}
   positions[parentKey] = { x: 0, y: 0 }
