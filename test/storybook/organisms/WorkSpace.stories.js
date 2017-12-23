@@ -2,7 +2,7 @@ import { storiesOf } from '@storybook/vue'
 import Vue from 'vue'
 
 import WorkSpace from '@/components/organisms/WorkSpace'
-import { createFile } from '@/utils/model'
+import { createFile, createUser } from '@/utils/model'
 
 storiesOf('organisms/WorkSpace', module).add('view', () => {
   return {
@@ -11,6 +11,8 @@ storiesOf('organisms/WorkSpace', module).add('view', () => {
     <v-app style="padding-top: 40px;">
       <WorkSpace
         :files="files"
+        :fileAuthorities="fileAuthorities"
+        :user="user"
         @changeName="changeName"
         @createFile="createFile"
         @deleteFiles="deleteFiles"
@@ -23,10 +25,21 @@ storiesOf('organisms/WorkSpace', module).add('view', () => {
         b: createFile({ name: 'file b' }),
         c: createFile({ name: 'file c' }),
         d: createFile({ name: 'file d' }),
-        e: createFile({ name: 'file e' }),
-        f: createFile({ name: 'file f' }),
-        g: createFile({ name: 'file g' }),
-        h: createFile({ name: 'file h' })
+        e: createFile({ name: 'file e' })
+      },
+      user: createUser({ uid: 'user' }),
+      fileAuthorities: {
+        a: {
+          user: { write: true }
+        },
+        b: {
+          user: { write: true }
+        },
+        c: { user: true },
+        d: {
+          user: { write: true }
+        },
+        e: { user: true }
       }
     }),
     methods: {

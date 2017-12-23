@@ -19,6 +19,18 @@ export default {
         Object.keys(fileKeys).forEach(key => {
           firebase
             .database()
+            .ref(`/file_authorities/${key}`)
+            .once('value')
+            .then(snapshot => {
+              const fileAuthority = snapshot.val()
+              context.commit(mutationTypes.UPDATE_FILE_AUTHORITIES, {
+                fileAuthorities: {
+                  [key]: fileAuthority
+                }
+              })
+            })
+          firebase
+            .database()
             .ref(`/files/${key}`)
             .once('value')
             .then(snapshot => {
@@ -57,7 +69,9 @@ export default {
     firebase
       .database()
       .ref(`/file_authorities/${fileKey}/${uid}`)
-      .set(true)
+      .set({
+        write: true
+      })
       .then(() => {
         // create the file
         const newFile = Object.assign({}, createFile(file), {

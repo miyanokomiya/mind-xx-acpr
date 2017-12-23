@@ -33,6 +33,18 @@ export const createFile = obj =>
     obj
   )
 
+export const createUser = obj =>
+  Object.assign(
+    {},
+    {
+      uid: null,
+      displayName: null,
+      email: null,
+      photoURL: null
+    },
+    obj
+  )
+
 export const calcPositions = ({ nodes, sizes, parentKey }) => {
   const positions = {}
   positions[parentKey] = { x: 0, y: 0 }

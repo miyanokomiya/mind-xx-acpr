@@ -5,7 +5,8 @@ import getters from './getters'
 export default {
   namespaced: true,
   state: {
-    files: {}
+    files: {},
+    fileAuthorities: {}
   },
   modules: {},
   actions,

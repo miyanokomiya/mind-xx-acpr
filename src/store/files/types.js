@@ -1,5 +1,6 @@
 export const getterTypes = {
-  FILES: 'FILES'
+  FILES: 'FILES',
+  FILE_AUTHORITIES: 'FILE_AUTHORITIES'
 }
 
 export const actionTypes = {
@@ -11,6 +12,6 @@ export const actionTypes = {
 
 export const mutationTypes = {
   UPDATE_FILES: 'UPDATE_FILES',
-  CREATE_FILE: 'CREATE_FILE',
-  CLEAR_FILES: 'CLEAR_FILES'
+  CLEAR_FILES: 'CLEAR_FILES',
+  UPDATE_FILE_AUTHORITIES: 'UPDATE_FILE_AUTHORITIES'
 }

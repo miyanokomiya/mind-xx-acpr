@@ -13,5 +13,15 @@ export default {
   },
   [mutationTypes.CLEAR_FILES] (state) {
     state.files = {}
+    state.fileAuthorities = {}
+  },
+  [mutationTypes.UPDATE_FILE_AUTHORITIES] (state, { fileAuthorities }) {
+    Object.keys(fileAuthorities).forEach(key => {
+      if (fileAuthorities[key]) {
+        Vue.set(state.fileAuthorities, key, fileAuthorities[key])
+      } else {
+        Vue.delete(state.fileAuthorities, key)
+      }
+    })
   }
 }

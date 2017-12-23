@@ -6,7 +6,11 @@
         ".write": "!data.exists() || data.child(auth.uid).exists()",
 
         "$uid": {
-          ".validate": "newData.val() === true"
+          "write": {
+            ".validate": "newData.val() === true"
+          },
+
+          "$other": { ".validate": false }
         }
       }
     },
@@ -30,7 +34,7 @@
         ".read":
           "root.child('file_authorities/' + $file_id + '/' + auth.uid).exists()",
         ".write":
-          "root.child('file_authorities/' + $file_id + '/' + auth.uid).exists()",
+          "root.child('file_authorities/' + $file_id + '/' + auth.uid + '/write').val() === true",
 
         "name": {
           ".validate": "newData.isString()"
@@ -53,7 +57,7 @@
         ".read":
           "root.child('file_authorities/' + $file_id + '/' + auth.uid).exists()",
         ".write":
-          "root.child('file_authorities/' + $file_id + '/' + auth.uid).exists()",
+          "root.child('file_authorities/' + $file_id + '/' + auth.uid + '/write').val() === true",
 
         "text": {
           ".validate": "newData.isString()"

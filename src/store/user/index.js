@@ -2,15 +2,12 @@ import actions from './actions'
 import mutations from './mutations'
 import getters from './getters'
 
+import { createUser } from '@/utils/model'
+
 export default {
   namespaced: true,
   state: {
-    user: {
-      uid: null,
-      displayName: null,
-      email: null,
-      photoURL: null
-    },
+    user: createUser(),
     authorityLoading: true
   },
   modules: {},

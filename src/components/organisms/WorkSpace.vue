@@ -36,6 +36,7 @@
     <template slot="items" slot-scope="props">
       <td class="text-xs-left">
         <v-btn
+          v-if="canWrite[props.item.key]"
           dark
           fab
           small
@@ -44,10 +45,21 @@
         >
           <v-icon>edit</v-icon>
         </v-btn>
+        <v-btn
+          v-else
+          dark
+          fab
+          small
+          color="blue"
+          @click="$router.push({name: 'Map', params: { fileKey: props.item.key }})"
+        >
+          <v-icon>navigate_next</v-icon>
+        </v-btn>
         <v-edit-dialog
           lazy
+          v-if="canWrite[props.item.key]"
         >
-          <span class="name elevation-3">{{ props.item.name }}</span>
+          <span class="name elevation-1">{{ props.item.name }}</span>
           <v-text-field
             slot="input"
             label="Edit"
@@ -58,6 +70,7 @@
             @change="val => changeName({ key: props.item.key, name: val })"
           ></v-text-field>
         </v-edit-dialog>
+        <span v-else class="name">{{ props.item.name }}</span>
       </td>
       <td class="text-xs-right">{{ props.item.nodeCount }}</td>
       <td class="text-xs-right">{{ new Date(props.item.created).toLocaleString() }}</td>
@@ -111,6 +124,14 @@ export default {
     files: {
       type: Object,
       default: () => ({})
+    },
+    fileAuthorities: {
+      type: Object,
+      default: () => ({})
+    },
+    user: {
+      type: Object,
+      default: () => ({})
     }
   },
   watch: {
@@ -128,6 +149,24 @@ export default {
       return Object.keys(this.files).map(key => {
         return Object.assign({}, this.files[key], { key })
       })
+    },
+    canWrite () {
+      const uid = this.user.uid
+      const ret = Object.keys(this.fileAuthorities).reduce((p, fileKey) => {
+        const fileAuthority = this.fileAuthorities[fileKey]
+        if (fileAuthority) {
+          const authority = fileAuthority[uid]
+          if (authority instanceof Boolean) {
+            p[fileKey] = false
+          } else {
+            p[fileKey] = authority.write
+          }
+        } else {
+          p[fileKey] = false
+        }
+        return p
+      }, {})
+      return ret
     }
   },
   methods: {

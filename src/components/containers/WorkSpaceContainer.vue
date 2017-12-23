@@ -1,6 +1,8 @@
 <template>
 <WorkSpace
   :files="files"
+  :fileAuthorities="fileAuthorities"
+  :user="user"
   @changeName="updateFiles"
   @createFile="createFile"
   @deleteFiles="deleteFiles"
@@ -12,6 +14,7 @@ import WorkSpace from '@/components/organisms/WorkSpace'
 
 import { mapGetters, mapActions } from 'vuex'
 import { getterTypes, actionTypes } from '@/store/files/types'
+import { getterTypes as userGetterTYpes } from '@/store/user/types'
 
 export default {
   components: {
@@ -19,7 +22,11 @@ export default {
   },
   computed: {
     ...mapGetters('files', {
-      files: getterTypes.FILES
+      files: getterTypes.FILES,
+      fileAuthorities: getterTypes.FILE_AUTHORITIES
+    }),
+    ...mapGetters('user', {
+      user: userGetterTYpes.USER
     })
   },
   mounted () {
