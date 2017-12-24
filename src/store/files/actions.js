@@ -117,24 +117,24 @@ export default {
         const updates = {}
         updates[`/files/${fileKey}`] = newFile
         updates[`/work_spaces/${uid}/files/${fileKey}`] = true
-        firebase
+        return firebase
           .database()
           .ref()
           .update(updates)
-          .then(() => {
-            // reloat the file
-            firebase
-              .database()
-              .ref(`/files/${fileKey}`)
-              .once('value')
-              .then(snapshot => {
-                context.commit(mutationTypes.UPDATE_FILES, {
-                  files: {
-                    [fileKey]: snapshot.val()
-                  }
-                })
-              })
-          })
+      })
+      .then(() => {
+        // reloat the file
+        return firebase
+          .database()
+          .ref(`/files/${fileKey}`)
+          .once('value')
+      })
+      .then(snapshot => {
+        context.commit(mutationTypes.UPDATE_FILES, {
+          files: {
+            [fileKey]: snapshot.val()
+          }
+        })
       })
   },
   [actionTypes.DELETE_FILES] (context, { files }) {
