@@ -11,8 +11,8 @@
   </v-list-tile>
   <MapCanvas
     v-if="renderCanvas"
-    style="display: none;"
     ref="mapCanvas"
+    class="map-canvas"
     :nodes="nodes"
     :width="canvasWidth"
     :height="canvasHeight"
@@ -80,6 +80,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.map-canvas {
+  opacity: 0;
+}
 </style>
 
