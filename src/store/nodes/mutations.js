@@ -15,7 +15,7 @@ export default {
       state.nodes = createDefaultNodes()
     }
   },
-  [mutationTypes.SET_SELECTED_NODES] (state, { selectedNodes }) {
+  [mutationTypes.SET_SELECTED_NODES] (state, { selectedNodes = {} }) {
     state.selectedNodes = selectedNodes
   },
   [mutationTypes.SET_FILE_KEY] (state, { fileKey }) {

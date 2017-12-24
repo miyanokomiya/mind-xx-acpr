@@ -6,6 +6,7 @@
     :selectedNodes="selectedNodes"
     :fileAuthority="fileAuthority"
     :user="user"
+    :defaultNodeProps="defaultNodeProps"
     @updateNodes="nodes => updateNodes({ nodes })"
     @setSelectedNodes="selectedNodes => setSelectedNodes({ selectedNodes })"
     @clearSelect="clearSelect"
@@ -20,6 +21,7 @@ import { getterTypes as layoutsGetterTypes } from '@/store/layouts/types'
 import { getterTypes as nodesGetterTypes, actionTypes as nodesActionTypes } from '@/store/nodes/types'
 import { getterTypes as fileGetterTypes, actionTypes as fileActionTypes } from '@/store/files/types'
 import { getterTypes as userGetterTypes } from '@/store/user/types'
+import { getterTypes as settingGetterTypes } from '@/store/settings/types'
 
 export default {
   components: {
@@ -47,6 +49,10 @@ export default {
     ...mapGetters('files', {
       fileAuthorities: fileGetterTypes.FILE_AUTHORITIES
     }),
+    ...mapGetters('settings', {
+      nodeColor: settingGetterTypes.NODE_COLOR,
+      textColor: settingGetterTypes.TEXT_COLOR
+    }),
     canvasWidth () {
       return this.$window.width >= 1264 && this.leftDrawer ? this.$window.width - 300 - 20 : this.$window.width - 20
     },
@@ -55,6 +61,12 @@ export default {
     },
     fileAuthority () {
       return this.fileAuthorities[this.fileKey]
+    },
+    defaultNodeProps () {
+      return {
+        backgroundColor: this.nodeColor,
+        color: this.textColor
+      }
     }
   },
   mounted () {

@@ -47,7 +47,8 @@
       :text="key === editTextTarget ? editingText : node.text"
       :strokeWidth="selectedNodes[key] ? 2 : 1"
       :stroke="selectedNodes[key] ? 'blue' : 'black'"
-      fill="yellow"
+      :fill="node.backgroundColor"
+      :textFill="node.color"
       @calcSize="size => calcSize({key, size})"
       @mousedown.native="e => canWrite ? nodeCursorDown(e, key) : ''"
       @mouseup.native="canWrite ? nodeCursorUp(key) : ''"
@@ -61,7 +62,8 @@
       :text="nodes[key].text"
       :strokeWidth="selectedNodes[key] ? 2 : 1"
       :stroke="selectedNodes[key] ? 'blue' : 'black'"
-      fill="yellow"
+      :fill="nodes[key].backgroundColor"
+      :textFill="nodes[key].color"
     />
     <g v-if="connectorOfMovingNodes" class="inserting-marker">
       <SvgConnector
@@ -198,6 +200,10 @@ export default {
       default: () => ({})
     },
     user: {
+      type: Object,
+      default: () => ({})
+    },
+    defaultNodeProps: {
       type: Object,
       default: () => ({})
     }
@@ -524,6 +530,7 @@ export default {
             parentKey: this.editMenuTarget,
             newKey: key
           })
+      updatedNodes[key] = Object.assign({}, updatedNodes[key], this.defaultNodeProps)
       this.$emit('updateNodes', updatedNodes)
       this.$nextTick().then(() => {
         this.readyEditText(key)

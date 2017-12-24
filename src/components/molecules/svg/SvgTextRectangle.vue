@@ -19,6 +19,7 @@
     :y="textY + textHeight * (i + 1)"
     :font-size="fontSize"
     :text="l"
+    :fill="textFill"
   />
   <SvgText
     v-if="!text"
@@ -26,6 +27,7 @@
     :x="textX"
     :y="textY + textHeight"
     :font-size="fontSize"
+    :fill="textFill"
   />
 </g>
 </template>
@@ -70,6 +72,10 @@ export default {
     fill: {
       type: String,
       default: 'none'
+    },
+    textFill: {
+      type: String,
+      default: 'black'
     }
   },
   computed: {

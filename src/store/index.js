@@ -4,6 +4,7 @@ import layouts from './layouts'
 import nodes from './nodes'
 import user from './user'
 import files from './files'
+import settings from './settings'
 
 Vue.use(Vuex)
 
@@ -15,6 +16,7 @@ export default new Vuex.Store({
     files,
     layouts,
     nodes,
+    settings,
     user
   },
   mutations: {}

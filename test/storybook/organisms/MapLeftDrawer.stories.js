@@ -15,7 +15,13 @@ storiesOf('organisms/MapLeftDrawer', module).add('view', () => {
         app
         v-model="drawer"
       >
-        <MapLeftDrawer :nodes="nodes"/>
+        <MapLeftDrawer
+          :nodes="nodes"
+          :nodeColor="nodeColor"
+          :textColor="textColor"
+          @changeNodeColor="val => nodeColor = val"
+          @changeTextColor="val => textColor = val"
+        />
       </v-navigation-drawer>
     </v-app>
     `,
@@ -23,7 +29,9 @@ storiesOf('organisms/MapLeftDrawer', module).add('view', () => {
       drawer: true,
       nodes: {
         [ROOT_NODE]: createNode()
-      }
+      },
+      nodeColor: '#87cefa',
+      textColor: '#000000'
     })
   }
 })

@@ -12,7 +12,9 @@ export const createNode = obj =>
     {},
     {
       text: '',
-      children: []
+      children: [],
+      backgroundColor: '#B3E5FC',
+      color: '#000000'
     },
     obj
   )
