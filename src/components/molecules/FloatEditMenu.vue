@@ -16,16 +16,26 @@
   </v-btn
   ><v-btn icon small outline color="indigo" class="list-item"
     v-if="!root"
-    @click="$emit('delete')"
+    @click="clickDelete"
   >
     <v-icon>delete</v-icon>
-  </v-btn
+  </v-btn>
+  <v-snackbar
+    bottom
+    right
+    :timeout="2000"
+    v-model="snackbar"
   >
+    One more click to delete.
+  </v-snackbar>
 </div>
 </template>
 
 <script>
 export default {
+  data: () => ({
+    snackbar: false
+  }),
   props: {
     x: {
       type: Number,
@@ -41,6 +51,16 @@ export default {
     }
   },
   computed: {
+  },
+  methods: {
+    clickDelete () {
+      if (this.snackbar) {
+        this.$emit('delete')
+        this.snackbar = false
+      } else {
+        this.snackbar = true
+      }
+    }
   }
 }
 </script>

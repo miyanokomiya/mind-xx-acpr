@@ -16,6 +16,7 @@ storiesOf('molecules/FloatEditMenu', module).add('story', () => {
   return {
     components: { FloatEditMenu },
     template: `
+    <v-app>
       <div style="position: relative;">
         <FloatEditMenu
           v-model="text"
@@ -23,6 +24,7 @@ storiesOf('molecules/FloatEditMenu', module).add('story', () => {
           :y="y"
         />
       </div>
+    </v-app>
     `,
     data: () => ({
       text: 'text',
