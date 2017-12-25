@@ -32,4 +32,13 @@ describe('store/nodes/getters', () => {
       })
     })
   })
+  describe('FILE_KEY', () => {
+    it('should get correct [fileKey]', () => {
+      const state = {
+        fileKey: 'aaa'
+      }
+      const res = getters[getterTypes.FILE_KEY](state)
+      expect(res).toBe('aaa')
+    })
+  })
 })

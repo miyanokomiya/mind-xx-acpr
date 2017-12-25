@@ -1,6 +1,7 @@
 export const getterTypes = {
   NODES: 'NODES',
-  SELECTED_NODES: 'SELECTED_NODES'
+  SELECTED_NODES: 'SELECTED_NODES',
+  FILE_KEY: 'FILE_KEY'
 }
 
 export const actionTypes = {

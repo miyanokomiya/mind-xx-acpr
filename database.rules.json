@@ -1,5 +1,35 @@
 {
   "rules": {
+    "users": {
+      ".indexOn": ["email"],
+
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": "$uid === auth.uid",
+
+        "email": {
+          ".validate": "newData.isString()"
+        }
+      }
+    },
+    "file_invitations": {
+      "$file_id": {
+        ".read": "data.child(auth.uid).exists()",
+        ".write":
+          "root.child('file_authorities/' + $file_id + '/' + auth.uid + '/write').val() === true",
+
+        "$tmp_id": {
+          "email": {
+            ".validate": "newData.isString()"
+          },
+          "write": {
+            ".validate": "newData.val() === true"
+          },
+
+          "$other": { ".validate": false }
+        }
+      }
+    },
     "file_authorities": {
       "$file_id": {
         ".read": "data.child(auth.uid).exists()",
@@ -22,6 +52,12 @@
           "$file_id": {
             ".write":
               "root.child('file_authorities/' + $file_id + '/' + $uid).exists()",
+            ".validate": "newData.val() === true"
+          }
+        },
+        "invited_files": {
+          "$file_id": {
+            ".write": "false",
             ".validate": "newData.val() === true"
           }
         },

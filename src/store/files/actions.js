@@ -163,5 +163,20 @@ export default {
           .ref()
           .update(updates)
       })
+  },
+  [actionTypes.INVITE_USER] (context, { email, fileKey }) {
+    const key = firebase
+      .database()
+      .ref()
+      .child('file_invitations')
+      .push().key
+    firebase
+      .database()
+      .ref(`/file_invitations/${fileKey}/${key}`)
+      .set({
+        email,
+        write: true
+      })
+      .then(() => {})
   }
 }

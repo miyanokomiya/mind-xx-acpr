@@ -3,7 +3,7 @@ import Router from 'vue-router'
 // import AppMaps from '@/components/pages/AppMaps'
 import AppCommonLayout from '@/components/pages/AppCommonLayout'
 import MapCanvasContainer from '@/components/containers/MapCanvasContainer'
-import MapHelpDialog from '@/components/organisms/MapHelpDialog'
+import MapMenu from '@/components/containers/MapMenu'
 import MapLeftDrawerContainer from '@/components/containers/MapLeftDrawerContainer'
 import WorkSpaceContainer from '@/components/containers/WorkSpaceContainer'
 
@@ -30,7 +30,7 @@ export default new Router({
           name: 'Map',
           components: {
             content: MapCanvasContainer,
-            headerIconList: MapHelpDialog,
+            headerIconList: MapMenu,
             leftDrawer: MapLeftDrawerContainer
           },
           props: {

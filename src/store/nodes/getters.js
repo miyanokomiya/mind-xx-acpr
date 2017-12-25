@@ -6,5 +6,8 @@ export default {
   },
   [getterTypes.SELECTED_NODES] (state) {
     return state.selectedNodes
+  },
+  [getterTypes.FILE_KEY] (state) {
+    return state.fileKey
   }
 }
