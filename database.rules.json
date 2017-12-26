@@ -39,8 +39,7 @@
 
         "files": {
           "$file_id": {
-            ".write":
-              "root.child('file_authorities/' + $file_id + '/' + $uid).exists()",
+            ".write": "$uid === auth.uid",
             ".validate": "newData.val() === true"
           }
         },
