@@ -1,22 +1,11 @@
 {
   "rules": {
-    "users": {
-      ".indexOn": ["email"],
-
-      "$uid": {
-        ".read": "$uid === auth.uid",
-        ".write": "$uid === auth.uid",
-
-        "email": {
-          ".validate": "newData.isString()"
-        }
-      }
-    },
     "file_invitations": {
       "$file_id": {
         ".read": "data.child(auth.uid).exists()",
         ".write":
           "root.child('file_authorities/' + $file_id + '/' + auth.uid + '/write').val() === true",
+        ".indexOn": ["email"],
 
         "$tmp_id": {
           "email": {

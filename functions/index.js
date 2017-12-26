@@ -49,7 +49,6 @@ exports.inviteUserToFile = functions.database
       .auth()
       .getUserByEmail(email)
       .then(user => {
-        console.log(user)
         if (user) {
           // the user is found
           const updates = {
