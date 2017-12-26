@@ -36,6 +36,35 @@ admin.initializeApp({
 //     .update(updates)
 // })
 
+exports.deleteFile = functions.database
+  .ref('/work_spaces/{ownerId}/files/{fileId}')
+  .onDelete(event => {
+    if (!event.data.previous.exists()) {
+      return null
+    }
+    const fileId = event.params.fileId
+    return admin
+      .database()
+      .ref(`/file_authorities/${fileId}`)
+      .once('value')
+      .then(spanshot => {
+        const authorities = spanshot.val()
+        const updates = {}
+        updates[`/file_invitations/${fileId}`] = null
+        updates[`/file_authorities/${fileId}`] = null
+        updates[`/files/${fileId}`] = null
+        updates[`/nodes/${fileId}`] = null
+        Object.keys(authorities).forEach(userId => {
+          updates[`/work_spaces/${userId}/files/${fileId}`] = null
+          updates[`/work_spaces/${userId}/invited_files/${fileId}`] = null
+        })
+        return admin
+          .database()
+          .ref()
+          .update(updates)
+      })
+  })
+
 exports.inviteUserToFile = functions.database
   .ref('/file_invitations/{fileId}/{tmpId}')
   .onWrite(event => {

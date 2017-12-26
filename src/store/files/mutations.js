@@ -11,10 +11,6 @@ export default {
       }
     })
   },
-  [mutationTypes.CLEAR_FILES] (state) {
-    state.files = {}
-    state.fileAuthorities = {}
-  },
   [mutationTypes.UPDATE_FILE_AUTHORITIES] (state, { fileAuthorities }) {
     Object.keys(fileAuthorities).forEach(key => {
       if (fileAuthorities[key]) {
@@ -23,5 +19,32 @@ export default {
         Vue.delete(state.fileAuthorities, key)
       }
     })
+  },
+  [mutationTypes.UPDATE_SHARED_FILES] (state, { sharedFiles }) {
+    Object.keys(sharedFiles).forEach(key => {
+      if (sharedFiles[key]) {
+        Vue.set(state.sharedFiles, key, sharedFiles[key])
+      } else {
+        Vue.delete(state.sharedFiles, key)
+      }
+    })
+  },
+  [mutationTypes.UPDATE_SHARED_FILE_AUTHORITIES] (
+    state,
+    { sharedFileAuthorities }
+  ) {
+    Object.keys(sharedFileAuthorities).forEach(key => {
+      if (sharedFileAuthorities[key]) {
+        Vue.set(state.sharedFileAuthorities, key, sharedFileAuthorities[key])
+      } else {
+        Vue.delete(state.sharedFileAuthorities, key)
+      }
+    })
+  },
+  [mutationTypes.CLEAR_FILES] (state) {
+    state.files = {}
+    state.fileAuthorities = {}
+    state.sharedFiles = {}
+    state.sharedFileAuthorities = {}
   }
 }

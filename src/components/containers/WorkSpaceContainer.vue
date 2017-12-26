@@ -2,6 +2,8 @@
 <WorkSpace
   :files="files"
   :fileAuthorities="fileAuthorities"
+  :sharedFiles="sharedFiles"
+  :sharedFileAuthorities="sharedFileAuthorities"
   :user="user"
   @changeName="updateFiles"
   @createFile="createFile"
@@ -23,7 +25,9 @@ export default {
   computed: {
     ...mapGetters('files', {
       files: getterTypes.FILES,
-      fileAuthorities: getterTypes.FILE_AUTHORITIES
+      fileAuthorities: getterTypes.FILE_AUTHORITIES,
+      sharedFiles: getterTypes.SHARED_FILES,
+      sharedFileAuthorities: getterTypes.SHARED_FILE_AUTHORITIES
     }),
     ...mapGetters('user', {
       user: userGetterTYpes.USER

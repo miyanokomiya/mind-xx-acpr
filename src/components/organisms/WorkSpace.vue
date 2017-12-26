@@ -2,17 +2,19 @@
 <div class="work-space-component">
   <v-card>
     <v-card-title>
-      Work space
-      <!-- <v-spacer></v-spacer>
-      <v-text-field
-        append-icon="search"
-        label="Search"
-        single-line
-        hide-details
-        v-model="searchText"
-      /> -->
+      <v-flex xs6>
+        <v-select
+          class="data-kind-select"
+          :items="[{text: 'Work space', value: 'workSpace'}, {text: 'Shared', value: 'shared'}]"
+          v-model="dataKind"
+          single-line
+          bottom
+          hide-details
+        />
+      </v-flex>
       <div class="header-buttons">
         <v-btn
+          v-if="!hideEditTools"
           dark
           fab
           small
@@ -77,6 +79,7 @@
         <td class="text-xs-right">{{ new Date(props.item.updated).toLocaleString() }}</td>
         <td class="delete-button-cell">
           <v-btn
+            v-if="!hideEditTools"
             dark
             fab
             small
@@ -127,7 +130,8 @@ export default {
       { text: 'Created', value: 'created' },
       { text: '', value: '', sortable: false }
     ],
-    snackbar: false
+    snackbar: false,
+    dataKind: 'workSpace'
   }),
   props: {
     files: {
@@ -135,6 +139,14 @@ export default {
       default: () => ({})
     },
     fileAuthorities: {
+      type: Object,
+      default: () => ({})
+    },
+    sharedFiles: {
+      type: Object,
+      default: () => ({})
+    },
+    sharedFileAuthorities: {
       type: Object,
       default: () => ({})
     },
@@ -154,15 +166,29 @@ export default {
     pages () {
       return this.pagination.rowsPerPage ? Math.ceil(this.fileList.length / this.pagination.rowsPerPage) : 0
     },
+    currentFiles () {
+      if (this.dataKind === 'shared') {
+        return this.sharedFiles
+      } else {
+        return this.files
+      }
+    },
+    currentFileAuthorities () {
+      if (this.dataKind === 'shared') {
+        return this.sharedFileAuthorities
+      } else {
+        return this.fileAuthorities
+      }
+    },
     fileList () {
-      return Object.keys(this.files).map(key => {
-        return Object.assign({}, this.files[key], { key })
+      return Object.keys(this.currentFiles).map(key => {
+        return Object.assign({}, this.currentFiles[key], { key })
       })
     },
     canWrite () {
       const uid = this.user.uid
-      const ret = Object.keys(this.fileAuthorities).reduce((p, fileKey) => {
-        const fileAuthority = this.fileAuthorities[fileKey]
+      const ret = Object.keys(this.currentFileAuthorities).reduce((p, fileKey) => {
+        const fileAuthority = this.currentFileAuthorities[fileKey]
         if (fileAuthority) {
           const authority = fileAuthority[uid]
           p[fileKey] = authority.write
@@ -172,12 +198,15 @@ export default {
         return p
       }, {})
       return ret
+    },
+    hideEditTools () {
+      return this.dataKind === 'shared'
     }
   },
   methods: {
     changeName ({ key, name }) {
       const files = {
-        [key]: Object.assign({}, this.files[key], { name })
+        [key]: Object.assign({}, this.currentFiles[key], { name })
       }
       this.$emit('changeName', { files })
     },
@@ -208,6 +237,9 @@ export default {
   width: 100%;
   height: 100%;
 
+  .data-kind-select {
+    padding: 0;
+  }
   .header-buttons {
     right: 0;
     top: 0;

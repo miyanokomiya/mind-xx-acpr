@@ -6,7 +6,9 @@ export default {
   namespaced: true,
   state: {
     files: {},
-    fileAuthorities: {}
+    fileAuthorities: {},
+    sharedFiles: {},
+    sharedFileAuthorities: {}
   },
   modules: {},
   actions,

@@ -32,4 +32,34 @@ describe('store/files/getters', () => {
       })
     })
   })
+  describe('SHARED_FILES', () => {
+    it('should get correct [files]', () => {
+      const state = {
+        sharedFiles: {
+          a: { name: 'a' },
+          b: { name: 'b' }
+        }
+      }
+      const res = getters[getterTypes.SHARED_FILES](state)
+      expect(res).toMatchObject({
+        a: { name: 'a' },
+        b: { name: 'b' }
+      })
+    })
+  })
+  describe('SHARED_FILE_AUTHORITIES', () => {
+    it('should get correct [fileAuthorities]', () => {
+      const state = {
+        sharedFileAuthorities: {
+          a: true,
+          b: { write: true }
+        }
+      }
+      const res = getters[getterTypes.SHARED_FILE_AUTHORITIES](state)
+      expect(res).toMatchObject({
+        a: true,
+        b: { write: true }
+      })
+    })
+  })
 })

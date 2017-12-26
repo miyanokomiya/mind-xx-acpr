@@ -35,13 +35,15 @@ export default {
     const uid = firebase.auth().currentUser.uid
     firebase
       .database()
-      .ref(`/work_spaces/${uid}/files`)
+      .ref(`/work_spaces/${uid}`)
       .once('value')
       .then(snapshot => {
-        const fileKeys = snapshot.val()
-        if (!fileKeys) {
+        const workSpace = snapshot.val()
+        if (!workSpace) {
           return
         }
+        const fileKeys = workSpace['files'] || {}
+        const shredFileKeys = workSpace['invited_files'] || {}
         Object.keys(fileKeys).forEach(key => {
           firebase
             .database()
@@ -63,6 +65,32 @@ export default {
               const file = snapshot.val()
               context.commit(mutationTypes.UPDATE_FILES, {
                 files: {
+                  [key]: file
+                }
+              })
+            })
+        })
+        Object.keys(shredFileKeys).forEach(key => {
+          firebase
+            .database()
+            .ref(`/file_authorities/${key}`)
+            .once('value')
+            .then(snapshot => {
+              const fileAuthority = snapshot.val()
+              context.commit(mutationTypes.UPDATE_SHARED_FILE_AUTHORITIES, {
+                sharedFileAuthorities: {
+                  [key]: fileAuthority
+                }
+              })
+            })
+          firebase
+            .database()
+            .ref(`/files/${key}`)
+            .once('value')
+            .then(snapshot => {
+              const file = snapshot.val()
+              context.commit(mutationTypes.UPDATE_SHARED_FILES, {
+                sharedFiles: {
                   [key]: file
                 }
               })
@@ -123,7 +151,7 @@ export default {
           .update(updates)
       })
       .then(() => {
-        // reloat the file
+        // reload the file
         return firebase
           .database()
           .ref(`/files/${fileKey}`)
@@ -139,11 +167,9 @@ export default {
   },
   [actionTypes.DELETE_FILES] (context, { files }) {
     const uid = firebase.auth().currentUser.uid
-    // delete files at first
+    // this operation triggers cloud functions to delete files
     const updates = Object.keys(files).reduce((p, c) => {
-      p[`/files/${c}`] = null
       p[`/work_spaces/${uid}/files/${c}`] = null
-      p[`/nodes/${c}`] = null
       return p
     }, {})
     firebase
@@ -153,15 +179,7 @@ export default {
       .then(() => {
         // commit
         context.commit(mutationTypes.UPDATE_FILES, { files })
-        // delete authorities of files
-        const updates = Object.keys(files).reduce((p, c) => {
-          p[`/file_authorities/${c}`] = null
-          return p
-        }, {})
-        firebase
-          .database()
-          .ref()
-          .update(updates)
+        return Promise.resolve()
       })
   },
   [actionTypes.INVITE_USER] (context, { email, fileKey }) {
