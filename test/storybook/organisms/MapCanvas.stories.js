@@ -19,7 +19,12 @@ const methods = {
     this.nodes = Object.assign({}, this.nodes, createNodes)
   },
   setSelectedNodes (selectedNodes) {
-    this.selectedNodes = selectedNodes
+    this.selectedNodes = Object.keys(selectedNodes).reduce((p, c) => {
+      if (selectedNodes[c]) {
+        p[c] = true
+      }
+      return p
+    }, {})
   },
   clearSelect () {
     this.selectedNodes = {}

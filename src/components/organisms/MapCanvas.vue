@@ -52,10 +52,10 @@
       :fill="node.backgroundColor"
       :textFill="node.color"
       @calcSize="size => calcSize({key, size})"
-      @mousedown.native="e => canWrite ? ($isMobile.any ? '' : nodeCursorDown(e, key)) : ''"
-      @mouseup.native="canWrite ? ($isMobile.any ?  '' : nodeCursorUp(key)) : ''"
-      @touchstart.native="e => canWrite ? ($isMobile.any ? nodeCursorDown(e, key) : '') : ''"
-      @touchend.native="canWrite ? ($isMobile.any ?  nodeCursorUp(key) : '') : ''"
+      @mousedown.native.prevent="e => canWrite ? ($isMobile.any ? '' : nodeCursorDown(e, key)) : ''"
+      @mouseup.native.prevent="e => canWrite ? ($isMobile.any ?  '' : nodeCursorUp(key, {shift: e.shiftKey})) : ''"
+      @touchstart.native.prevent="e => canWrite ? ($isMobile.any ? nodeCursorDown(e, key) : '') : ''"
+      @touchend.native.prevent="e => canWrite ? ($isMobile.any ?  nodeCursorUp(key, {shift: e.shiftKey}) : '') : ''"
     />
     <SvgTextRectangle
       class="mind-node moving-copy"
@@ -99,7 +99,7 @@
     />
   </div>
   <FloatTextInput
-    v-if="editTextTargetNode && movingNodeCount === 0"
+    v-if="editTextTargetNode && movingNodeCount === 0 && !isMultiSelect"
     v-model="editingText"
     :x="editTextTargetPosition.x"
     :y="editTextTargetPosition.y"
@@ -107,7 +107,7 @@
     @mousewheel.native.prevent="e => $isMobile.any ? '' : mousewheel(e)"
   />
   <FloatEditMenu
-    v-if="editMenuTarget && movingNodeCount === 0"
+    v-if="editMenuTarget && movingNodeCount === 0 && !isMultiSelect"
     :root="editMenuTarget === ROOT_NODE"
     :x="editMenuTargetPosition.x"
     :y="editMenuTargetPosition.y"
@@ -325,6 +325,9 @@ export default {
       const widthRate = this.width / coveredRec.width
       const heightRate = this.height / coveredRec.height
       return Math.min(widthRate, heightRate)
+    },
+    isMultiSelect () {
+      return Object.keys(this.selectedNodes).length > 1
     }
   },
   watch: {
@@ -380,7 +383,7 @@ export default {
         }
       }
     },
-    nodeCursorUp (key) {
+    nodeCursorUp (key, { shift = false }) {
       const now = Date.now()
       if (now - this.nodeCursorDownStart < INTERVAL_CLICK) {
         if (now - this.nodeCursorClickLast < INTERVAL_DOUBLE_CLICK) {
@@ -388,7 +391,7 @@ export default {
           this.readyEditText(key)
         } else {
           // single click
-          this.toggleSelectNode(key)
+          this.toggleSelectNode(key, shift)
         }
         this.nodeCursorClickLast = now
       }
@@ -405,7 +408,7 @@ export default {
           this.movingNodePositions[key].y -= dif.y
         })
         this.beforeMoveP = Object.assign({}, p)
-        // reduce frequency of swiching positions
+        // reduce frequency of adjusting positions
         if (!this.adjustParentWithMovingTimer) {
           this.adjustParentWithMovingTimer = setTimeout(() => {
             this.adjustParentWithMoving()
@@ -448,15 +451,41 @@ export default {
       this.editTextTarget = null
       this.editingText = null
     },
-    selectNode (key) {
+    clearSelectNode (key) {
+      this.$emit('setSelectedNodes', Object.assign({}, this.selectedNodes, {
+        [key]: false
+      }))
+      const keys = Object.keys(this.selectedNodes).filter(k => k !== key)
+      if (keys.length === 1) {
+        this.editMenuTarget = keys[0]
+      } else {
+        this.editMenuTarget = null
+      }
+      this.editTextTarget = null
+      this.editingText = null
+    },
+    selectNode (key, multi) {
       if (!this.canWrite) {
         return
       }
-      this.$emit('setSelectedNodes', {
-        [key]: true
-      })
+      if (multi) {
+        this.$emit('setSelectedNodes', Object.assign({}, this.selectedNodes, {
+          [key]: true
+        }))
+      } else {
+        this.$emit('setSelectedNodes', {
+          [key]: true
+        })
+      }
       this.editMenuTarget = key
       this.moveViewToCoverSelectedNode(key)
+    },
+    toggleSelectNode (key, multi) {
+      if (this.selectedNodes[key]) {
+        this.clearSelectNode(key)
+      } else {
+        this.selectNode(key, multi)
+      }
     },
     moveViewToCoverSelectedNode (key) {
       const node = this.nodes[key]
@@ -482,13 +511,6 @@ export default {
         this.$nextTick().then(() => {
           this.moveViewToCoverSelectedNode(key)
         })
-      }
-    },
-    toggleSelectNode (key) {
-      if (this.selectedNodes[key]) {
-        this.clearSelect()
-      } else {
-        this.selectNode(key)
       }
     },
     readyEditText (key) {

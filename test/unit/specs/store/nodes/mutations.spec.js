@@ -44,6 +44,19 @@ describe('store/nodes/mutations', () => {
         }
       })
     })
+    it('should delete keys which set false', () => {
+      const state = {
+        selectedNodes: {
+          a: true
+        }
+      }
+      mutations[mutationTypes.SET_SELECTED_NODES](state, {
+        selectedNodes: {
+          a: false
+        }
+      })
+      expect(state.a).toBe(undefined)
+    })
   })
   describe('SET_FILE_KEY', () => {
     it('should set correct [fileKey]', () => {

@@ -16,7 +16,12 @@ export default {
     }
   },
   [mutationTypes.SET_SELECTED_NODES] (state, { selectedNodes = {} }) {
-    state.selectedNodes = selectedNodes
+    state.selectedNodes = Object.keys(selectedNodes).reduce((p, c) => {
+      if (selectedNodes[c]) {
+        p[c] = true
+      }
+      return p
+    }, {})
   },
   [mutationTypes.SET_FILE_KEY] (state, { fileKey }) {
     state.fileKey = fileKey
