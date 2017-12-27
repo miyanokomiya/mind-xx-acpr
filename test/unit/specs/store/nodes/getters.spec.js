@@ -41,4 +41,13 @@ describe('store/nodes/getters', () => {
       expect(res).toBe('aaa')
     })
   })
+  describe('INITIAL_LOADING', () => {
+    it('should get correct [initialLoading]', () => {
+      const state = {
+        initialLoading: false
+      }
+      const res = getters[getterTypes.INITIAL_LOADING](state)
+      expect(res).toBe(false)
+    })
+  })
 })

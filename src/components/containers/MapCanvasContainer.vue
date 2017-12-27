@@ -1,5 +1,6 @@
 <template>
   <MapCanvas
+    v-if="loaded"
     :width="canvasWidth"
     :height="canvasHeight"
     :nodes="nodes"
@@ -44,10 +45,12 @@ export default {
     }),
     ...mapGetters('nodes', {
       nodes: nodesGetterTypes.NODES,
-      selectedNodes: nodesGetterTypes.SELECTED_NODES
+      selectedNodes: nodesGetterTypes.SELECTED_NODES,
+      initialLoading: nodesGetterTypes.INITIAL_LOADING
     }),
     ...mapGetters('files', {
-      fileAuthorities: fileGetterTypes.FILE_AUTHORITIES
+      fileAuthorities: fileGetterTypes.FILE_AUTHORITIES,
+      files: fileGetterTypes.FILES
     }),
     ...mapGetters('settings', {
       nodeColor: settingGetterTypes.NODE_COLOR,
@@ -67,6 +70,13 @@ export default {
         backgroundColor: this.nodeColor,
         color: this.textColor
       }
+    },
+    file () {
+      return this.files[this.fileKey]
+    },
+    loaded () {
+      // If the count of nodes in a file is zero, the records of nodes don't exist.
+      return !this.initialLoading || (this.file && this.file.nodeCount < 1)
     }
   },
   mounted () {

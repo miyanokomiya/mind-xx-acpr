@@ -15,12 +15,18 @@ export default {
   [actionTypes.LOAD_NODES] (context, { fileKey }) {
     context.dispatch(actionTypes.DISCONNECT)
     context.commit(mutationTypes.SET_FILE_KEY, { fileKey })
+    context.commit(mutationTypes.SET_INITIAL_LOADING, { initialLoading: true })
     var commentsRef = firebase.database().ref('nodes/' + fileKey)
     commentsRef.on('child_added', data => {
       const nodes = {
         [data.key]: createNode(data.val())
       }
       context.commit(mutationTypes.UPDATE_NODES, { nodes })
+      if (context.state.initialLoading) {
+        context.commit(mutationTypes.SET_INITIAL_LOADING, {
+          initialLoading: false
+        })
+      }
     })
     commentsRef.on('child_changed', function (data) {
       const nodes = {

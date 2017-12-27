@@ -30,5 +30,8 @@ export default {
     state.fileKey = null
     state.nodes = createDefaultNodes()
     state.selectedNodes = {}
+  },
+  [mutationTypes.SET_INITIAL_LOADING] (state, { initialLoading }) {
+    state.initialLoading = initialLoading
   }
 }

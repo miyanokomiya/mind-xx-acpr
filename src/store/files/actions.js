@@ -182,7 +182,7 @@ export default {
         return Promise.resolve()
       })
   },
-  [actionTypes.INVITE_USER] (context, { email, fileKey }) {
+  [actionTypes.INVITE_USER] (context, { email, fileKey, readOnly }) {
     const key = firebase
       .database()
       .ref()
@@ -193,7 +193,7 @@ export default {
       .ref(`/file_invitations/${fileKey}/${key}`)
       .set({
         email,
-        write: true
+        write: !readOnly
       })
       .then(() => {})
   }

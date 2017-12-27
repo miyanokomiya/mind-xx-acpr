@@ -12,7 +12,7 @@
             ".validate": "newData.isString()"
           },
           "write": {
-            ".validate": "newData.val() === true"
+            ".validate": "newData.isBoolean()"
           },
 
           "$other": { ".validate": false }
@@ -26,7 +26,7 @@
 
         "$uid": {
           "write": {
-            ".validate": "newData.val() === true"
+            ".validate": "newData.isBoolean()"
           },
 
           "$other": { ".validate": false }

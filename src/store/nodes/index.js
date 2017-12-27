@@ -12,7 +12,8 @@ export default {
     nodes: {
       [ROOT_NODE]: createNode()
     },
-    selectedNodes: {}
+    selectedNodes: {},
+    initialLoading: true
   },
   modules: {},
   actions,

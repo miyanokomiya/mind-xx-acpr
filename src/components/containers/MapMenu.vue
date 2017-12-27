@@ -27,10 +27,11 @@ export default {
     ...mapActions('files', {
       inviteUser: filesActionTypes.INVITE_USER
     }),
-    invite ({ email }) {
+    invite ({ email, readOnly }) {
       this.inviteUser({
         fileKey: this.fileKey,
-        email
+        email,
+        readOnly
       })
     }
   }

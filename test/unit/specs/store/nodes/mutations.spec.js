@@ -86,4 +86,17 @@ describe('store/nodes/mutations', () => {
       })
     })
   })
+  describe('SET_INITIAL_LOADING', () => {
+    it('should set fileKey = null, nodes = {}, selectedNodes = {}', () => {
+      const state = {
+        initialLoading: false
+      }
+      mutations[mutationTypes.SET_INITIAL_LOADING](state, {
+        initialLoading: true
+      })
+      expect(state).toMatchObject({
+        initialLoading: true
+      })
+    })
+  })
 })
