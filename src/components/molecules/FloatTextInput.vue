@@ -8,10 +8,10 @@
     multi-line
     hide-details
     autofocus
-    :rows="3"
+    :rows="rows"
     v-model="_value"
     @keyup.esc="$emit('done')"
-    @blur="e => $emit('blur', e)"
+    @blur="e => $emit('done')"
   />
 </div>
 </template>
@@ -40,6 +40,12 @@ export default {
       set (val) {
         this.$emit('input', val)
       }
+    },
+    lines () {
+      return this._value.split(/\n|\r\n/)
+    },
+    rows () {
+      return Math.min(this.lines.length, 3)
     }
   }
 }

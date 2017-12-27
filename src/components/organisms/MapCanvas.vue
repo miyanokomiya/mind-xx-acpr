@@ -103,7 +103,6 @@
     v-model="editingText"
     :x="editTextTargetPosition.x"
     :y="editTextTargetPosition.y"
-    @blur="doneEditText"
     @done="doneEditText"
     @mousewheel.native.prevent="e => $isMobile.any ? '' : mousewheel(e)"
   />
