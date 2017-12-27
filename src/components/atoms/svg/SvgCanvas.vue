@@ -3,12 +3,17 @@
   <svg
     font-family="sans-serif"
     :viewBox="`${x} ${y} ${canvasWidth} ${canvasHeight}`"
-    @mousedown="canvasCursorDown"
-    @mouseup="canvasCursorUp"
-    @mousemove.prevent="canvasCursorMove"
-    @mousedown.self="canvasCursorDownSelf"
-    @mouseup.self="canvasCursorUpSelf"
-    @mousewheel.prevent="canvasWheel"
+    @mousedown="e => $isMobile.any ? '' : canvasCursorDown(e)"
+    @mouseup="e => $isMobile.any ? '' : canvasCursorUp(e)"
+    @mousemove.prevent="e => $isMobile.any ? '' : canvasCursorMove(e)"
+    @mousedown.self="e => $isMobile.any ? '' : canvasCursorDownSelf(e)"
+    @mouseup.self="e => $isMobile.any ? '' : canvasCursorUpSelf(e)"
+    @mousewheel.prevent="e => $isMobile.any ? '' : canvasWheel(e)"
+    @touchstart="e => $isMobile.any ? canvasCursorDown(e) : ''"
+    @touchend="e => $isMobile.any ? canvasCursorUp(e) : ''"
+    @touchmove.prevent="e => $isMobile.any ? canvasCursorMove(e) : ''"
+    @touchstart.self="e => $isMobile.any ? canvasCursorDownSelf(e) : ''"
+    @touchend.self="e => $isMobile.any ? canvasCursorUpSelf(e) : ''"
   >
     <slot />
   </svg>

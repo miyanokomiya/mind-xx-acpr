@@ -25,8 +25,10 @@
     @move="move"
     @zoom="zoom"
     @click="clearSelect"
-    @mousemove.native="canvasCursorMove"
-    @mouseup.native="canvasCursorUp"
+    @mousemove.native="e => $isMobile.any ? '' : canvasCursorMove(e)"
+    @mouseup.native="e => $isMobile.any ? '' : canvasCursorUp(e)"
+    @touchmove.native="e => $isMobile.any ? canvasCursorMove(e) : ''"
+    @touchend.native="e => $isMobile.any ? canvasCursorUp(e) : ''"
   >
     <SvgConnector
       v-for="(connector, i) in connectors"
@@ -50,8 +52,10 @@
       :fill="node.backgroundColor"
       :textFill="node.color"
       @calcSize="size => calcSize({key, size})"
-      @mousedown.native="e => canWrite ? nodeCursorDown(e, key) : ''"
-      @mouseup.native="canWrite ? nodeCursorUp(key) : ''"
+      @mousedown.native="e => canWrite ? ($isMobile.any ? '' : nodeCursorDown(e, key)) : ''"
+      @mouseup.native="canWrite ? ($isMobile.any ?  '' : nodeCursorUp(key)) : ''"
+      @touchstart.native="e => canWrite ? ($isMobile.any ? nodeCursorDown(e, key) : '') : ''"
+      @touchend.native="canWrite ? ($isMobile.any ?  nodeCursorUp(key) : '') : ''"
     />
     <SvgTextRectangle
       class="mind-node moving-copy"
@@ -101,17 +105,18 @@
     :y="editTextTargetPosition.y"
     @blur="doneEditText"
     @done="doneEditText"
-    @mousewheel.native.prevent="mousewheel"
+    @mousewheel.native.prevent="e => $isMobile.any ? '' : mousewheel(e)"
   />
   <FloatEditMenu
     v-if="editMenuTarget && movingNodeCount === 0"
     :root="editMenuTarget === ROOT_NODE"
     :x="editMenuTargetPosition.x"
     :y="editMenuTargetPosition.y"
+    @editText="readyEditText(editMenuTarget)"
     @addBrother="createNode(true)"
     @addChild="createNode(false)"
     @delete="deleteNode"
-    @mousewheel.native.prevent="mousewheel"
+    @mousewheel.native.prevent="e => $isMobile.any ? '' : mousewheel(e)"
   />
 </div>
 </template>

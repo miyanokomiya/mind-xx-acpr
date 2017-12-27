@@ -6,6 +6,7 @@ import router from './router'
 import store from './store'
 import Vuetify from 'vuetify'
 import './utils/windowState'
+import '@/utils/isMobile'
 
 import 'ress'
 import 'vuetify/dist/vuetify.min.css'

@@ -5,6 +5,12 @@
 >
   <v-btn icon small outline color="indigo" class="list-item"
     v-if="!root"
+    @click="$emit('editText')"
+  >
+    <v-icon>edit</v-icon>
+  </v-btn
+  ><v-btn icon small outline color="indigo" class="list-item"
+    v-if="!root"
     @click="$emit('addBrother')"
   >
     <v-icon>add</v-icon>
