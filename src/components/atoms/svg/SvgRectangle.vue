@@ -1,5 +1,17 @@
 <template>
-<rect :x="x" :y="y" :rx="rx" :ry="ry" :width="width" :height="height" :stroke="stroke" :stroke-width="strokeWidth" :fill="fill"/>
+<rect
+  :x="x"
+  :y="y"
+  :rx="rx"
+  :ry="ry"
+  :width="width"
+  :height="height"
+  :stroke="stroke"
+  :stroke-width="strokeWidth"
+  :fill="fill"
+  :stroke-dasharray="strokeDasharray"
+  :stroke-dashoffset="strokeDashoffset"
+/>
 </template>
 
 <script>
@@ -40,6 +52,14 @@ export default {
     fill: {
       type: String,
       default: 'none'
+    },
+    strokeDasharray: {
+      type: Number,
+      default: 0
+    },
+    strokeDashoffset: {
+      type: Number,
+      default: 0
     }
   }
 }

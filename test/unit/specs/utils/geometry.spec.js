@@ -304,4 +304,48 @@ describe('utils/geometry', () => {
       expect(res).toBe('b')
     })
   })
+
+  describe('isCoveredRectangle', () => {
+    const rectangle1 = { x: 0, y: 0, width: 10, height: 10 }
+    it('should return true if a rectangle covers another', () => {
+      const rectangle2 = { x: 2, y: 2, width: 2, height: 2 }
+      const res = geometry.isCoveredRectangle({
+        outer: rectangle1,
+        inner: rectangle2
+      })
+      expect(res).toBe(true)
+    })
+    it('should return false if a rectangle does not cover another, 1', () => {
+      const rectangle2 = { x: -2, y: 2, width: 2, height: 2 }
+      const res = geometry.isCoveredRectangle({
+        outer: rectangle1,
+        inner: rectangle2
+      })
+      expect(res).toBe(false)
+    })
+    it('should return false if a rectangle does not cover another, 2', () => {
+      const rectangle2 = { x: 2, y: -2, width: 2, height: 2 }
+      const res = geometry.isCoveredRectangle({
+        outer: rectangle1,
+        inner: rectangle2
+      })
+      expect(res).toBe(false)
+    })
+    it('should return false if a rectangle does not cover another, 3', () => {
+      const rectangle2 = { x: 2, y: 2, width: 12, height: 2 }
+      const res = geometry.isCoveredRectangle({
+        outer: rectangle1,
+        inner: rectangle2
+      })
+      expect(res).toBe(false)
+    })
+    it('should return false if a rectangle does not cover another, 4', () => {
+      const rectangle2 = { x: 2, y: 2, width: 2, height: 12 }
+      const res = geometry.isCoveredRectangle({
+        outer: rectangle1,
+        inner: rectangle2
+      })
+      expect(res).toBe(false)
+    })
+  })
 })

@@ -155,3 +155,19 @@ export function getClosestRectangleByPoint ({ rectangles, point }) {
   })
   return ret
 }
+
+export function isCoveredRectangle ({ outer, inner }) {
+  if (outer.x > inner.x) {
+    return false
+  }
+  if (outer.y > inner.y) {
+    return false
+  }
+  if (outer.x + outer.width < inner.x + inner.width) {
+    return false
+  }
+  if (outer.y + outer.height < inner.y + inner.height) {
+    return false
+  }
+  return true
+}

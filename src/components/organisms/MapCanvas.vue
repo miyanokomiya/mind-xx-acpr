@@ -29,6 +29,7 @@
     :scale="scale"
     @move="move"
     @zoom="zoom"
+    @selectRectangle="selectRectangle"
     @click="clearSelect"
     @mousemove.native="e => $isMobile.any ? '' : canvasCursorMove(e)"
     @mouseup.native="e => $isMobile.any ? '' : canvasCursorUp(e)"
@@ -146,7 +147,7 @@ import {
   getConnectors,
   getBetterConnector
 } from '@/utils/model'
-import { getCoveredRectangle } from '@/utils/geometry'
+import { getCoveredRectangle, isCoveredRectangle } from '@/utils/geometry'
 import * as canvasUtils from '@/utils/canvas'
 
 import SvgCanvas from '@/components/atoms/svg/SvgCanvas'
@@ -651,6 +652,25 @@ export default {
       let x = Math.max(nodeViewX, viewLeft + 20) - 5
       x = Math.min(x, nodeViewRight)
       return { x, y }
+    },
+    selectRectangle (rectangle) {
+      const selectedNodes = Object.keys(this.nodes).reduce((p, c) => {
+        const rec = {
+          x: this.nodePositions[c].x,
+          y: this.nodePositions[c].y,
+          width: this.nodeSizes[c].width,
+          height: this.nodeSizes[c].height
+        }
+        const selected = isCoveredRectangle({
+          outer: rectangle,
+          inner: rec
+        })
+        if (selected) {
+          p[c] = true
+        }
+        return p
+      }, {})
+      this.$emit('setSelectedNodes', Object.assign({}, this.selectedNodes, selectedNodes))
     }
   }
 }
