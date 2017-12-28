@@ -3,6 +3,7 @@
   class="map-canvas-wrapper"
   :tabindex="canWrite ? '1' : ''"
   ref="svgCanvasWrapper"
+  @click="getFocus"
   @keydown.self.enter.exact="keydownEnter"
   @keydown.self.enter.shift.exact="keydownShiftEnter"
   @keydown.self.up.exact="moveSelect('up')"
@@ -12,7 +13,7 @@
   @keydown.self.up.shift.exact="changeOrder(true)"
   @keydown.self.down.shift.exact="changeOrder()"
   @keydown.self.space.self.exact="keydownSpace"
-  @keydown.self.delete.exact="keydownDelete"
+  @keydown.self.delete.shift.exact="keydownDelete"
 >
   <v-icon v-if="!canWrite" class="lock-button">lock</v-icon>
   <SvgCanvas
@@ -340,6 +341,9 @@ export default {
     }
   },
   methods: {
+    getFocus () {
+      this.$refs.svgCanvasWrapper.focus()
+    },
     move ({ x, y }) {
       this.x = x
       this.y = y
@@ -563,14 +567,21 @@ export default {
       })
     },
     deleteNode () {
-      if (this.editMenuTarget) {
+      const targetKey = this.editMenuTarget
+      if (targetKey) {
+        const parentKey = getParentKey({
+          nodes: this.nodes,
+          childKey: targetKey
+        })
+        if (parentKey) {
+          this.selectNode(parentKey)
+        }
         const updatedNodes = getUpdatedNodesWhenDeleteNode({
           nodes: this.nodes,
-          deleteKey: this.editMenuTarget
+          deleteKey: targetKey
         })
         this.$emit('updateNodes', updatedNodes)
       }
-      this.clearSelect()
     },
     calcSize ({ key, size }) {
       Vue.set(this.nodeSizes, key, size)

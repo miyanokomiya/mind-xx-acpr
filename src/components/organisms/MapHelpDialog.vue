@@ -34,7 +34,7 @@
         <v-list-tile avatar>
           <v-list-tile-content>
             <v-list-tile-title>
-              <code>Delete</code>
+              <code>Shift</code> + <code>Delete</code>
             </v-list-tile-title>
             <v-list-tile-sub-title>Delete a node</v-list-tile-sub-title>
           </v-list-tile-content>
