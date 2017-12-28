@@ -16,63 +16,77 @@
         <v-list-tile avatar>
           <v-list-tile-content>
             <v-list-tile-title>
+              Move focus
+            </v-list-tile-title>
+            <v-list-tile-sub-title>
               <code>Arrow</code>
-            </v-list-tile-title>
-            <v-list-tile-sub-title>Move focus</v-list-tile-sub-title>
+            </v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>
 
         <v-list-tile avatar>
           <v-list-tile-content>
             <v-list-tile-title>
+              Create a younger node
+            </v-list-tile-title>
+            <v-list-tile-sub-title>
               <code>Enter</code>
-            </v-list-tile-title>
-            <v-list-tile-sub-title>Create a younger node</v-list-tile-sub-title>
+            </v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>
 
         <v-list-tile avatar>
           <v-list-tile-content>
             <v-list-tile-title>
+              Delete a node
+            </v-list-tile-title>
+            <v-list-tile-sub-title>
               <code>Shift</code> + <code>Delete</code>
-            </v-list-tile-title>
-            <v-list-tile-sub-title>Delete a node</v-list-tile-sub-title>
+            </v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>
 
         <v-list-tile avatar>
           <v-list-tile-content>
             <v-list-tile-title>
+              Create a child node
+            </v-list-tile-title>
+            <v-list-tile-sub-title>
               <code>Shift</code> + <code>Enter</code>
-            </v-list-tile-title>
-            <v-list-tile-sub-title>Create a child node</v-list-tile-sub-title>
+            </v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>
 
         <v-list-tile avatar>
           <v-list-tile-content>
             <v-list-tile-title>
+              Edit text
+            </v-list-tile-title>
+            <v-list-tile-sub-title>
               <code>Space</code>
-            </v-list-tile-title>
-            <v-list-tile-sub-title>Edit text</v-list-tile-sub-title>
+            </v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>
 
         <v-list-tile avatar>
           <v-list-tile-content>
             <v-list-tile-title>
+              Change the parent
+            </v-list-tile-title>
+            <v-list-tile-sub-title>
               <code>Drag</code>
-            </v-list-tile-title>
-            <v-list-tile-sub-title>Change the parent</v-list-tile-sub-title>
+            </v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>
 
         <v-list-tile avatar>
           <v-list-tile-content>
             <v-list-tile-title>
-              <code>Shift</code> + <code>Up or Down</code>
+              Switch order
             </v-list-tile-title>
-            <v-list-tile-sub-title>Switch order</v-list-tile-sub-title>
+            <v-list-tile-sub-title>
+              <code>Shift</code> + <code>Up or Down</code>
+            </v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>
 
@@ -82,11 +96,38 @@
         <v-list-tile avatar>
           <v-list-tile-content>
             <v-list-tile-title>
-              <code>Escape</code>
+              Complete editing text
             </v-list-tile-title>
-            <v-list-tile-sub-title>Complete editing text</v-list-tile-sub-title>
+            <v-list-tile-sub-title>
+              <code>Escape</code>
+            </v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>
+
+        <v-divider></v-divider>
+        <v-subheader>History</v-subheader>
+
+        <v-list-tile avatar>
+          <v-list-tile-content>
+            <v-list-tile-title>
+              Undo
+            </v-list-tile-title>
+            <v-list-tile-sub-title>
+              <code>Control</code> + <code>Z</code> , <code>Command</code> + <code>Z</code>
+            </v-list-tile-sub-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile avatar>
+          <v-list-tile-content>
+            <v-list-tile-title>
+              Redo
+            </v-list-tile-title>
+            <v-list-tile-sub-title>
+              <code>Control</code> + <code>Shift</code> + <code>Z</code> , <code>Command</code> + <code>Shift</code> + <code>Z</code>
+            </v-list-tile-sub-title>
+          </v-list-tile-content>
+        </v-list-tile>
+
         <v-divider></v-divider>
 
       </v-list>
