@@ -19,6 +19,22 @@ export const createNode = obj =>
     obj
   )
 
+export const isSameNode = (n1, n2) => {
+  if (n1.text !== n2.text) {
+    return false
+  }
+  if (n1.backgroundColor !== n2.backgroundColor) {
+    return false
+  }
+  if (n1.color !== n2.color) {
+    return false
+  }
+  if (n1.children.join('/') !== n2.children.join('/')) {
+    return false
+  }
+  return true
+}
+
 export const createDefaultNodes = () => ({
   [ROOT_NODE]: createNode()
 })
@@ -469,4 +485,32 @@ export function getBetterConnector ({
       ey: elderBrotherPosition.y + elderBrotherSize.height + NODE_MARGIN_Y / 2
     })
   }
+}
+
+export function getNodeDiff ({ nodes, updatedNodes }) {
+  return Object.keys(updatedNodes).reduce((p, c) => {
+    const current = nodes[c]
+    const updated = updatedNodes[c]
+    if (current) {
+      if (updated) {
+        if (!isSameNode(current, updated)) {
+          p[c] = updated
+        }
+      } else {
+        // updated is deleted
+        p[c] = updated
+      }
+    } else {
+      // current does not exist
+      p[c] = updated
+    }
+    return p
+  }, {})
+}
+
+export function isConfrict ({ nodes }) {
+  const isConfrict = !!Object.keys(nodes).find(key => {
+    return key !== ROOT_NODE && !getParentKey({ nodes, childKey: key })
+  })
+  return isConfrict
 }

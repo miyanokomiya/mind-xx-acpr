@@ -17,7 +17,7 @@ export const testAction = (action, payload, state, expectedMutations, done) => {
       done()
     }
   }
-  action({ commit, state }, payload)
+  action({ commit, state, dispatch: () => {} }, payload)
   if (expectedMutations.length === 0) {
     expect(count).toBe(0)
     done()

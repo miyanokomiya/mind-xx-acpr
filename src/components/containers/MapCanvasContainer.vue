@@ -11,6 +11,8 @@
     @updateNodes="nodes => updateNodes({ nodes })"
     @setSelectedNodes="selectedNodes => setSelectedNodes({ selectedNodes })"
     @clearSelect="clearSelect"
+    @undo="undo"
+    @redo="redo"
   />
 </template>
 
@@ -92,7 +94,9 @@ export default {
       updateNodes: nodesActionTypes.UPDATE_NODES,
       setSelectedNodes: nodesActionTypes.SET_SELECTED_NODES,
       clearSelect: nodesActionTypes.CLEAR_SELECT,
-      loadNodes: nodesActionTypes.LOAD_NODES
+      loadNodes: nodesActionTypes.LOAD_NODES,
+      undo: nodesActionTypes.UNDO_NODES,
+      redo: nodesActionTypes.REDO_NODES
     }),
     ...mapActions('files', {
       loadFile: fileActionTypes.LOAD_FILE

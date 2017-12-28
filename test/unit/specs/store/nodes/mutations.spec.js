@@ -1,6 +1,6 @@
 import mutations from '@/store/nodes/mutations'
 import { mutationTypes } from '@/store/nodes/types'
-import { createDefaultNodes } from '@/utils/model'
+import { createDefaultNodes, createNode } from '@/utils/model'
 
 describe('store/nodes/mutations', () => {
   describe('UPDATE_NODES', () => {
@@ -10,7 +10,8 @@ describe('store/nodes/mutations', () => {
           a: { x: 0, y: 0 },
           b: { x: 10, y: 10 },
           c: { x: 40, y: 40 }
-        }
+        },
+        selectedNodes: {}
       }
       mutations[mutationTypes.UPDATE_NODES](state, {
         nodes: {
@@ -24,7 +25,31 @@ describe('store/nodes/mutations', () => {
           a: { x: 0, y: 0 },
           b: { x: 20, y: 30 },
           d: { x: 40, y: 40 }
+        },
+        selectedNodes: {}
+      })
+    })
+    it('should clear select of deleted nodes', () => {
+      const state = {
+        nodes: {
+          a: { x: 0, y: 0 },
+          b: { x: 10, y: 10 },
+          c: { x: 40, y: 40 }
+        },
+        selectedNodes: { b: true, c: true }
+      }
+      mutations[mutationTypes.UPDATE_NODES](state, {
+        nodes: {
+          b: { x: 20, y: 30 },
+          c: null
         }
+      })
+      expect(state).toMatchObject({
+        nodes: {
+          a: { x: 0, y: 0 },
+          b: { x: 20, y: 30 }
+        },
+        selectedNodes: { b: true }
       })
     })
   })
@@ -72,17 +97,21 @@ describe('store/nodes/mutations', () => {
     })
   })
   describe('CLEAR_NODES', () => {
-    it('should set fileKey = null, nodes = {}, selectedNodes = {}', () => {
+    it('should set fileKey = null, nodes = {}, selectedNodes = {}, undoStacks = [], redoStacks = []', () => {
       const state = {
         fileKey: 'aaa',
         nodes: { a: { text: 'aa' } },
-        selectedNodes: { a: true }
+        selectedNodes: { a: true },
+        undoStacks: [{ a: { text: 'a' } }],
+        redoStacks: [{ a: { text: 'a' } }]
       }
       mutations[mutationTypes.CLEAR_NODES](state)
       expect(state).toMatchObject({
         fileKey: null,
         nodes: createDefaultNodes(),
-        selectedNodes: {}
+        selectedNodes: {},
+        undoStacks: [],
+        redoStacks: []
       })
     })
   })
@@ -96,6 +125,108 @@ describe('store/nodes/mutations', () => {
       })
       expect(state).toMatchObject({
         initialLoading: true
+      })
+    })
+  })
+  describe('PUSH_UNDO_STACK', () => {
+    it('should push new stack to [undoStacks], and clear [redoStacks]', () => {
+      const state = {
+        nodes: {
+          b: createNode({ text: 'bbb' })
+        },
+        undoStacks: [],
+        redoStacks: [{ a: createNode({ text: 'a' }) }]
+      }
+      mutations[mutationTypes.PUSH_UNDO_STACK](state, {
+        nodes: {
+          b: createNode({ text: 'b' })
+        }
+      })
+      expect(state).toMatchObject({
+        nodes: {
+          b: createNode({ text: 'bbb' })
+        },
+        undoStacks: [{ b: createNode({ text: 'bbb' }) }],
+        redoStacks: []
+      })
+    })
+  })
+  describe('POP_UNDO_STACK', () => {
+    it('should pop a stack from [undoStacks], and push it to [redoStacks]', () => {
+      const state = {
+        nodes: {
+          b: createNode({ text: 'bbb' })
+        },
+        undoStacks: [
+          { a: createNode({ text: 'a' }) },
+          { b: createNode({ text: 'b' }) }
+        ],
+        redoStacks: []
+      }
+      mutations[mutationTypes.POP_UNDO_STACK](state)
+      expect(state).toMatchObject({
+        nodes: {
+          b: createNode({ text: 'bbb' })
+        },
+        undoStacks: [{ a: createNode({ text: 'a' }) }],
+        redoStacks: [{ b: createNode({ text: 'bbb' }) }]
+      })
+    })
+    it('should do nothing if there are no stacks in [undoStacks]', () => {
+      const state = {
+        undoStacks: [],
+        redoStacks: [{ b: createNode({ text: 'b' }) }]
+      }
+      mutations[mutationTypes.POP_UNDO_STACK](state)
+      expect(state).toMatchObject({
+        undoStacks: [],
+        redoStacks: [{ b: createNode({ text: 'b' }) }]
+      })
+    })
+  })
+  describe('POP_REDO_STACK', () => {
+    it('should pop a stack from [redoStacks], and push it to [undoStacks]', () => {
+      const state = {
+        nodes: {
+          b: createNode({ text: 'bbb' })
+        },
+        undoStacks: [],
+        redoStacks: [
+          { a: createNode({ text: 'a' }) },
+          { b: createNode({ text: 'b' }) }
+        ]
+      }
+      mutations[mutationTypes.POP_REDO_STACK](state)
+      expect(state).toMatchObject({
+        nodes: {
+          b: createNode({ text: 'bbb' })
+        },
+        undoStacks: [{ b: createNode({ text: 'bbb' }) }],
+        redoStacks: [{ a: createNode({ text: 'a' }) }]
+      })
+    })
+    it('should do nothing if there are no stacks in [redoStacks]', () => {
+      const state = {
+        undoStacks: [{ b: createNode({ text: 'b' }) }],
+        redoStacks: []
+      }
+      mutations[mutationTypes.POP_REDO_STACK](state)
+      expect(state).toMatchObject({
+        undoStacks: [{ b: createNode({ text: 'b' }) }],
+        redoStacks: []
+      })
+    })
+  })
+  describe('CLEAR_STACKS', () => {
+    it('should set empty array to [undoStacks] and [redoStacks]', () => {
+      const state = {
+        undoStacks: [{ a: { text: 'a' } }],
+        redoStacks: [{ a: { text: 'a' } }]
+      }
+      mutations[mutationTypes.CLEAR_STACKS](state)
+      expect(state).toMatchObject({
+        undoStacks: [],
+        redoStacks: []
       })
     })
   })

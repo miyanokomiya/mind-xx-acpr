@@ -13,7 +13,9 @@ export default {
       [ROOT_NODE]: createNode()
     },
     selectedNodes: {},
-    initialLoading: true
+    initialLoading: true,
+    undoStacks: [],
+    redoStacks: []
   },
   modules: {},
   actions,

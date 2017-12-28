@@ -2,10 +2,55 @@ import * as modelUtils from '@/utils/model'
 import {
   NODE_MARGIN_X,
   NODE_MARGIN_Y,
-  NODE_ADDITIONAL_MARGIN_X_RATE
+  NODE_ADDITIONAL_MARGIN_X_RATE,
+  ROOT_NODE
 } from '@/constants'
 
 describe('utils/model', () => {
+  describe('isSameNode', () => {
+    const n1 = modelUtils.createNode({
+      text: '11',
+      children: ['a', 'b'],
+      backgroundColor: '#B3E5FC',
+      color: '#000000'
+    })
+    it('should return true if two nodes are same', () => {
+      const n2 = modelUtils.createNode({
+        text: '11',
+        children: ['a', 'b'],
+        backgroundColor: '#B3E5FC',
+        color: '#000000'
+      })
+      const res = modelUtils.isSameNode(n1, n2)
+      expect(res).toBe(true)
+    })
+    it('should return true if two nodes, have no children, are same', () => {
+      const n1 = modelUtils.createNode({
+        text: '11',
+        children: [],
+        backgroundColor: '#B3E5FC',
+        color: '#000000'
+      })
+      const n2 = modelUtils.createNode({
+        text: '11',
+        children: [],
+        backgroundColor: '#B3E5FC',
+        color: '#000000'
+      })
+      const res = modelUtils.isSameNode(n1, n2)
+      expect(res).toBe(true)
+    })
+    it('should return true if two nodes are different', () => {
+      const n2 = modelUtils.createNode({
+        text: '11',
+        children: ['a', 'b', 'c'],
+        backgroundColor: '#B3E5FC',
+        color: '#000000'
+      })
+      const res = modelUtils.isSameNode(n1, n2)
+      expect(res).toBe(false)
+    })
+  })
   describe('calcFamilyPositions', () => {
     it('should calc correct position of a node that has grandson', () => {
       const a = modelUtils.createNode({
@@ -849,5 +894,84 @@ describe('utils/model', () => {
         ey: -40
       })
     })
+  })
+  describe('getNodeDiff', () => {
+    it('should get diff of nodes', () => {
+      const nodes = {
+        a: modelUtils.createNode({
+          text: '1'
+        }),
+        b: modelUtils.createNode({
+          text: '4'
+        })
+      }
+      const updatedNodes = {
+        a: modelUtils.createNode({
+          text: '1'
+        }),
+        b: modelUtils.createNode({
+          text: '6'
+        }),
+        c: modelUtils.createNode()
+      }
+      const res = modelUtils.getNodeDiff({
+        nodes,
+        updatedNodes
+      })
+      expect(res).toMatchObject({
+        b: modelUtils.createNode({
+          text: '6'
+        }),
+        c: modelUtils.createNode()
+      })
+      expect(res.a).toBe(undefined)
+    })
+  })
+  it('should get diff of nodes if next node is deleted', () => {
+    const nodes = {
+      a: modelUtils.createNode({
+        text: '1'
+      })
+    }
+    const updatedNodes = {
+      a: null
+    }
+    const res = modelUtils.getNodeDiff({
+      nodes,
+      updatedNodes
+    })
+    expect(res).toMatchObject({
+      a: null
+    })
+  })
+  describe('isConfrict', () => {
+    it('should return false if all nodes have parent', () => {
+      const nodes = {
+        [ROOT_NODE]: modelUtils.createNode({
+          children: ['b']
+        }),
+        b: modelUtils.createNode({
+          children: []
+        })
+      }
+      const res = modelUtils.isConfrict({
+        nodes
+      })
+      expect(res).toBe(false)
+    })
+  })
+  it('should return true if nodes except for [ROOT_NODE] do not have parent', () => {
+    const nodes = {
+      [ROOT_NODE]: modelUtils.createNode({
+        children: []
+      }),
+      b: modelUtils.createNode({
+        children: []
+      })
+    }
+    const res = modelUtils.isConfrict({
+      nodes
+    })
+    expect(res).toBe(true)
   })
 })

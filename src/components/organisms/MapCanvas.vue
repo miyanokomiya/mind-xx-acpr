@@ -14,6 +14,10 @@
   @keydown.self.down.shift.exact="changeOrder()"
   @keydown.self.space.self.exact="keydownSpace"
   @keydown.self.delete.shift.exact="keydownDelete"
+  @keydown.self.90.ctrl.exact="$emit('undo')"
+  @keydown.self.90.meta.exact="$emit('undo')"
+  @keydown.self.90.ctrl.shift.exact="$emit('redo')"
+  @keydown.self.90.meta.shift.exact="$emit('redo')"
 >
   <v-icon v-if="!canWrite" class="lock-button">lock</v-icon>
   <SvgCanvas
@@ -332,12 +336,21 @@ export default {
     }
   },
   watch: {
-    scale (from, to) {
+    scale () {
       const position = this.$refs.svgCanvas.getPostionAfterChangeScale(
         this.scale
       )
       this.x = position.x
       this.y = position.y
+    },
+    selectedNodes (to, from) {
+      const keys = Object.keys(to)
+      if (keys.indexOf(this.editMenuTarget) === -1) {
+        this.editMenuTarget = null
+      }
+      if (keys.indexOf(this.editTextTarget) === -1) {
+        this.editTextTarget = null
+      }
     }
   },
   methods: {
