@@ -5,6 +5,7 @@
   :textColor="textColor"
   @changeNodeColor="changeNodeColor"
   @changeTextColor="changeTextColor"
+  @repairFile="repairFile"
 />
 </template>
 
@@ -31,7 +32,8 @@ export default {
   },
   methods: {
     ...mapActions('nodes', {
-      updateNodes: nodesActionTypes.UPDATE_NODES
+      updateNodes: nodesActionTypes.UPDATE_NODES,
+      repairFile: nodesActionTypes.RESCUE_CONFRICT
     }),
     ...mapActions('settings', {
       setNodeColor: settingsActionTypes.SET_NODE_COLOR,

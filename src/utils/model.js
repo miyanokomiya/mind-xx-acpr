@@ -508,23 +508,42 @@ export function getNodeDiff ({ nodes, updatedNodes }) {
   }, {})
 }
 
-export function isConfrict ({ nodes }) {
-  let isConfrict = false
+export function isConflict ({ nodes }) {
+  let isConflict = false
   Object.keys(nodes).some(key => {
     if (key !== ROOT_NODE) {
       if (!getParentKey({ nodes, childKey: key })) {
-        isConfrict = true
-        return isConfrict
+        isConflict = true
+        return isConflict
       }
     }
     const node = nodes[key]
     node.children.some(childKey => {
       if (!nodes[childKey]) {
-        isConfrict = true
+        isConflict = true
         return true
       }
     })
-    return isConfrict
+    return isConflict
   })
-  return isConfrict
+  return isConflict
+}
+
+export function rescueConflict ({ nodes }) {
+  return Object.keys(nodes).reduce((p, key) => {
+    if (key !== ROOT_NODE) {
+      if (!getParentKey({ nodes, childKey: key })) {
+        return p
+      }
+    }
+    const children = nodes[key].children.filter(childKey => {
+      if (nodes[childKey]) {
+        return true
+      }
+    })
+    p[key] = Object.assign({}, nodes[key], {
+      children
+    })
+    return p
+  }, {})
 }

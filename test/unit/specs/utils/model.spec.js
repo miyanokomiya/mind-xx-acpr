@@ -944,7 +944,7 @@ describe('utils/model', () => {
       a: null
     })
   })
-  describe('isConfrict', () => {
+  describe('isConflict', () => {
     it('should return false if all nodes have parent', () => {
       const nodes = {
         [ROOT_NODE]: modelUtils.createNode({
@@ -954,7 +954,7 @@ describe('utils/model', () => {
           children: []
         })
       }
-      const res = modelUtils.isConfrict({
+      const res = modelUtils.isConflict({
         nodes
       })
       expect(res).toBe(false)
@@ -969,7 +969,7 @@ describe('utils/model', () => {
         children: []
       })
     }
-    const res = modelUtils.isConfrict({
+    const res = modelUtils.isConflict({
       nodes
     })
     expect(res).toBe(true)
@@ -983,9 +983,50 @@ describe('utils/model', () => {
         children: []
       })
     }
-    const res = modelUtils.isConfrict({
+    const res = modelUtils.isConflict({
       nodes
     })
     expect(res).toBe(true)
+  })
+  describe('rescueConflict', () => {
+    it('should omit nodes which have unreal parent, except for [ROOT_NODE]', () => {
+      const nodes = {
+        [ROOT_NODE]: modelUtils.createNode({
+          children: []
+        }),
+        b: modelUtils.createNode({
+          children: []
+        })
+      }
+      const res = modelUtils.rescueConflict({
+        nodes
+      })
+      expect(res).toMatchObject({
+        [ROOT_NODE]: modelUtils.createNode({
+          children: []
+        })
+      })
+    })
+    it('should omit children which are not exist', () => {
+      const nodes = {
+        [ROOT_NODE]: modelUtils.createNode({
+          children: ['a', 'b']
+        }),
+        b: modelUtils.createNode({
+          children: ['c']
+        })
+      }
+      const res = modelUtils.rescueConflict({
+        nodes
+      })
+      expect(res).toMatchObject({
+        [ROOT_NODE]: modelUtils.createNode({
+          children: ['b']
+        }),
+        b: modelUtils.createNode({
+          children: []
+        })
+      })
+    })
   })
 })

@@ -130,6 +130,34 @@ describe('store/nodes/actions', () => {
       )
     })
   })
+  describe('RESCUE_CONFRICT', () => {
+    it('should commit correct mutations', done => {
+      testAction(
+        actions[actionTypes.RESCUE_CONFRICT],
+        {},
+        {
+          nodes: {
+            [ROOT_NODE]: createNode({ text: 'a' }),
+            b: createNode({ text: 'b' })
+          }
+        },
+        [
+          {
+            type: mutationTypes.CLEAR_STACKS
+          },
+          {
+            type: mutationTypes.SET_SELECTED_NODES,
+            payload: {}
+          },
+          {
+            type: mutationTypes.UPDATE_NODES,
+            payload: { nodes: { [ROOT_NODE]: createNode({ text: 'a' }) } }
+          }
+        ],
+        done
+      )
+    })
+  })
   describe('SET_SELECTED_NODES', () => {
     it('should commit correct mutations', done => {
       testAction(

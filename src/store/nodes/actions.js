@@ -1,6 +1,11 @@
 import { actionTypes, mutationTypes } from './types'
 import firebase from '@/firebase'
-import { createNode, getNodeDiff, isConfrict } from '@/utils/model'
+import {
+  createNode,
+  getNodeDiff,
+  isConflict,
+  rescueConflict
+} from '@/utils/model'
 
 const updateNodes =
   process.env.NODE_ENV === 'test'
@@ -105,7 +110,7 @@ export default {
               delete nextMerged[key]
             }
           }
-          if (isConfrict({ nodes: nextMerged })) {
+          if (isConflict({ nodes: nextMerged })) {
             context.commit(mutationTypes.CLEAR_STACKS)
             return reject(
               new Error('Failed to undo. Others may edit and conflicted.')
@@ -136,7 +141,7 @@ export default {
               delete nextMerged[key]
             }
           }
-          if (isConfrict({ nodes: nextMerged })) {
+          if (isConflict({ nodes: nextMerged })) {
             context.commit(mutationTypes.CLEAR_STACKS)
             return reject(
               new Error('Failed to redo. Others may edit and conflicted.')
@@ -153,6 +158,20 @@ export default {
       }
       return resolve()
     })
+  },
+  [actionTypes.RESCUE_CONFRICT] (context) {
+    if (!isConflict({ nodes: context.state.nodes })) {
+      return
+    }
+    const nodes = rescueConflict({ nodes: context.state.nodes })
+    // clear stack
+    context.commit(mutationTypes.CLEAR_STACKS)
+    // clear select
+    context.commit(mutationTypes.SET_SELECTED_NODES, {})
+    // local commit
+    context.commit(mutationTypes.UPDATE_NODES, { nodes })
+    // push firebase
+    updateNodes(context, { nodes })
   },
   [actionTypes.SET_SELECTED_NODES] (context, { selectedNodes }) {
     context.commit(mutationTypes.SET_SELECTED_NODES, { selectedNodes })
