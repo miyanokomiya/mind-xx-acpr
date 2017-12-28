@@ -93,44 +93,66 @@ export default {
     updateNodes(context, { nodes: diff })
   },
   [actionTypes.UNDO_NODES] (context) {
-    const stacks = context.state.undoStacks
-    if (stacks.length > 0) {
-      const nodes = stacks[stacks.length - 1]
-      if (nodes) {
-        // check all parents exist after merging
-        const nextMerged = Object.assign({}, context.state.nodes, nodes)
-        if (isConfrict({ nodes: nextMerged })) {
-          context.commit(mutationTypes.CLEAR_STACKS)
-        } else {
-          // pop undo stack
-          context.commit(mutationTypes.POP_UNDO_STACK)
-          // local commit
-          context.commit(mutationTypes.UPDATE_NODES, { nodes })
-          // push firebase
-          updateNodes(context, { nodes })
+    return new Promise((resolve, reject) => {
+      const stacks = context.state.undoStacks
+      if (stacks.length > 0) {
+        const nodes = stacks[stacks.length - 1]
+        if (nodes) {
+          // check all parents exist after merging
+          const nextMerged = Object.assign({}, context.state.nodes, nodes)
+          for (const key in nextMerged) {
+            if (!nextMerged[key]) {
+              delete nextMerged[key]
+            }
+          }
+          if (isConfrict({ nodes: nextMerged })) {
+            context.commit(mutationTypes.CLEAR_STACKS)
+            return reject(
+              new Error('Failed to undo. Others may edit and confricted.')
+            )
+          } else {
+            // pop undo stack
+            context.commit(mutationTypes.POP_UNDO_STACK)
+            // local commit
+            context.commit(mutationTypes.UPDATE_NODES, { nodes })
+            // push firebase
+            updateNodes(context, { nodes })
+          }
         }
       }
-    }
+      return resolve()
+    })
   },
   [actionTypes.REDO_NODES] (context) {
-    const stacks = context.state.redoStacks
-    if (stacks.length > 0) {
-      const nodes = stacks[stacks.length - 1]
-      if (nodes) {
-        // check all parents exist after merging
-        const nextMerged = Object.assign({}, context.state.nodes, nodes)
-        if (isConfrict({ nodes: nextMerged })) {
-          context.commit(mutationTypes.CLEAR_STACKS)
-        } else {
-          // pop redo stack
-          context.commit(mutationTypes.POP_REDO_STACK)
-          // local commit
-          context.commit(mutationTypes.UPDATE_NODES, { nodes })
-          // push firebase
-          updateNodes(context, { nodes })
+    return new Promise((resolve, reject) => {
+      const stacks = context.state.redoStacks
+      if (stacks.length > 0) {
+        const nodes = stacks[stacks.length - 1]
+        if (nodes) {
+          // check all parents exist after merging
+          const nextMerged = Object.assign({}, context.state.nodes, nodes)
+          for (const key in nextMerged) {
+            if (!nextMerged[key]) {
+              delete nextMerged[key]
+            }
+          }
+          if (isConfrict({ nodes: nextMerged })) {
+            context.commit(mutationTypes.CLEAR_STACKS)
+            return reject(
+              new Error('Failed to redo. Others may edit and confricted.')
+            )
+          } else {
+            // pop redo stack
+            context.commit(mutationTypes.POP_REDO_STACK)
+            // local commit
+            context.commit(mutationTypes.UPDATE_NODES, { nodes })
+            // push firebase
+            updateNodes(context, { nodes })
+          }
         }
       }
-    }
+      return resolve()
+    })
   },
   [actionTypes.SET_SELECTED_NODES] (context, { selectedNodes }) {
     context.commit(mutationTypes.SET_SELECTED_NODES, { selectedNodes })

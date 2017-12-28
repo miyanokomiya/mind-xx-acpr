@@ -509,8 +509,22 @@ export function getNodeDiff ({ nodes, updatedNodes }) {
 }
 
 export function isConfrict ({ nodes }) {
-  const isConfrict = !!Object.keys(nodes).find(key => {
-    return key !== ROOT_NODE && !getParentKey({ nodes, childKey: key })
+  let isConfrict = false
+  Object.keys(nodes).some(key => {
+    if (key !== ROOT_NODE) {
+      if (!getParentKey({ nodes, childKey: key })) {
+        isConfrict = true
+        return isConfrict
+      }
+    }
+    const node = nodes[key]
+    node.children.some(childKey => {
+      if (!nodes[childKey]) {
+        isConfrict = true
+        return true
+      }
+    })
+    return isConfrict
   })
   return isConfrict
 }

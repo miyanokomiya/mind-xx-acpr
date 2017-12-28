@@ -974,4 +974,18 @@ describe('utils/model', () => {
     })
     expect(res).toBe(true)
   })
+  it('should return true if children are not found', () => {
+    const nodes = {
+      [ROOT_NODE]: modelUtils.createNode({
+        children: ['a', 'b']
+      }),
+      b: modelUtils.createNode({
+        children: []
+      })
+    }
+    const res = modelUtils.isConfrict({
+      nodes
+    })
+    expect(res).toBe(true)
+  })
 })

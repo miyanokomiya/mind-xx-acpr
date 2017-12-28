@@ -1,4 +1,5 @@
 <template>
+<div>
   <MapCanvas
     v-if="loaded"
     :width="canvasWidth"
@@ -14,6 +15,16 @@
     @undo="undo"
     @redo="redo"
   />
+  <v-snackbar
+    bottom
+    right
+    color="error"
+    :timeout="4000"
+    v-model="snackbar"
+  >
+    {{message}}
+  </v-snackbar>
+</div>
 </template>
 
 <script>
@@ -31,6 +42,7 @@ export default {
     MapCanvas
   },
   data: () => ({
+    message: ''
   }),
   props: {
     fileKey: {
@@ -79,6 +91,14 @@ export default {
     loaded () {
       // If the count of nodes in a file is zero, the records of nodes don't exist.
       return !this.initialLoading || (this.file && this.file.nodeCount < 1)
+    },
+    snackbar: {
+      get () {
+        return !!this.message
+      },
+      set (val) {
+        this.message = val ? this.message : ''
+      }
     }
   },
   mounted () {
@@ -95,12 +115,22 @@ export default {
       setSelectedNodes: nodesActionTypes.SET_SELECTED_NODES,
       clearSelect: nodesActionTypes.CLEAR_SELECT,
       loadNodes: nodesActionTypes.LOAD_NODES,
-      undo: nodesActionTypes.UNDO_NODES,
-      redo: nodesActionTypes.REDO_NODES
+      _undo: nodesActionTypes.UNDO_NODES,
+      _redo: nodesActionTypes.REDO_NODES
     }),
     ...mapActions('files', {
       loadFile: fileActionTypes.LOAD_FILE
-    })
+    }),
+    undo () {
+      this._undo().catch(e => {
+        this.message = e.message
+      })
+    },
+    redo () {
+      this._redo().catch(e => {
+        this.message = e.message
+      })
+    }
   }
 }
 </script>
