@@ -34,9 +34,9 @@
       </v-btn> -->
       <v-menu bottom left offset-y v-if="user">
         <v-btn icon slot="activator" dark>
-          <v-avatar size="32px" tile>
-          <img :src="user.photoURL"/>
-        </v-avatar>
+          <v-avatar size="32px">
+            <img :src="user.photoURL"/>
+          </v-avatar>
         </v-btn>
         <v-list>
           <v-list-tile>
