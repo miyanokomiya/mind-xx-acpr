@@ -108,7 +108,7 @@ export default {
           if (isConfrict({ nodes: nextMerged })) {
             context.commit(mutationTypes.CLEAR_STACKS)
             return reject(
-              new Error('Failed to undo. Others may edit and confricted.')
+              new Error('Failed to undo. Others may edit and conflicted.')
             )
           } else {
             // pop undo stack
@@ -139,7 +139,7 @@ export default {
           if (isConfrict({ nodes: nextMerged })) {
             context.commit(mutationTypes.CLEAR_STACKS)
             return reject(
-              new Error('Failed to redo. Others may edit and confricted.')
+              new Error('Failed to redo. Others may edit and conflicted.')
             )
           } else {
             // pop redo stack
