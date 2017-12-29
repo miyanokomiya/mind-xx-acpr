@@ -1,6 +1,6 @@
 import Vue from 'vue'
 
-if (process.env.NODE_ENV !== 'production') {
+if (!window.trackJs) {
   window.trackJs = {
     track () {
       console.log('trackJs', arguments)
