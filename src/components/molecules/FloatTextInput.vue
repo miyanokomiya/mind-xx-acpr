@@ -10,8 +10,8 @@
     autofocus
     :rows="rows"
     v-model="_value"
-    @keyup.esc="$emit('done')"
-    @blur="e => $emit('done')"
+    @keyup.esc="done"
+    @blur="done"
   />
 </div>
 </template>
@@ -30,6 +30,10 @@ export default {
     y: {
       type: Number,
       default: 0
+    },
+    targetKey: {
+      type: String,
+      required: true
     }
   },
   computed: {
@@ -46,6 +50,14 @@ export default {
     },
     rows () {
       return Math.min(this.lines.length, 3)
+    }
+  },
+  methods: {
+    done () {
+      this.$emit('done', {
+        value: this.value,
+        targetKey: this.targetKey
+      })
     }
   }
 }

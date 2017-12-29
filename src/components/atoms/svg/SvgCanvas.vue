@@ -11,6 +11,7 @@
     @touchmove.prevent="e => $isMobile.any ? canvasCursorMove(e) : ''"
     @touchstart.self="e => $isMobile.any ? canvasCursorDownSelf(e) : ''"
     @touchend.self="e => $isMobile.any ? canvasCursorUpSelf(e) : ''"
+    @touchend="e => $isMobile.any ? canvasCursorUp(e) : ''"
   >
     <slot />
     <SvgRectangle

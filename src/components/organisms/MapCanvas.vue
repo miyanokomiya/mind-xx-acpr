@@ -1,99 +1,103 @@
 <template>
 <div
   class="map-canvas-wrapper"
-  :tabindex="canWrite ? '1' : ''"
-  ref="svgCanvasWrapper"
-  @click="getFocus"
-  @keydown.self.enter.exact="keydownEnter"
-  @keydown.self.enter.shift.exact="keydownShiftEnter"
-  @keydown.self.up.exact="moveSelect('up')"
-  @keydown.self.down.exact="moveSelect('down')"
-  @keydown.self.left.exact="moveSelect('left')"
-  @keydown.self.right.exact="moveSelect('right')"
-  @keydown.self.up.shift.exact="changeOrder(true)"
-  @keydown.self.down.shift.exact="changeOrder()"
-  @keydown.self.space.self.exact="keydownSpace"
-  @keydown.self.delete.shift.exact="keydownDelete"
-  @keydown.self.90.ctrl.exact="$emit('undo')"
-  @keydown.self.90.meta.exact="$emit('undo')"
-  @keydown.self.90.ctrl.shift.exact="$emit('redo')"
-  @keydown.self.90.meta.shift.exact="$emit('redo')"
 >
-  <v-icon v-if="!canWrite" class="lock-button">lock</v-icon>
-  <SvgCanvas
-    ref="svgCanvas"
-    :x="x"
-    :y="y"
-    :width="width"
-    :height="height"
-    :scale="scale"
-    @move="move"
-    @zoom="zoom"
-    @selectRectangle="selectRectangle"
-    @click="clearSelect"
-    @mousemove.native="e => $isMobile.any ? '' : canvasCursorMove(e)"
-    @mouseup.native="e => $isMobile.any ? '' : canvasCursorUp(e)"
-    @touchmove.native="e => $isMobile.any ? canvasCursorMove(e) : ''"
-    @touchend.native="e => $isMobile.any ? canvasCursorUp(e) : ''"
+  <div
+    class="canvas-wrapper"
+    :tabindex="canWrite ? '1' : ''"
+    ref="svgCanvasWrapper"
+    @click="getFocus"
+    @keydown.self.enter.exact="keydownEnter"
+    @keydown.self.enter.shift.exact="keydownShiftEnter"
+    @keydown.self.up.exact="moveSelect('up')"
+    @keydown.self.down.exact="moveSelect('down')"
+    @keydown.self.left.exact="moveSelect('left')"
+    @keydown.self.right.exact="moveSelect('right')"
+    @keydown.self.up.shift.exact="changeOrder(true)"
+    @keydown.self.down.shift.exact="changeOrder()"
+    @keydown.self.space.self.exact="keydownSpace"
+    @keydown.self.delete.shift.exact="keydownDelete"
+    @keydown.self.90.ctrl.exact="$emit('undo')"
+    @keydown.self.90.meta.exact="$emit('undo')"
+    @keydown.self.90.ctrl.shift.exact="$emit('redo')"
+    @keydown.self.90.meta.shift.exact="$emit('redo')"
   >
-    <SvgConnector
-      v-for="(connector, i) in connectors"
-      :key="i"
-      :sx="connector.sx"
-      :sy="connector.sy"
-      :ex="connector.ex"
-      :ey="connector.ey"
-    />
-    <g v-if="connectorOfMovingNodes" class="inserting-marker">
+    <v-icon v-if="!canWrite" class="lock-button">lock</v-icon>
+    <SvgCanvas
+      ref="svgCanvas"
+      :x="x"
+      :y="y"
+      :width="width"
+      :height="height"
+      :scale="scale"
+      @move="move"
+      @zoom="zoom"
+      @selectRectangle="selectRectangle"
+      @click="clearSelect"
+      @mousemove.native="e => $isMobile.any ? '' : canvasCursorMove(e)"
+      @mouseup.native="e => $isMobile.any ? '' : canvasCursorUp(e)"
+      @touchmove.native="e => $isMobile.any ? canvasCursorMove(e) : ''"
+      @touchend.native="e => $isMobile.any ? canvasCursorUp(e) : ''"
+    >
       <SvgConnector
-        :sx="connectorOfMovingNodes.sx"
-        :sy="connectorOfMovingNodes.sy"
-        :ex="connectorOfMovingNodes.ex"
-        :ey="connectorOfMovingNodes.ey"
+        v-for="(connector, i) in connectors"
+        :key="i"
+        :sx="connector.sx"
+        :sy="connector.sy"
+        :ex="connector.ex"
+        :ey="connector.ey"
       />
-      <SvgRectangle
-        :x="connectorOfMovingNodes.ex"
-        :y="connectorOfMovingNodes.ey - NODE_MARGIN_Y / 3 / 2"
-        :rx="5"
-        :ry="5"
-        :width="50"
-        :height="NODE_MARGIN_Y / 3"
-        stroke="none"
-        fill="blue"
+      <g v-if="connectorOfMovingNodes" class="inserting-marker">
+        <SvgConnector
+          :sx="connectorOfMovingNodes.sx"
+          :sy="connectorOfMovingNodes.sy"
+          :ex="connectorOfMovingNodes.ex"
+          :ey="connectorOfMovingNodes.ey"
+        />
+        <SvgRectangle
+          :x="connectorOfMovingNodes.ex"
+          :y="connectorOfMovingNodes.ey - NODE_MARGIN_Y / 3 / 2"
+          :rx="5"
+          :ry="5"
+          :width="50"
+          :height="NODE_MARGIN_Y / 3"
+          stroke="none"
+          fill="blue"
+        />
+      </g>
+      <SvgTextRectangle
+        class="mind-node"
+        :class="{ 'moving-origin': movingNodePositions[key] }"
+        v-for="(node, key) in nodes"
+        :key="key"
+        :ref="`node_${key}`"
+        :x="nodePositions[key].x"
+        :y="nodePositions[key].y"
+        :text="key === editTextTarget ? editingText : node.text"
+        :strokeWidth="selectedNodes[key] ? 2 : 1"
+        :stroke="selectedNodes[key] ? 'blue' : 'black'"
+        :fill="node.backgroundColor"
+        :textFill="node.color"
+        @calcSize="size => calcSize({key, size})"
+        @mousedown.native.prevent="e => canWrite ? ($isMobile.any ? '' : nodeCursorDown(e, key)) : ''"
+        @mouseup.native.prevent="e => canWrite ? ($isMobile.any ?  '' : nodeCursorUp(key, {shift: e.shiftKey})) : ''"
+        @touchstart.native.prevent="e => canWrite ? ($isMobile.any ? nodeCursorDown(e, key) : '') : ''"
+        @touchend.native.prevent="e => canWrite ? ($isMobile.any ?  nodeCursorUp(key, {shift: e.shiftKey}) : '') : ''"
       />
-    </g>
-    <SvgTextRectangle
-      class="mind-node"
-      :class="{ 'moving-origin': movingNodePositions[key] }"
-      v-for="(node, key) in nodes"
-      :key="key"
-      :ref="`node_${key}`"
-      :x="nodePositions[key].x"
-      :y="nodePositions[key].y"
-      :text="key === editTextTarget ? editingText : node.text"
-      :strokeWidth="selectedNodes[key] ? 2 : 1"
-      :stroke="selectedNodes[key] ? 'blue' : 'black'"
-      :fill="node.backgroundColor"
-      :textFill="node.color"
-      @calcSize="size => calcSize({key, size})"
-      @mousedown.native.prevent="e => canWrite ? ($isMobile.any ? '' : nodeCursorDown(e, key)) : ''"
-      @mouseup.native.prevent="e => canWrite ? ($isMobile.any ?  '' : nodeCursorUp(key, {shift: e.shiftKey})) : ''"
-      @touchstart.native.prevent="e => canWrite ? ($isMobile.any ? nodeCursorDown(e, key) : '') : ''"
-      @touchend.native.prevent="e => canWrite ? ($isMobile.any ?  nodeCursorUp(key, {shift: e.shiftKey}) : '') : ''"
-    />
-    <SvgTextRectangle
-      class="mind-node moving-copy"
-      v-for="(positions, key) in movingNodePositions"
-      :key="`moving_${key}`"
-      :x="positions.x"
-      :y="positions.y"
-      :text="nodes[key].text"
-      :strokeWidth="selectedNodes[key] ? 2 : 1"
-      :stroke="selectedNodes[key] ? 'blue' : 'black'"
-      :fill="nodes[key].backgroundColor"
-      :textFill="nodes[key].color"
-    />
-  </SvgCanvas>
+      <SvgTextRectangle
+        class="mind-node moving-copy"
+        v-for="(positions, key) in movingNodePositions"
+        :key="`moving_${key}`"
+        :x="positions.x"
+        :y="positions.y"
+        :text="nodes[key].text"
+        :strokeWidth="selectedNodes[key] ? 2 : 1"
+        :stroke="selectedNodes[key] ? 'blue' : 'black'"
+        :fill="nodes[key].backgroundColor"
+        :textFill="nodes[key].color"
+      />
+    </SvgCanvas>
+  </div>
   <div class="scale-tool">
     <ScaleToolBox
       :min="MIN_SCALE_RATE"
@@ -109,6 +113,7 @@
     v-model="editingText"
     :x="editTextTargetPosition.x"
     :y="editTextTargetPosition.y"
+    :targetKey="editTextTarget"
     @done="doneEditText"
     @mousewheel.native.prevent="e => $isMobile.any ? '' : mousewheel(e)"
   />
@@ -541,16 +546,16 @@ export default {
       this.editingText = this.nodes[key] ? this.nodes[key].text : ''
       this.editMenuTarget = null
     },
-    doneEditText () {
-      if (this.editTextTarget) {
-        const target = this.nodes[this.editTextTarget]
+    doneEditText ({ value, targetKey }) {
+      const target = this.nodes[targetKey]
+      if (target) {
         const next = Object.assign({}, target, {
-          text: this.editingText
+          text: value
         })
         this.$emit('updateNodes', {
-          [this.editTextTarget]: next
+          [targetKey]: next
         })
-        this.editMenuTarget = this.editTextTarget
+        this.selectNode(targetKey)
         this.editTextTarget = null
         this.editingText = null
         this.$refs.svgCanvasWrapper.focus()
@@ -690,9 +695,11 @@ export default {
 <style lang="scss" scoped>
 .map-canvas-wrapper {
   position: relative;
-  display: inline-block;
   overflow: hidden;
-  outline: none;
+
+  .canvas-wrapper {
+    outline: none;
+  }
   .lock-button {
     position: absolute;
     top: 10px;
