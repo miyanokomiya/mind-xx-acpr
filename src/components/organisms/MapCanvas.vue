@@ -44,6 +44,24 @@
       :ex="connector.ex"
       :ey="connector.ey"
     />
+    <g v-if="connectorOfMovingNodes" class="inserting-marker">
+      <SvgConnector
+        :sx="connectorOfMovingNodes.sx"
+        :sy="connectorOfMovingNodes.sy"
+        :ex="connectorOfMovingNodes.ex"
+        :ey="connectorOfMovingNodes.ey"
+      />
+      <SvgRectangle
+        :x="connectorOfMovingNodes.ex"
+        :y="connectorOfMovingNodes.ey - NODE_MARGIN_Y / 3 / 2"
+        :rx="5"
+        :ry="5"
+        :width="50"
+        :height="NODE_MARGIN_Y / 3"
+        stroke="none"
+        fill="blue"
+      />
+    </g>
     <SvgTextRectangle
       class="mind-node"
       :class="{ 'moving-origin': movingNodePositions[key] }"
@@ -75,24 +93,6 @@
       :fill="nodes[key].backgroundColor"
       :textFill="nodes[key].color"
     />
-    <g v-if="connectorOfMovingNodes" class="inserting-marker">
-      <SvgConnector
-        :sx="connectorOfMovingNodes.sx"
-        :sy="connectorOfMovingNodes.sy"
-        :ex="connectorOfMovingNodes.ex"
-        :ey="connectorOfMovingNodes.ey"
-      />
-      <SvgRectangle
-        :x="connectorOfMovingNodes.ex"
-        :y="connectorOfMovingNodes.ey - NODE_MARGIN_Y / 3 / 2"
-        :rx="5"
-        :ry="5"
-        :width="50"
-        :height="NODE_MARGIN_Y / 3"
-        stroke="none"
-        fill="blue"
-      />
-    </g>
   </SvgCanvas>
   <div class="scale-tool">
     <ScaleToolBox

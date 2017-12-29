@@ -906,7 +906,7 @@ describe('utils/model', () => {
         newChildOrder: 0
       })
       expect(res).toMatchObject({
-        sx: 10,
+        sx: 10 - CONNECTOR_INNTER_MARGIN_X,
         sy: 10,
         ex: 50,
         ey: 50 - NODE_MARGIN_Y / 2
@@ -922,7 +922,7 @@ describe('utils/model', () => {
         newChildOrder: 1
       })
       expect(res).toMatchObject({
-        sx: 10,
+        sx: 10 - CONNECTOR_INNTER_MARGIN_X,
         sy: 10,
         ex: 50,
         ey: 300
@@ -938,7 +938,7 @@ describe('utils/model', () => {
         newChildOrder: 2
       })
       expect(res).toMatchObject({
-        sx: 10,
+        sx: 10 - CONNECTOR_INNTER_MARGIN_X,
         sy: 10,
         ex: 50,
         ey: 500 + 40 + NODE_MARGIN_Y / 2
@@ -954,7 +954,7 @@ describe('utils/model', () => {
         newChildOrder: 0
       })
       expect(res).toMatchObject({
-        sx: 150,
+        sx: 150 - CONNECTOR_INNTER_MARGIN_X,
         sy: -40,
         ex: 150 + NODE_MARGIN_X,
         ey: -40

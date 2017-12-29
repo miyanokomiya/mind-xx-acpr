@@ -305,9 +305,9 @@ export function getUpdatedNodesWhenFitClosestParent ({
       return
     }
     // remove family
-    if (familyKeys.indexOf(key) > -1) {
-      return
-    }
+    // if (familyKeys.indexOf(key) > -1) {
+    //   return
+    // }
     rectangles[key] = {
       x: positions[key].x,
       y: positions[key].y,
@@ -321,15 +321,8 @@ export function getUpdatedNodesWhenFitClosestParent ({
     width: sizes[targetKey].width,
     height: sizes[targetKey].height
   }
-  const targetCenter = geometry.getCenterOfRectangle(targetRectangle)
-  const originalTargetCenter = geometry.getCenterOfRectangle(
-    rectangles[targetKey]
-  )
-  if (geometry.getDistance(targetCenter, originalTargetCenter) < 15) {
-    return nodes
-  }
 
-  delete rectangles[targetKey]
+  // delete rectangles[targetKey]
   const closestKey = geometry.getClosestRectangleByPoint({
     rectangles,
     point: {
@@ -338,8 +331,14 @@ export function getUpdatedNodesWhenFitClosestParent ({
     }
   })
 
+  // change nothing if closest node is the target or its family
+  if (familyKeys.indexOf(closestKey) > -1 || closestKey === targetKey) {
+    return nodes
+  }
+
   const closestNode = nodes[closestKey]
   const closestRectangle = rectangles[closestKey]
+  const targetCenter = geometry.getCenterOfRectangle(targetRectangle)
 
   const closestHasNoChildOrHasTarget =
     closestNode.children.length === 0 ||
@@ -463,12 +462,12 @@ export function getBetterConnector ({
   const parentPosition = positions[newParentKey]
   const parentSize = sizes[newParentKey]
   const start = {
-    sx: parentPosition.x + parentSize.width,
+    sx: parentPosition.x + parentSize.width - CONNECTOR_INNTER_MARGIN_X,
     sy: parentPosition.y + parentSize.height / 2
   }
   if (parentNode.children.length === 0) {
     return Object.assign({}, start, {
-      ex: start.sx + NODE_MARGIN_X,
+      ex: start.sx + CONNECTOR_INNTER_MARGIN_X + NODE_MARGIN_X,
       ey: start.sy
     })
   }
