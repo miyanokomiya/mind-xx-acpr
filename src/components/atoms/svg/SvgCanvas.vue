@@ -17,6 +17,8 @@
       v-if="rectangleSelecting"
       :x="selectRectangle.x"
       :y="selectRectangle.y"
+      :rx="3"
+      :ry="3"
       :width="selectRectangle.width"
       :height="selectRectangle.height"
       fill="none"

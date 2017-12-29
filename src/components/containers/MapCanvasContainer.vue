@@ -74,7 +74,7 @@ export default {
       return this.$window.width >= 1264 && this.leftDrawer ? this.$window.width - 300 - 20 : this.$window.width - 20
     },
     canvasHeight () {
-      return this.$window.height - 72
+      return this.$window.height - 48
     },
     fileAuthority () {
       return this.fileAuthorities[this.fileKey]
