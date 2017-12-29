@@ -1,5 +1,12 @@
 <template>
-  <text ref="text" :x="x" :y="y" :font-size="fontSize" :fill="fill">
+  <text
+    ref="text"
+    :x="x"
+    :y="y"
+    :font-size="fontSize"
+    :font-weight="fontWeight"
+    :fill="fill"
+  >
     {{text}}
   </text>
 </template>
@@ -26,6 +33,10 @@ export default {
     fill: {
       type: String,
       default: 'black'
+    },
+    fontWeight: {
+      type: Number,
+      default: 500
     }
   },
   methods: {
