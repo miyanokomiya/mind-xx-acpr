@@ -3,7 +3,8 @@ import {
   NODE_MARGIN_X,
   NODE_MARGIN_Y,
   NODE_ADDITIONAL_MARGIN_X_RATE,
-  ROOT_NODE
+  ROOT_NODE,
+  CONNECTOR_INNTER_MARGIN_X
 } from '@/constants'
 
 describe('utils/model', () => {
@@ -849,19 +850,19 @@ describe('utils/model', () => {
       const res = modelUtils.getConnectors({ nodes, positions, sizes })
       expect(res).toMatchObject({
         'a-b': {
-          sx: 10,
+          sx: 10 - CONNECTOR_INNTER_MARGIN_X,
           sy: 10,
           ex: 50,
           ey: 75
         },
         'b-c': {
-          sx: 80,
+          sx: 80 - CONNECTOR_INNTER_MARGIN_X,
           sy: 75,
           ex: 0,
           ey: -40
         },
         'b-d': {
-          sx: 80,
+          sx: 80 - CONNECTOR_INNTER_MARGIN_X,
           sy: 75,
           ex: 100,
           ey: 520

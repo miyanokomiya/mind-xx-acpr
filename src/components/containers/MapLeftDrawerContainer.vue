@@ -1,6 +1,8 @@
 <template>
 <MapLeftDrawer
+  v-if="file"
   :nodes="nodes"
+  :file="file"
   :nodeColor="nodeColor"
   :textColor="textColor"
   @changeNodeColor="changeNodeColor"
@@ -15,6 +17,7 @@ import MapLeftDrawer from '@/components/organisms/MapLeftDrawer'
 import { mapGetters, mapActions } from 'vuex'
 import { getterTypes as nodesGetterTypes, actionTypes as nodesActionTypes } from '@/store/nodes/types'
 import { getterTypes as settingsGetterTypes, actionTypes as settingsActionTypes } from '@/store/settings/types'
+import { getterTypes as filesGetterTypes } from '@/store/files/types'
 
 export default {
   components: {
@@ -23,12 +26,19 @@ export default {
   computed: {
     ...mapGetters('nodes', {
       nodes: nodesGetterTypes.NODES,
-      selectedNodes: nodesGetterTypes.SELECTED_NODES
+      selectedNodes: nodesGetterTypes.SELECTED_NODES,
+      fileKey: nodesGetterTypes.FILE_KEY
     }),
     ...mapGetters('settings', {
       nodeColor: settingsGetterTypes.NODE_COLOR,
       textColor: settingsGetterTypes.TEXT_COLOR
-    })
+    }),
+    ...mapGetters('files', {
+      files: filesGetterTypes.FILES
+    }),
+    file () {
+      return this.files[this.fileKey]
+    }
   },
   methods: {
     ...mapActions('nodes', {

@@ -2,7 +2,8 @@ import {
   NODE_MARGIN_X,
   NODE_MARGIN_Y,
   NODE_ADDITIONAL_MARGIN_X_RATE,
-  ROOT_NODE
+  ROOT_NODE,
+  CONNECTOR_INNTER_MARGIN_X
 } from '@/constants'
 
 import * as geometry from './geometry'
@@ -434,7 +435,7 @@ export function getConnectors ({ nodes, positions, sizes }) {
           childPosition.x + childSize.width / 2 <
           parentPosition.x + parentSize.width / 2
         ret[`${parentKey}-${childKey}`] = {
-          sx: parentPosition.x + parentSize.width,
+          sx: parentPosition.x + parentSize.width - CONNECTOR_INNTER_MARGIN_X,
           sy: parentPosition.y + parentSize.height / 2,
           ex: isChildLeftFromParent
             ? childPosition.x + childSize.width

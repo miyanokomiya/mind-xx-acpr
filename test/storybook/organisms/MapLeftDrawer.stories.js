@@ -2,7 +2,7 @@ import { storiesOf } from '@storybook/vue'
 import MapLeftDrawer from '@/components/organisms/MapLeftDrawer'
 
 import { ROOT_NODE } from '@/constants'
-import { createNode } from '@/utils/model'
+import { createNode, createFile } from '@/utils/model'
 
 storiesOf('organisms/MapLeftDrawer', module).add('view', () => {
   return {
@@ -17,6 +17,7 @@ storiesOf('organisms/MapLeftDrawer', module).add('view', () => {
       >
         <MapLeftDrawer
           :nodes="nodes"
+          :file="file"
           :nodeColor="nodeColor"
           :textColor="textColor"
           @changeNodeColor="val => nodeColor = val"
@@ -30,6 +31,7 @@ storiesOf('organisms/MapLeftDrawer', module).add('view', () => {
       nodes: {
         [ROOT_NODE]: createNode()
       },
+      file: createFile(),
       nodeColor: '#87cefa',
       textColor: '#000000'
     })

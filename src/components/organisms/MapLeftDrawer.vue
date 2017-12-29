@@ -98,6 +98,10 @@ export default {
         return (ROOT_NODE in value)
       }
     },
+    file: {
+      type: Object,
+      required: true
+    },
     nodeColor: {
       type: String,
       default: '#87cefa'
@@ -125,7 +129,7 @@ export default {
           const dom = svgCanvas.$el
           const xmlSerializer = new XMLSerializer()
           const textXml = xmlSerializer.serializeToString(dom)
-          this.downloadText(textXml, 'mind-xx-acpr.svg')
+          this.downloadText(textXml, this.file.name)
           this.renderCanvas = false
         })
       })
