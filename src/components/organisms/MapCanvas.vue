@@ -138,6 +138,7 @@ import {
 import {
   calcPositions,
   getUpdatedNodesWhenDeleteNode,
+  getUpdatedNodesWhenDeleteNodes,
   getUpdatedNodesWhenCreateChildNode,
   getUpdatedNodesWhenCreateBrotherdNode,
   getUpdatedNodesWhenFitClosestParent,
@@ -581,20 +582,30 @@ export default {
       })
     },
     deleteNode () {
-      const targetKey = this.editMenuTarget
-      if (targetKey) {
-        const parentKey = getParentKey({
+      if (this.isMultiSelect) {
+        const updatedNodes = getUpdatedNodesWhenDeleteNodes({
           nodes: this.nodes,
-          childKey: targetKey
-        })
-        if (parentKey) {
-          this.selectNode(parentKey)
-        }
-        const updatedNodes = getUpdatedNodesWhenDeleteNode({
-          nodes: this.nodes,
-          deleteKey: targetKey
+          deleteKeys: this.selectedNodes
         })
         this.$emit('updateNodes', updatedNodes)
+        this.clearSelect()
+      } else {
+        const targetKey = this.editMenuTarget
+        if (targetKey) {
+          // select the parent if it exists
+          const parentKey = getParentKey({
+            nodes: this.nodes,
+            childKey: targetKey
+          })
+          if (parentKey) {
+            this.selectNode(parentKey)
+          }
+          const updatedNodes = getUpdatedNodesWhenDeleteNode({
+            nodes: this.nodes,
+            deleteKey: targetKey
+          })
+          this.$emit('updateNodes', updatedNodes)
+        }
       }
     },
     calcSize ({ key, size }) {

@@ -22,7 +22,7 @@ const updateNodes =
         updates[`/files/${fileKey}/nodeCount`] = Object.keys(
           Object.assign({}, context.state.nodes, nodes)
         ).length
-        firebase
+        return firebase
           .database()
           .ref()
           .update(updates)
@@ -32,7 +32,7 @@ const disconnect =
   process.env.NODE_ENV === 'test'
     ? () => {}
     : context => {
-        firebase
+        return firebase
           .database()
           .ref('nodes/' + context.state.fileKey)
           .off()
@@ -66,6 +66,7 @@ const connect =
           }
           context.commit(mutationTypes.UPDATE_NODES, { nodes })
         })
+        return Promise.resolve()
       }
 
 export default {
@@ -161,7 +162,7 @@ export default {
   },
   [actionTypes.RESCUE_CONFRICT] (context) {
     if (!isConflict({ nodes: context.state.nodes })) {
-      return
+      return Promise.resolve()
     }
     const nodes = rescueConflict({ nodes: context.state.nodes })
     // clear stack
@@ -171,7 +172,7 @@ export default {
     // local commit
     context.commit(mutationTypes.UPDATE_NODES, { nodes })
     // push firebase
-    updateNodes(context, { nodes })
+    return updateNodes(context, { nodes })
   },
   [actionTypes.SET_SELECTED_NODES] (context, { selectedNodes }) {
     context.commit(mutationTypes.SET_SELECTED_NODES, { selectedNodes })

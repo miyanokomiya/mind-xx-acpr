@@ -33,7 +33,7 @@ export default {
   methods: {
     ...mapActions('nodes', {
       updateNodes: nodesActionTypes.UPDATE_NODES,
-      repairFile: nodesActionTypes.RESCUE_CONFRICT
+      _repairFile: nodesActionTypes.RESCUE_CONFRICT
     }),
     ...mapActions('settings', {
       setNodeColor: settingsActionTypes.SET_NODE_COLOR,
@@ -56,6 +56,11 @@ export default {
     changeTextColor (textColor) {
       this.setTextColor({textColor})
       this.changeSelectedNodesProps({color: textColor})
+    },
+    repairFile () {
+      this._repairFile().then(() => {
+        location.reload()
+      })
     }
   }
 }

@@ -231,6 +231,27 @@ export function getUpdatedNodesWhenDeleteNode ({ nodes, deleteKey }) {
   return updatedNodes
 }
 
+export function getUpdatedNodesWhenDeleteNodes ({ nodes, deleteKeys }) {
+  let currentNodes = Object.assign({}, nodes)
+  return Object.keys(deleteKeys).reduce((p, deleteKey) => {
+    if (deleteKey in p) {
+      return p
+    }
+    const updatedNodes = getUpdatedNodesWhenDeleteNode({
+      nodes: currentNodes,
+      deleteKey
+    })
+    // update current nodes after deleting
+    currentNodes = Object.keys(currentNodes).reduce((p, c) => {
+      if (updatedNodes[c] !== null) {
+        p[c] = updatedNodes[c] || currentNodes[c]
+      }
+      return p
+    }, {})
+    return Object.assign({}, p, updatedNodes)
+  }, {})
+}
+
 export function copyNode (node) {
   return Object.assign({}, node, {
     children: node.children.concat()

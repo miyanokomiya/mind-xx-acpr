@@ -534,6 +534,71 @@ describe('utils/model', () => {
     })
   })
 
+  describe('getUpdatedNodesWhenDeleteNodes', () => {
+    const a = modelUtils.createNode({
+      children: ['b', 'e']
+    })
+    const b = modelUtils.createNode({
+      children: ['c', 'd']
+    })
+    const c = modelUtils.createNode()
+    const d = modelUtils.createNode()
+    const e = modelUtils.createNode()
+    const nodes = { a, b, c, d, e }
+    it('should get correct nodes when deleting nodes have no children', () => {
+      const updatedNodes = modelUtils.getUpdatedNodesWhenDeleteNodes({
+        nodes,
+        deleteKeys: {
+          c: true,
+          e: true
+        }
+      })
+      expect(updatedNodes).toEqual({
+        a: Object.assign({}, a, {
+          children: ['b']
+        }),
+        b: Object.assign({}, b, {
+          children: ['d']
+        }),
+        c: null,
+        e: null
+      })
+    })
+    it('should get correct nodes when deleting nodes have children', () => {
+      const updatedNodes = modelUtils.getUpdatedNodesWhenDeleteNodes({
+        nodes,
+        deleteKeys: {
+          b: true,
+          d: true
+        }
+      })
+      expect(updatedNodes).toEqual({
+        a: Object.assign({}, a, {
+          children: ['e']
+        }),
+        b: null,
+        c: null,
+        d: null
+      })
+    })
+    it('should get correct nodes when deleting brothers', () => {
+      const updatedNodes = modelUtils.getUpdatedNodesWhenDeleteNodes({
+        nodes,
+        deleteKeys: {
+          c: true,
+          d: true
+        }
+      })
+      expect(updatedNodes).toEqual({
+        b: Object.assign({}, b, {
+          children: []
+        }),
+        c: null,
+        d: null
+      })
+    })
+  })
+
   describe('copyNode', () => {
     const origin = modelUtils.createNode()
     it('should get complete copy', () => {
