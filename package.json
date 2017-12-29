@@ -5,14 +5,17 @@
   "author": "miyanokomiya",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+    "dev":
+      "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
     "unit": "jest --config test/unit/jest.conf.js --watch",
     "unit-coverage": "jest --config test/unit/jest.conf.js --coverage --watch",
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit && npm run e2e",
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs",
-    "build": "node build/build.js",
+    "move-map":
+      "rm -rf ./sourcemap/js && mkdir ./sourcemap/js && mv ./public/static/js/*.map ./sourcemap/js",
+    "build": "node build/build.js && npm run move-map",
     "deploy": "npm run build && firebase deploy",
     "storybook": "start-storybook -p 9001 -c .storybook"
   },
@@ -93,9 +96,5 @@
     "node": ">= 4.0.0",
     "npm": ">= 3.0.0"
   },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not ie <= 8"
-  ]
+  "browserslist": ["> 1%", "last 2 versions", "not ie <= 8"]
 }

@@ -3,6 +3,7 @@ import Vue from 'vue'
 import Vuetify from 'vuetify'
 import '@/utils/windowState'
 import '@/utils/isMobile'
+import '@/utils/trackJs'
 import { addDecorator } from '@storybook/vue'
 import { withKnobs } from '@storybook/addon-knobs'
 
