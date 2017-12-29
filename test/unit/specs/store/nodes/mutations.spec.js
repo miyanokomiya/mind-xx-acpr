@@ -230,4 +230,26 @@ describe('store/nodes/mutations', () => {
       })
     })
   })
+  describe('CLEAR_UNDO_STACKS', () => {
+    it('should set empty array to [undoStacks]', () => {
+      const state = {
+        undoStacks: [{ a: { text: 'a' } }]
+      }
+      mutations[mutationTypes.CLEAR_UNDO_STACKS](state)
+      expect(state).toMatchObject({
+        undoStacks: []
+      })
+    })
+  })
+  describe('CLEAR_REDO_STACKS', () => {
+    it('should set empty array to [redoStacks]', () => {
+      const state = {
+        redoStacks: [{ a: { text: 'a' } }]
+      }
+      mutations[mutationTypes.CLEAR_REDO_STACKS](state)
+      expect(state).toMatchObject({
+        redoStacks: []
+      })
+    })
+  })
 })

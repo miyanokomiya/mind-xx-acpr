@@ -112,7 +112,7 @@ export default {
             }
           }
           if (isConflict({ nodes: nextMerged })) {
-            context.commit(mutationTypes.CLEAR_STACKS)
+            context.commit(mutationTypes.CLEAR_UNDO_STACKS)
             return reject(
               new Error('Failed to undo. Others may edit and conflicted.')
             )
@@ -125,6 +125,8 @@ export default {
             updateNodes(context, { nodes })
           }
         }
+      } else {
+        return reject(new Error('No undo history'))
       }
       return resolve()
     })
@@ -143,7 +145,7 @@ export default {
             }
           }
           if (isConflict({ nodes: nextMerged })) {
-            context.commit(mutationTypes.CLEAR_STACKS)
+            context.commit(mutationTypes.CLEAR_REDO_STACKS)
             return reject(
               new Error('Failed to redo. Others may edit and conflicted.')
             )
@@ -156,6 +158,8 @@ export default {
             updateNodes(context, { nodes })
           }
         }
+      } else {
+        return reject(new Error('No redo history'))
       }
       return resolve()
     })

@@ -73,5 +73,11 @@ export default {
   [mutationTypes.CLEAR_STACKS] (state) {
     state.undoStacks = []
     state.redoStacks = []
+  },
+  [mutationTypes.CLEAR_UNDO_STACKS] (state) {
+    state.undoStacks = []
+  },
+  [mutationTypes.CLEAR_REDO_STACKS] (state) {
+    state.redoStacks = []
   }
 }
