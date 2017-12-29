@@ -11,7 +11,7 @@
       <v-list two-line subheader>
 
         <v-divider></v-divider>
-        <v-subheader>Selecting a Node</v-subheader>
+        <v-subheader>Select</v-subheader>
 
         <v-list-tile avatar>
           <v-list-tile-content>
@@ -27,10 +27,10 @@
         <v-list-tile avatar>
           <v-list-tile-content>
             <v-list-tile-title>
-              Create a younger node
+              Multiple
             </v-list-tile-title>
             <v-list-tile-sub-title>
-              <code>Enter</code>
+              <code>Shift</code> + <code>Click</code>
             </v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>
@@ -38,10 +38,24 @@
         <v-list-tile avatar>
           <v-list-tile-content>
             <v-list-tile-title>
-              Delete a node
+              Rectangle
             </v-list-tile-title>
             <v-list-tile-sub-title>
-              <code>Shift</code> + <code>Delete</code>
+              <code>Shift</code> + <code>Drag</code>
+            </v-list-tile-sub-title>
+          </v-list-tile-content>
+        </v-list-tile>
+
+        <v-divider></v-divider>
+        <v-subheader>Selecting a Node</v-subheader>
+
+        <v-list-tile avatar>
+          <v-list-tile-content>
+            <v-list-tile-title>
+              Create a younger node
+            </v-list-tile-title>
+            <v-list-tile-sub-title>
+              <code>Enter</code>
             </v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>
@@ -60,10 +74,32 @@
         <v-list-tile avatar>
           <v-list-tile-content>
             <v-list-tile-title>
+              Delete a node
+            </v-list-tile-title>
+            <v-list-tile-sub-title>
+              <code>Shift</code> + <code>Delete</code>
+            </v-list-tile-sub-title>
+          </v-list-tile-content>
+        </v-list-tile>
+
+        <v-list-tile avatar>
+          <v-list-tile-content>
+            <v-list-tile-title>
               Edit text
             </v-list-tile-title>
             <v-list-tile-sub-title>
               <code>Space</code>
+            </v-list-tile-sub-title>
+          </v-list-tile-content>
+        </v-list-tile>
+
+        <v-list-tile avatar>
+          <v-list-tile-content>
+            <v-list-tile-title>
+              Complete editing text
+            </v-list-tile-title>
+            <v-list-tile-sub-title>
+              <code>Escape</code>
             </v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>
@@ -91,20 +127,6 @@
         </v-list-tile>
 
         <v-divider></v-divider>
-        <v-subheader>Editing Text of a Node</v-subheader>
-
-        <v-list-tile avatar>
-          <v-list-tile-content>
-            <v-list-tile-title>
-              Complete editing text
-            </v-list-tile-title>
-            <v-list-tile-sub-title>
-              <code>Escape</code>
-            </v-list-tile-sub-title>
-          </v-list-tile-content>
-        </v-list-tile>
-
-        <v-divider></v-divider>
         <v-subheader>History</v-subheader>
 
         <v-list-tile avatar>
@@ -117,6 +139,7 @@
             </v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>
+
         <v-list-tile avatar>
           <v-list-tile-content>
             <v-list-tile-title>

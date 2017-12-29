@@ -83,7 +83,7 @@ export default {
       return this.height / this.scale
     },
     selectRectangle () {
-      if (!this.downP || !this.beforeMoveP) {
+      if (!this.rectangleSelecting || !this.downP || !this.beforeMoveP) {
         return null
       }
       const p1 = this.dom2svg(this.downP)
@@ -148,7 +148,6 @@ export default {
     },
     canvasCursorUpSelf (e) {
       const now = Date.now()
-      this.beforeMoveP = null
       if (now - this.downStart < INTERVAL_CLICK) {
         if (now - this.clickLast < INTERVAL_DOUBLE_CLICK) {
           // double click
