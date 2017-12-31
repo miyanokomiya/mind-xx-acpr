@@ -36,48 +36,36 @@
         expand
       >
       <template slot="items" slot-scope="props">
-        <td class="text-xs-left">
-          <v-btn
-            v-if="canWrite[props.item.key]"
-            dark
-            fab
-            small
-            color="blue"
-            @click="$router.push({name: 'Map', params: { fileKey: props.item.key }})"
-          >
-            <v-icon>edit</v-icon>
-          </v-btn>
-          <v-btn
-            v-else
-            dark
-            fab
-            small
-            color="blue"
-            @click="$router.push({name: 'Map', params: { fileKey: props.item.key }})"
-          >
-            <v-icon>navigate_next</v-icon>
-          </v-btn>
+        <td class="text-xs-left open-file" @click="$router.push({name: 'Map', params: { fileKey: props.item.key }})">
+          <span class="name elevation-1">{{ props.item.name }}</span>
+        </td>
+        <td class="text-xs-right count">{{ props.item.nodeCount }}</td>
+        <td class="text-xs-right datetime">{{ new Date(props.item.created).toLocaleString() }}</td>
+        <td class="text-xs-right datetime">{{ new Date(props.item.updated).toLocaleString() }}</td>
+        <td class="button-column">
           <v-edit-dialog
             lazy
             v-if="canWrite[props.item.key]"
           >
-            <span class="name elevation-1">{{ props.item.name }}</span>
+            <v-btn
+              dark
+              fab
+              small
+              color="blue"
+            >
+              <v-icon>edit</v-icon>
+            </v-btn>
             <v-text-field
               slot="input"
               label="Edit"
               single-line
               counter
-              :rules="[max25chars]"
               :value="props.item.name"
               @change="val => changeName({ key: props.item.key, name: val })"
             ></v-text-field>
           </v-edit-dialog>
-          <span v-else class="name">{{ props.item.name }}</span>
         </td>
-        <td class="text-xs-right">{{ props.item.nodeCount }}</td>
-        <td class="text-xs-right">{{ new Date(props.item.created).toLocaleString() }}</td>
-        <td class="text-xs-right">{{ new Date(props.item.updated).toLocaleString() }}</td>
-        <td class="delete-button-cell">
+        <td class="button-column">
           <v-btn
             v-if="!hideEditTools"
             dark
@@ -110,7 +98,6 @@
 <script>
 export default {
   data: () => ({
-    max25chars: (v) => v.length <= 25 || 'Input too long!',
     tmp: '',
     searchText: '',
     pagination: {
@@ -128,6 +115,7 @@ export default {
       { text: 'Count', value: 'nodeCount' },
       { text: 'Updated', value: 'updated' },
       { text: 'Created', value: 'created' },
+      { text: '', value: '', sortable: false },
       { text: '', value: '', sortable: false }
     ],
     snackbar: false,
@@ -190,15 +178,20 @@ export default {
       const ret = Object.keys(this.currentFileAuthorities).reduce((p, fileKey) => {
         const fileAuthority = this.currentFileAuthorities[fileKey]
         if (fileAuthority) {
-          if (fileAuthority.public) {
-            // this file is public
-            p[fileKey] = fileAuthority.public.write
-          } else {
-            // this file is private
-            const authority = fileAuthority.users[uid]
+          const authority = fileAuthority.users[uid]
+          if (authority) {
             p[fileKey] = authority.write
+          } else {
+            if (fileAuthority.public) {
+              // this file is public
+              p[fileKey] = fileAuthority.public.write
+            } else {
+              // no authority
+              p[fileKey] = false
+            } 
           }
         } else {
+              // no authority
           p[fileKey] = false
         }
         return p
@@ -251,10 +244,21 @@ export default {
     top: 0;
     position: absolute;
   }
+  .open-file {
+    cursor: pointer;
+  }
   .name {
     padding: 5px 10px;
+    width: 100%;
+    display: inline-block;
   }
-  .delete-button-cell {
+  .count {
+    width: 50px;
+  }
+  .datetime {
+    width: 50px;
+  }
+  .button-column {
     width: 50px;
     padding: 0;
   }
