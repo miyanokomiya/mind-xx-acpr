@@ -46,5 +46,8 @@ export default {
     state.fileAuthorities = {}
     state.sharedFiles = {}
     state.sharedFileAuthorities = {}
+  },
+  [mutationTypes.SET_PERMISSION_DENIED] (state, { permissionDenied }) {
+    state.permissionDenied = permissionDenied
   }
 }

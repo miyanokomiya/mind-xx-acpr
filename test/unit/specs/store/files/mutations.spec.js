@@ -135,4 +135,17 @@ describe('store/files/mutations', () => {
       })
     })
   })
+  describe('SET_PERMISSION_DENIED', () => {
+    it('should set correct [permissionDenied]', () => {
+      const state = {
+        permissionDenied: false
+      }
+      mutations[mutationTypes.SET_PERMISSION_DENIED](state, {
+        permissionDenied: true
+      })
+      expect(state).toMatchObject({
+        permissionDenied: true
+      })
+    })
+  })
 })

@@ -8,7 +8,8 @@ export default {
     files: {},
     fileAuthorities: {},
     sharedFiles: {},
-    sharedFileAuthorities: {}
+    sharedFileAuthorities: {},
+    permissionDenied: false
   },
   modules: {},
   actions,

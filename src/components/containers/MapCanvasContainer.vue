@@ -1,7 +1,7 @@
 <template>
-<div>
+<div class="wrapper">
   <MapCanvas
-    v-if="loaded"
+    v-if="loaded && !permissionDenied"
     :width="canvasWidth"
     :height="canvasHeight"
     :nodes="nodes"
@@ -15,6 +15,9 @@
     @undo="undo"
     @redo="redo"
   />
+  <div class="center-box">
+    <PermissionDeniedMessage v-if="permissionDenied"/>
+  </div>
   <v-snackbar
     bottom
     right
@@ -29,6 +32,7 @@
 
 <script>
 import MapCanvas from '@/components/organisms/MapCanvas'
+import PermissionDeniedMessage from '@/components/molecules/PermissionDeniedMessage'
 
 import { mapGetters, mapActions } from 'vuex'
 import { getterTypes as layoutsGetterTypes } from '@/store/layouts/types'
@@ -39,7 +43,8 @@ import { getterTypes as settingsGetterTypes } from '@/store/settings/types'
 
 export default {
   components: {
-    MapCanvas
+    MapCanvas,
+    PermissionDeniedMessage
   },
   data: () => ({
     message: ''
@@ -64,7 +69,8 @@ export default {
     }),
     ...mapGetters('files', {
       fileFromKey: filesGetterTypes.FILE_FROM_KEY,
-      fileAuthorityFromKey: filesGetterTypes.FILE_AUTHORITY_FROM_KEY
+      fileAuthorityFromKey: filesGetterTypes.FILE_AUTHORITY_FROM_KEY,
+      permissionDenied: filesGetterTypes.PERMISSION_DENIED
     }),
     ...mapGetters('settings', {
       nodeColor: settingsGetterTypes.NODE_COLOR,
@@ -136,6 +142,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.wrapper {
+  width: 100%;
+}
+.center-box {
+  margin: 30px 10%;
+}
 </style>
 

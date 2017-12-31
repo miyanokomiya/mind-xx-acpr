@@ -4,6 +4,15 @@ import { createFile } from '@/utils/model'
 
 export default {
   [actionTypes.LOAD_FILE] (context, { key }) {
+    // reset permission status as first
+    firebase
+      .database()
+      .ref('/file_authorities')
+      .off()
+    context.commit(mutationTypes.SET_PERMISSION_DENIED, {
+      permissionDenied: false
+    })
+    // start loading
     const uid = firebase.auth().currentUser.uid
     let isMyFile = false
     firebase
@@ -15,26 +24,38 @@ export default {
         return Promise.resolve()
       })
       .then(() => {
+        // watch the authority
         firebase
           .database()
           .ref(`/file_authorities/${key}`)
-          .once('value')
-          .then(snapshot => {
-            const fileAuthority = snapshot.val()
-            if (isMyFile) {
-              context.commit(mutationTypes.UPDATE_FILE_AUTHORITIES, {
-                fileAuthorities: {
-                  [key]: fileAuthority
-                }
+          .on(
+            'value',
+            snapshot => {
+              context.commit(mutationTypes.SET_PERMISSION_DENIED, {
+                permissionDenied: false
               })
-            } else {
-              context.commit(mutationTypes.UPDATE_SHARED_FILE_AUTHORITIES, {
-                sharedFileAuthorities: {
-                  [key]: fileAuthority
-                }
+              const fileAuthority = snapshot.val()
+              if (isMyFile) {
+                context.commit(mutationTypes.UPDATE_FILE_AUTHORITIES, {
+                  fileAuthorities: {
+                    [key]: fileAuthority
+                  }
+                })
+              } else {
+                context.commit(mutationTypes.UPDATE_SHARED_FILE_AUTHORITIES, {
+                  sharedFileAuthorities: {
+                    [key]: fileAuthority
+                  }
+                })
+              }
+            },
+            e => {
+              // if enter this route, '.on' is expired
+              context.commit(mutationTypes.SET_PERMISSION_DENIED, {
+                permissionDenied: true
               })
             }
-          })
+          )
         firebase
           .database()
           .ref(`/files/${key}`)
@@ -54,6 +75,12 @@ export default {
                 }
               })
             }
+          })
+          .catch(e => {
+            context.commit(mutationTypes.SET_PERMISSION_DENIED, {
+              permissionDenied: true
+            })
+            return Promise.resolve()
           })
       })
   },

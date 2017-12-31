@@ -25,5 +25,8 @@ export default {
   },
   [getterTypes.IS_MY_FILE_FROM_KEY]: state => ({ fileKey }) => {
     return fileKey in state.files
+  },
+  [getterTypes.PERMISSION_DENIED] (state) {
+    return state.permissionDenied
   }
 }

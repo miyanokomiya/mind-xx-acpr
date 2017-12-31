@@ -146,4 +146,13 @@ describe('store/files/getters', () => {
       expect(res).toBe(false)
     })
   })
+  describe('PERMISSION_DENIED', () => {
+    it('should get correct [fileAuthorities]', () => {
+      const state = {
+        permissionDenied: true
+      }
+      const res = getters[getterTypes.PERMISSION_DENIED](state)
+      expect(res).toBe(true)
+    })
+  })
 })
