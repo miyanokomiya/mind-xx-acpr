@@ -9,7 +9,7 @@ import {
 
 const updateNodes =
   process.env.NODE_ENV === 'test'
-    ? () => {}
+    ? () => Promise.resolve()
     : (context, { nodes }) => {
         const fileKey = context.state.fileKey
         const updates = Object.keys(nodes).reduce((p, c) => {
@@ -30,7 +30,7 @@ const updateNodes =
 
 const disconnect =
   process.env.NODE_ENV === 'test'
-    ? () => {}
+    ? () => Promise.resolve()
     : context => {
         return firebase
           .database()
@@ -40,7 +40,7 @@ const disconnect =
 
 const connect =
   process.env.NODE_ENV === 'test'
-    ? () => {}
+    ? () => Promise.resolve()
     : (context, { fileKey }) => {
         var commentsRef = firebase.database().ref('nodes/' + fileKey)
         commentsRef.on('child_added', data => {
