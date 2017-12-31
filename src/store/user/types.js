@@ -6,7 +6,8 @@ export const getterTypes = {
 export const actionTypes = {
   LOAD_USER: 'LOAD_USER',
   SIGN_OUT: 'SIGN_OUT',
-  SET_AUTHORITY_LOADING: 'SET_AUTHORITY_LOADING'
+  SET_AUTHORITY_LOADING: 'SET_AUTHORITY_LOADING',
+  DELETE_USER: 'DELETE_USER'
 }
 
 export const mutationTypes = {

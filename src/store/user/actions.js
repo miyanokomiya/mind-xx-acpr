@@ -41,5 +41,15 @@ export default {
           reject(error)
         })
     })
+  },
+  [actionTypes.DELETE_USER] (context) {
+    return new Promise((resolve, reject) => {
+      const user = firebase.auth().currentUser
+      user.delete().then(() => {
+        context.commit(mutationTypes.SET_USER, null)
+        context.commit(mutationTypes.SET_AUTHORITY_LOADING, false)
+        resolve()
+      })
+    })
   }
 }

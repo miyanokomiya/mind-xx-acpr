@@ -46,6 +46,10 @@
           <v-list-tile @click="signOut">
             <v-list-tile-title>Sign out</v-list-tile-title>
           </v-list-tile>
+          <v-divider/>
+          <v-list-tile @click="deleteUser">
+            <v-list-tile-title>Delete account</v-list-tile-title>
+          </v-list-tile>
         </v-list>
       </v-menu>
     </div>
@@ -81,7 +85,8 @@ export default {
       setLeftDrawer: actionTypes.SET_LEFT_DRAWER
     }),
     ...mapActions('user', {
-      _signOut: userActionTypes.SIGN_OUT
+      _signOut: userActionTypes.SIGN_OUT,
+      deleteUser: userActionTypes.DELETE_USER
     }),
     signOut () {
       this._signOut().then().catch().then(() => {

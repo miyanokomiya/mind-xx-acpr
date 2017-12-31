@@ -24,17 +24,48 @@ admin.initializeApp({
 //     })
 // })
 
-// exports.removeUser = functions.auth.user().onDelete(event => {
-//   const uid = event.data.uid
-//   const updates = {
-//     [`/users/${uid}`]: null,
-//     [`/work_spaces/${uid}`]: null
-//   }
-//   return admin
-//     .database()
-//     .ref()
-//     .update(updates)
-// })
+exports.deleteUser = functions.auth.user().onDelete(event => {
+  const uid = event.data.uid
+  return admin
+    .database()
+    .ref(`/work_spaces/${uid}/files`)
+    .onece('value')
+    .then(snapshot => {
+      const files = snapshot.val()
+      if (files) {
+        return Promise.all(
+          Object.keys(files).map(fileId => {
+            return deleteFile(fileId)
+          })
+        )
+      } else {
+        return Promise.resolve()
+      }
+    })
+})
+
+function deleteFile (fileId) {
+  return admin
+    .database()
+    .ref(`/file_authorities/${fileId}`)
+    .once('value')
+    .then(snapshot => {
+      const authorities = snapshot.val()
+      const updates = {}
+      updates[`/file_invitations/${fileId}`] = null
+      updates[`/file_authorities/${fileId}`] = null
+      updates[`/files/${fileId}`] = null
+      updates[`/nodes/${fileId}`] = null
+      Object.keys(authorities).forEach(userId => {
+        updates[`/work_spaces/${userId}/files/${fileId}`] = null
+        updates[`/work_spaces/${userId}/invited_files/${fileId}`] = null
+      })
+      return admin
+        .database()
+        .ref()
+        .update(updates)
+    })
+}
 
 exports.deleteFile = functions.database
   .ref('/work_spaces/{ownerId}/files/{fileId}')
@@ -43,26 +74,7 @@ exports.deleteFile = functions.database
       return null
     }
     const fileId = event.params.fileId
-    return admin
-      .database()
-      .ref(`/file_authorities/${fileId}`)
-      .once('value')
-      .then(spanshot => {
-        const authorities = spanshot.val()
-        const updates = {}
-        updates[`/file_invitations/${fileId}`] = null
-        updates[`/file_authorities/${fileId}`] = null
-        updates[`/files/${fileId}`] = null
-        updates[`/nodes/${fileId}`] = null
-        Object.keys(authorities).forEach(userId => {
-          updates[`/work_spaces/${userId}/files/${fileId}`] = null
-          updates[`/work_spaces/${userId}/invited_files/${fileId}`] = null
-        })
-        return admin
-          .database()
-          .ref()
-          .update(updates)
-      })
+    return deleteFile(fileId)
   })
 
 exports.inviteUserToFile = functions.database
