@@ -4,7 +4,7 @@
       "$file_id": {
         ".read": "data.child(auth.uid).exists()",
         ".write":
-          "root.child('file_authorities/' + $file_id + '/' + auth.uid + '/write').val() === true",
+          "root.child('file_authorities/' + $file_id + '/users/' + auth.uid + '/write').val() === true",
         ".indexOn": ["email"],
 
         "$tmp_id": {
@@ -21,16 +21,30 @@
     },
     "file_authorities": {
       "$file_id": {
-        ".read": "data.child(auth.uid).exists()",
-        ".write": "!data.exists() || data.child(auth.uid).exists()",
+        ".read":
+          "data.child('users').child(auth.uid).exists() || data.child('public').exists()",
 
-        "$uid": {
+        "users": {
+          ".write":
+            "!data.exists() || data.child(auth.uid + 'write').val() === true",
+
+          "$uid": {
+            "write": {
+              ".validate": "newData.isBoolean()"
+            },
+
+            "$other": { ".validate": false }
+          }
+        },
+        "public": {
+          ".write":
+            "root.child('work_spaces/' + auth.uid + '/files/' + $file_id).exists()",
           "write": {
             ".validate": "newData.isBoolean()"
-          },
+          }
+        },
 
-          "$other": { ".validate": false }
-        }
+        "$other": { ".validate": false }
       }
     },
     "work_spaces": {
@@ -56,9 +70,9 @@
     "files": {
       "$file_id": {
         ".read":
-          "root.child('file_authorities/' + $file_id + '/' + auth.uid).exists()",
+          "root.child('file_authorities/' + $file_id + '/users/' + auth.uid).exists() || root.child('file_authorities/' + $file_id + '/public').exists()",
         ".write":
-          "root.child('file_authorities/' + $file_id + '/' + auth.uid + '/write').val() === true",
+          "root.child('file_authorities/' + $file_id + '/users/' + auth.uid + '/write').val() === true || root.child('file_authorities/' + $file_id + '/public/write').val() === true",
 
         "name": {
           ".validate": "newData.isString()"
@@ -79,14 +93,20 @@
     "nodes": {
       "$file_id": {
         ".read":
-          "root.child('file_authorities/' + $file_id + '/' + auth.uid).exists()",
+          "root.child('file_authorities/' + $file_id + '/users/' + auth.uid).exists() || root.child('file_authorities/' + $file_id + '/public').exists()",
         ".write":
-          "root.child('file_authorities/' + $file_id + '/' + auth.uid + '/write').val() === true",
+          "root.child('file_authorities/' + $file_id + '/users/' + auth.uid + '/write').val() === true || root.child('file_authorities/' + $file_id + '/public/write').val() === true",
 
         "text": {
           ".validate": "newData.isString()"
         },
-        "children": {}
+        "children": {},
+        "backgroundColor": {
+          ".validate": "newData.isString()"
+        },
+        "color": {
+          ".validate": "newData.isString()"
+        }
       }
     },
 

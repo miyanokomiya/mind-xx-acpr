@@ -1,32 +1,60 @@
-import { actionTypes, mutationTypes } from './types'
+import { actionTypes, mutationTypes, getterTypes } from './types'
 import firebase from '@/firebase'
 import { createFile } from '@/utils/model'
 
 export default {
   [actionTypes.LOAD_FILE] (context, { key }) {
+    const uid = firebase.auth().currentUser.uid
+    let isMyFile = false
     firebase
       .database()
-      .ref(`/file_authorities/${key}`)
+      .ref(`/work_spaces/${uid}/files/${key}`)
       .once('value')
       .then(snapshot => {
-        const fileAuthority = snapshot.val()
-        context.commit(mutationTypes.UPDATE_FILE_AUTHORITIES, {
-          fileAuthorities: {
-            [key]: fileAuthority
-          }
-        })
+        isMyFile = snapshot.exists()
+        return Promise.resolve()
       })
-    firebase
-      .database()
-      .ref(`/files/${key}`)
-      .once('value')
-      .then(snapshot => {
-        const file = snapshot.val()
-        context.commit(mutationTypes.UPDATE_FILES, {
-          files: {
-            [key]: file
-          }
-        })
+      .then(() => {
+        firebase
+          .database()
+          .ref(`/file_authorities/${key}`)
+          .once('value')
+          .then(snapshot => {
+            const fileAuthority = snapshot.val()
+            if (isMyFile) {
+              context.commit(mutationTypes.UPDATE_FILE_AUTHORITIES, {
+                fileAuthorities: {
+                  [key]: fileAuthority
+                }
+              })
+            } else {
+              context.commit(mutationTypes.UPDATE_SHARED_FILE_AUTHORITIES, {
+                sharedFileAuthorities: {
+                  [key]: fileAuthority
+                }
+              })
+            }
+          })
+        firebase
+          .database()
+          .ref(`/files/${key}`)
+          .once('value')
+          .then(snapshot => {
+            const file = snapshot.val()
+            if (isMyFile) {
+              context.commit(mutationTypes.UPDATE_FILES, {
+                files: {
+                  [key]: file
+                }
+              })
+            } else {
+              context.commit(mutationTypes.UPDATE_SHARED_FILES, {
+                sharedFiles: {
+                  [key]: file
+                }
+              })
+            }
+          })
       })
   },
   [actionTypes.LOAD_FILES] (context, payload) {
@@ -122,7 +150,7 @@ export default {
     // create the authority setting at first
     firebase
       .database()
-      .ref(`/file_authorities/${fileKey}/${uid}`)
+      .ref(`/file_authorities/${fileKey}/users/${uid}`)
       .set({
         write: true
       })
@@ -131,8 +159,10 @@ export default {
         context.commit(mutationTypes.UPDATE_FILE_AUTHORITIES, {
           fileAuthorities: {
             [fileKey]: {
-              [uid]: {
-                write: true
+              users: {
+                [uid]: {
+                  write: true
+                }
               }
             }
           }
@@ -196,5 +226,41 @@ export default {
         write: !readOnly
       })
       .then(() => {})
+  },
+  [actionTypes.UPDATE_STATUS] (context, { publicFile, readOnly, fileKey }) {
+    const status = publicFile
+      ? {
+          write: !readOnly
+        }
+      : null
+    return firebase
+      .database()
+      .ref(`/file_authorities/${fileKey}/public`)
+      .set(status)
+      .then(() => {
+        return firebase
+          .database()
+          .ref(`/file_authorities/${fileKey}`)
+          .once('value')
+      })
+      .then(snapshot => {
+        const isMyFile = context.getters[getterTypes.IS_MY_FILE_FROM_KEY]({
+          fileKey
+        })
+        const fileAuthority = snapshot.val()
+        if (isMyFile) {
+          context.commit(mutationTypes.UPDATE_FILE_AUTHORITIES, {
+            fileAuthorities: {
+              [fileKey]: fileAuthority
+            }
+          })
+        } else {
+          context.commit(mutationTypes.UPDATE_SHARED_FILE_AUTHORITIES, {
+            sharedFileAuthorities: {
+              [fileKey]: fileAuthority
+            }
+          })
+        }
+      })
   }
 }

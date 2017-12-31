@@ -33,9 +33,9 @@ import MapCanvas from '@/components/organisms/MapCanvas'
 import { mapGetters, mapActions } from 'vuex'
 import { getterTypes as layoutsGetterTypes } from '@/store/layouts/types'
 import { getterTypes as nodesGetterTypes, actionTypes as nodesActionTypes } from '@/store/nodes/types'
-import { getterTypes as fileGetterTypes, actionTypes as fileActionTypes } from '@/store/files/types'
+import { getterTypes as filesGetterTypes, actionTypes as filesActionTypes } from '@/store/files/types'
 import { getterTypes as userGetterTypes } from '@/store/user/types'
-import { getterTypes as settingGetterTypes } from '@/store/settings/types'
+import { getterTypes as settingsGetterTypes } from '@/store/settings/types'
 
 export default {
   components: {
@@ -63,21 +63,18 @@ export default {
       initialLoading: nodesGetterTypes.INITIAL_LOADING
     }),
     ...mapGetters('files', {
-      fileAuthorities: fileGetterTypes.FILE_AUTHORITIES,
-      files: fileGetterTypes.FILES
+      fileFromKey: filesGetterTypes.FILE_FROM_KEY,
+      fileAuthorityFromKey: filesGetterTypes.FILE_AUTHORITY_FROM_KEY
     }),
     ...mapGetters('settings', {
-      nodeColor: settingGetterTypes.NODE_COLOR,
-      textColor: settingGetterTypes.TEXT_COLOR
+      nodeColor: settingsGetterTypes.NODE_COLOR,
+      textColor: settingsGetterTypes.TEXT_COLOR
     }),
     canvasWidth () {
       return this.$window.width >= 1264 && this.leftDrawer ? this.$window.width - 300 - 20 : this.$window.width - 20
     },
     canvasHeight () {
       return this.$window.height - 48
-    },
-    fileAuthority () {
-      return this.fileAuthorities[this.fileKey]
     },
     defaultNodeProps () {
       return {
@@ -86,7 +83,10 @@ export default {
       }
     },
     file () {
-      return this.files[this.fileKey]
+      return this.fileFromKey({fileKey: this.fileKey})
+    },
+    fileAuthority () {
+      return this.fileAuthorityFromKey({fileKey: this.fileKey})
     },
     loaded () {
       // If the count of nodes in a file is zero, the records of nodes don't exist.
@@ -119,7 +119,7 @@ export default {
       _redo: nodesActionTypes.REDO_NODES
     }),
     ...mapActions('files', {
-      loadFile: fileActionTypes.LOAD_FILE
+      loadFile: filesActionTypes.LOAD_FILE
     }),
     undo () {
       this._undo().catch(e => {

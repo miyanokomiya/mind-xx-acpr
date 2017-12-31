@@ -232,7 +232,11 @@ export default {
   computed: {
     canWrite () {
       if (this.fileAuthority) {
-        const authority = this.fileAuthority[this.user.uid]
+        if (this.fileAuthority.public && this.fileAuthority.public.write) {
+          // this file is public and writable
+          return true
+        }
+        const authority = this.fileAuthority.users[this.user.uid]
         return authority && authority.write
       } else {
         return false

@@ -190,8 +190,14 @@ export default {
       const ret = Object.keys(this.currentFileAuthorities).reduce((p, fileKey) => {
         const fileAuthority = this.currentFileAuthorities[fileKey]
         if (fileAuthority) {
-          const authority = fileAuthority[uid]
-          p[fileKey] = authority.write
+          if (fileAuthority.public) {
+            // this file is public
+            p[fileKey] = fileAuthority.public.write
+          } else {
+            // this file is private
+            const authority = fileAuthority.users[uid]
+            p[fileKey] = authority.write
+          }
         } else {
           p[fileKey] = false
         }

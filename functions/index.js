@@ -81,7 +81,7 @@ exports.inviteUserToFile = functions.database
         if (user) {
           // the user is found
           const updates = {
-            [`/file_authorities/${fileId}/${user.uid}`]: {
+            [`/file_authorities/${fileId}/users/${user.uid}`]: {
               write: original.write
             },
             [`/work_spaces/${user.uid}/invited_files/${fileId}`]: true

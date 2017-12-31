@@ -1,13 +1,33 @@
 <template>
   <v-layout row justify-center>
-    <v-dialog v-model="dialog" max-width="300">
+    <v-dialog v-model="dialog" max-width="400">
       <v-btn icon slot="activator">
         <v-icon>share</v-icon>
       </v-btn>
       <v-card>
-        <v-card-title class="headline">Share this file</v-card-title>
+        <v-card-title class="headline">File status</v-card-title>
         <v-card-text>
-           <form>
+          <form>
+            <v-checkbox
+              label="Public"
+              v-model="publicFileLocal"
+              :disabled="!canEditPublic"
+            />
+            <v-checkbox
+              v-if="publicFileLocal"
+              label="Read Only (except for invited users)"
+              v-model="publicReadOnlyLocal"
+              :disabled="!canEditPublic"
+            />
+            <v-btn v-if="canEditPublic" @click="setStatus">Set status</v-btn>
+          </form>
+        </v-card-text>
+      </v-card>
+      <v-divider/>
+      <v-card>
+        <v-card-title class="headline">Share</v-card-title>
+        <v-card-text>
+          <form>
             <v-text-field
               label="E-mail"
               v-model="email"
@@ -18,7 +38,7 @@
               label="Read only"
               v-model="readOnly"
             />
-            <v-btn @click="submit">invite</v-btn>
+            <v-btn @click="invite">Invite users</v-btn>
           </form>
         </v-card-text>
       </v-card>
@@ -31,17 +51,50 @@ export default {
   data: () => ({
     dialog: false,
     email: '',
-    readOnly: false
+    readOnly: false,
+    publicFileLocal: false,
+    publicReadOnlyLocal: false
   }),
   props: {
+    publicFile: {
+      type: Boolean,
+      default: false
+    },
+    publicReadOnly: {
+      type: Boolean,
+      default: false
+    },
+    canEditPublic: {
+      type: Boolean,
+      default: true
+    }
   },
   computed: {
     emailErrors () {
       return []
     }
   },
+  watch: {
+    publicFile (to, from) {
+      this.publicFileLocal = to || false
+    },
+    publicReadOnly (to, from) {
+      this.publicReadOnlyLocal = to || false
+    }
+  },
+  mounted () {
+    this.publicFileLocal = this.publicFile || false
+    this.publicReadOnlyLocal = this.publicReadOnly || false
+  },
   methods: {
-    submit () {
+    setStatus () {
+      this.$emit('setStatus', {
+        publicFile: this.publicFileLocal,
+        readOnly: this.publicReadOnlyLocal
+      })
+      this.dialog = false
+    },
+    invite () {
       this.$emit('invite', { email: this.email, readOnly: this.readOnly })
       this.dialog = false
     }
