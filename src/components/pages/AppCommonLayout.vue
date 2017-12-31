@@ -51,8 +51,8 @@
     </div>
   </v-toolbar>
   <v-content ref="content">
-    <v-container fluid fill-height>
-      <v-layout justify-center>
+    <v-container fill-height>
+      <v-layout class="main-layout">
         <router-view name="content"/>
       </v-layout>
     </v-container>
@@ -95,6 +95,9 @@ export default {
 <style lang="scss" scoped>
 .container.fill-height {
   padding: 0;
+}
+.main-layout {
+  width: 100%;
 }
 </style>
 
