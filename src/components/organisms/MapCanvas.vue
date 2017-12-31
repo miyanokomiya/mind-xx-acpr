@@ -2,6 +2,7 @@
 <div
   class="map-canvas-wrapper"
 >
+  <!-- this setting, @mousewheel.prevent, make a event of mousewheel in the canvas better on Safari -->
   <div
     class="canvas-wrapper"
     :tabindex="canWrite ? '1' : ''"
@@ -21,6 +22,7 @@
     @keydown.self.90.meta.exact="$emit('undo')"
     @keydown.self.90.ctrl.shift.exact="$emit('redo')"
     @keydown.self.90.meta.shift.exact="$emit('redo')"
+    @mousewheel.prevent
   >
     <v-icon v-if="!canWrite" class="lock-button">lock</v-icon>
     <SvgCanvas
