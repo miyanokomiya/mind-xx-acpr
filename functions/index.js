@@ -29,7 +29,7 @@ exports.deleteUser = functions.auth.user().onDelete(event => {
   return admin
     .database()
     .ref(`/work_spaces/${uid}/files`)
-    .onece('value')
+    .once('value')
     .then(snapshot => {
       const files = snapshot.val()
       if (files) {
@@ -42,12 +42,18 @@ exports.deleteUser = functions.auth.user().onDelete(event => {
         return Promise.resolve()
       }
     })
+    .then(() => {
+      return admin
+        .database()
+        .ref(`/work_spaces/${uid}`)
+        .set(null)
+    })
 })
 
 function deleteFile (fileId) {
   return admin
     .database()
-    .ref(`/file_authorities/${fileId}`)
+    .ref(`/file_authorities/${fileId}/users`)
     .once('value')
     .then(snapshot => {
       const authorities = snapshot.val()
@@ -71,17 +77,18 @@ exports.deleteFile = functions.database
   .ref('/work_spaces/{ownerId}/files/{fileId}')
   .onDelete(event => {
     if (!event.data.previous.exists()) {
-      return null
+      return Promise.resolve()
+    } else {
+      const fileId = event.params.fileId
+      return deleteFile(fileId)
     }
-    const fileId = event.params.fileId
-    return deleteFile(fileId)
   })
 
 exports.inviteUserToFile = functions.database
   .ref('/file_invitations/{fileId}/{tmpId}')
   .onWrite(event => {
     if (!event.data.exists()) {
-      return null
+      return Promise.resolve()
     }
     const fileId = event.params.fileId
     const original = event.data.val()

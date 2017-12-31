@@ -19,7 +19,7 @@ export default {
             context.commit(mutationTypes.SET_AUTHORITY_LOADING, !result.user)
           })
           .catch(error => {
-            console.log(error.code, error.message)
+            return Promise.reject(error)
           })
       }
     })
@@ -43,13 +43,7 @@ export default {
     })
   },
   [actionTypes.DELETE_USER] (context) {
-    return new Promise((resolve, reject) => {
-      const user = firebase.auth().currentUser
-      user.delete().then(() => {
-        context.commit(mutationTypes.SET_USER, null)
-        context.commit(mutationTypes.SET_AUTHORITY_LOADING, false)
-        resolve()
-      })
-    })
+    const user = firebase.auth().currentUser
+    return user.delete()
   }
 }

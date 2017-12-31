@@ -61,15 +61,24 @@
       </v-layout>
     </v-container>
   </v-content>
+  <AuthDialog v-model="reauth" :reauth="true"/>
 </div>
 </template>
 
 <script>
+import AuthDialog from '@/components/organisms/AuthDialog'
+
 import { mapGetters, mapActions } from 'vuex'
 import { getterTypes, actionTypes } from '@/store/layouts/types'
 import { getterTypes as userGetterTypes, actionTypes as userActionTypes } from '@/store/user/types'
 
 export default {
+  components: {
+    AuthDialog
+  },
+  data: () => ({
+    reauth: false
+  }),
   props: {
   },
   computed: {
@@ -86,11 +95,19 @@ export default {
     }),
     ...mapActions('user', {
       _signOut: userActionTypes.SIGN_OUT,
-      deleteUser: userActionTypes.DELETE_USER
+      _deleteUser: userActionTypes.DELETE_USER,
+      reauthenticate: userActionTypes.REAUTHENTICATE
     }),
     signOut () {
       this._signOut().then().catch().then(() => {
         location.reload()
+      })
+    },
+    deleteUser () {
+      this._deleteUser().then(() => {
+        window.location.reload()
+      }).catch(e => {
+        this.reauth = true
       })
     }
   }

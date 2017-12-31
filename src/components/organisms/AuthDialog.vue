@@ -1,8 +1,13 @@
 <template>
   <v-layout row justify-center>
-    <v-dialog v-model="value" persistent max-width="240">
+    <v-dialog
+      max-width="240"
+      :value="value"
+      :persistent="!reauth"
+      @input="val => $emit('input', val)"
+    >
       <v-card>
-        <v-card-title class="headline">Need Auth</v-card-title>
+        <v-card-title class="headline">{{reauth ? 'Need Reauth' : 'Need Auth'}}</v-card-title>
         <v-card-text>
           <v-btn color="white" @click="authGoogle">
             <img class="image" src="../..//assets/images/googlelogo_color_90x40dp.png" />
@@ -21,6 +26,10 @@ export default {
     value: {
       type: Boolean,
       required: true
+    },
+    reauth: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
