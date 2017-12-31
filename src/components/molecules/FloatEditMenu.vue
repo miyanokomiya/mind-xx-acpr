@@ -4,7 +4,6 @@
   :style="{top: `${y}px`, left: `${x}px`}"
 >
   <v-btn icon small outline color="indigo" class="list-item"
-    v-if="!root"
     @click="$emit('editText')"
   >
     <v-icon>edit</v-icon>
@@ -21,7 +20,6 @@
     <v-icon>subdirectory_arrow_right</v-icon>
   </v-btn
   ><v-btn icon small outline color="indigo" class="list-item"
-    v-if="!root"
     @click="clickDelete"
   >
     <v-icon>delete</v-icon>
