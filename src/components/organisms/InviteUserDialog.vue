@@ -80,6 +80,12 @@ export default {
     },
     publicReadOnly (to, from) {
       this.publicReadOnlyLocal = to || false
+    },
+    dialog (to) {
+      if (to) {
+        this.publicFileLocal = this.publicFile || false
+        this.publicReadOnlyLocal = this.publicReadOnly || false
+      }
     }
   },
   mounted () {
