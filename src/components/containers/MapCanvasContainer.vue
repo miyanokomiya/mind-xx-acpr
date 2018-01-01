@@ -108,8 +108,8 @@ export default {
     }
   },
   mounted () {
-    this.loadNodes({ fileKey: this.fileKey })
     this.loadFile({ key: this.fileKey })
+    this.loadNodes({ fileKey: this.fileKey })
   },
   destroyed () {
     this.disconnect()
