@@ -62,10 +62,12 @@ function deleteFile (fileId) {
       updates[`/file_authorities/${fileId}`] = null
       updates[`/files/${fileId}`] = null
       updates[`/nodes/${fileId}`] = null
-      Object.keys(authorities).forEach(userId => {
-        updates[`/work_spaces/${userId}/files/${fileId}`] = null
-        updates[`/work_spaces/${userId}/invited_files/${fileId}`] = null
-      })
+      if (authorities) {
+        Object.keys(authorities).forEach(userId => {
+          updates[`/work_spaces/${userId}/files/${fileId}`] = null
+          updates[`/work_spaces/${userId}/invited_files/${fileId}`] = null
+        })
+      }
       return admin
         .database()
         .ref()
