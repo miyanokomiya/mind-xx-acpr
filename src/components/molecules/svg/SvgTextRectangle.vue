@@ -21,9 +21,10 @@
     :text="l"
     :fill="textFill"
   />
+  <!-- empty text causes errors of getting the positions on Safari -->
   <SvgText
     v-if="!text"
-    text=""
+    text="-XXACPR-"
     :x="textX"
     :y="textY + textHeight"
     :font-size="fontSize"
@@ -80,13 +81,13 @@ export default {
   },
   computed: {
     lines () {
-      return this.text.split(/\n|\r\n/)
+      return this.text ? this.text.split(/\n|\r\n/) : []
     },
     width () {
       return this.textWidth
     },
     height () {
-      return this.textHeight * this.lines.length + 8
+      return this.textHeight * Math.max(1, this.lines.length) + 8
     },
     textHeight () {
       return this.fontSize + 5
@@ -121,7 +122,7 @@ export default {
       const width = this.lines.reduce((p, c, i) => {
         const width = this.$refs['svgLine'][i].getBBox().width
         return Math.max(p, width)
-      }, 46)
+      }, 48)
       return {
         width: width + this.textPaddingX * 2,
         height: this.height
