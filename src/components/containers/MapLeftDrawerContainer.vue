@@ -34,10 +34,10 @@ export default {
       textColor: settingsGetterTypes.TEXT_COLOR
     }),
     ...mapGetters('files', {
-      files: filesGetterTypes.FILES
+      fileFromKey: filesGetterTypes.FILE_FROM_KEY
     }),
     file () {
-      return this.files[this.fileKey]
+      return this.fileFromKey({ fileKey: this.fileKey })
     }
   },
   methods: {
