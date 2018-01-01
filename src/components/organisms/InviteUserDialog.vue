@@ -1,6 +1,6 @@
 <template>
   <v-layout row justify-center>
-    <v-dialog v-model="dialog" max-width="400">
+    <v-dialog v-model="dialog" max-width="560">
       <v-btn icon slot="activator">
         <v-icon>share</v-icon>
       </v-btn>
@@ -9,18 +9,22 @@
         <v-card-text>
           <form>
             <v-checkbox
+              hide-details
               label="Public"
               v-model="publicFileLocal"
               :disabled="!canEditPublic"
+              :class="{updated: publicFile !== publicFileLocal}"
             />
             <v-checkbox
               v-if="publicFileLocal"
+              hide-details
               label="Read Only (except for invited users)"
               v-model="publicReadOnlyLocal"
               :disabled="!canEditPublic"
+              :class="{updated: publicReadOnly !== publicReadOnlyLocal}"
             />
             <div class="text-xs-right">
-              <v-btn v-if="canEditPublic" @click="setStatus">Set status</v-btn>
+              <v-btn v-if="canEditPublic" @click="setStatus">Update</v-btn>
             </div>
           </form>
         </v-card-text>
@@ -37,11 +41,12 @@
               required
             />
             <v-checkbox
+              hide-details
               label="Read only"
               v-model="readOnly"
             />
             <div class="text-xs-right">
-              <v-btn @click="invite">Invite users</v-btn>
+              <v-btn @click="invite">Invite</v-btn>
             </div>
           </form>
         </v-card-text>
@@ -72,7 +77,6 @@
                 v-for="(auth, uid) in invitedUserAuthorities"
                 v-bind:key="uid"
                 v-if="users[uid]"
-                class="users"
                 :class="{updated: (uid in updatedAuthorities)}"
               >
               <v-badge
@@ -184,11 +188,12 @@ export default {
         publicFile: this.publicFileLocal,
         readOnly: this.publicReadOnlyLocal
       })
-      this.dialog = false
     },
     invite () {
-      this.$emit('invite', { email: this.email, readOnly: this.readOnly })
-      this.dialog = false
+      if (this.email) {
+        this.$emit('invite', { email: this.email, readOnly: this.readOnly })
+        this.email = ''
+      }
     },
     update () {
       const updates = Object.keys(this.updatedAuthorities).reduce((p, uid) => {
@@ -205,7 +210,7 @@ export default {
         return p
       }, {})
       this.$emit('updateUserAuthorities', updates)
-      this.dialog = false
+      this.updatedAuthorities = {}
     },
     toggleDeleteUser (uid) {
       // set 'null' means to be delete
@@ -241,13 +246,8 @@ export default {
 .toggle-writable {
   cursor: pointer;
 }
-.users {
-  border-left: 1px solid rgba(0, 0, 0, 0);
-  border-right: 1px solid rgba(0, 0, 0, 0);
-}
 .updated {
-  border-left: 1px solid red;
-  border-right: 1px solid red;
+  background-color: rgba(255, 0, 0, 0.2)
 }
 </style>
 

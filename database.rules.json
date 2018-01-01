@@ -1,8 +1,10 @@
 {
   "rules": {
     "users": {
+      ".read": "auth !== null",
+      ".indexOn": ["email"],
+
       "$uid": {
-        ".read": "auth !== null",
         ".write": "$uid === auth.uid",
 
         "uid": {

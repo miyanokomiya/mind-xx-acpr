@@ -82,13 +82,17 @@ export default {
       _updateUserAuthorities: filesActionTypes.UPDATE_USER_AUTHORITIES
     }),
     ...mapActions('users', {
-      _loadUsers: usersActionTypes.LOAD_USERS
+      _loadUsers: usersActionTypes.LOAD_USERS,
+      _loadUsersFromEmail: usersActionTypes.LOAD_USERS_FROM_EMAIL
     }),
     invite ({ email, readOnly }) {
       this.inviteUser({
         fileKey: this.fileKey,
         email,
         readOnly
+      })
+      this._loadUsersFromEmail({
+        emailList: [email]
       })
     },
     setStatus ({publicFile, readOnly}) {
