@@ -1,6 +1,7 @@
 <template>
 <div class="wrapper">
   <MapCanvas
+    class="map-canvas-wrapper"
     v-if="loaded && !permissionDenied"
     :width="canvasWidth"
     :height="canvasHeight"
@@ -144,6 +145,10 @@ export default {
 <style lang="scss" scoped>
 .wrapper {
   width: 100%;
+
+  .map-canvas-wrapper {
+    margin: auto;
+  }
 }
 .center-box {
   margin: 30px 10%;
