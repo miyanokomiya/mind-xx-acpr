@@ -15,8 +15,8 @@
     @undo="undo"
     @redo="redo"
   />
-  <div class="center-box">
-    <PermissionDeniedMessage v-if="permissionDenied"/>
+  <div class="center-box" v-if="permissionDenied">
+    <PermissionDeniedMessage/>
   </div>
   <v-snackbar
     bottom
