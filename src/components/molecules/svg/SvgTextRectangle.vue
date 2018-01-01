@@ -122,7 +122,7 @@ export default {
       const width = this.lines.reduce((p, c, i) => {
         const width = this.$refs['svgLine'][i].getBBox().width
         return Math.max(p, width)
-      }, 48)
+      }, 50)
       return {
         width: width + this.textPaddingX * 2,
         height: this.height
