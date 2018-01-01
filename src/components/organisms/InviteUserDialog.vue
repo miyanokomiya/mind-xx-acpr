@@ -85,7 +85,7 @@
               >
                 <v-icon slot="badge" dark>edit</v-icon>
                 <v-avatar size="32px">
-                  <img :src="owner.photoURL"/>
+                  <img :src="users[uid].photoURL"/>
                 </v-avatar>
               </v-badge>
                 <v-list-tile-content :class="{deleted: updatedAuthorities[uid] === null}">
