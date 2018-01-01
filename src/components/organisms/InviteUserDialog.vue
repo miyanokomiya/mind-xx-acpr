@@ -19,7 +19,9 @@
               v-model="publicReadOnlyLocal"
               :disabled="!canEditPublic"
             />
-            <v-btn v-if="canEditPublic" @click="setStatus">Set status</v-btn>
+            <div class="text-xs-right">
+              <v-btn v-if="canEditPublic" @click="setStatus">Set status</v-btn>
+            </div>
           </form>
         </v-card-text>
       </v-card>
@@ -38,7 +40,9 @@
               label="Read only"
               v-model="readOnly"
             />
-            <v-btn @click="invite">Invite users</v-btn>
+            <div class="text-xs-right">
+              <v-btn @click="invite">Invite users</v-btn>
+            </div>
           </form>
         </v-card-text>
       </v-card>

@@ -7,8 +7,6 @@
     :value="leftDrawer"
     @input="val => setLeftDrawer({ leftDrawer: val })"
   >
-    <!-- <v-list dense>
-    </v-list> -->
     <router-view name="leftDrawer"/>
   </v-navigation-drawer>
   <v-toolbar
@@ -21,17 +19,10 @@
   >
     <v-toolbar-title :style="$vuetify.breakpoint.smAndUp ? 'width: 300px; min-width: 250px' : 'min-width: 72px'" class="ml-0 pl-3">
       <v-toolbar-side-icon @click.stop="setLeftDrawer({ leftDrawer: !leftDrawer })"></v-toolbar-side-icon>
-      <!-- <span class="hidden-xs-only">MindXXACPR</span> -->
       <v-btn flat @click="$router.push({name: 'WorkSpace'})">MindXXACPR</v-btn>
     </v-toolbar-title>
     <div class="d-flex align-center" style="margin-left: auto">
       <router-view name="headerIconList"/>
-      <!-- <v-btn icon>
-        <v-icon>apps</v-icon>
-      </v-btn>
-      <v-btn icon>
-        <v-icon>notifications</v-icon>
-      </v-btn> -->
       <v-menu bottom left offset-y :nudge-bottom="6" v-if="user">
         <v-btn icon slot="activator" dark>
           <v-avatar size="32px">
@@ -47,7 +38,7 @@
             <v-list-tile-title>Sign out</v-list-tile-title>
           </v-list-tile>
           <v-divider/>
-          <v-list-tile @click="deleteUser">
+          <v-list-tile @click="deleteConfirm = true">
             <v-list-tile-title>Delete account</v-list-tile-title>
           </v-list-tile>
         </v-list>
@@ -62,11 +53,18 @@
     </v-container>
   </v-content>
   <AuthDialog v-model="reauth" :reauth="true"/>
+  <ConfirmDialog
+    v-model="deleteConfirm"
+    message="All your files will be deleted and cannot revert. Are you sure you want to delete?"
+    @ok="deleteUser"
+    @cancel="deleteConfirm = false"
+  />
 </div>
 </template>
 
 <script>
 import AuthDialog from '@/components/organisms/AuthDialog'
+import ConfirmDialog from '@/components/organisms/ConfirmDialog'
 
 import { mapGetters, mapActions } from 'vuex'
 import { getterTypes, actionTypes } from '@/store/layouts/types'
@@ -74,10 +72,12 @@ import { getterTypes as userGetterTypes, actionTypes as userActionTypes } from '
 
 export default {
   components: {
-    AuthDialog
+    AuthDialog,
+    ConfirmDialog,
   },
   data: () => ({
-    reauth: false
+    reauth: false,
+    deleteConfirm: false
   }),
   props: {
   },
@@ -104,6 +104,7 @@ export default {
       })
     },
     deleteUser () {
+      this.deleteConfirm = false
       this._deleteUser().then(() => {
         window.location.reload()
       }).catch(e => {

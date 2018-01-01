@@ -8,7 +8,7 @@
     >
       <v-card>
         <v-card-title class="headline">{{reauth ? 'Need Reauth' : 'Need Auth'}}</v-card-title>
-        <v-card-text>
+        <v-card-text class="text-xs-left">
           <v-btn color="white" @click="authGoogle">
             <img class="image" src="../..//assets/images/googlelogo_color_90x40dp.png" />
           </v-btn>
