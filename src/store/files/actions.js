@@ -179,7 +179,8 @@ export default {
       .database()
       .ref(`/file_authorities/${fileKey}/users/${uid}`)
       .set({
-        write: true
+        write: true,
+        owner: true
       })
       .then(() => {
         // local commit the authority
@@ -188,7 +189,8 @@ export default {
             [fileKey]: {
               users: {
                 [uid]: {
-                  write: true
+                  write: true,
+                  owner: true
                 }
               }
             }
@@ -289,5 +291,22 @@ export default {
           })
         }
       })
+  },
+  [actionTypes.UPDATE_USER_AUTHORITIES] (context, { userAuthorities, fileKey }) {
+    const updates = Object.keys(userAuthorities).reduce((p, uid) => {
+      const auth = userAuthorities[uid]
+      if (auth) {
+        p[`/file_authorities/${fileKey}/users/${uid}`] = auth
+      } else {
+        // delete user authority
+        p[`/file_authorities/${fileKey}/users/${uid}`] = null
+        p[`/work_spaces/${uid}/invited_files/${fileKey}`] = null
+      }
+      return p
+    }, {})
+    return firebase
+      .database()
+      .ref()
+      .update(updates)
   }
 }

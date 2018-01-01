@@ -43,10 +43,14 @@ exports.deleteUser = functions.auth.user().onDelete(event => {
       }
     })
     .then(() => {
+      const updates = {
+        [`/work_spaces/${uid}`]: null,
+        [`/users/${uid}`]: null
+      }
       return admin
         .database()
         .ref(`/work_spaces/${uid}`)
-        .set(null)
+        .update(updates)
     })
 })
 
@@ -101,18 +105,34 @@ exports.inviteUserToFile = functions.database
       .then(user => {
         if (user) {
           // the user is found
-          const updates = {
-            [`/file_authorities/${fileId}/users/${user.uid}`]: {
-              write: original.write
-            },
-            [`/work_spaces/${user.uid}/invited_files/${fileId}`]: true
-          }
           return admin
             .database()
-            .ref()
-            .update(updates)
-            .then(() => {
-              return event.data.ref.remove()
+            .ref(`/file_authorities/${fileId}/users/${user.uid}`)
+            .once('value')
+            .then(snapshot => {
+              const current = snapshot.val()
+              if (current && current.owner) {
+                console.error(
+                  `The authority of the owner cannot change. file=${fileId}, owner=${
+                    user.uid
+                  }`
+                )
+                return Promise.resolve()
+              } else {
+                const updates = {
+                  [`/file_authorities/${fileId}/users/${user.uid}`]: {
+                    write: original.write
+                  },
+                  [`/work_spaces/${user.uid}/invited_files/${fileId}`]: true
+                }
+                return admin
+                  .database()
+                  .ref()
+                  .update(updates)
+                  .then(() => {
+                    return event.data.ref.remove()
+                  })
+              }
             })
         } else {
           // the user is not found

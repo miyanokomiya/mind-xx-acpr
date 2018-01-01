@@ -5,8 +5,12 @@
     :publicFile="!!publicFile"
     :publicReadOnly="publicFile ? !publicFile.write : false"
     :canEditPublic="canEditPublic"
+    :userAuthorities="userAuthorities"
+    :users="users"
     @setStatus="setStatus"
     @invite="invite"
+    @updateUserAuthorities="updateUserAuthorities"
+    @click.native="loadUsers"
   />
   <MapHelpDialog/>
 </div>
@@ -19,7 +23,8 @@ import MapHelpDialog from '@/components/organisms/MapHelpDialog'
 import { mapGetters, mapActions } from 'vuex'
 import { getterTypes as nodesActionTypes } from '@/store/nodes/types'
 import { getterTypes as filesGetterTypes, actionTypes as filesActionTypes } from '@/store/files/types'
-import { getterTypes as userActionTypes } from '@/store/user/types'
+import { getterTypes as userGetterTypes } from '@/store/user/types'
+import { getterTypes as usersGetterTypes, actionTypes as usersActionTypes } from '@/store/users/types'
 
 export default {
   components: {
@@ -35,7 +40,10 @@ export default {
       isMyFileFromKey: filesGetterTypes.IS_MY_FILE_FROM_KEY
     }),
     ...mapGetters('user', {
-      user: userActionTypes.USER
+      user: userGetterTypes.USER
+    }),
+    ...mapGetters('users', {
+      users: usersGetterTypes.USERS
     }),
     fileAuthority () {
       return this.fileAuthorityFromKey({fileKey: this.fileKey})
@@ -62,12 +70,19 @@ export default {
       } else {
         return null
       }
+    },
+    userAuthorities () {
+      return this.fileAuthority.users || {}
     }
   },
   methods: {
     ...mapActions('files', {
       inviteUser: filesActionTypes.INVITE_USER,
-      updateStatus: filesActionTypes.UPDATE_STATUS
+      updateStatus: filesActionTypes.UPDATE_STATUS,
+      _updateUserAuthorities: filesActionTypes.UPDATE_USER_AUTHORITIES
+    }),
+    ...mapActions('users', {
+      _loadUsers: usersActionTypes.LOAD_USERS
     }),
     invite ({ email, readOnly }) {
       this.inviteUser({
@@ -80,6 +95,17 @@ export default {
       this.updateStatus({
         publicFile,
         readOnly,
+        fileKey: this.fileKey
+      })
+    },
+    loadUsers () {
+      this._loadUsers({
+        users: this.userAuthorities
+      })
+    },
+    updateUserAuthorities (userAuthorities) {
+      this._updateUserAuthorities({
+        userAuthorities,
         fileKey: this.fileKey
       })
     }

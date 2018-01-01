@@ -1,5 +1,26 @@
 {
   "rules": {
+    "users": {
+      "$uid": {
+        ".read": "auth !== null",
+        ".write": "$uid === auth.uid",
+
+        "uid": {
+          ".validate": "newData.isString()"
+        },
+        "displayName": {
+          ".validate": "newData.isString()"
+        },
+        "email": {
+          ".validate": "newData.isString()"
+        },
+        "photoURL": {
+          ".validate": "newData.isString()"
+        },
+
+        "$other": { ".validate": false }
+      }
+    },
     "file_invitations": {
       "$file_id": {
         ".read": "data.child(auth.uid).exists()",
@@ -25,11 +46,13 @@
           "data.child('users').child(auth.uid).exists() || data.child('public').exists()",
 
         "users": {
-          ".write":
-            "!data.exists() || data.child(auth.uid + 'write').val() === true",
-
           "$uid": {
+            ".write":
+              "!data.exists() || (data.parent().child(auth.uid + '/write').val() === true && data.child('owner').val() !== true)",
             "write": {
+              ".validate": "newData.isBoolean()"
+            },
+            "owner": {
               ".validate": "newData.isBoolean()"
             },
 
@@ -59,7 +82,8 @@
         },
         "invited_files": {
           "$file_id": {
-            ".write": "false",
+            ".write":
+              "root.child('file_authorities/' + $file_id + '/users/' + auth.uid + '/write').val() === true",
             ".validate": "newData.val() === true"
           }
         },

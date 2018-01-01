@@ -1,4 +1,4 @@
-import { actionTypes, mutationTypes } from './types'
+import { actionTypes, mutationTypes, getterTypes } from './types'
 import firebase from '@/firebase'
 
 export default {
@@ -9,8 +9,13 @@ export default {
       if (user) {
         context.commit(mutationTypes.SET_USER, user)
         context.commit(mutationTypes.SET_AUTHORITY_LOADING, !user)
+        // update the information of my account to be latest allways
+        return firebase
+          .database()
+          .ref(`/users/${user.uid}`)
+          .set(context.getters[getterTypes.USER])
       } else {
-        firebase
+        return firebase
           .auth()
           .getRedirectResult()
           .then(result => {
