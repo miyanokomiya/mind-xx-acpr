@@ -1,7 +1,7 @@
 <template>
 <div
   class="float-text-input-wrapper"
-  :style="{top: `${y}px`, left: `${x}px`}"
+  :style="{top: `${_y}px`, left: `${_x}px`, width: width}"
 >
   <v-text-field
     class="text-field"
@@ -13,6 +13,9 @@
     @keyup.esc="done"
     @blur="done"
   />
+  <v-btn fab dark small color="primary" class="submit">
+    <v-icon dark>done</v-icon>
+  </v-btn>
 </div>
 </template>
 
@@ -50,6 +53,15 @@ export default {
     },
     rows () {
       return Math.min(this.lines.length, 3)
+    },
+    _x () {
+      return this.$isMobile.any ? 0 : this.x
+    },
+    _y () {
+      return this.$isMobile.any ? 0 : this.y
+    },
+    width () {
+      return this.$isMobile.any ? '100%' : ''
     }
   },
   methods: {
@@ -72,6 +84,14 @@ export default {
 
   .text-field {
     padding: 0;
+    width: calc(100% - 40px);
+    display: inline-flex;
+  }
+  .submit {
+    margin: 0;
+    width: 32px;
+    height: 32px;
+    margin-bottom: 1px;
   }
 }
 </style>

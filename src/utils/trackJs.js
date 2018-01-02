@@ -25,4 +25,5 @@ Vue.config.errorHandler = (err, vm, info) => {
 
   // Track the native JS error
   window.trackJs.track(err)
+  throw err
 }

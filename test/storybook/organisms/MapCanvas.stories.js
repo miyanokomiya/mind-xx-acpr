@@ -33,7 +33,9 @@ const methods = {
 
 const user = createUser({ uid: 'user' })
 const fileAuthority = {
-  user: { write: true }
+  users: {
+    user: { write: true }
+  }
 }
 
 storiesOf('organisms/MapCanvas', module)
