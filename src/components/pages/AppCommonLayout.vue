@@ -68,6 +68,7 @@
     :persistent="needAuth"
     @input="val => needAuthLocal = val"
   />
+  <v-progress-linear v-if="authorityLoading" :indeterminate="true"/>
 </div>
 </template>
 
