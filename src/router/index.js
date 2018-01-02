@@ -13,6 +13,10 @@ export default new Router({
   mode: 'history',
   routes: [
     {
+      path: '/',
+      redirect: { name: 'WorkSpace' }
+    },
+    {
       path: '/map',
       component: AppCommonLayout,
       props: {
@@ -34,7 +38,7 @@ export default new Router({
       ]
     },
     {
-      path: '/',
+      path: '/workspace',
       component: AppCommonLayout,
       props: {
         needAuth: true
