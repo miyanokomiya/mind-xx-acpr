@@ -4,11 +4,13 @@
     font-family="sans-serif"
     :viewBox="`${x} ${y} ${canvasWidth} ${canvasHeight}`"
     @mousemove.prevent="e => $isMobile.any ? '' : canvasCursorMove(e)"
+    @mousedown="e => $isMobile.any ? '' : canvasCursorDown(e)"
     @mousedown.self="e => $isMobile.any ? '' : canvasCursorDownSelf(e)"
     @mouseup.self="e => $isMobile.any ? '' : canvasCursorUpSelf(e)"
     @mouseup="e => $isMobile.any ? '' : canvasCursorUp(e)"
     @mousewheel.prevent="e => $isMobile.any ? '' : canvasWheel(e)"
     @touchmove.prevent="e => $isMobile.any ? canvasCursorMove(e) : ''"
+    @touchstart="e => $isMobile.any ? canvasCursorDown(e) : ''"
     @touchstart.self="e => $isMobile.any ? canvasCursorDownSelf(e) : ''"
     @touchend.self="e => $isMobile.any ? canvasCursorUpSelf(e) : ''"
     @touchend="e => $isMobile.any ? canvasCursorUp(e) : ''"
@@ -45,7 +47,10 @@ export default {
     downStart: 0,
     clickLast: 0,
     rectangleSelecting: false,
-    downP: null
+    downP: null,
+    movingTimer: 0,
+    progressiveMove: {x: 0, y: 0}
+
   }),
   props: {
     x: {
@@ -132,15 +137,35 @@ export default {
           })
         }
         this.beforeMoveP = Object.assign({}, p)
+        this.progressiveMove = {
+          // limit too fast moving
+          x: Math.min(dif.x, 5),
+          y: Math.min(dif.y, 5)
+        }
+
       }
     },
     canvasWheel (e) {
+      this.stopProgressiveMove()
       const dx = e.wheelDeltaX
       const dy = e.wheelDeltaY
       this.$emit('move', {
         x: this.x - dx / 3 / this.scale,
         y: this.y - dy / 3 / this.scale
       })
+    },
+    stopProgressiveMove () {
+      if (this.movingTimer > 0) {
+        clearTimeout(this.movingTimer)
+        this.movingTimer = 0
+      }
+      this.progressiveMove = {
+        x: 0,
+        y: 0
+      }
+    },
+    canvasCursorDown (e) {
+      this.stopProgressiveMove()
     },
     canvasCursorDownSelf (e) {
       this.downStart = Date.now()
@@ -150,6 +175,10 @@ export default {
       this.downP = p
     },
     canvasCursorUpSelf (e) {
+      this.movingTimer = setTimeout(() => {
+        this.movingLoop()
+      }, 25)
+
       const now = Date.now()
       if (now - this.downStart < INTERVAL_CLICK) {
         if (now - this.clickLast < INTERVAL_DOUBLE_CLICK) {
@@ -168,6 +197,28 @@ export default {
       }
       this.beforeMoveP = null
       this.rectangleSelecting = false
+    },
+    movingLoop () {
+      if (this.movingTimer > 0) {
+        const dif = this.progressiveMove
+        this.$emit('move', {
+          x: this.x + dif.x,
+          y: this.y + dif.y,
+        })
+        dif.x *= 0.98
+        dif.y *= 0.98
+        if (Math.abs(dif.x) + Math.abs(dif.y) > 1) {
+          this.movingTimer = setTimeout(() => {
+            this.movingLoop()
+          }, 25)
+        } else {
+          this.movingTimer = 0
+          this.progressiveMove = {
+            x: 0,
+            y: 0
+          }
+        }
+      }
     },
     getPostionAfterChangeScale (nextScale) {
       // zoom based at cursor position
