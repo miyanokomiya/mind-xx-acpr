@@ -157,10 +157,19 @@ export default {
                 x: this.x + dif.x,
                 y: this.y + dif.y
               })
-              this.progressiveMove = {
-                // limit too fast moving
-                x: Math.min(dif.x, 5),
-                y: Math.min(dif.y, 5)
+              const d = Math.sqrt(dif.x * dif.x + dif.y * dif.y)
+              if (d > 2) {
+                // limit too fast or slow moving
+                const rate = Math.min(Math.max(d, 3), 10)
+                this.progressiveMove = {
+                  x: dif.x / d * rate,
+                  y: dif.y / d * rate
+                }
+              } else {
+                this.progressiveMove = {
+                  x: 0,
+                  y: 0,
+                }
               }
               this.lastMove = Date.now()
             }
