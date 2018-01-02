@@ -28,8 +28,8 @@
             </div>
           </form>
         </v-card-text>
+        <v-divider/>
       </v-card>
-      <v-divider/>
       <v-card>
         <v-card-title class="headline">Share</v-card-title>
         <v-card-text>
@@ -50,8 +50,8 @@
             </div>
           </form>
         </v-card-text>
+        <v-divider/>
       </v-card>
-      <v-divider/>
       <v-card>
         <v-card-title class="headline">Users</v-card-title>
         <v-card-text>
@@ -107,6 +107,13 @@
             <v-btn @click="update">Update</v-btn>
           </div>
         </v-card-text>
+      </v-card>
+      <v-card>
+        <v-divider/>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="black darken-1" flat="flat" @click="dialog = false">Close</v-btn>
+        </v-card-actions>
       </v-card>
     </v-dialog>
   </v-layout>

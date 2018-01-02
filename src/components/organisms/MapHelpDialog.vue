@@ -151,9 +151,8 @@
           </v-list-tile-content>
         </v-list-tile>
 
-        <v-divider></v-divider>
-
       </v-list>
+      <v-divider></v-divider>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="black darken-1" flat="flat" @click="dialog = false">Close</v-btn>
