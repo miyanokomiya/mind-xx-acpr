@@ -246,7 +246,7 @@ export default {
           // this file is public and writable
           return true
         }
-        const authority = this.fileAuthority.users[this.user.uid]
+        const authority = this.fileAuthority.users ? this.fileAuthority.users[this.user.uid] : null
         return authority && authority.write
       } else {
         return false

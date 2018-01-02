@@ -135,7 +135,7 @@ export default {
       })
     },
     downloadText (text, fileName) {
-      var blob = new Blob([ text ], { 'type': 'text/plain' })
+      var blob = new Blob([ text ], { 'type': 'image/svg+xml' })
       if (window.navigator.msSaveBlob) {
         window.navigator.msSaveBlob(blob, fileName)
       } else {
