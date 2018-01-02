@@ -8,6 +8,7 @@
     :selectedNodes="selectedNodes"
     :fileAuthority="fileAuthority"
     :user="user"
+    :canWrite="canWrite"
     :defaultNodeProps="defaultNodeProps"
     @updateNodes="nodes => updateNodes({ nodes })"
     @setSelectedNodes="selectedNodes => setSelectedNodes({ selectedNodes })"
@@ -61,7 +62,8 @@ export default {
       leftDrawer: layoutsGetterTypes.LEFT_DRAWER
     }),
     ...mapGetters('user', {
-      user: userGetterTypes.USER
+      user: userGetterTypes.USER,
+      _canWrite: userGetterTypes.CAN_WRITE
     }),
     ...mapGetters('nodes', {
       nodes: nodesGetterTypes.NODES,
@@ -77,6 +79,9 @@ export default {
       nodeColor: settingsGetterTypes.NODE_COLOR,
       textColor: settingsGetterTypes.TEXT_COLOR
     }),
+    canWrite () {
+      return this._canWrite({fileKey: this.fileKey})
+    },
     canvasWidth () {
       return this.$window.width >= 1264 && this.leftDrawer ? this.$window.width - 300 - 20 : this.$window.width - 20
     },

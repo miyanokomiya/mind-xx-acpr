@@ -44,10 +44,10 @@ export const createFile = obj =>
   Object.assign(
     {},
     {
-      name: 'file a',
+      name: '',
       nodeCount: 0,
-      created: 'created',
-      updated: 'updated'
+      created: 0,
+      updated: 0
     },
     obj
   )

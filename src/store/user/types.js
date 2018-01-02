@@ -1,6 +1,7 @@
 export const getterTypes = {
   USER: 'USER',
-  AUTHORITY_LOADING: 'AUTHORITY_LOADING'
+  AUTHORITY_LOADING: 'AUTHORITY_LOADING',
+  CAN_WRITE: 'CAN_WRITE'
 }
 
 export const actionTypes = {

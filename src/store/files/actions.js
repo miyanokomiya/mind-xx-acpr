@@ -13,76 +13,81 @@ export default {
       permissionDenied: false
     })
     // start loading
-    const uid = firebase.auth().currentUser.uid
     let isMyFile = false
-    firebase
-      .database()
-      .ref(`/work_spaces/${uid}/files/${key}`)
-      .once('value')
-      .then(snapshot => {
-        isMyFile = snapshot.exists()
-        return Promise.resolve()
-      })
-      .then(() => {
-        // watch the authority
-        firebase
-          .database()
-          .ref(`/file_authorities/${key}`)
-          .on(
-            'value',
-            snapshot => {
-              context.commit(mutationTypes.SET_PERMISSION_DENIED, {
-                permissionDenied: false
-              })
-              const fileAuthority = snapshot.val()
-              if (isMyFile) {
-                context.commit(mutationTypes.UPDATE_FILE_AUTHORITIES, {
-                  fileAuthorities: {
-                    [key]: fileAuthority
-                  }
-                })
-              } else {
-                context.commit(mutationTypes.UPDATE_SHARED_FILE_AUTHORITIES, {
-                  sharedFileAuthorities: {
-                    [key]: fileAuthority
-                  }
-                })
-              }
-            },
-            e => {
-              // if enter this route, '.on' is expired
-              context.commit(mutationTypes.SET_PERMISSION_DENIED, {
-                permissionDenied: true
-              })
-            }
-          )
-        firebase
-          .database()
-          .ref(`/files/${key}`)
-          .once('value')
-          .then(snapshot => {
-            const file = snapshot.val()
+    let promise
+    if (firebase.auth().currentUser) {
+      const uid = firebase.auth().currentUser.uid
+      promise = firebase
+        .database()
+        .ref(`/work_spaces/${uid}/files/${key}`)
+        .once('value')
+        .then(snapshot => {
+          isMyFile = snapshot.exists()
+          return Promise.resolve()
+        })
+    } else {
+      promise = Promise.resolve()
+    }
+    return promise.then(() => {
+      // watch the authority
+      firebase
+        .database()
+        .ref(`/file_authorities/${key}`)
+        .on(
+          'value',
+          snapshot => {
+            context.commit(mutationTypes.SET_PERMISSION_DENIED, {
+              permissionDenied: false
+            })
+            const fileAuthority = snapshot.val()
             if (isMyFile) {
-              context.commit(mutationTypes.UPDATE_FILES, {
-                files: {
-                  [key]: file
+              context.commit(mutationTypes.UPDATE_FILE_AUTHORITIES, {
+                fileAuthorities: {
+                  [key]: fileAuthority
                 }
               })
             } else {
-              context.commit(mutationTypes.UPDATE_SHARED_FILES, {
-                sharedFiles: {
-                  [key]: file
+              context.commit(mutationTypes.UPDATE_SHARED_FILE_AUTHORITIES, {
+                sharedFileAuthorities: {
+                  [key]: fileAuthority
                 }
               })
             }
-          })
-          .catch(e => {
+          },
+          e => {
+            // if enter this route, '.on' is expired
             context.commit(mutationTypes.SET_PERMISSION_DENIED, {
               permissionDenied: true
             })
-            return Promise.resolve()
+          }
+        )
+      firebase
+        .database()
+        .ref(`/files/${key}`)
+        .once('value')
+        .then(snapshot => {
+          const file = snapshot.val()
+          if (isMyFile) {
+            context.commit(mutationTypes.UPDATE_FILES, {
+              files: {
+                [key]: file
+              }
+            })
+          } else {
+            context.commit(mutationTypes.UPDATE_SHARED_FILES, {
+              sharedFiles: {
+                [key]: file
+              }
+            })
+          }
+        })
+        .catch(e => {
+          context.commit(mutationTypes.SET_PERMISSION_DENIED, {
+            permissionDenied: true
           })
-      })
+          return Promise.resolve()
+        })
+    })
   },
   [actionTypes.LOAD_FILES] (context, payload) {
     context.commit(mutationTypes.CLEAR_FILES)

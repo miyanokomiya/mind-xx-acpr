@@ -53,6 +53,9 @@ export default {
       return this.isMyFileFromKey({fileKey: this.fileKey})
     },
     canShare () {
+      if (!this.user) {
+        return false
+      }
       const uid = this.user.uid
       const fileAuthority = this.fileAuthority
       if (fileAuthority) {

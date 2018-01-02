@@ -232,6 +232,10 @@ export default {
     defaultNodeProps: {
       type: Object,
       default: () => ({})
+    },
+    canWrite: {
+      type: Boolean,
+      default: false
     }
   },
   mounted () {
@@ -240,18 +244,6 @@ export default {
     })
   },
   computed: {
-    canWrite () {
-      if (this.fileAuthority) {
-        if (this.fileAuthority.public && this.fileAuthority.public.write) {
-          // this file is public and writable
-          return true
-        }
-        const authority = this.fileAuthority.users ? this.fileAuthority.users[this.user.uid] : null
-        return authority && authority.write
-      } else {
-        return false
-      }
-    },
     ROOT_NODE () {
       return ROOT_NODE
     },

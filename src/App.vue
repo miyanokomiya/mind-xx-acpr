@@ -1,29 +1,16 @@
 <template>
   <v-app id="app">
-    <router-view v-if="!authorityLoading"/>
-    <AuthDialog v-model="needAuth"/>
+    <router-view/>
   </v-app>
 </template>
 
 <script>
-import AuthDialog from './components/organisms/AuthDialog'
-
-import { mapGetters, mapActions } from 'vuex'
-import { getterTypes, actionTypes } from '@/store/user/types'
+import { mapActions } from 'vuex'
+import { actionTypes } from '@/store/user/types'
 
 export default {
   name: 'app',
-  components: {
-    AuthDialog
-  },
   computed: {
-    ...mapGetters('user', {
-      user: getterTypes.USER,
-      authorityLoading: getterTypes.AUTHORITY_LOADING
-    }),
-    needAuth () {
-      return !this.user
-    }
   },
   mounted () {
     this.loadUser()

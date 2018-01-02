@@ -13,20 +13,14 @@ export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '/',
+      path: '/map',
       component: AppCommonLayout,
+      props: {
+        needAuth: false
+      },
       children: [
         {
-          path: '',
-          name: 'WorkSpace',
-          components: {
-            content: WorkSpaceContainer
-            // headerIconList: MapHelpDialog,
-            // leftDrawer: MapLeftDrawerContainer
-          }
-        },
-        {
-          path: 'map/:fileKey',
+          path: ':fileKey',
           name: 'Map',
           components: {
             content: MapCanvasContainer,
@@ -35,6 +29,22 @@ export default new Router({
           },
           props: {
             content: true
+          }
+        }
+      ]
+    },
+    {
+      path: '/',
+      component: AppCommonLayout,
+      props: {
+        needAuth: true
+      },
+      children: [
+        {
+          path: '',
+          name: 'WorkSpace',
+          components: {
+            content: WorkSpaceContainer
           }
         }
       ]

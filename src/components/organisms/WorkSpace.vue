@@ -37,7 +37,7 @@
       >
       <template slot="items" slot-scope="props">
         <td class="text-xs-left open-file" @click="$router.push({name: 'Map', params: { fileKey: props.item.key }})">
-          <span class="name elevation-1">{{ props.item.name }}</span>
+          <span class="name elevation-1">{{ props.item.name || 'untitled' }}</span>
         </td>
         <td class="text-xs-right count">{{ props.item.nodeCount }}</td>
         <td class="text-xs-right datetime">{{ new Date(props.item.created).toLocaleString() }}</td>
@@ -211,7 +211,7 @@ export default {
     },
     createFile () {
       this.$emit('createFile', {
-        file: { name: 'untitled' }
+        file: { name: '' }
       })
       this.pagination.sortBy = 'created'
       this.pagination.descending = true

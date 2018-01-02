@@ -45,7 +45,7 @@
     "file_authorities": {
       "$file_id": {
         ".read":
-          "data.child('users').child(auth.uid).exists() || data.child('public').exists()",
+          "data.child('public').exists() || data.child('users').child(auth.uid).exists()",
 
         "users": {
           "$uid": {
@@ -78,7 +78,8 @@
 
         "files": {
           "$file_id": {
-            ".write": "$uid === auth.uid",
+            ".write":
+              "root.child('file_authorities/' + $file_id + '/users/' + auth.uid + '/owner').val() === true",
             ".validate": "newData.val() === true"
           }
         },
@@ -96,9 +97,9 @@
     "files": {
       "$file_id": {
         ".read":
-          "root.child('file_authorities/' + $file_id + '/users/' + auth.uid).exists() || root.child('file_authorities/' + $file_id + '/public').exists()",
+          "root.child('file_authorities/' + $file_id + '/public').exists() || root.child('file_authorities/' + $file_id + '/users/' + auth.uid).exists()",
         ".write":
-          "root.child('file_authorities/' + $file_id + '/users/' + auth.uid + '/write').val() === true || root.child('file_authorities/' + $file_id + '/public/write').val() === true",
+          "root.child('file_authorities/' + $file_id + '/public/write').val() === true || root.child('file_authorities/' + $file_id + '/users/' + auth.uid + '/write').val() === true",
 
         "name": {
           ".validate": "newData.isString()"
@@ -119,9 +120,9 @@
     "nodes": {
       "$file_id": {
         ".read":
-          "root.child('file_authorities/' + $file_id + '/users/' + auth.uid).exists() || root.child('file_authorities/' + $file_id + '/public').exists()",
+          "root.child('file_authorities/' + $file_id + '/public').exists() || root.child('file_authorities/' + $file_id + '/users/' + auth.uid).exists()",
         ".write":
-          "root.child('file_authorities/' + $file_id + '/users/' + auth.uid + '/write').val() === true || root.child('file_authorities/' + $file_id + '/public/write').val() === true",
+          "root.child('file_authorities/' + $file_id + '/public/write').val() === true || root.child('file_authorities/' + $file_id + '/users/' + auth.uid + '/write').val() === true",
 
         "text": {
           ".validate": "newData.isString()"

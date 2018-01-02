@@ -1,6 +1,6 @@
 <template>
 <MapLeftDrawer
-  v-if="file"
+  v-if="file && canWrite"
   :nodes="nodes"
   :file="file"
   :nodeColor="nodeColor"
@@ -18,6 +18,7 @@ import { mapGetters, mapActions } from 'vuex'
 import { getterTypes as nodesGetterTypes, actionTypes as nodesActionTypes } from '@/store/nodes/types'
 import { getterTypes as settingsGetterTypes, actionTypes as settingsActionTypes } from '@/store/settings/types'
 import { getterTypes as filesGetterTypes } from '@/store/files/types'
+import { getterTypes as userGetterTypes } from '@/store/user/types'
 
 export default {
   components: {
@@ -36,6 +37,12 @@ export default {
     ...mapGetters('files', {
       fileFromKey: filesGetterTypes.FILE_FROM_KEY
     }),
+    ...mapGetters('user', {
+      _canWrite: userGetterTypes.CAN_WRITE
+    }),
+    canWrite () {
+      return this._canWrite({fileKey: this.fileKey})
+    },
     file () {
       return this.fileFromKey({ fileKey: this.fileKey })
     }
