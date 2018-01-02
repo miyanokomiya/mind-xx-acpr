@@ -53,7 +53,7 @@ export default {
       return this._value.split(/\n|\r\n/)
     },
     rows () {
-      return this.$isMobile.any ? 3 : Math.min(this.lines.length, 3)
+      return 3
     },
     _x () {
       return this.$isMobile.any ? 0 : this.x
@@ -62,7 +62,7 @@ export default {
       return this.$isMobile.any ? 0 : this.y
     },
     width () {
-      return this.$isMobile.any ? '100%' : ''
+      return this.$isMobile.any ? '100%' : '40%'
     }
   },
   methods: {
