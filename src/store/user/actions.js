@@ -8,7 +8,7 @@ export default {
       context.commit(mutationTypes.SET_AUTHORITY_LOADING, true)
       if (user) {
         context.commit(mutationTypes.SET_USER, user)
-        context.commit(mutationTypes.SET_AUTHORITY_LOADING, !user)
+        context.commit(mutationTypes.SET_AUTHORITY_LOADING, false)
         // update the information of my account to be latest allways
         return firebase
           .database()
@@ -21,7 +21,7 @@ export default {
           .then(result => {
             // The signed-in user info.
             context.commit(mutationTypes.SET_USER, result.user)
-            context.commit(mutationTypes.SET_AUTHORITY_LOADING, !result.user)
+            context.commit(mutationTypes.SET_AUTHORITY_LOADING, false)
           })
           .catch(error => {
             return Promise.reject(error)
@@ -31,7 +31,6 @@ export default {
   },
   [actionTypes.SIGN_OUT] (context) {
     return new Promise((resolve, reject) => {
-      context.commit(mutationTypes.SET_AUTHORITY_LOADING, true)
       firebase
         .auth()
         .signOut()

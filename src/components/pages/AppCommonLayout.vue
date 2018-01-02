@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div v-if="!needAuth || authComplete">
+  <div v-if="!authorityLoading && (!needAuth || authenticated)">
     <v-navigation-drawer
       fixed
       clipped
@@ -63,7 +63,7 @@
     />
   </div>
   <AuthDialog
-    v-if="_needAuth && !authComplete"
+    v-if="!authorityLoading && (_needAuth && !authenticated)"
     :value="true"
     :persistent="needAuth"
     @input="val => needAuthLocal = val"
@@ -105,9 +105,6 @@ export default {
     },
     _needAuth () {
       return this.needAuth || this.needAuthLocal
-    },
-    authComplete () {
-      return !this.authorityLoading && this.authenticated
     }
   },
   methods: {
