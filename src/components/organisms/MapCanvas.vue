@@ -100,7 +100,7 @@
       />
     </SvgCanvas>
   </div>
-  <div class="scale-tool" :class="{mobile: $isMobile.any}">
+  <div class="scale-tool">
     <ScaleToolBox
       :min="MIN_SCALE_RATE"
       :max="MAX_SCALE_RATE"
@@ -742,20 +742,17 @@ export default {
   .node-text-input {
     position: absolute;
   }
-  .scale-tool {
+  .scale-tool, .history-tool {
     position: absolute;
     bottom: 6px;
-    width: 100%;
-    padding: 0 90px 0 5px;
+    padding: 0 0 0 5px;
   }
-  .scale-tool.mobile {
+  .scale-tool {
+    width: 100%;
     padding-right: 90px;
   }
   .history-tool {
-    position: absolute;
-    bottom: 6px;
     right: 6px;
-    padding: 0 0 0 5px;
   }
 }
 </style>
