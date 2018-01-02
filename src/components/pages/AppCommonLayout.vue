@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div v-if="!needAuth || (!authorityLoading && authenticated)">
+  <div v-if="!needAuth || authComplete">
     <v-navigation-drawer
       fixed
       clipped
@@ -44,6 +44,7 @@
             </v-list-tile>
           </v-list>
         </v-menu>
+        <v-btn v-else flat @click="needAuthLocal = true">SIGN IN</v-btn>
       </div>
     </v-toolbar>
     <v-content ref="content">
@@ -53,7 +54,7 @@
         </v-layout>
       </v-container>
     </v-content>
-    <AuthDialog v-model="reauth" :reauth="true"/>
+    <AuthDialog v-model="reauth" :reauth="true" :persistent="false"/>
     <ConfirmDialog
       v-model="deleteConfirm"
       message="All your files will be deleted and cannot revert. Are you sure you want to delete?"
@@ -61,7 +62,12 @@
       @cancel="deleteConfirm = false"
     />
   </div>
-  <AuthDialog v-else :value="!authenticated"/>
+  <AuthDialog
+    v-if="_needAuth && !authComplete"
+    :value="true"
+    :persistent="needAuth"
+    @input="val => needAuthLocal = val"
+  />
 </div>
 </template>
 
@@ -80,7 +86,8 @@ export default {
   },
   data: () => ({
     reauth: false,
-    deleteConfirm: false
+    deleteConfirm: false,
+    needAuthLocal: false
   }),
   props: {
     needAuth: false
@@ -95,6 +102,12 @@ export default {
     }),
     authenticated () {
       return !!this.user
+    },
+    _needAuth () {
+      return this.needAuth || this.needAuthLocal
+    },
+    authComplete () {
+      return !this.authorityLoading && this.authenticated
     }
   },
   methods: {
