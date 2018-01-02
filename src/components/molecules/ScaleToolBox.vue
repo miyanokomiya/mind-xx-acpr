@@ -1,7 +1,11 @@
 <template>
-<div class="scale-tool-wrapper">
+<div
+  class="scale-tool-wrapper"
+  :class="{mobile: $isMobile.any}"
+>
   <div class="scale-slider-wrapper">
     <v-slider
+      class="slider"
       hide-details
       :step="step"
       :min="min"
@@ -42,17 +46,32 @@ export default {
 <style lang="scss" scoped>
 .scale-tool-wrapper {
   text-align: left;
+
+  .scale-slider-wrapper {
+    padding: 0 0 0 42px;
+    height: 0;
+  }
+  .input-group.input-group--slider {
+    padding: 0;
+  }
+  .pan-button {
+    margin: 0;
+    width: 32px;
+    height: 32px;
+  }
+  .slider {
+    padding-top: 2px;
+  }
 }
-.scale-slider-wrapper {
-  padding: 0 0 0 42px;
-  height: 0;
-}
-.input-group.input-group--slider {
-  padding: 0;
-}
-.pan-button {
-  margin: 0;
-  border: none;
+.scale-tool-wrapper.mobile {
+  .pan-button {
+    margin: 0;
+    width: 36px;
+    height: 36px;
+  }
+  .slider {
+    padding-top: 5px;
+  }
 }
 </style>
 

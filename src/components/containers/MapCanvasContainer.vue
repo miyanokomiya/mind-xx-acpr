@@ -20,10 +20,11 @@
   </div>
   <v-snackbar
     bottom
-    right
+    left
     color="error"
     :timeout="4000"
     v-model="snackbar"
+    @click="snackbar = false"
   >
     {{message}}
   </v-snackbar>

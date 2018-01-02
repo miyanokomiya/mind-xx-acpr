@@ -100,7 +100,7 @@
       />
     </SvgCanvas>
   </div>
-  <div class="scale-tool">
+  <div class="scale-tool" :class="{mobile: $isMobile.any}">
     <ScaleToolBox
       :min="MIN_SCALE_RATE"
       :max="MAX_SCALE_RATE"
@@ -108,6 +108,12 @@
       :scaleRate="scaleRate"
       @changeScaleRate="setScaleRateBaseCenter"
       @clearZoom="clearZoom"
+    />
+  </div>
+  <div class="history-tool">
+    <HistoryToolBox
+      @undo="$emit('undo')"
+      @redo="$emit('redo')"
     />
   </div>
   <FloatTextInput
@@ -165,6 +171,7 @@ import SvgConnector from '@/components/molecules/svg/SvgConnector'
 import FloatTextInput from '@/components/molecules/FloatTextInput'
 import FloatEditMenu from '@/components/molecules/FloatEditMenu'
 import ScaleToolBox from '@/components/molecules/ScaleToolBox'
+import HistoryToolBox from '@/components/molecules/HistoryToolBox'
 
 export default {
   components: {
@@ -174,7 +181,8 @@ export default {
     SvgConnector,
     FloatTextInput,
     FloatEditMenu,
-    ScaleToolBox
+    ScaleToolBox,
+    HistoryToolBox
   },
   data: () => ({
     x: 0,
@@ -736,9 +744,18 @@ export default {
   }
   .scale-tool {
     position: absolute;
-    bottom: 5px;
+    bottom: 6px;
     width: 100%;
-    padding: 0 15px 0 5px;
+    padding: 0 90px 0 5px;
+  }
+  .scale-tool.mobile {
+    padding-right: 90px;
+  }
+  .history-tool {
+    position: absolute;
+    bottom: 6px;
+    right: 6px;
+    padding: 0 0 0 5px;
   }
 }
 </style>
