@@ -110,7 +110,7 @@
       @clearZoom="clearZoom"
     />
   </div>
-  <div class="history-tool">
+  <div class="history-tool" v-if="canWrite">
     <HistoryToolBox
       @undo="$emit('undo')"
       @redo="$emit('redo')"
@@ -720,6 +720,7 @@ export default {
 
   .canvas-wrapper {
     outline: none;
+    user-select: none;
   }
   .lock-button {
     position: absolute;
