@@ -106,7 +106,7 @@
       :max="MAX_SCALE_RATE"
       :step="0.1"
       :scaleRate="scaleRate"
-      @changeScaleRate="val => scaleRate = val"
+      @changeScaleRate="setScaleRateBaseCenter"
       @clearZoom="clearZoom"
     />
   </div>
@@ -349,13 +349,6 @@ export default {
     }
   },
   watch: {
-    scale () {
-      const position = this.$refs.svgCanvas.getPostionAfterChangeScale(
-        this.scale
-      )
-      this.x = position.x
-      this.y = position.y
-    },
     selectedNodes (to, from) {
       const keys = Object.keys(to)
       if (keys.indexOf(this.editMenuTarget) === -1) {
@@ -367,6 +360,14 @@ export default {
     }
   },
   methods: {
+    setScaleRateBaseCenter (val) {
+      this.scaleRate = val
+      const position = this.$refs.svgCanvas.getPostionAfterChangeScale(
+        this.scale
+      )
+      this.x = position.x
+      this.y = position.y
+    },
     getFocus () {
       this.$refs.svgCanvasWrapper.focus()
     },
@@ -376,8 +377,14 @@ export default {
     },
     zoom ({ scale, x, y }) {
       this.scale = scale
-      this.x = x
-      this.y = y
+      // this.scale is limited max and min automatically
+      // so, 'this.scale' may not be equal 'scale'
+      const position = this.$refs.svgCanvas.getPostionAfterChangeScale(
+        this.scale,
+        { x, y }
+      )
+      this.x = position.x
+      this.y = position.y
     },
     clearZoom () {
       return new Promise(resolve => {

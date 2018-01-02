@@ -52,6 +52,13 @@ export function getCenterOfRectangle (rectangle) {
   }
 }
 
+export function getCenter (p1, p2) {
+  return {
+    x: (p1.x + p2.x) / 2,
+    y: (p1.y + p2.y) / 2
+  }
+}
+
 export function getDistance (p1, p2) {
   return Math.pow(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2), 1 / 2)
 }

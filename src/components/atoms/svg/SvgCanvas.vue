@@ -35,6 +35,7 @@
 
 <script>
 import * as canvasUtils from '@/utils/canvas'
+import * as geometry from '@/utils/geometry'
 import {INTERVAL_CLICK, INTERVAL_DOUBLE_CLICK} from '@/constants'
 import SvgRectangle from '@/components/atoms/svg/SvgRectangle'
 
@@ -49,8 +50,8 @@ export default {
     rectangleSelecting: false,
     downP: null,
     movingTimer: 0,
-    progressiveMove: {x: 0, y: 0}
-
+    progressiveMove: {x: 0, y: 0},
+    pinchDistance: null
   }),
   props: {
     x: {
@@ -123,26 +124,47 @@ export default {
         y: (p.y - this.y) * scale
       }
     },
+    pinch (e) {
+      const points = canvasUtils.getPoints(e)
+      const p0 = points[0]
+      const p1 = points[1]
+      const d = geometry.getDistance(p0, p1)
+      const center = geometry.getCenter(p0, p1)
+      if (this.pinchDistance && Math.abs(this.pinchDistance - d) > 1) {
+        const scale = this.scale * (this.pinchDistance < d ? 1.05 : 1 / 1.05)
+        this.$emit('zoom', {
+          scale,
+          x: center.x,
+          y: center.y
+        })
+      }
+      this.pinchDistance = d
+    },
     canvasCursorMove (e) {
       if (this.beforeMoveP) {
-        const p = canvasUtils.getPoint(e)
-        const dif = this.dom2svgScale({
-          x: this.beforeMoveP.x - p.x,
-          y: this.beforeMoveP.y - p.y
-        })
-        if (!this.rectangleSelecting) {
-          this.$emit('move', {
-            x: this.x + dif.x,
-            y: this.y + dif.y
-          })
+        if (canvasUtils.isMulitTouch(e)) {
+          this.pinch(e)
+        } else {
+          if (!this.pinchDistance) {
+            const p = canvasUtils.getPoint(e)
+            const dif = this.dom2svgScale({
+              x: this.beforeMoveP.x - p.x,
+              y: this.beforeMoveP.y - p.y
+            })
+            if (!this.rectangleSelecting) {
+              this.$emit('move', {
+                x: this.x + dif.x,
+                y: this.y + dif.y
+              })
+            }
+            this.beforeMoveP = Object.assign({}, p)
+            this.progressiveMove = {
+              // limit too fast moving
+              x: Math.min(dif.x, 5),
+              y: Math.min(dif.y, 5)
+            }
+          }
         }
-        this.beforeMoveP = Object.assign({}, p)
-        this.progressiveMove = {
-          // limit too fast moving
-          x: Math.min(dif.x, 5),
-          y: Math.min(dif.y, 5)
-        }
-
       }
     },
     canvasWheel (e) {
@@ -166,6 +188,7 @@ export default {
     },
     canvasCursorDown (e) {
       this.stopProgressiveMove()
+      this.pinchDistance = null
     },
     canvasCursorDownSelf (e) {
       this.downStart = Date.now()
@@ -220,9 +243,9 @@ export default {
         }
       }
     },
-    getPostionAfterChangeScale (nextScale) {
-      // zoom based at cursor position
-      const domP = {
+    getPostionAfterChangeScale (nextScale, baseP) {
+      // zoom based at cursor position or argu
+      const domP = baseP || {
         x: this.width / 2,
         y: this.height / 2
       }

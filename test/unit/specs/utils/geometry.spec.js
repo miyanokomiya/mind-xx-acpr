@@ -91,6 +91,18 @@ describe('utils/geometry', () => {
     })
   })
 
+  describe('getCenter', () => {
+    it('should calc correct center point', () => {
+      const p1 = { x: 0, y: 0 }
+      const p2 = { x: 3, y: -4 }
+      const res = geometry.getCenter(p1, p2)
+      expect(res).toMatchObject({
+        x: 1.5,
+        y: -2
+      })
+    })
+  })
+
   describe('getDistance', () => {
     it('should calc correct distance', () => {
       const p1 = { x: 0, y: 0 }
