@@ -415,6 +415,7 @@ export default {
       })
     },
     nodeCursorDown (e, key) {
+      this.getFocus()
       this.nodeCursorDownStart = Date.now()
       if (key !== ROOT_NODE) {
         const fromNodeDomP = canvasUtils.getPoint(e)
