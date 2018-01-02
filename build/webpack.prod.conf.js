@@ -76,7 +76,8 @@ const webpackConfig = merge(baseWebpackConfig, {
       },
       // necessary to consistently work with multiple chunks via CommonsChunkPlugin
       chunksSortMode: 'dependency',
-      trackJs: true
+      trackJs: true,
+      appVersion: JSON.stringify(require('../package.json').version)
     }),
     // keep module.id stable when vender modules does not change
     new webpack.HashedModuleIdsPlugin(),
