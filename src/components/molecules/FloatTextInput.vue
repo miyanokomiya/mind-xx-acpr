@@ -1,6 +1,7 @@
 <template>
 <div
   class="float-text-input-wrapper"
+  :class="{mobile: $isMobile.any}"
   :style="{top: `${_y}px`, left: `${_x}px`, width: width}"
 >
   <v-text-field
@@ -52,7 +53,7 @@ export default {
       return this._value.split(/\n|\r\n/)
     },
     rows () {
-      return Math.min(this.lines.length, 3)
+      return this.$isMobile.any ? 3 : Math.min(this.lines.length, 3)
     },
     _x () {
       return this.$isMobile.any ? 0 : this.x
@@ -84,14 +85,20 @@ export default {
 
   .text-field {
     padding: 0;
-    width: calc(100% - 40px);
+    width: calc(100% - 42px);
     display: inline-flex;
   }
   .submit {
-    margin: 0;
     width: 32px;
     height: 32px;
-    margin-bottom: 1px;
+    margin: 0 0 2px 0;
+  }
+}
+.float-text-input-wrapper.mobile {
+  .submit {
+    width: 36px;
+    height: 36px;
+    margin: 2px 2px 0 0;
   }
 }
 </style>

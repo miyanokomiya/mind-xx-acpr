@@ -1,7 +1,8 @@
 <template>
 <div
   class="float-edit-menu-wrapper"
-  :style="{top: `${y}px`, left: `${x}px`}"
+  :class="{mobile: $isMobile.any}"
+  :style="{top: `${_y}px`, left: `${_x}px`, width: width}"
 >
   <v-btn icon small outline color="indigo" class="list-item"
     @click="$emit('editText')"
@@ -55,6 +56,15 @@ export default {
     }
   },
   computed: {
+    _x () {
+      return this.$isMobile.any ? 0 : this.x
+    },
+    _y () {
+      return this.$isMobile.any ? 0 : this.y
+    },
+    width () {
+      return this.$isMobile.any ? '100%' : ''
+    }
   },
   methods: {
     clickDelete () {
@@ -80,6 +90,13 @@ export default {
   .list-item {
     margin-left: 3px;
     margin-right: 3px;
+  }
+}
+.float-edit-menu-wrapper.mobile {
+  .list-item {
+    margin: 2px 6px;
+    width: 36px;
+    height: 36px;
   }
 }
 </style>

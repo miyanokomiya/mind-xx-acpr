@@ -18,10 +18,10 @@
     dense
   >
     <v-toolbar-title :style="$vuetify.breakpoint.smAndUp ? 'width: 300px; min-width: 250px' : 'min-width: 72px'" class="ml-0 pl-3">
-      <v-toolbar-side-icon @click.stop="setLeftDrawer({ leftDrawer: !leftDrawer })"></v-toolbar-side-icon>
-      <v-btn flat @click="$router.push({name: 'WorkSpace'})">MindXXACPR</v-btn>
+      <v-toolbar-side-icon class="left-drawer-activator" @click.stop="setLeftDrawer({ leftDrawer: !leftDrawer })"></v-toolbar-side-icon>
+      <v-btn class="header-title" flat @click="$router.push({name: 'WorkSpace'})">MindXXACPR</v-btn>
     </v-toolbar-title>
-    <div class="d-flex align-center" style="margin-left: auto">
+    <div class="d-flex align-center icon-box" style="margin-left: auto">
       <router-view name="headerIconList"/>
       <v-menu bottom left offset-y :nudge-bottom="6" v-if="user">
         <v-btn icon slot="activator" dark>
@@ -121,6 +121,13 @@ export default {
 }
 .main-layout {
   width: 100%;
+}
+.left-drawer-activator, .header-title {
+  margin-left: 0;
+  margin-right: 0;
+}
+.icon-box {
+  margin-right: 6px !important; // FIXME
 }
 </style>
 
