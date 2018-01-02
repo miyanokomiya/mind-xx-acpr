@@ -51,7 +51,8 @@ export default {
     downP: null,
     movingTimer: 0,
     progressiveMove: {x: 0, y: 0},
-    pinchDistance: null
+    pinchDistance: null,
+    lastMove: 0
   }),
   props: {
     x: {
@@ -156,13 +157,14 @@ export default {
                 x: this.x + dif.x,
                 y: this.y + dif.y
               })
+              this.progressiveMove = {
+                // limit too fast moving
+                x: Math.min(dif.x, 5),
+                y: Math.min(dif.y, 5)
+              }
+              this.lastMove = Date.now()
             }
             this.beforeMoveP = Object.assign({}, p)
-            this.progressiveMove = {
-              // limit too fast moving
-              x: Math.min(dif.x, 5),
-              y: Math.min(dif.y, 5)
-            }
           }
         }
       }
@@ -198,11 +200,13 @@ export default {
       this.downP = p
     },
     canvasCursorUpSelf (e) {
-      this.movingTimer = setTimeout(() => {
-        this.movingLoop()
-      }, 25)
-
       const now = Date.now()
+      if (now - this.lastMove < 50) {
+        this.movingTimer = setTimeout(() => {
+          this.movingLoop()
+        }, 25)
+      }
+
       if (now - this.downStart < INTERVAL_CLICK) {
         if (now - this.clickLast < INTERVAL_DOUBLE_CLICK) {
           // double click
