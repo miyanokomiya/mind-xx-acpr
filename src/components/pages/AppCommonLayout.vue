@@ -73,7 +73,7 @@
     :persistent="needAuth"
     @input="val => needAuthLocal = val"
   />
-  <v-progress-linear v-if="authorityLoading" :indeterminate="true"/>
+  <v-progress-linear class="top-progress" v-if="authorityLoading" :indeterminate="true"/>
 </div>
 </template>
 
@@ -159,6 +159,9 @@ export default {
 }
 .icon-box {
   margin-right: 6px !important; // FIXME
+}
+.top-progress {
+  margin: 0;
 }
 </style>
 
