@@ -1,14 +1,16 @@
 <template>
-<WorkSpace
-  :files="files"
-  :fileAuthorities="fileAuthorities"
-  :sharedFiles="sharedFiles"
-  :sharedFileAuthorities="sharedFileAuthorities"
-  :user="user"
-  @changeName="updateFiles"
-  @createFile="createFile"
-  @deleteFiles="deleteFiles"
-/>
+<div class="work-space-wrapper">
+  <WorkSpace
+    :files="files"
+    :fileAuthorities="fileAuthorities"
+    :sharedFiles="sharedFiles"
+    :sharedFileAuthorities="sharedFileAuthorities"
+    :user="user"
+    @changeName="updateFiles"
+    @createFile="createFile"
+    @deleteFiles="deleteFiles"
+  />
+</div>
 </template>
 
 <script>
@@ -47,7 +49,10 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-
+<style lang="scss" scoped>
+.work-space-wrapper {
+  margin: 0 10px;
+  width: 100%;
+}
 </style>
 

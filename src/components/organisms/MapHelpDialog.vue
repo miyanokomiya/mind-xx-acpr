@@ -19,7 +19,7 @@
               Move focus
             </v-list-tile-title>
             <v-list-tile-sub-title>
-              <code>Arrow</code>
+              <code>Arrow key</code>
             </v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>
@@ -88,7 +88,7 @@
               Edit text
             </v-list-tile-title>
             <v-list-tile-sub-title>
-              <code>Space</code>
+              <code>Space</code> , <code>Double click</code>
             </v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>

@@ -2,6 +2,7 @@
 <div>
   <div v-if="!authorityLoading && (!needAuth || authenticated)">
     <v-navigation-drawer
+      v-if="!hideLedfDrawer"
       fixed
       clipped
       app
@@ -19,7 +20,11 @@
       dense
     >
       <v-toolbar-title :style="$vuetify.breakpoint.smAndUp ? 'width: 300px; min-width: 250px' : 'min-width: 72px'" class="ml-0 pl-3">
-        <v-toolbar-side-icon class="left-drawer-activator" @click.stop="setLeftDrawer({ leftDrawer: !leftDrawer })"></v-toolbar-side-icon>
+        <v-toolbar-side-icon
+          v-if="!hideLedfDrawer"
+          class="left-drawer-activator"
+          @click.stop="setLeftDrawer({ leftDrawer: !leftDrawer })"
+        />
         <v-btn class="header-title" flat @click="$router.push({name: 'WorkSpace'})">MindXXACPR</v-btn>
       </v-toolbar-title>
       <div class="d-flex align-center icon-box" style="margin-left: auto">
@@ -48,7 +53,7 @@
       </div>
     </v-toolbar>
     <v-content ref="content">
-      <v-container fill-height>
+      <v-container fluid fill-height>
         <v-layout class="main-layout">
           <router-view name="content"/>
         </v-layout>
@@ -91,7 +96,14 @@ export default {
     needAuthLocal: false
   }),
   props: {
-    needAuth: false
+    needAuth: {
+      type: Boolean,
+      default: false
+    },
+    hideLedfDrawer: {
+      type: Boolean,
+      default: false
+    }
   },
   computed: {
     ...mapGetters('layouts', {

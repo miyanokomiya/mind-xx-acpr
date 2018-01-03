@@ -1,10 +1,11 @@
 <template>
 <MapLeftDrawer
-  v-if="file && canWrite"
+  v-if="file"
   :nodes="nodes"
   :file="file"
   :nodeColor="nodeColor"
   :textColor="textColor"
+  :canWrite="canWrite"
   @changeNodeColor="changeNodeColor"
   @changeTextColor="changeTextColor"
   @repairFile="repairFile"

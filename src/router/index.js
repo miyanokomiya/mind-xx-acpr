@@ -20,7 +20,8 @@ export default new Router({
       path: '/map',
       component: AppCommonLayout,
       props: {
-        needAuth: false
+        needAuth: false,
+        hideLedfDrawer: false
       },
       children: [
         {
@@ -41,7 +42,8 @@ export default new Router({
       path: '/workspace',
       component: AppCommonLayout,
       props: {
-        needAuth: true
+        needAuth: true,
+        hideLedfDrawer: true
       },
       children: [
         {

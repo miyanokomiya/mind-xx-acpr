@@ -1,7 +1,7 @@
 <template>
 <v-tabs grow>
   <v-tabs-bar class="grey lighten-4" light>
-    <v-tabs-item href="#left-drawer-edit" class="primary--text">
+    <v-tabs-item v-if="canWrite" href="#left-drawer-edit" class="primary--text">
       <v-icon>mode_edit</v-icon>
     </v-tabs-item>
     <v-tabs-item href="#left-drawer-file" class="primary--text">
@@ -11,6 +11,7 @@
   </v-tabs-bar>
   <v-tabs-items>
     <v-tabs-content
+      v-if="canWrite"
       :id="'left-drawer-edit'"
     >
       <v-list>
@@ -59,7 +60,7 @@
           :height="canvasHeight"
         />
         <v-divider/>
-        <v-list-tile @click="$emit('repairFile')">
+        <v-list-tile v-if="canWrite" @click="$emit('repairFile')">
           <v-list-tile-action>
             <v-icon>autorenew</v-icon>
           </v-list-tile-action>
@@ -109,6 +110,10 @@ export default {
     textColor: {
       type: String,
       default: '#000000'
+    },
+    canWrite: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
