@@ -32,11 +32,6 @@ const methods = {
 }
 
 const user = createUser({ uid: 'user' })
-const fileAuthority = {
-  users: {
-    user: { write: true }
-  }
-}
 
 storiesOf('organisms/MapCanvas', module)
   .add('some nodes', () => {
@@ -48,11 +43,13 @@ storiesOf('organisms/MapCanvas', module)
       components: { MapCanvas },
       template: `
       <v-app>
-        <div>
+        <div style="width: 420px; height: 400px;">
           <MapCanvas
+            :width="400"
+            :height="400"
             :nodes="nodes"
             :selectedNodes="selectedNodes"
-            :fileAuthority="fileAuthority"
+            :canWrite="true"
             :user="user"
             @updateNodes="updateNodes"
             @createNode="createNode"
@@ -71,8 +68,7 @@ storiesOf('organisms/MapCanvas', module)
           d: createNode({ text: 'dddd' })
         },
         selectedNodes: {},
-        user,
-        fileAuthority
+        user
       }),
       methods
     }
@@ -86,11 +82,13 @@ storiesOf('organisms/MapCanvas', module)
       components: { MapCanvas },
       template: `
       <v-app>
-        <div>
+      <div style="width: 420px; height: 400px;">
           <MapCanvas
+            :width="400"
+            :height="400"
             :nodes="nodes"
             :selectedNodes="selectedNodes"
-            :fileAuthority="fileAuthority"
+            :canWrite="false"
             :user="user"
             @updateNodes="updateNodes"
             @createNode="createNode"
@@ -109,10 +107,7 @@ storiesOf('organisms/MapCanvas', module)
           d: createNode({ text: 'dddd' })
         },
         selectedNodes: {},
-        user,
-        fileAuthority: {
-          user: {}
-        }
+        user
       }),
       methods
     }

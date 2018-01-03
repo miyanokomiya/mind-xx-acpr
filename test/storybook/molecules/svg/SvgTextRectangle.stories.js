@@ -3,11 +3,12 @@ import { text } from '@storybook/addon-knobs'
 
 import SvgTextRectangle from '@/components/molecules/svg/SvgTextRectangle'
 
-storiesOf('molecules/svg/SvgTextRectangle', module).add('story', () => {
-  const text1 = text('Text', 'editable text')
-  return {
-    components: { SvgTextRectangle },
-    template: `
+storiesOf('molecules/svg/SvgTextRectangle', module)
+  .add('story', () => {
+    const text1 = text('Text', 'editable text')
+    return {
+      components: { SvgTextRectangle },
+      template: `
         <svg-wrapper>
           <SvgTextRectangle :x="10" :y="10" text="text"/>
           <SvgTextRectangle :x="10" :y="40" :rx="10" :ry="5" fill="yellow"  text="あいうえお"/>
@@ -15,8 +16,20 @@ storiesOf('molecules/svg/SvgTextRectangle', module).add('story', () => {
           <SvgTextRectangle :x="10" :y="130" :rx="10" :ry="5" fill="yellow"  :text="text1"/>
         </svg-wrapper>
       `,
-    data: () => ({
-      text1: `${text1}`
-    })
-  }
-})
+      data: () => ({
+        text1: `${text1}`
+      })
+    }
+  })
+  .add('link', () => {
+    return {
+      components: { SvgTextRectangle },
+      template: `
+        <svg-wrapper>
+          <SvgTextRectangle :x="10" :y="10" text="https://mind-xx-acpr.firebaseapp.com/map/-L1k9pQdQ248amP4NQOe"/>
+          <SvgTextRectangle :x="10" :y="40" text="あいうえお\nhttps://mind-xx-acpr.firebaseapp.com/map/-L1k9pQdQ248amP4NQOe\nかきくけこ"/>
+        </svg-wrapper>
+      `,
+      data: () => ({})
+    }
+  })

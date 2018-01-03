@@ -679,7 +679,8 @@ export default {
       const viewLeft = (this.viewRectangle.x - this.x) * this.scale
       const nodeViewX = (position.x - this.x) * this.scale
       const nodeViewRight = (position.x + size.width - this.x) * this.scale
-      let x = Math.max(nodeViewX, viewLeft + 20) - 5
+      // FIXME 8 is only a better number, padding-left of the canvas should be concerned in fact
+      let x = Math.max(nodeViewX, viewLeft + 20) + 8
       x = Math.min(x, nodeViewRight)
       return { x, y }
     },
