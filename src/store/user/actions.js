@@ -4,7 +4,7 @@ import firebase from '@/firebase'
 export default {
   [actionTypes.LOAD_USER] (context) {
     context.commit(mutationTypes.SET_AUTHORITY_LOADING, true)
-    firebase.auth().onAuthStateChanged(user => {
+    return firebase.auth().onAuthStateChanged(user => {
       context.commit(mutationTypes.SET_AUTHORITY_LOADING, true)
       if (user) {
         context.commit(mutationTypes.SET_USER, user)
@@ -24,6 +24,9 @@ export default {
             context.commit(mutationTypes.SET_AUTHORITY_LOADING, false)
           })
           .catch(error => {
+            context.commit(mutationTypes.SET_USER, null)
+            context.commit(mutationTypes.SET_AUTHORITY_LOADING, false)
+            console.log(error)
             return Promise.reject(error)
           })
       }
