@@ -133,7 +133,8 @@
         },
         "color": {
           ".validate": "newData.isString()"
-        }
+        },
+        "dependencies": {}
       }
     },
 

@@ -7,3 +7,8 @@ export const NODE_ADDITIONAL_MARGIN_X_RATE = 0.1
 export const CONNECTOR_INNTER_MARGIN_X = 5
 
 export const ROOT_NODE = 'root'
+
+export const CANVAS_MODE = {
+  NORMAL: 'NORMAL',
+  DEPENDENCY: 'DEPENDENCY'
+}

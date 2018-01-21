@@ -41,6 +41,7 @@
       @touchmove.native="e => $isMobile.any ? canvasCursorMove(e) : ''"
       @touchend.native="e => $isMobile.any ? canvasCursorUp(e) : ''"
     >
+      <!-- 親子コネクタ -->
       <SvgConnector
         v-for="(connector, i) in connectors"
         :key="i"
@@ -49,6 +50,7 @@
         :ex="connector.ex"
         :ey="connector.ey"
       />
+      <!-- 親変更時のマーカー -->
       <g v-if="connectorOfMovingNodes" class="inserting-marker">
         <SvgConnector
           :sx="connectorOfMovingNodes.sx"
@@ -67,6 +69,7 @@
           fill="blue"
         />
       </g>
+      <!-- 通常ノード -->
       <SvgTextRectangle
         class="mind-node"
         :class="{ 'moving-origin': movingNodePositions[key] }"
@@ -76,8 +79,8 @@
         :x="nodePositions[key].x"
         :y="nodePositions[key].y"
         :text="key === editTextTarget ? editingText : node.text"
-        :strokeWidth="selectedNodes[key] ? 2 : 1"
-        :stroke="selectedNodes[key] ? 'blue' : 'black'"
+        :strokeWidth="getStrokeWidth(key)"
+        :stroke="getStrokeColor(key)"
         :fill="node.backgroundColor"
         :textFill="node.color"
         @calcSize="size => calcSize({key, size})"
@@ -86,6 +89,17 @@
         @touchstart.native.prevent="e => canWrite ? ($isMobile.any ? nodeCursorDown(e, key) : '') : ''"
         @touchend.native.prevent="e => canWrite ? ($isMobile.any ?  nodeCursorUp(key, {shift: e.shiftKey}) : '') : ''"
       />
+      <!-- 依存コネクタ -->
+      <SvgBridgeConnector
+        v-for="(connector, i) in dependencyConnectors"
+        :key="i"
+        :sx="connector.sx"
+        :sy="connector.sy"
+        :ex="connector.ex"
+        :ey="connector.ey"
+        :selected="selectedDependencyConnector[i]"
+      />
+      <!-- 親変更時の移動シャドー -->
       <SvgTextRectangle
         class="mind-node moving-copy"
         v-for="(positions, key) in movingNodePositions"
@@ -130,9 +144,11 @@
     :root="editMenuTarget === ROOT_NODE"
     :x="editMenuTargetPosition.x"
     :y="editMenuTargetPosition.y"
+    :mode="mode"
     @editText="readyEditText(editMenuTarget)"
     @addBrother="createNode(true)"
     @addChild="createNode(false)"
+    @editDependency="editDependency"
     @delete="deleteNode"
     @mousewheel.native.prevent="e => $isMobile.any ? '' : mousewheel(e)"
   />
@@ -146,7 +162,8 @@ import {
   INTERVAL_CLICK,
   INTERVAL_DOUBLE_CLICK,
   NODE_MARGIN_Y,
-  ROOT_NODE
+  ROOT_NODE,
+  CANVAS_MODE
 } from '@/constants'
 import {
   calcPositions,
@@ -160,6 +177,7 @@ import {
   getNodeFrom,
   getUpdatedNodesWhenChangeChildOrder,
   getConnectors,
+  getDependencyConnectors,
   getBetterConnector
 } from '@/utils/model'
 import { getCoveredRectangle, isCoveredRectangle } from '@/utils/geometry'
@@ -169,6 +187,7 @@ import SvgCanvas from '@/components/atoms/svg/SvgCanvas'
 import SvgRectangle from '@/components/atoms/svg/SvgRectangle'
 import SvgTextRectangle from '@/components/molecules/svg/SvgTextRectangle'
 import SvgConnector from '@/components/molecules/svg/SvgConnector'
+import SvgBridgeConnector from '@/components/molecules/svg/SvgBridgeConnector'
 import FloatTextInput from '@/components/molecules/FloatTextInput'
 import FloatEditMenu from '@/components/molecules/FloatEditMenu'
 import ScaleToolBox from '@/components/molecules/ScaleToolBox'
@@ -180,6 +199,7 @@ export default {
     SvgRectangle,
     SvgTextRectangle,
     SvgConnector,
+    SvgBridgeConnector,
     FloatTextInput,
     FloatEditMenu,
     ScaleToolBox,
@@ -198,6 +218,7 @@ export default {
     editTextTarget: null,
     editingText: '',
     editMenuTarget: null,
+    mode: CANVAS_MODE.NORMAL,
 
     adjustParentWithMovingTimer: null,
     insertInformationOfMovingNodes: null
@@ -289,6 +310,9 @@ export default {
     editTextTargetNode () {
       return this.nodes[this.editTextTarget]
     },
+    editDependencyTarget () {
+      return this.mode === CANVAS_MODE.DEPENDENCY ? this.editMenuTarget : null
+    },
     editTextTargetPosition () {
       // FIXME improve to get the menu width
       return this.getFloatMenuPosition(this.editTextTarget, 80, this.width * 0.4)
@@ -311,6 +335,26 @@ export default {
         positions: this.nodePositions,
         sizes: this.nodeSizes
       })
+    },
+    dependencyConnectors () {
+      return getDependencyConnectors({
+        nodes: this.nodes,
+        positions: this.nodePositions,
+        sizes: this.nodeSizes
+      })
+    },
+    selectedDependencyConnector () {
+      return Object.keys(this.dependencyConnectors).reduce((p, key) => {
+        const dependency = this.dependencyConnectors[key]
+        let selected = false
+        if (this.selectedNodes[dependency.from] || this.selectedNodes[dependency.to]) {
+          selected = true
+        }
+        return {
+          ...p,
+          [key]: selected
+        }
+      }, {})
     },
     connectorOfMovingNodes () {
       const info = this.insertInformationOfMovingNodes
@@ -363,6 +407,24 @@ export default {
     }
   },
   methods: {
+    getStrokeWidth (key) {
+      if (this.selectedNodes[key]) {
+        return 2
+      }
+      if (this.editDependencyTarget === key) {
+        return 2
+      }
+      return 1
+    },
+    getStrokeColor (key) {
+      if (this.editDependencyTarget === key) {
+        return 'tomato'
+      }
+      if (this.selectedNodes[key]) {
+        return 'blue'
+      }
+      return 'black'
+    },
     setScaleRateBaseCenter (val) {
       this.scaleRate = val
       const position = this.$refs.svgCanvas.getPostionAfterChangeScale(
@@ -427,12 +489,19 @@ export default {
     nodeCursorUp (key, { shift = false }) {
       const now = Date.now()
       if (now - this.nodeCursorDownStart < INTERVAL_CLICK) {
-        if (now - this.nodeCursorClickLast < INTERVAL_DOUBLE_CLICK) {
-          // double click
-          this.readyEditText(key)
+        if (this.editDependencyTarget) {
+          this.toggleDependency({
+            from: this.editDependencyTarget,
+            to: key
+          })
         } else {
-          // single click
-          this.toggleSelectNode(key, shift)
+          if (now - this.nodeCursorClickLast < INTERVAL_DOUBLE_CLICK) {
+            // double click
+            this.readyEditText(key)
+          } else {
+            // single click
+            this.toggleSelectNode(key, shift)
+          }
         }
         this.nodeCursorClickLast = now
       }
@@ -491,6 +560,7 @@ export default {
       this.editMenuTarget = null
       this.editTextTarget = null
       this.editingText = null
+      this.mode = CANVAS_MODE.NORMAL
     },
     clearSelectNode (key) {
       this.$emit('setSelectedNodes', Object.assign({}, this.selectedNodes, {
@@ -504,6 +574,7 @@ export default {
       }
       this.editTextTarget = null
       this.editingText = null
+      this.mode = CANVAS_MODE.NORMAL
     },
     selectNode (key, multi) {
       if (!this.canWrite) {
@@ -707,6 +778,27 @@ export default {
         return p
       }, {})
       this.$emit('setSelectedNodes', Object.assign({}, this.selectedNodes, selectedNodes))
+    },
+    editDependency () {
+      this.mode = this.mode === CANVAS_MODE.DEPENDENCY ? CANVAS_MODE.NORMAL : CANVAS_MODE.DEPENDENCY
+    },
+    toggleDependency ({ from, to }) {
+      const fromNode = this.nodes[from]
+      const toNode = this.nodes[to]
+      if (fromNode && toNode) {
+        const updated = {
+          ...fromNode,
+          dependencies: {
+            ...fromNode.dependencies
+          }
+        }
+        if (fromNode.dependencies[to]) {
+          delete updated.dependencies[to]
+        } else {
+          updated.dependencies[to] = true
+        }
+        this.$emit('updateNodes', { [from]: updated })
+      }
     }
   }
 }
@@ -728,13 +820,14 @@ export default {
   }
   .mind-node {
     cursor: pointer;
-  }
-  .mind-node.moving-origin {
-    opacity: 0.2;
-  }
-  .mind-node.moving-copy {
-    opacity: 0.5;
-    pointer-events: none;
+
+    &.moving-origin {
+      opacity: 0.2;
+    }
+    &.moving-copy {
+      opacity: 0.5;
+      pointer-events: none;
+    }
   }
   .inserting-marker {
     opacity: 0.5;

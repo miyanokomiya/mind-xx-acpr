@@ -20,7 +20,12 @@
   >
     <v-icon>subdirectory_arrow_right</v-icon>
   </v-btn
-  ><v-btn icon small outline color="indigo" class="list-item"
+  ><v-btn icon small outline :color="modeDependency ? 'red lighten-2' : 'indigo'" class="list-item"
+    @click="$emit('editDependency')"
+  >
+    <v-icon>call_missed</v-icon>
+  </v-btn
+  ><v-btn icon small outline color="grey" class="list-item"
     @click="clickDelete"
   >
     <v-icon>delete</v-icon>
@@ -37,6 +42,10 @@
 </template>
 
 <script>
+import {
+  CANVAS_MODE
+} from '@/constants'
+
 export default {
   data: () => ({
     snackbar: false
@@ -53,6 +62,10 @@ export default {
     root: {
       type: Boolean,
       default: false
+    },
+    mode: {
+      type: String,
+      default: CANVAS_MODE.NORMAL
     }
   },
   computed: {
@@ -64,6 +77,9 @@ export default {
     },
     width () {
       return this.$isMobile.any ? '100%' : ''
+    },
+    modeDependency () {
+      return this.mode === CANVAS_MODE.DEPENDENCY
     }
   },
   methods: {

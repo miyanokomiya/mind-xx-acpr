@@ -13,14 +13,16 @@ describe('utils/model', () => {
       text: '11',
       children: ['a', 'b'],
       backgroundColor: '#B3E5FC',
-      color: '#000000'
+      color: '#000000',
+      dependencies: { a: true }
     })
     it('should return true if two nodes are same', () => {
       const n2 = modelUtils.createNode({
         text: '11',
         children: ['a', 'b'],
         backgroundColor: '#B3E5FC',
-        color: '#000000'
+        color: '#000000',
+        dependencies: { a: true }
       })
       const res = modelUtils.isSameNode(n1, n2)
       expect(res).toBe(true)
@@ -30,13 +32,15 @@ describe('utils/model', () => {
         text: '11',
         children: [],
         backgroundColor: '#B3E5FC',
-        color: '#000000'
+        color: '#000000',
+        dependencies: { a: true }
       })
       const n2 = modelUtils.createNode({
         text: '11',
         children: [],
         backgroundColor: '#B3E5FC',
-        color: '#000000'
+        color: '#000000',
+        dependencies: { a: true }
       })
       const res = modelUtils.isSameNode(n1, n2)
       expect(res).toBe(true)
@@ -46,7 +50,19 @@ describe('utils/model', () => {
         text: '11',
         children: ['a', 'b', 'c'],
         backgroundColor: '#B3E5FC',
-        color: '#000000'
+        color: '#000000',
+        dependencies: { a: true }
+      })
+      const res = modelUtils.isSameNode(n1, n2)
+      expect(res).toBe(false)
+    })
+    it('should return true if dependencies of two nodes are different', () => {
+      const n2 = modelUtils.createNode({
+        text: '11',
+        children: ['a', 'b'],
+        backgroundColor: '#B3E5FC',
+        color: '#000000',
+        dependencies: { b: true }
       })
       const res = modelUtils.isSameNode(n1, n2)
       expect(res).toBe(false)
@@ -566,6 +582,31 @@ describe('utils/model', () => {
         d: null
       })
     })
+    it('should get correct nodes when deleting a node which other nodes depend on it', () => {
+      const e = modelUtils.createNode({
+        dependencies: {
+          c: true,
+          d: true
+        }
+      })
+      const nodes = { a, b, c, d, e }
+      const updatedNodes = modelUtils.getUpdatedNodesWhenDeleteNode({
+        nodes,
+        deleteKey: 'c'
+      })
+      expect(updatedNodes).toEqual({
+        b: {
+          ...b,
+          children: ['d']
+        },
+        c: null,
+        e: modelUtils.createNode({
+          dependencies: {
+            d: true
+          }
+        })
+      })
+    })
   })
 
   describe('getUpdatedNodesWhenDeleteNodes', () => {
@@ -899,6 +940,51 @@ describe('utils/model', () => {
           sy: 75,
           ex: 100,
           ey: 520
+        }
+      })
+    })
+  })
+
+  describe('getDependencyConnectors', () => {
+    const a = modelUtils.createNode({
+      children: ['b']
+    })
+    const b = modelUtils.createNode({
+      children: ['c', 'd']
+    })
+    const c = modelUtils.createNode()
+    const d = modelUtils.createNode({
+      dependencies: {
+        c: true
+      }
+    })
+    const nodes = { a, b, c, d }
+    const positions = {
+      a: { x: 0, y: 0 },
+      b: { x: 50, y: 50 },
+      c: { x: -50, y: -50 },
+      d: { x: 100, y: 500 }
+    }
+    const sizes = {
+      a: { width: 10, height: 20 },
+      b: { width: 30, height: 50 },
+      c: { width: 50, height: 20 },
+      d: { width: 40, height: 40 }
+    }
+    it('should get correct connectors', () => {
+      const res = modelUtils.getDependencyConnectors({
+        nodes,
+        positions,
+        sizes
+      })
+      expect(res).toMatchObject({
+        'depend_d-c': {
+          sx: 100,
+          sy: 500,
+          ex: -50 + 50,
+          ey: -50 + 20,
+          from: 'd',
+          to: 'c'
         }
       })
     })

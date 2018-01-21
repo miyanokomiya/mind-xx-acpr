@@ -15,7 +15,8 @@ export const createNode = obj =>
       text: '',
       children: [],
       backgroundColor: '#B3E5FC',
-      color: '#000000'
+      color: '#000000',
+      dependencies: {}
     },
     obj
   )
@@ -32,6 +33,18 @@ export const isSameNode = (n1, n2) => {
   }
   if (n1.children.join('/') !== n2.children.join('/')) {
     return false
+  }
+  {
+    const keys1 = Object.keys(n1.dependencies)
+    const keys2 = Object.keys(n2.dependencies)
+    if (keys1.length !== keys2.length) {
+      return false
+    }
+    for (let key of keys1) {
+      if (n1.dependencies[key] !== n2.dependencies[key]) {
+        return false
+      }
+    }
   }
   return true
 }
@@ -243,6 +256,17 @@ export function getUpdatedNodesWhenDeleteNode ({ nodes, deleteKey }) {
     )
     updatedNodes[parentKey] = nextParentNode
   }
+  Object.keys(nodes).forEach(key => {
+    const node = nodes[key]
+    if (node.dependencies[deleteKey]) {
+      const dependencies = { ...node.dependencies }
+      delete dependencies[deleteKey]
+      updatedNodes[key] = {
+        ...node,
+        dependencies
+      }
+    }
+  })
   return updatedNodes
 }
 
@@ -454,6 +478,30 @@ export function getConnectors ({ nodes, positions, sizes }) {
             ? childPosition.x + childSize.width
             : childPosition.x,
           ey: childPosition.y + childSize.height / 2
+        }
+      }
+    })
+  })
+  return ret
+}
+
+export function getDependencyConnectors ({ nodes, positions, sizes }) {
+  const ret = {}
+  Object.keys(nodes).forEach(fromKey => {
+    const from = nodes[fromKey]
+    const fromPosition = positions[fromKey]
+    const fromSize = sizes[fromKey]
+    Object.keys(from.dependencies).forEach(toKey => {
+      const toPosition = positions[toKey]
+      const toSize = sizes[toKey]
+      if (fromSize && toSize) {
+        ret[`depend_${fromKey}-${toKey}`] = {
+          sx: fromPosition.x,
+          sy: fromPosition.y,
+          ex: toPosition.x + toSize.width,
+          ey: toPosition.y + toSize.height,
+          from: fromKey,
+          to: toKey
         }
       }
     })
