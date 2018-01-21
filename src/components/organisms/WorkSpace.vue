@@ -98,26 +98,12 @@
 <script>
 export default {
   data: () => ({
-    tmp: '',
-    searchText: '',
     pagination: {
       page: 1,
       rowsPerPage: 10,
       sortBy: 'created',
       descending: true
     },
-    headers: [
-      {
-        text: 'Name',
-        align: 'left',
-        value: 'name'
-      },
-      { text: 'Count', value: 'nodeCount' },
-      { text: 'Updated', value: 'updated' },
-      { text: 'Created', value: 'created' },
-      { text: '', value: '', sortable: false },
-      { text: '', value: '', sortable: false }
-    ],
     snackbar: false,
     dataKind: 'workSpace'
   }),
@@ -144,13 +130,25 @@ export default {
     }
   },
   watch: {
-    pagination: {
-      handler () {
-      },
-      deep: true
+    files () {
+      this.pagination.page = 1
     }
   },
   computed: {
+    headers () {
+      return [
+        {
+          text: 'Name',
+          align: 'left',
+          value: 'name'
+        },
+        { text: 'Count', value: 'nodeCount' },
+        { text: 'Updated', value: 'updated' },
+        { text: 'Created', value: 'created' },
+        { text: '', value: '', sortable: false },
+        { text: '', value: '', sortable: false }
+      ]
+    },
     pages () {
       return this.pagination.rowsPerPage ? Math.ceil(this.fileList.length / this.pagination.rowsPerPage) : 0
     },
