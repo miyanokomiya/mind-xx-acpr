@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import AppCommonLayout from '@/components/pages/AppCommonLayout'
 import MapCanvasContainer from '@/components/containers/MapCanvasContainer'
 import MapMenu from '@/components/containers/MapMenu'
+import HeaderTitle from '@/components/containers/HeaderTitle'
 import MapLeftDrawerContainer from '@/components/containers/MapLeftDrawerContainer'
 import WorkSpaceContainer from '@/components/containers/WorkSpaceContainer'
 
@@ -29,6 +30,7 @@ export default new Router({
           name: 'Map',
           components: {
             content: MapCanvasContainer,
+            headerTitle: HeaderTitle,
             headerIconList: MapMenu,
             leftDrawer: MapLeftDrawerContainer
           },
@@ -50,6 +52,7 @@ export default new Router({
           path: '',
           name: 'WorkSpace',
           components: {
+            headerTitle: HeaderTitle,
             content: WorkSpaceContainer
           }
         }
