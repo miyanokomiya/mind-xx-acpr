@@ -168,8 +168,9 @@ export default {
                 x: this.x + dif.x,
                 y: this.y + dif.y
               })
-              const d = Math.sqrt(viewDif.x * viewDif.x + viewDif.y * viewDif.y)
-              if (d > 1) {
+              const viewD = Math.sqrt(viewDif.x * viewDif.x + viewDif.y * viewDif.y)
+              const d = viewD / this.scale
+              if (viewD > 1) {
                 // limit too fast or slow moving
                 const rate = Math.min(Math.max(d, 3), 40)
                 this.progressiveMove = {
@@ -251,8 +252,8 @@ export default {
           x: this.x + dif.x,
           y: this.y + dif.y,
         })
-        dif.x *= 0.98
-        dif.y *= 0.98
+        dif.x *= 0.95
+        dif.y *= 0.95
         if (Math.abs(dif.x) + Math.abs(dif.y) > 2) {
           this.movingTimer = setTimeout(() => {
             this.movingLoop()
