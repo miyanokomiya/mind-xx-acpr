@@ -172,7 +172,7 @@ export default {
               const d = viewD / this.scale
               if (viewD > 1) {
                 // limit too fast or slow moving
-                const rate = Math.min(Math.max(d, 3), 40)
+                const rate = Math.min(d, 40)
                 this.progressiveMove = {
                   x: dif.x / d * rate,
                   y: dif.y / d * rate
