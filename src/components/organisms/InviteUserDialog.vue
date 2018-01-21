@@ -33,7 +33,7 @@
       <v-card>
         <v-card-title class="headline">Share</v-card-title>
         <v-card-text>
-          <form>
+          <form @submit.prevent="invite">
             <v-text-field
               label="E-mail"
               v-model="email"
@@ -46,7 +46,7 @@
               v-model="readOnly"
             />
             <div class="text-xs-right">
-              <v-btn @click="invite">Invite</v-btn>
+              <v-btn>Invite</v-btn>
             </div>
           </form>
         </v-card-text>
