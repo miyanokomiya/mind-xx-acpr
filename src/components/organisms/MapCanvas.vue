@@ -41,6 +41,16 @@
       @touchmove.native="e => $isMobile.any ? canvasCursorMove(e) : ''"
       @touchend.native="e => $isMobile.any ? canvasCursorUp(e) : ''"
     >
+      <!-- connectors of dependencies -->
+      <SvgBridgeConnector
+        v-for="(connector, i) in dependencyConnectors"
+        :key="i"
+        :sx="connector.sx"
+        :sy="connector.sy"
+        :ex="connector.ex"
+        :ey="connector.ey"
+        :selected="selectedDependencyConnector[i]"
+      />
       <!-- connectors of family -->
       <SvgConnector
         v-for="(connector, i) in connectors"
@@ -88,16 +98,6 @@
         @mouseup.native.prevent="e => canWrite ? ($isMobile.any ?  '' : nodeCursorUp(key, {shift: e.shiftKey})) : ''"
         @touchstart.native.prevent="e => canWrite ? ($isMobile.any ? nodeCursorDown(e, key) : '') : ''"
         @touchend.native.prevent="e => canWrite ? ($isMobile.any ?  nodeCursorUp(key, {shift: e.shiftKey}) : '') : ''"
-      />
-      <!-- connectors of dependencies -->
-      <SvgBridgeConnector
-        v-for="(connector, i) in dependencyConnectors"
-        :key="i"
-        :sx="connector.sx"
-        :sy="connector.sy"
-        :ex="connector.ex"
-        :ey="connector.ey"
-        :selected="selectedDependencyConnector[i]"
       />
       <!-- moving shadow of switching a parent -->
       <SvgTextRectangle

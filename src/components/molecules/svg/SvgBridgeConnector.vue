@@ -1,5 +1,5 @@
 <template>
-  <path :stroke="selected ? 'tomato' : 'green'" :stroke-width="selected ? 3 : 2" fill="none" stroke-dasharray="1 4 1 1"
+  <path :stroke="selected ? 'tomato' : 'green'" :stroke-width="selected ? 3 : 1" fill="none" stroke-dasharray="2 4"
     :d="`M ${sx} ${sy} Q ${qx} ${qy} ${ex} ${ey}`"
   />
 </template>
