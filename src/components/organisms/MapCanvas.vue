@@ -290,10 +290,12 @@ export default {
       return this.nodes[this.editTextTarget]
     },
     editTextTargetPosition () {
-      return this.getFloatMenuPosition(this.editTextTarget, 120)
+      // FIXME improve to get the menu width
+      return this.getFloatMenuPosition(this.editTextTarget, 80, this.width * 0.4)
     },
     editMenuTargetPosition () {
-      return this.getFloatMenuPosition(this.editMenuTarget, 80)
+      // FIXME improve to get the menu width
+      return this.getFloatMenuPosition(this.editMenuTarget, 80, 136)
     },
     nodePositions () {
       const size = { width: 50, height: 20 }
@@ -669,7 +671,7 @@ export default {
     mousewheel (e) {
       this.$refs.svgCanvas.canvasWheel(e)
     },
-    getFloatMenuPosition (key, bottom) {
+    getFloatMenuPosition (key, bottom, menuWidth) {
       const position = this.nodePositions[key]
       const size = this.nodeSizes[key]
       const viewBottom = (this.viewRectangle.y + this.viewRectangle.height - this.y) * this.scale
@@ -683,6 +685,8 @@ export default {
       // FIXME 8 is only a better number, padding-left of the canvas should be concerned in fact
       let x = Math.max(nodeViewX, viewLeft + 20) + 8
       x = Math.min(x, nodeViewRight)
+      x = Math.min(x, this.width - menuWidth - 6)
+      x = Math.max(x, nodeViewX - menuWidth)
       return { x, y }
     },
     selectRectangle (rectangle) {
