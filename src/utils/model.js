@@ -258,13 +258,21 @@ export function getUpdatedNodesWhenDeleteNode ({ nodes, deleteKey }) {
   }
   Object.keys(nodes).forEach(key => {
     const node = nodes[key]
+    const dependencies = { ...node.dependencies }
     if (node.dependencies[deleteKey]) {
-      const dependencies = { ...node.dependencies }
       delete dependencies[deleteKey]
-      updatedNodes[key] = {
-        ...node,
-        dependencies
+    }
+    for (let familyKey of familyKeys) {
+      if (dependencies[familyKey]) {
+        delete dependencies[familyKey]
       }
+    }
+    const updated = {
+      ...node,
+      dependencies
+    }
+    if (!isSameNode(node, updated)) {
+      updatedNodes[key] = updated
     }
   })
   return updatedNodes
@@ -492,16 +500,19 @@ export function getDependencyConnectors ({ nodes, positions, sizes }) {
     const fromPosition = positions[fromKey]
     const fromSize = sizes[fromKey]
     Object.keys(from.dependencies).forEach(toKey => {
-      const toPosition = positions[toKey]
-      const toSize = sizes[toKey]
-      if (fromSize && toSize) {
-        ret[`depend_${fromKey}-${toKey}`] = {
-          sx: fromPosition.x,
-          sy: fromPosition.y,
-          ex: toPosition.x + toSize.width,
-          ey: toPosition.y + toSize.height,
-          from: fromKey,
-          to: toKey
+      const to = nodes[toKey]
+      if (to) {
+        const toPosition = positions[toKey]
+        const toSize = sizes[toKey]
+        if (fromSize && toSize) {
+          ret[`depend_${fromKey}-${toKey}`] = {
+            sx: fromPosition.x,
+            sy: fromPosition.y,
+            ex: toPosition.x + toSize.width,
+            ey: toPosition.y + toSize.height,
+            from: fromKey,
+            to: toKey
+          }
         }
       }
     })

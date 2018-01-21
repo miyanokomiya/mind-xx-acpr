@@ -783,6 +783,9 @@ export default {
       this.mode = this.mode === CANVAS_MODE.DEPENDENCY ? CANVAS_MODE.NORMAL : CANVAS_MODE.DEPENDENCY
     },
     toggleDependency ({ from, to }) {
+      if (from === to) {
+        return
+      }
       const fromNode = this.nodes[from]
       const toNode = this.nodes[to]
       if (fromNode && toNode) {

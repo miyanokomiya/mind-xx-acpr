@@ -607,6 +607,32 @@ describe('utils/model', () => {
         })
       })
     })
+    it('should get correct nodes when deleting a node has child which other nodes depend on it', () => {
+      const e = modelUtils.createNode({
+        dependencies: {
+          a: true,
+          c: true
+        }
+      })
+      const nodes = { a, b, c, d, e }
+      const updatedNodes = modelUtils.getUpdatedNodesWhenDeleteNode({
+        nodes,
+        deleteKey: 'b'
+      })
+      expect(updatedNodes).toEqual({
+        a: Object.assign({}, a, {
+          children: ['e']
+        }),
+        b: null,
+        c: null,
+        d: null,
+        e: modelUtils.createNode({
+          dependencies: {
+            a: true
+          }
+        })
+      })
+    })
   })
 
   describe('getUpdatedNodesWhenDeleteNodes', () => {
