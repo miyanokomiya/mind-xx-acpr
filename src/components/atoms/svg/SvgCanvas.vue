@@ -220,7 +220,7 @@ export default {
     },
     canvasCursorUpSelf (e) {
       const now = Date.now()
-      if (now - this.lastMove < 50) {
+      if (now - this.lastMove < 200) {
         this.movingTimer = setTimeout(() => {
           this.movingLoop()
         }, 20)
