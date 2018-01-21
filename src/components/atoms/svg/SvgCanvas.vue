@@ -52,7 +52,8 @@ export default {
     movingTimer: 0,
     progressiveMove: {x: 0, y: 0},
     pinchDistance: null,
-    lastMove: 0
+    lastMove: 0,
+    movinguInvalidateTimer: -1
   }),
   props: {
     x: {
@@ -142,25 +143,35 @@ export default {
       this.pinchDistance = d
     },
     canvasCursorMove (e) {
+      this.lastMove = Date.now()
+      if (this.movinguInvalidateTimer === -1) {
+        this._canvasCursorMove(e)
+        this.movinguInvalidateTimer = setTimeout(() => {
+          this.movinguInvalidateTimer = -1
+        }, 10)
+      }
+    },
+    _canvasCursorMove (e) {
       if (this.beforeMoveP) {
         if (canvasUtils.isMulitTouch(e)) {
           this.pinch(e)
         } else {
           if (!this.pinchDistance) {
             const p = canvasUtils.getPoint(e)
-            const dif = this.dom2svgScale({
+            const viewDif = {
               x: this.beforeMoveP.x - p.x,
               y: this.beforeMoveP.y - p.y
-            })
+            }
+            const dif = this.dom2svgScale(viewDif)
             if (!this.rectangleSelecting) {
               this.$emit('move', {
                 x: this.x + dif.x,
                 y: this.y + dif.y
               })
-              const d = Math.sqrt(dif.x * dif.x + dif.y * dif.y)
-              if (d > 2) {
+              const d = Math.sqrt(viewDif.x * viewDif.x + viewDif.y * viewDif.y)
+              if (d > 1) {
                 // limit too fast or slow moving
-                const rate = Math.min(Math.max(d, 3), 10)
+                const rate = Math.min(Math.max(d, 3), 40)
                 this.progressiveMove = {
                   x: dif.x / d * rate,
                   y: dif.y / d * rate
@@ -171,7 +182,6 @@ export default {
                   y: 0,
                 }
               }
-              this.lastMove = Date.now()
             }
             this.beforeMoveP = Object.assign({}, p)
           }
@@ -213,7 +223,7 @@ export default {
       if (now - this.lastMove < 50) {
         this.movingTimer = setTimeout(() => {
           this.movingLoop()
-        }, 25)
+        }, 20)
       }
 
       if (now - this.downStart < INTERVAL_CLICK) {
@@ -243,10 +253,10 @@ export default {
         })
         dif.x *= 0.98
         dif.y *= 0.98
-        if (Math.abs(dif.x) + Math.abs(dif.y) > 1) {
+        if (Math.abs(dif.x) + Math.abs(dif.y) > 2) {
           this.movingTimer = setTimeout(() => {
             this.movingLoop()
-          }, 25)
+          }, 20)
         } else {
           this.movingTimer = 0
           this.progressiveMove = {
