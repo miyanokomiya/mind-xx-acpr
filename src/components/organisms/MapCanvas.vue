@@ -41,7 +41,7 @@
       @touchmove.native="e => $isMobile.any ? canvasCursorMove(e) : ''"
       @touchend.native="e => $isMobile.any ? canvasCursorUp(e) : ''"
     >
-      <!-- 親子コネクタ -->
+      <!-- connectors of family -->
       <SvgConnector
         v-for="(connector, i) in connectors"
         :key="i"
@@ -50,7 +50,7 @@
         :ex="connector.ex"
         :ey="connector.ey"
       />
-      <!-- 親変更時のマーカー -->
+      <!-- a marker of switching a parent -->
       <g v-if="connectorOfMovingNodes" class="inserting-marker">
         <SvgConnector
           :sx="connectorOfMovingNodes.sx"
@@ -69,7 +69,7 @@
           fill="blue"
         />
       </g>
-      <!-- 通常ノード -->
+      <!-- standard nodes -->
       <SvgTextRectangle
         class="mind-node"
         :class="{ 'moving-origin': movingNodePositions[key] }"
@@ -89,7 +89,7 @@
         @touchstart.native.prevent="e => canWrite ? ($isMobile.any ? nodeCursorDown(e, key) : '') : ''"
         @touchend.native.prevent="e => canWrite ? ($isMobile.any ?  nodeCursorUp(key, {shift: e.shiftKey}) : '') : ''"
       />
-      <!-- 依存コネクタ -->
+      <!-- connectors of dependencies -->
       <SvgBridgeConnector
         v-for="(connector, i) in dependencyConnectors"
         :key="i"
@@ -99,7 +99,7 @@
         :ey="connector.ey"
         :selected="selectedDependencyConnector[i]"
       />
-      <!-- 親変更時の移動シャドー -->
+      <!-- moving shadow of switching a parent -->
       <SvgTextRectangle
         class="mind-node moving-copy"
         v-for="(positions, key) in movingNodePositions"
