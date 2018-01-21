@@ -163,6 +163,20 @@ export function getParentKey ({ nodes, childKey }) {
   return ret || null
 }
 
+export function getNearestFamilyKey ({ nodes, childKey }) {
+  const parentKey = getParentKey({ nodes, childKey })
+  if (!parentKey) {
+    return null
+  }
+  const parent = nodes[parentKey]
+  const index = parent.children.indexOf(childKey)
+  if (index > 0) {
+    return parent.children[index - 1]
+  } else {
+    return parentKey
+  }
+}
+
 export function getFamilyKeys ({ nodes, parentKey }) {
   let familyKeys = []
   const parent = nodes[parentKey]

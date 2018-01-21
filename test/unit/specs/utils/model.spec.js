@@ -413,6 +413,39 @@ describe('utils/model', () => {
     })
   })
 
+  describe('getNearestFamilyKey', () => {
+    const a = modelUtils.createNode({
+      children: ['b']
+    })
+    const b = modelUtils.createNode({
+      children: ['c', 'd']
+    })
+    const c = modelUtils.createNode()
+    const d = modelUtils.createNode()
+    const nodes = { a, b, c, d }
+    it('should get correct elder brother key if it exists', () => {
+      const key = modelUtils.getNearestFamilyKey({
+        nodes,
+        childKey: 'd'
+      })
+      expect(key).toBe('c')
+    })
+    it('should get correct parent key if elder brothers do not exist', () => {
+      const key = modelUtils.getNearestFamilyKey({
+        nodes,
+        childKey: 'c'
+      })
+      expect(key).toBe('b')
+    })
+    it('should get null when no parent ', () => {
+      const parentKey = modelUtils.getNearestFamilyKey({
+        nodes,
+        childKey: 'a'
+      })
+      expect(parentKey).toBe(null)
+    })
+  })
+
   describe('getFamilyKeys', () => {
     const a = modelUtils.createNode({
       children: ['b', 'e']

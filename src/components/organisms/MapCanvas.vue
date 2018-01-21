@@ -156,6 +156,7 @@ import {
   getUpdatedNodesWhenCreateBrotherdNode,
   getUpdatedNodesWhenFitClosestParent,
   getParentKey,
+  getNearestFamilyKey,
   getNodeFrom,
   getUpdatedNodesWhenChangeChildOrder,
   getConnectors,
@@ -611,8 +612,8 @@ export default {
       } else {
         const targetKey = this.editMenuTarget
         if (targetKey) {
-          // select the parent if it exists
-          const parentKey = getParentKey({
+          // select the nearest family if it exists
+          const parentKey = getNearestFamilyKey({
             nodes: this.nodes,
             childKey: targetKey
           })
