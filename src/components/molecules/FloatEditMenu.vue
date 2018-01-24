@@ -184,6 +184,7 @@ export default {
 }
 .button-box {
   display: flex;
+  justify-content: center;
 }
 </style>
 
