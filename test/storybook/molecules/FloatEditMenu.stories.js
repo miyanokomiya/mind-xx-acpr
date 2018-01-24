@@ -22,6 +22,7 @@ storiesOf('molecules/FloatEditMenu', module).add('story', () => {
           v-model="text"
           :x="x"
           :y="y"
+          :defaultNodeProps="defaultNodeProps"
         />
       </div>
     </v-app>
@@ -29,7 +30,11 @@ storiesOf('molecules/FloatEditMenu', module).add('story', () => {
     data: () => ({
       text: 'text',
       x,
-      y
+      y,
+      defaultNodeProps: {
+        color: '#fff',
+        backgroundColor: '#000'
+      }
     }),
     methods: {}
   }

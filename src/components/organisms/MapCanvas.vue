@@ -145,10 +145,12 @@
     :x="editMenuTargetPosition.x"
     :y="editMenuTargetPosition.y"
     :mode="mode"
+    :defaultNodeProps="defaultNodeProps"
     @editText="readyEditText(editMenuTarget)"
     @addBrother="createNode(true)"
     @addChild="createNode(false)"
     @editDependency="editDependency"
+    @selectProp="prop => $emit('selectProp', prop)"
     @delete="deleteNode"
     @mousewheel.native.prevent="e => $isMobile.any ? '' : mousewheel(e)"
   />

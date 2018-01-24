@@ -15,6 +15,7 @@
     @clearSelect="clearSelect"
     @undo="undo"
     @redo="redo"
+    @selectProp="selectProp"
   />
   <div class="center-box" v-if="permissionDenied">
     <PermissionDeniedMessage/>
@@ -41,7 +42,7 @@ import { getterTypes as layoutsGetterTypes } from '@/store/layouts/types'
 import { getterTypes as nodesGetterTypes, actionTypes as nodesActionTypes } from '@/store/nodes/types'
 import { getterTypes as filesGetterTypes, actionTypes as filesActionTypes } from '@/store/files/types'
 import { getterTypes as userGetterTypes } from '@/store/user/types'
-import { getterTypes as settingsGetterTypes } from '@/store/settings/types'
+import { getterTypes as settingsGetterTypes, actionTypes as settingsActionTypes } from '@/store/settings/types'
 
 export default {
   components: {
@@ -124,7 +125,7 @@ export default {
     ...mapActions('nodes', {
       disconnect: nodesActionTypes.DISCONNECT,
       updateNodes: nodesActionTypes.UPDATE_NODES,
-      setSelectedNodes: nodesActionTypes.SET_SELECTED_NODES,
+      _setSelectedNodes: nodesActionTypes.SET_SELECTED_NODES,
       clearSelect: nodesActionTypes.CLEAR_SELECT,
       loadNodes: nodesActionTypes.LOAD_NODES,
       _undo: nodesActionTypes.UNDO_NODES,
@@ -133,6 +134,20 @@ export default {
     ...mapActions('files', {
       loadFile: filesActionTypes.LOAD_FILE
     }),
+    ...mapActions('settings', {
+      setNodeColor: settingsActionTypes.SET_NODE_COLOR,
+      setTextColor: settingsActionTypes.SET_TEXT_COLOR
+    }),
+    setSelectedNodes ({ selectedNodes }) {
+      this._setSelectedNodes({ selectedNodes })
+      const keys = Object.keys(selectedNodes)
+      if (keys.length > 0) {
+        const key = keys[0]
+        const node = this.nodes[key]
+      this.setTextColor({textColor: node.color})
+      this.setNodeColor({nodeColor: node.backgroundColor})
+      }
+    },
     undo () {
       this._undo().catch(e => {
         this.message = e.message
@@ -142,6 +157,25 @@ export default {
       this._redo().catch(e => {
         this.message = e.message
       })
+    },
+    changeSelectedNodesProps ({ color, backgroundColor }) {
+      const selectedKeys = Object.keys(this.selectedNodes)
+      if (selectedKeys.length > 0) {
+        const updatedNodes = selectedKeys.reduce((p, key) => {
+          p[key] = {
+            ...this.nodes[key],
+            color,
+            backgroundColor
+          }
+          return p
+        }, {})
+        this.updateNodes({ nodes: updatedNodes })
+      }
+    },
+    selectProp ({ color, backgroundColor }) {
+      this.changeSelectedNodesProps({ color, backgroundColor })
+      this.setTextColor({textColor: color})
+      this.setNodeColor({nodeColor: backgroundColor})
     }
   }
 }

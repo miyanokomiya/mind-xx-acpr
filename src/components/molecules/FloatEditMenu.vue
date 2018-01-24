@@ -4,32 +4,51 @@
   :class="{mobile: $isMobile.any}"
   :style="{top: `${_y}px`, left: `${_x}px`, width: width}"
 >
-  <v-btn icon small outline color="indigo" class="list-item"
-    @click="$emit('editText')"
-  >
-    <v-icon>edit</v-icon>
-  </v-btn
-  ><v-btn icon small outline color="indigo" class="list-item"
-    v-if="!root"
-    @click="$emit('addBrother')"
-  >
-    <v-icon>add</v-icon>
-  </v-btn
-  ><v-btn icon small outline color="indigo" class="list-item"
-    @click="$emit('addChild')"
-  >
-    <v-icon>subdirectory_arrow_right</v-icon>
-  </v-btn
-  ><v-btn icon small outline :color="modeDependency ? 'red lighten-2' : 'indigo'" class="list-item"
-    @click="$emit('editDependency')"
-  >
-    <v-icon>call_missed</v-icon>
-  </v-btn
-  ><v-btn icon small outline color="grey" class="list-item"
-    @click="clickDelete"
-  >
-    <v-icon>delete</v-icon>
-  </v-btn>
+  <div v-if="!colorMode" class="button-box">
+    <v-btn icon small outline color="indigo" class="list-item"
+      @click="$emit('editText')"
+    >
+      <v-icon>edit</v-icon>
+    </v-btn>
+    <v-btn icon small outline color="indigo" class="list-item"
+      v-if="!root"
+      @click="$emit('addBrother')"
+    >
+      <v-icon>add</v-icon>
+    </v-btn>
+    <v-btn icon small outline color="indigo" class="list-item"
+      @click="$emit('addChild')"
+    >
+      <v-icon>subdirectory_arrow_right</v-icon>
+    </v-btn>
+    <v-btn icon small outline :color="modeDependency ? 'red lighten-2' : 'indigo'" class="list-item"
+      @click="$emit('editDependency')"
+    >
+      <v-icon>call_missed</v-icon>
+    </v-btn>
+    <v-btn icon small class="list-item"
+      :style="{color: defaultNodeProps.color, background: defaultNodeProps.backgroundColor}"
+      @click="colorMode = true"
+    >
+      <v-icon>text_format</v-icon>
+    </v-btn>
+    <v-btn icon small outline color="grey" class="list-item"
+      @click="clickDelete"
+    >
+      <v-icon>delete</v-icon>
+    </v-btn>
+  </div>
+  <div v-else class="button-box">
+    <v-btn icon small class="list-item color"
+      v-for="(prop, i) in colorProps"
+      :key="i"
+      :class="{selected: i === selectedProp}"
+      :style="{color: prop.color, background: prop.backgroundColor}"
+      @click="selectProp(prop)"
+    >
+      <v-icon>text_format</v-icon>
+    </v-btn>
+  </div>
   <v-snackbar
     bottom
     right
@@ -48,7 +67,8 @@ import {
 
 export default {
   data: () => ({
-    snackbar: false
+    snackbar: false,
+    colorMode: false
   }),
   props: {
     x: {
@@ -66,6 +86,16 @@ export default {
     mode: {
       type: String,
       default: CANVAS_MODE.NORMAL
+    },
+    defaultNodeProps: {
+      color: {
+        type: String,
+        default: '#000'
+      },
+      backgroundColor: {
+        type: String,
+        default: '#fff'
+      }
     }
   },
   computed: {
@@ -80,6 +110,39 @@ export default {
     },
     modeDependency () {
       return this.mode === CANVAS_MODE.DEPENDENCY
+    },
+    colorProps () {
+      return [
+        {
+          color: '#000',
+          backgroundColor: '#B3E5FC'
+        },
+        {
+          color: '#000',
+          backgroundColor: '#C8E6C9'
+        },
+        {
+          color: '#000',
+          backgroundColor: '#FFE0B2'
+        },
+        {
+          color: '#000',
+          backgroundColor: '#F8BBD0'
+        },
+        {
+          color: '#000',
+          backgroundColor: '#fff'
+        },
+        {
+          color: '#fff',
+          backgroundColor: '#000'
+        }
+      ]
+    },
+    selectedProp () {
+      return this.colorProps.findIndex(prop => {
+        return prop.color === this.defaultNodeProps.color && prop.backgroundColor === this.defaultNodeProps.backgroundColor
+      })
     }
   },
   methods: {
@@ -90,6 +153,10 @@ export default {
       } else {
         this.snackbar = true
       }
+    },
+    selectProp (prop) {
+      this.$emit('selectProp', prop)
+      this.colorMode = false
     }
   }
 }
@@ -114,6 +181,9 @@ export default {
     width: 36px;
     height: 36px;
   }
+}
+.button-box {
+  display: flex;
 }
 </style>
 
