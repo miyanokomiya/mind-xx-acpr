@@ -7,6 +7,7 @@
     :canEditPublic="canEditPublic"
     :userAuthorities="userAuthorities"
     :users="users"
+    :user="user"
     @setStatus="setStatus"
     @invite="invite"
     @updateUserAuthorities="updateUserAuthorities"
