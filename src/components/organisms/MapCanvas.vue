@@ -321,7 +321,7 @@ export default {
     },
     editMenuTargetPosition () {
       // FIXME improve to get the menu width
-      return this.getFloatMenuPosition(this.editMenuTarget, 80, 136)
+      return this.getFloatMenuPosition(this.editMenuTarget, 80, 204)
     },
     nodePositions () {
       const size = { width: 50, height: 20 }
