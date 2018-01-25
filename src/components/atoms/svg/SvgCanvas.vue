@@ -52,7 +52,7 @@ export default {
     movingTimer: 0,
     progressiveMove: {x: 0, y: 0},
     pinchDistance: null,
-    lastMove: 0,
+    lastSetupProgressiveMove: 0,
     movinguInvalidateTimer: -1
   }),
   props: {
@@ -143,7 +143,6 @@ export default {
       this.pinchDistance = d
     },
     canvasCursorMove (e) {
-      this.lastMove = Date.now()
       if (this.movinguInvalidateTimer === -1) {
         this._canvasCursorMove(e)
         this.movinguInvalidateTimer = setTimeout(() => {
@@ -171,6 +170,7 @@ export default {
               const viewD = Math.sqrt(viewDif.x * viewDif.x + viewDif.y * viewDif.y)
               const d = viewD / this.scale
               if (viewD > 5) {
+                this.lastSetupProgressiveMove = Date.now()
                 // limit too fast or slow moving
                 const rate = Math.min(d, 40)
                 this.progressiveMove = {
@@ -221,7 +221,7 @@ export default {
     },
     canvasCursorUpSelf (e) {
       const now = Date.now()
-      if (now - this.lastMove < 200) {
+      if (now - this.lastSetupProgressiveMove < 200) {
         this.movingTimer = setTimeout(() => {
           this.movingLoop()
         }, 20)
