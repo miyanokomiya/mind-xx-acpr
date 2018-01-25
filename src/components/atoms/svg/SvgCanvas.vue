@@ -170,7 +170,7 @@ export default {
               })
               const viewD = Math.sqrt(viewDif.x * viewDif.x + viewDif.y * viewDif.y)
               const d = viewD / this.scale
-              if (viewD > 1) {
+              if (viewD > 5) {
                 // limit too fast or slow moving
                 const rate = Math.min(d, 40)
                 this.progressiveMove = {
