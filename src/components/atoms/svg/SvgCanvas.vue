@@ -225,17 +225,17 @@ export default {
         this.movingTimer = setTimeout(() => {
           this.movingLoop()
         }, 20)
-      }
-
-      if (now - this.downStart < INTERVAL_CLICK) {
-        if (now - this.clickLast < INTERVAL_DOUBLE_CLICK) {
-          // double click
-          this.$emit('doubleClick', e)
-        } else {
-          // single click
-          this.$emit('click', e)
+      } else {
+        if (now - this.downStart < INTERVAL_CLICK) {
+          if (now - this.clickLast < INTERVAL_DOUBLE_CLICK) {
+            // double click
+            this.$emit('doubleClick', e)
+          } else {
+            // single click
+            this.$emit('click', e)
+          }
+          this.clickLast = now
         }
-        this.clickLast = now
       }
     },
     canvasCursorUp (e) {
