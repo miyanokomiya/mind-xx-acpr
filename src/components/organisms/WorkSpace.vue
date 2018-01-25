@@ -5,7 +5,7 @@
       <v-flex xs6>
         <v-select
           class="data-kind-select"
-          :items="[{text: 'Work space', value: 'workSpace'}, {text: 'Shared', value: 'shared'}]"
+          :items="[{text: 'All files', value: 'all'}, {text: 'My files', value: 'workSpace'}, {text: 'Shared files', value: 'shared'}]"
           v-model="dataKind"
           single-line
           bottom
@@ -40,8 +40,8 @@
           <span class="name elevation-1">{{ props.item.name || 'untitled' }}</span>
         </td>
         <td class="text-xs-right count">{{ props.item.nodeCount }}</td>
-        <td class="text-xs-right datetime">{{ new Date(props.item.created).toLocaleString() }}</td>
-        <td class="text-xs-right datetime">{{ new Date(props.item.updated).toLocaleString() }}</td>
+        <td class="text-xs-right datetime">{{ dateFormat(props.item.updated) }}</td>
+        <td class="text-xs-right datetime">{{ dateFormat(props.item.created) }}</td>
         <td class="button-column">
           <v-edit-dialog
             lazy
@@ -67,7 +67,7 @@
         </td>
         <td class="button-column">
           <v-btn
-            v-if="!hideEditTools"
+            v-if="!sharedFileAuthorities[props.item.key]"
             dark
             fab
             small
@@ -101,11 +101,11 @@ export default {
     pagination: {
       page: 1,
       rowsPerPage: 10,
-      sortBy: 'created',
+      sortBy: 'updated',
       descending: true
     },
     snackbar: false,
-    dataKind: 'workSpace'
+    dataKind: 'all'
   }),
   props: {
     files: {
@@ -129,11 +129,6 @@ export default {
       default: () => ({})
     }
   },
-  watch: {
-    files () {
-      this.pagination.page = 1
-    }
-  },
   computed: {
     headers () {
       return [
@@ -155,15 +150,19 @@ export default {
     currentFiles () {
       if (this.dataKind === 'shared') {
         return this.sharedFiles
-      } else {
+      } else if (this.dataKind === 'workSpace') {
         return this.files
+      } else {
+        return { ...this.sharedFiles, ...this.files }
       }
     },
     currentFileAuthorities () {
       if (this.dataKind === 'shared') {
         return this.sharedFileAuthorities
-      } else {
+      } else if (this.dataKind === 'workSpace') {
         return this.fileAuthorities
+      } else {
+        return { ...this.sharedFileAuthorities, ...this.fileAuthorities }
       }
     },
     fileList () {
@@ -200,6 +199,11 @@ export default {
       return this.dataKind === 'shared'
     }
   },
+  watch: {
+    files () {
+      this.pagination.page = 1
+    }
+  },
   methods: {
     changeName ({ key, name }) {
       const files = {
@@ -211,7 +215,7 @@ export default {
       this.$emit('createFile', {
         file: { name: '' }
       })
-      this.pagination.sortBy = 'created'
+      this.pagination.sortBy = 'updated'
       this.pagination.descending = true
     },
     deleteFile (key) {
@@ -224,6 +228,16 @@ export default {
       } else {
         this.snackbar = true
       }
+    },
+    dateFormat (ms) {
+      const date = new Date(ms)
+      const yyyy = date.getFullYear()
+      const mm = (`0${date.getMonth() + 1}`).slice(-2)
+      const dd = (`0${date.getDate()}`).slice(-2)
+      const hh = (`0${date.getHours()}`).slice(-2)
+      const mi = (`0${date.getMinutes()}`).slice(-2)
+      const se = (`0${date.getSeconds()}`).slice(-2)
+      return `${yyyy}/${mm}/${dd} ${hh}:${mi}:${se}`
     }
   }
 }
@@ -257,8 +271,12 @@ export default {
     width: 50px;
   }
   .button-column {
-    width: 50px;
+    width: 56px;
     padding: 0;
+  }
+
+  & /deep/ th.column.sortable {
+    outline: none;
   }
 }
 </style>
