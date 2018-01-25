@@ -133,7 +133,7 @@ export default {
       const d = geometry.getDistance(p0, p1)
       const center = geometry.getCenter(p0, p1)
       if (this.pinchDistance && Math.abs(this.pinchDistance - d) > 1) {
-        const scale = this.scale * (this.pinchDistance < d ? 1.05 : 1 / 1.05)
+        const scale = this.scale * (this.pinchDistance < d ? 1.1 : 1 / 1.1)
         this.$emit('zoom', {
           scale,
           x: center.x,
