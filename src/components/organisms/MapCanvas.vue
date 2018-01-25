@@ -454,6 +454,7 @@ export default {
       this.y = position.y
     },
     clearZoom () {
+      this.$refs.svgCanvas.stopProgressiveMove()
       return new Promise(resolve => {
         const coveredRec = this.rectangleCoveringAllNode
         const widthRate = this.width / coveredRec.width
