@@ -140,9 +140,10 @@ export default {
       })
     },
     downloadText (text, fileName) {
+      const filteredName = fileName.replace(/^.*[(\\|/|:|*|?|"|<|>||)].*$/, '_')
       var blob = new Blob([ text ], { 'type': 'image/svg+xml' })
       if (window.navigator.msSaveBlob) {
-        window.navigator.msSaveBlob(blob, fileName)
+        window.navigator.msSaveBlob(blob, filteredName)
       } else {
         var a = document.createElement('a')
         a.href = URL.createObjectURL(blob)
