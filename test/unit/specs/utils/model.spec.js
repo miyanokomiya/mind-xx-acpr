@@ -1004,13 +1004,13 @@ describe('utils/model', () => {
         sizes
       })
       expect(res).toMatchObject({
-        'depend_d-c': {
-          sx: 100,
-          sy: 500,
-          ex: -50 + 50,
-          ey: -50 + 20,
-          from: 'd',
-          to: 'c'
+        'depend_c-d': {
+          sx: -50 + 50,
+          sy: -50 + 20 / 2,
+          ex: 100,
+          ey: 500 + 40 / 2,
+          from: 'c',
+          to: 'd'
         }
       })
     })

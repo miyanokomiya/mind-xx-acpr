@@ -495,21 +495,21 @@ export function getConnectors ({ nodes, positions, sizes }) {
 
 export function getDependencyConnectors ({ nodes, positions, sizes }) {
   const ret = {}
-  Object.keys(nodes).forEach(fromKey => {
-    const from = nodes[fromKey]
-    const fromPosition = positions[fromKey]
-    const fromSize = sizes[fromKey]
-    Object.keys(from.dependencies).forEach(toKey => {
+  Object.keys(nodes).forEach(toKey => {
+    const to = nodes[toKey]
+    const toPosition = positions[toKey]
+    const toSize = sizes[toKey]
+    Object.keys(to.dependencies).forEach(fromKey => {
       const to = nodes[toKey]
       if (to) {
-        const toPosition = positions[toKey]
-        const toSize = sizes[toKey]
+        const fromPosition = positions[fromKey]
+        const fromSize = sizes[fromKey]
         if (fromSize && toSize) {
           ret[`depend_${fromKey}-${toKey}`] = {
-            sx: fromPosition.x,
-            sy: fromPosition.y,
-            ex: toPosition.x + toSize.width,
-            ey: toPosition.y + toSize.height,
+            sx: fromPosition.x + fromSize.width,
+            sy: fromPosition.y + fromSize.height / 2,
+            ex: toPosition.x,
+            ey: toPosition.y + toSize.height / 2,
             from: fromKey,
             to: toKey
           }

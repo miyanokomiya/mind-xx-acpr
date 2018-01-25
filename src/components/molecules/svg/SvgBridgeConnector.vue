@@ -1,12 +1,10 @@
 <template>
   <path :stroke="selected ? 'tomato' : 'green'" :stroke-width="selected ? 3 : 1" fill="none" stroke-dasharray="2 4"
-    :d="`M ${sx} ${sy} Q ${qx} ${qy} ${ex} ${ey}`"
+    :d="`M ${sx} ${sy} C ${qx1} ${qy1} ${qx2} ${qy2} ${ex} ${ey}`"
   />
 </template>
 
 <script>
-import { getDistance } from '@/utils/geometry'
-
 export default {
   props: {
     sx: {
@@ -31,42 +29,39 @@ export default {
     }
   },
   computed: {
-    // radian () {
-    //   return Math.atan2(this.ey - this.sy, this.ex - this.sx)
-    // },
-    // qRadian () {
-    //   return this.radian - Math.PI / 2
-    // },
-    // qDistance () {
-    //   return 30
-    // },
+    qx1 () {
+      return this.sx + this.gap
+    },
+    qy1 () {
+      return this.sy
+    },
+    qx2 () {
+      return this.ex - this.gap
+    },
+    qy2 () {
+      return this.ey
+    },
+    xGap () {
+      return Math.abs(this.sx - this.ex)
+    },
+    yGap () {
+      return Math.abs(this.sy - this.ey)
+    },
+    gap () {
+      return this.xGap / 3 + this.yGap / 6
+    }
     // qx () {
-    //   return this.sx + Math.cos(this.qRadian) * this.qDistance
+    //   return this.sx * 5 / 10 + this.ex * 5 / 10 + this.distance * 0.3
     // },
     // qy () {
-    //   return this.sy + Math.sin(this.qRadian) * this.qDistance
+    //   return this.sy * 5 / 10 + this.ey * 5 / 10 - this.distance * 0.3
+    // },
+    // cx () {
+    //   return (this.sx + this.ex) / 2
+    // },
+    // cy () {
+    //   return (this.sy + this.ey) / 2
     // }
-    distance () {
-      return getDistance({
-        x: this.sx,
-        y: this.sy
-      }, {
-        x: this.ex,
-        y: this.ey
-      })
-    },
-    qx () {
-      return this.sx * 5 / 10 + this.ex * 5 / 10 + this.distance * 0.3
-    },
-    qy () {
-      return this.sy * 5 / 10 + this.ey * 5 / 10 - this.distance * 0.3
-    },
-    cx () {
-      return (this.sx + this.ex) / 2
-    },
-    cy () {
-      return (this.sy + this.ey) / 2
-    }
   },
   methods: {
   }
