@@ -199,6 +199,7 @@ import ScaleToolBox from '@/components/molecules/ScaleToolBox'
 import HistoryToolBox from '@/components/molecules/HistoryToolBox'
 
 export default {
+  name: 'MapCanvas',
   components: {
     SvgCanvas,
     SvgRectangle,

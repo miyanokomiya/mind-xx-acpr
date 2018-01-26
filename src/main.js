@@ -7,7 +7,7 @@ import store from './store'
 import Vuetify from 'vuetify'
 import './utils/windowState'
 import './utils/isMobile'
-import './utils/trackJs'
+import './utils/track'
 
 import 'ress'
 import 'vuetify/dist/vuetify.min.css'

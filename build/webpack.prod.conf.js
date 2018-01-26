@@ -33,7 +33,8 @@ const webpackConfig = merge(baseWebpackConfig, {
   plugins: [
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
     new webpack.DefinePlugin({
-      'process.env': env
+      'process.env': env,
+      'process.appVersion': JSON.stringify(require('../package.json').version)
     }),
     new UglifyJsPlugin({
       uglifyOptions: {
@@ -75,9 +76,7 @@ const webpackConfig = merge(baseWebpackConfig, {
         // https://github.com/kangax/html-minifier#options-quick-reference
       },
       // necessary to consistently work with multiple chunks via CommonsChunkPlugin
-      chunksSortMode: 'dependency',
-      trackJs: true,
-      appVersion: JSON.stringify(require('../package.json').version)
+      chunksSortMode: 'dependency'
     }),
     // keep module.id stable when vender modules does not change
     new webpack.HashedModuleIdsPlugin(),
