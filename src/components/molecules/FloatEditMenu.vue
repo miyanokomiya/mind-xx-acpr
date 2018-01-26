@@ -6,22 +6,25 @@
 >
   <div v-if="!colorMode" class="button-box">
     <v-btn icon small outline color="indigo" class="list-item"
+      v-if="!multiSelect"
       @click="$emit('editText')"
     >
       <v-icon>edit</v-icon>
     </v-btn>
     <v-btn icon small outline color="indigo" class="list-item"
-      v-if="!root"
+      v-if="!root && !multiSelect"
       @click="$emit('addBrother')"
     >
       <v-icon>add</v-icon>
     </v-btn>
     <v-btn icon small outline color="indigo" class="list-item"
+      v-if="!multiSelect"
       @click="$emit('addChild')"
     >
       <v-icon>subdirectory_arrow_right</v-icon>
     </v-btn>
     <v-btn icon small outline :color="modeDependency ? 'red lighten-2' : 'indigo'" class="list-item"
+      v-if="!multiSelect"
       @click="$emit('editDependency')"
     >
       <v-icon>call_missed</v-icon>
@@ -96,6 +99,10 @@ export default {
         type: String,
         default: '#fff'
       }
+    },
+    multiSelect: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {

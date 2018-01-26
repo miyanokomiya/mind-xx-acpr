@@ -131,7 +131,8 @@
     />
   </div>
   <FloatTextInput
-    v-if="editTextTargetNode && movingNodeCount === 0 && !isMultiSelect"
+    ref="floatTextInput"
+    v-if="showTextInput"
     v-model="editingText"
     :x="editTextTargetPosition.x"
     :y="editTextTargetPosition.y"
@@ -140,12 +141,14 @@
     @mousewheel.native.prevent="e => $isMobile.any ? '' : mousewheel(e)"
   />
   <FloatEditMenu
-    v-if="editMenuTarget && movingNodeCount === 0 && !isMultiSelect"
+    ref="floatEditMenu"
+    v-if="showEditMenu"
     :root="editMenuTarget === ROOT_NODE"
     :x="editMenuTargetPosition.x"
     :y="editMenuTargetPosition.y"
     :mode="mode"
     :defaultNodeProps="defaultNodeProps"
+    :multiSelect="isMultiSelect"
     @editText="readyEditText(editMenuTarget)"
     @addBrother="createNode(true)"
     @addChild="createNode(false)"
@@ -220,6 +223,8 @@ export default {
     editTextTarget: null,
     editingText: '',
     editMenuTarget: null,
+    floatEditMenuWidth: 0,
+    floatTextInputWidth: 0,
     mode: CANVAS_MODE.NORMAL,
 
     adjustParentWithMovingTimer: null,
@@ -309,6 +314,12 @@ export default {
         this.scaleRate = rate
       }
     },
+    showTextInput () {
+      return this.editTextTargetNode && this.movingNodeCount === 0 && !this.isMultiSelect
+    },
+    showEditMenu () {
+      return this.editMenuTarget && this.movingNodeCount === 0
+    },
     editTextTargetNode () {
       return this.nodes[this.editTextTarget]
     },
@@ -316,12 +327,18 @@ export default {
       return this.mode === CANVAS_MODE.DEPENDENCY ? this.editMenuTarget : null
     },
     editTextTargetPosition () {
-      // FIXME improve to get the menu width
-      return this.getFloatMenuPosition(this.editTextTarget, 80, this.width * 0.4)
+      if (this.editTextTarget) {
+        return this.getFloatMenuPosition(this.editTextTarget, 80, this.floatTextInputWidth)
+      } else {
+        return { x: 0, y: 0 }
+      }
     },
     editMenuTargetPosition () {
-      // FIXME improve to get the menu width
-      return this.getFloatMenuPosition(this.editMenuTarget, 80, 204)
+      if (this.editMenuTarget) {
+        return this.getFloatMenuPosition(this.editMenuTarget, 80, this.floatEditMenuWidth)
+      } else {
+        return { x: 0, y: 0 }
+      }
     },
     nodePositions () {
       const size = { width: 50, height: 20 }
@@ -405,6 +422,22 @@ export default {
       }
       if (keys.indexOf(this.editTextTarget) === -1) {
         this.editTextTarget = null
+      }
+    },
+    showTextInput (to) {
+      if (to) {
+        this.$nextTick().then(() => {
+          const menu = this.$refs.floatTextInput
+          this.floatTextInputWidth = menu.$el.clientWidth
+        })
+      }
+    },
+    showEditMenu (to) {
+      if (to) {
+        this.$nextTick().then(() => {
+          const menu = this.$refs.floatEditMenu
+          this.floatEditMenuWidth = menu.$el.clientWidth
+        })
       }
     }
   },
@@ -564,7 +597,7 @@ export default {
       this.$emit('clearSelect')
       this.editMenuTarget = null
       this.editTextTarget = null
-      this.editingText = null
+      this.editingText = ''
       this.mode = CANVAS_MODE.NORMAL
     },
     clearSelectNode (key) {
@@ -578,7 +611,7 @@ export default {
         this.editMenuTarget = null
       }
       this.editTextTarget = null
-      this.editingText = null
+      this.editingText = ''
       this.mode = CANVAS_MODE.NORMAL
     },
     selectNode (key, multi) {
@@ -650,7 +683,7 @@ export default {
         })
         this.editMenuTarget = targetKey
         this.editTextTarget = null
-        this.editingText = null
+        this.editingText = ''
         this.$refs.svgCanvasWrapper.focus()
       }
     },
@@ -779,6 +812,7 @@ export default {
         })
         if (selected) {
           p[c] = true
+          this.editMenuTarget = c
         }
         return p
       }, {})
