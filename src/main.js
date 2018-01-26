@@ -12,6 +12,7 @@ import './utils/track'
 import 'ress'
 import 'vuetify/dist/vuetify.min.css'
 import '@/assets/styles/icons.css'
+import '@/assets/styles/main.scss'
 
 Vue.use(Vuetify)
 Vue.config.productionTip = false
