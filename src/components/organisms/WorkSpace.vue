@@ -14,75 +14,72 @@
       </v-flex>
       <div class="header-buttons">
         <v-btn
+          dark fab small color="green"
           v-if="!hideEditTools"
-          dark
-          fab
-          small
-          color="green"
           @click="createFile"
         >
           <v-icon>add</v-icon>
         </v-btn>
       </div>
     </v-card-title>
-    </v-card>
-    <v-card>
-    <v-data-table
-        :headers="headers"
-        :items="fileList"
-        :pagination.sync="pagination"
-        hide-actions
-        must-sort
-        expand
-      >
-      <template slot="items" slot-scope="props">
-        <td class="text-xs-left open-file" @click="$router.push({name: 'Map', params: { fileKey: props.item.key }})">
-          <span class="name elevation-1">{{ props.item.name || 'untitled' }}</span>
-        </td>
-        <td class="text-xs-right count">{{ props.item.nodeCount }}</td>
-        <td class="text-xs-right datetime">{{ dateFormat(props.item.updated) }}</td>
-        <td class="text-xs-right datetime">{{ dateFormat(props.item.created) }}</td>
-        <td class="button-column">
-          <v-edit-dialog
-            lazy
-            v-if="canWrite[props.item.key]"
-          >
-            <v-btn
-              dark
-              fab
-              small
-              color="blue"
-            >
-              <v-icon>edit</v-icon>
-            </v-btn>
-            <v-text-field
-              slot="input"
-              label="Edit"
-              single-line
-              counter
-              :value="props.item.name"
-              @change="val => changeName({ key: props.item.key, name: val })"
-            ></v-text-field>
-          </v-edit-dialog>
-        </td>
-        <td class="button-column">
-          <v-btn
-            v-if="!sharedFileAuthorities[props.item.key]"
-            dark
-            fab
-            small
-            color="black"
-            outline
-            @click="deleteFile(props.item.key)"
-          >
-            <v-icon>delete</v-icon>
-          </v-btn>
-        </td>
-      </template>
-    </v-data-table>
-    <div class="text-xs-center pt-2">
-      <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
+  </v-card>
+  <v-card>
+    <div class="header-tools">
     </div>
+    <v-flex
+      xs-12
+      v-for="(file, key) in currentFiles"
+      :key="key"
+    >
+      <v-card class="file-card">
+        <v-card-title class="card-title">
+          <div class="content-box" @click="$router.push({name: 'Map', params: { fileKey: key }})">
+            <p class="file-name mb-0">{{file.name || 'untitled'}}</p>
+            <dl>
+              <dt>Nodes: </dt><dd>{{file.nodeCount}}</dd>
+            </dl>
+            <dl>
+              <dt>Updated: </dt><dd>{{dateFormat(file.updated)}}</dd>
+              <dt>Created: </dt><dd>{{dateFormat(file.created)}}</dd>
+            </dl>
+          </div>
+          <div class="button-box">
+            <v-chip v-if="sharedFileAuthorities[key]" class="shared-tag">shared</v-chip>
+            <v-edit-dialog
+              lazy
+              v-if="canWrite[key]"
+            >
+              <v-btn
+                dark fab small color="blue" class="file-button edit-name"
+              >
+                <v-icon>textsms</v-icon>
+              </v-btn>
+              <v-text-field
+                single-line counter
+                slot="input"
+                label="Edit"
+                :value="file.name"
+                @change="val => changeName({ key: key, name: val })"
+              ></v-text-field>
+            </v-edit-dialog>
+            <!-- TODO feature -->
+            <!-- <v-btn
+              dark fab small outline color="black" class="file-button"
+              @click="cloneFile(key)"
+            >
+              <v-icon>content_copy</v-icon>
+            </v-btn> -->
+            <v-btn
+              dark fab small outline color="black" class="file-button"
+              v-if="!sharedFileAuthorities[key]"
+              @click="deleteFile(key)"
+            >
+              <v-icon>delete</v-icon>
+            </v-btn>
+          </div>
+        </v-card-title>
+      </v-card>
+    </v-flex>
   </v-card>
   <v-snackbar
     bottom
@@ -99,8 +96,6 @@
 export default {
   data: () => ({
     pagination: {
-      page: 1,
-      rowsPerPage: 10,
       sortBy: 'updated',
       descending: true
     },
@@ -143,9 +138,6 @@ export default {
         { text: '', value: '', sortable: false },
         { text: '', value: '', sortable: false }
       ]
-    },
-    pages () {
-      return this.pagination.rowsPerPage ? Math.ceil(this.fileList.length / this.pagination.rowsPerPage) : 0
     },
     currentFiles () {
       if (this.dataKind === 'shared') {
@@ -199,11 +191,6 @@ export default {
       return this.dataKind === 'shared'
     }
   },
-  watch: {
-    files () {
-      this.pagination.page = 1
-    }
-  },
   methods: {
     changeName ({ key, name }) {
       const files = {
@@ -227,6 +214,12 @@ export default {
         this.snackbar = false
       } else {
         this.snackbar = true
+      }
+    },
+    cloneFile (key) {
+      const file = this.currentFiles[key]
+      if (file) {
+        this.$emit('cloneFile', { file })
       }
     },
     dateFormat (ms) {
@@ -256,27 +249,64 @@ export default {
     top: 0;
     position: absolute;
   }
-  .open-file {
-    cursor: pointer;
+  .header-tools {
+    display: flex;
   }
-  .name {
-    padding: 5px 10px;
-    width: 100%;
-    display: inline-block;
+  .file-card {
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(#bbb, 0.4)
   }
-  .count {
-    width: 50px;
-  }
-  .datetime {
-    width: 50px;
-  }
-  .button-column {
-    width: 56px;
+  .card-title {
     padding: 0;
-  }
+    display: flex;
 
-  & /deep/ th.column.sortable {
-    outline: none;
+    .file-name {
+      word-wrap: break-word;
+      font-size: 1.3em;
+      font-weight: 500;
+    }
+    .content-box {
+      max-width: 100%;
+      margin-left: 1em;
+      cursor: pointer;
+      text-align: left;
+    }
+    .button-box {
+      margin-left: auto;
+    }
+    .shared-tag {
+      height: 24px;
+      & /deep/ span.chip__content {
+        padding: 0 8px;
+      }
+    }
+    dl {
+      display: flex;
+      vertical-align: bottom;
+      margin-left: .5em;
+      font-size: .9em;
+    }
+    dt {
+      margin-left: 1em;
+      font-weight: 500;
+    }
+    dt:first-child {
+      margin-left: 0;
+    }
+    dd {
+      margin-left: .3em;
+    }
+  }
+  .button-box {
+    margin-right: 8px;
+  }
+  .file-button {
+    margin-left: 8px;
+    margin-right: 0;
+
+    &.edit-name {
+      margin-left: 0;
+    }
   }
 }
 </style>

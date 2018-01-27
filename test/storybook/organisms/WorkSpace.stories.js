@@ -12,6 +12,8 @@ storiesOf('organisms/WorkSpace', module).add('view', () => {
       <WorkSpace
         :files="files"
         :fileAuthorities="fileAuthorities"
+        :sharedFiles="sharedFiles"
+        :sharedFileAuthorities="sharedFileAuthorities"
         :user="user"
         @changeName="changeName"
         @createFile="createFile"
@@ -23,23 +25,41 @@ storiesOf('organisms/WorkSpace', module).add('view', () => {
       files: {
         a: createFile({ name: 'file a' }),
         b: createFile({ name: 'file b' }),
-        c: createFile({ name: 'file c' }),
-        d: createFile({ name: 'file d' }),
-        e: createFile({ name: 'file e' })
+        c: createFile({ name: 'file c'.repeat(15) })
       },
       user: createUser({ uid: 'user' }),
       fileAuthorities: {
         a: {
-          user: { write: true }
+          users: {
+            user: { write: true }
+          }
         },
         b: {
-          user: { write: true }
+          users: {
+            user: { write: true }
+          }
         },
-        c: { user: true },
+        c: {
+          users: {
+            user: { write: false }
+          }
+        }
+      },
+      sharedFiles: {
+        d: createFile({ name: 'file d' }),
+        e: createFile({ name: 'file e' })
+      },
+      sharedFileAuthorities: {
         d: {
-          user: { write: true }
+          users: {
+            user: { write: true }
+          }
         },
-        e: { user: true }
+        e: {
+          users: {
+            user: { write: false }
+          }
+        }
       }
     }),
     methods: {
