@@ -675,6 +675,7 @@ export default {
       }
       this.editMenuTarget = key
       this.moveViewToCoverSelectedNode(key)
+      this.mode = CANVAS_MODE.NORMAL
     },
     toggleSelectNode (key, multi) {
       if (this.selectedNodes[key]) {
