@@ -19,9 +19,13 @@ const updateNodes =
         }, {})
         updates[`/files/${fileKey}/updated`] =
           firebase.database.ServerValue.TIMESTAMP
-        updates[`/files/${fileKey}/nodeCount`] = Object.keys(
-          Object.assign({}, context.state.nodes, nodes)
-        ).length
+        const newNodes = Object.assign({}, context.state.nodes, nodes)
+        updates[`/files/${fileKey}/nodeCount`] = Object.keys(newNodes).reduce(
+          (count, c) => {
+            return newNodes[c] ? count + 1 : count
+          },
+          0
+        )
         return firebase
           .database()
           .ref()
