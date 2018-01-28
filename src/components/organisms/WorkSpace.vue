@@ -44,7 +44,12 @@
             </dl>
           </div>
           <div class="button-box">
-            <v-chip v-if="sharedFileAuthorities[file.key]" class="shared-tag">shared</v-chip>
+            <v-chip
+              class="shared-tag"
+              :class="{hidden: !sharedFileAuthorities[file.key]}"
+            >
+                shared
+            </v-chip>
             <v-edit-dialog
               lazy
               :class="{hidden: !canWrite[file.key]}"
@@ -256,7 +261,7 @@ export default {
     display: flex;
   }
   .file-card {
-    padding: 5px 0;
+    padding: 0;
     border-bottom: 1px solid rgba(#bbb, 0.4)
   }
   .card-title {
@@ -269,10 +274,19 @@ export default {
       font-weight: 500;
     }
     .content-box {
+      flex-grow: 1;
       max-width: 100%;
-      margin-left: 1em;
-      cursor: pointer;
+      margin-left: .7em;
+      margin-right: .7em;
+      padding: .2em .3em;
+      padding-right: .5em;
+      box-shadow: 1px 1px 8px -3px gray;
       text-align: left;
+      cursor: pointer;
+
+      &:hover {
+        background-color: rgba(#eee, .7)
+      }
     }
     .button-box {
       margin-left: auto;
@@ -310,9 +324,9 @@ export default {
     &.edit-name {
       margin-left: 0;
     }
-    &.hidden {
-      visibility: hidden;
-    }
+  }
+  .hidden {
+    visibility: hidden;
   }
 }
 </style>
