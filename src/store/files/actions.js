@@ -104,6 +104,7 @@ export default {
           },
           e => {
             // if enter this route, '.on' is expired
+            console.log(`can not load the authority of this file: ${key}`, e)
             context.commit(mutationTypes.SET_PERMISSION_DENIED, {
               permissionDenied: true
             })
