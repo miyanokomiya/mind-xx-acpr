@@ -224,7 +224,7 @@ export default {
       if (now - this.lastSetupProgressiveMove < 200) {
         this.movingTimer = setTimeout(() => {
           this.movingLoop()
-        }, 20)
+        }, 10)
       } else {
         if (now - this.downStart < INTERVAL_CLICK) {
           if (now - this.clickLast < INTERVAL_DOUBLE_CLICK) {
@@ -252,12 +252,12 @@ export default {
           x: this.x + dif.x,
           y: this.y + dif.y,
         })
-        dif.x *= 0.95
-        dif.y *= 0.95
+        dif.x *= 0.92
+        dif.y *= 0.92
         if (Math.abs(dif.x) + Math.abs(dif.y) > 2) {
           this.movingTimer = setTimeout(() => {
             this.movingLoop()
-          }, 20)
+          }, 10)
         } else {
           this.movingTimer = 0
           this.progressiveMove = {
