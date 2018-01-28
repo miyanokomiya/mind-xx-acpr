@@ -6,7 +6,7 @@ export const testAction = (action, payload, state, expectedMutations, done) => {
     try {
       expect(mutation.type).toBe(type)
       if (payload) {
-        expect(mutation.payload).toMatchObject(payload)
+        expect(mutation.payload).toEqual(payload)
       }
     } catch (error) {
       done(error)

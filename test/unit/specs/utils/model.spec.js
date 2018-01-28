@@ -1199,6 +1199,26 @@ describe('utils/model', () => {
     })
     expect(res).toBe(true)
   })
+  it('should return true if dependent nodes are not found', () => {
+    const nodes = {
+      [ROOT_NODE]: modelUtils.createNode({
+        children: ['a', 'b']
+      }),
+      a: modelUtils.createNode({
+        children: [],
+        dependencies: {
+          c: true
+        }
+      }),
+      b: modelUtils.createNode({
+        children: []
+      })
+    }
+    const res = modelUtils.isConflict({
+      nodes
+    })
+    expect(res).toBe(true)
+  })
   describe('rescueConflict', () => {
     it('should omit nodes which have unreal parent, except for [ROOT_NODE]', () => {
       const nodes = {
@@ -1233,6 +1253,37 @@ describe('utils/model', () => {
       expect(res).toMatchObject({
         [ROOT_NODE]: modelUtils.createNode({
           children: ['b']
+        }),
+        b: modelUtils.createNode({
+          children: []
+        })
+      })
+    })
+    it('should omit dependencies which are not exist', () => {
+      const nodes = {
+        [ROOT_NODE]: modelUtils.createNode({
+          children: ['a', 'b']
+        }),
+        a: modelUtils.createNode({
+          children: [],
+          dependencies: {
+            c: true
+          }
+        }),
+        b: modelUtils.createNode({
+          children: []
+        })
+      }
+      const res = modelUtils.rescueConflict({
+        nodes
+      })
+      expect(res).toEqual({
+        [ROOT_NODE]: modelUtils.createNode({
+          children: ['a', 'b']
+        }),
+        a: modelUtils.createNode({
+          children: [],
+          dependencies: {}
         }),
         b: modelUtils.createNode({
           children: []

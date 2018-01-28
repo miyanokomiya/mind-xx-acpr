@@ -185,7 +185,7 @@ describe('store/nodes/actions', () => {
         [
           {
             type: mutationTypes.SET_SELECTED_NODES,
-            payload: { selectedNodes: {} }
+            payload: {}
           }
         ],
         done

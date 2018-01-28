@@ -608,16 +608,26 @@ export function isConflict ({ nodes }) {
     if (key !== ROOT_NODE) {
       if (!getParentKey({ nodes, childKey: key })) {
         isConflict = true
-        return isConflict
+        return true
       }
     }
     const node = nodes[key]
+    // check children
     node.children.some(childKey => {
       if (!nodes[childKey]) {
         isConflict = true
         return true
       }
     })
+    if (!isConflict) {
+      // check dependencies
+      Object.keys(node.dependencies).some(childKey => {
+        if (!nodes[childKey]) {
+          isConflict = true
+          return true
+        }
+      })
+    }
     return isConflict
   })
   return isConflict
@@ -635,8 +645,22 @@ export function rescueConflict ({ nodes }) {
         return true
       }
     })
+    const dependencies = Object.keys(nodes[key].dependencies).reduce(
+      (p, childKey) => {
+        if (nodes[childKey]) {
+          return {
+            ...p,
+            childKey: true
+          }
+        } else {
+          return p
+        }
+      },
+      {}
+    )
     p[key] = Object.assign({}, nodes[key], {
-      children
+      children,
+      dependencies
     })
     return p
   }, {})
