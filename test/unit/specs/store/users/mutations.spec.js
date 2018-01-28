@@ -13,7 +13,7 @@ describe('store/users/mutations', () => {
       mutations[mutationTypes.UPDATE_USERS](state, {
         users: { aaa: createUser({ uid: 'aaa' }) }
       })
-      expect(state).toMatchObject({
+      expect(state).toEqual({
         users: {
           aaa: createUser({ uid: 'aaa' }),
           bbb: createUser({ uid: 'bbb' })
@@ -30,7 +30,7 @@ describe('store/users/mutations', () => {
       mutations[mutationTypes.UPDATE_USERS](state, {
         users: { aaa: null }
       })
-      expect(state).toMatchObject({
+      expect(state).toEqual({
         users: {
           bbb: createUser({ uid: 'bbb' })
         }

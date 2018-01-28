@@ -14,7 +14,7 @@ describe('store/user/mutations', () => {
         email: 'email',
         photoURL: 'photoURL'
       })
-      expect(state).toMatchObject({
+      expect(state).toEqual({
         user: {
           uid: 'bbbb',
           displayName: 'aaa',
@@ -30,7 +30,7 @@ describe('store/user/mutations', () => {
         authorityLoading: true
       }
       mutations[mutationTypes.SET_USER](state, null)
-      expect(state).toMatchObject({
+      expect(state).toEqual({
         user: null,
         authorityLoading: true
       })
@@ -42,7 +42,7 @@ describe('store/user/mutations', () => {
         authorityLoading: false
       }
       mutations[mutationTypes.SET_AUTHORITY_LOADING](state, true)
-      expect(state).toMatchObject({
+      expect(state).toEqual({
         authorityLoading: true
       })
     })
@@ -51,7 +51,7 @@ describe('store/user/mutations', () => {
         authorityLoading: true
       }
       mutations[mutationTypes.SET_AUTHORITY_LOADING](state, false)
-      expect(state).toMatchObject({
+      expect(state).toEqual({
         authorityLoading: false
       })
     })

@@ -11,7 +11,7 @@ describe('store/nodes/getters', () => {
         }
       }
       const res = getters[getterTypes.NODES](state)
-      expect(res).toMatchObject({
+      expect(res).toEqual({
         a: { x: 0, y: 0 },
         b: { x: 10, y: 10 }
       })
@@ -26,7 +26,7 @@ describe('store/nodes/getters', () => {
         }
       }
       const res = getters[getterTypes.SELECTED_NODES](state)
-      expect(res).toMatchObject({
+      expect(res).toEqual({
         a: true,
         b: true
       })

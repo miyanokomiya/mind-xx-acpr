@@ -20,7 +20,7 @@ describe('store/nodes/mutations', () => {
           d: { x: 40, y: 40 }
         }
       })
-      expect(state).toMatchObject({
+      expect(state).toEqual({
         nodes: {
           a: { x: 0, y: 0 },
           b: { x: 20, y: 30 },
@@ -44,7 +44,7 @@ describe('store/nodes/mutations', () => {
           c: null
         }
       })
-      expect(state).toMatchObject({
+      expect(state).toEqual({
         nodes: {
           a: { x: 0, y: 0 },
           b: { x: 20, y: 30 }
@@ -63,7 +63,7 @@ describe('store/nodes/mutations', () => {
           a: true
         }
       })
-      expect(state).toMatchObject({
+      expect(state).toEqual({
         selectedNodes: {
           a: true
         }
@@ -91,7 +91,7 @@ describe('store/nodes/mutations', () => {
       mutations[mutationTypes.SET_FILE_KEY](state, {
         fileKey: 'abc'
       })
-      expect(state).toMatchObject({
+      expect(state).toEqual({
         fileKey: 'abc'
       })
     })
@@ -106,7 +106,7 @@ describe('store/nodes/mutations', () => {
         redoStacks: [{ a: { text: 'a' } }]
       }
       mutations[mutationTypes.CLEAR_NODES](state)
-      expect(state).toMatchObject({
+      expect(state).toEqual({
         fileKey: null,
         nodes: createDefaultNodes(),
         selectedNodes: {},
@@ -123,7 +123,7 @@ describe('store/nodes/mutations', () => {
       mutations[mutationTypes.SET_INITIAL_LOADING](state, {
         initialLoading: true
       })
-      expect(state).toMatchObject({
+      expect(state).toEqual({
         initialLoading: true
       })
     })
@@ -142,7 +142,7 @@ describe('store/nodes/mutations', () => {
           b: createNode({ text: 'b' })
         }
       })
-      expect(state).toMatchObject({
+      expect(state).toEqual({
         nodes: {
           b: createNode({ text: 'bbb' })
         },
@@ -164,7 +164,7 @@ describe('store/nodes/mutations', () => {
         redoStacks: []
       }
       mutations[mutationTypes.POP_UNDO_STACK](state)
-      expect(state).toMatchObject({
+      expect(state).toEqual({
         nodes: {
           b: createNode({ text: 'bbb' })
         },
@@ -178,7 +178,7 @@ describe('store/nodes/mutations', () => {
         redoStacks: [{ b: createNode({ text: 'b' }) }]
       }
       mutations[mutationTypes.POP_UNDO_STACK](state)
-      expect(state).toMatchObject({
+      expect(state).toEqual({
         undoStacks: [],
         redoStacks: [{ b: createNode({ text: 'b' }) }]
       })
@@ -197,7 +197,7 @@ describe('store/nodes/mutations', () => {
         ]
       }
       mutations[mutationTypes.POP_REDO_STACK](state)
-      expect(state).toMatchObject({
+      expect(state).toEqual({
         nodes: {
           b: createNode({ text: 'bbb' })
         },
@@ -211,7 +211,7 @@ describe('store/nodes/mutations', () => {
         redoStacks: []
       }
       mutations[mutationTypes.POP_REDO_STACK](state)
-      expect(state).toMatchObject({
+      expect(state).toEqual({
         undoStacks: [{ b: createNode({ text: 'b' }) }],
         redoStacks: []
       })
@@ -224,7 +224,7 @@ describe('store/nodes/mutations', () => {
         redoStacks: [{ a: { text: 'a' } }]
       }
       mutations[mutationTypes.CLEAR_STACKS](state)
-      expect(state).toMatchObject({
+      expect(state).toEqual({
         undoStacks: [],
         redoStacks: []
       })
@@ -236,7 +236,7 @@ describe('store/nodes/mutations', () => {
         undoStacks: [{ a: { text: 'a' } }]
       }
       mutations[mutationTypes.CLEAR_UNDO_STACKS](state)
-      expect(state).toMatchObject({
+      expect(state).toEqual({
         undoStacks: []
       })
     })
@@ -247,7 +247,7 @@ describe('store/nodes/mutations', () => {
         redoStacks: [{ a: { text: 'a' } }]
       }
       mutations[mutationTypes.CLEAR_REDO_STACKS](state)
-      expect(state).toMatchObject({
+      expect(state).toEqual({
         redoStacks: []
       })
     })

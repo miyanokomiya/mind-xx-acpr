@@ -11,7 +11,7 @@ describe('store/files/getters', () => {
         }
       }
       const res = getters[getterTypes.FILES](state)
-      expect(res).toMatchObject({
+      expect(res).toEqual({
         a: { name: 'a' },
         b: { name: 'b' }
       })
@@ -26,7 +26,7 @@ describe('store/files/getters', () => {
         }
       }
       const res = getters[getterTypes.FILE_AUTHORITIES](state)
-      expect(res).toMatchObject({
+      expect(res).toEqual({
         a: true,
         b: { write: true }
       })
@@ -41,7 +41,7 @@ describe('store/files/getters', () => {
         }
       }
       const res = getters[getterTypes.SHARED_FILES](state)
-      expect(res).toMatchObject({
+      expect(res).toEqual({
         a: { name: 'a' },
         b: { name: 'b' }
       })
@@ -56,7 +56,7 @@ describe('store/files/getters', () => {
         }
       }
       const res = getters[getterTypes.SHARED_FILE_AUTHORITIES](state)
-      expect(res).toMatchObject({
+      expect(res).toEqual({
         a: true,
         b: { write: true }
       })
@@ -74,7 +74,7 @@ describe('store/files/getters', () => {
       const res = getters[getterTypes.FILE_FROM_KEY](state)({
         fileKey: 'a'
       })
-      expect(res).toMatchObject({ name: 'a' })
+      expect(res).toEqual({ name: 'a' })
     })
     it('should get correct file from [files] or [sharedFiles], if from sharedFiles', () => {
       const state = {
@@ -87,7 +87,7 @@ describe('store/files/getters', () => {
       const res = getters[getterTypes.FILE_FROM_KEY](state)({
         fileKey: 'a'
       })
-      expect(res).toMatchObject({ name: 'a' })
+      expect(res).toEqual({ name: 'a' })
     })
   })
   describe('FILE_AUTHORITY_FROM_KEY', () => {
@@ -102,7 +102,7 @@ describe('store/files/getters', () => {
       const res = getters[getterTypes.FILE_AUTHORITY_FROM_KEY](state)({
         fileKey: 'a'
       })
-      expect(res).toMatchObject({ write: false })
+      expect(res).toEqual({ write: false })
     })
     it('should get correct authority of a file from [fileAuthorities] or [sharedFileAuthorities], if from sharedFileAuthorities', () => {
       const state = {
@@ -115,7 +115,7 @@ describe('store/files/getters', () => {
       const res = getters[getterTypes.FILE_AUTHORITY_FROM_KEY](state)({
         fileKey: 'a'
       })
-      expect(res).toMatchObject({ write: false })
+      expect(res).toEqual({ write: false })
     })
   })
   describe('IS_MY_FILE_FROM_KEY', () => {

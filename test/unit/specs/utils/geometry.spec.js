@@ -16,7 +16,7 @@ describe('utils/geometry', () => {
         }
       }
       const rec = geometry.getCoveredRectangle({ positions, sizes })
-      expect(rec).toMatchObject({
+      expect(rec).toEqual({
         x: 0,
         y: 10,
         width: 100,
@@ -45,7 +45,7 @@ describe('utils/geometry', () => {
         }
       }
       const rec = geometry.getCoveredRectangle({ positions, sizes })
-      expect(rec).toMatchObject({
+      expect(rec).toEqual({
         x: -10,
         y: 10,
         width: 120,
@@ -74,7 +74,7 @@ describe('utils/geometry', () => {
         }
       }
       const rec = geometry.getCoveredRectangle({ positions, sizes })
-      expect(rec).toMatchObject({
+      expect(rec).toEqual({
         x: 10,
         y: 10,
         width: 100,
@@ -87,7 +87,7 @@ describe('utils/geometry', () => {
     it('should calc correct center', () => {
       const rectangle = { x: 0, y: 20, width: 30, height: 30 }
       const res = geometry.getCenterOfRectangle(rectangle)
-      expect(res).toMatchObject({ x: 15, y: 35 })
+      expect(res).toEqual({ x: 15, y: 35 })
     })
   })
 
@@ -96,7 +96,7 @@ describe('utils/geometry', () => {
       const p1 = { x: 0, y: 0 }
       const p2 = { x: 3, y: -4 }
       const res = geometry.getCenter(p1, p2)
-      expect(res).toMatchObject({
+      expect(res).toEqual({
         x: 1.5,
         y: -2
       })

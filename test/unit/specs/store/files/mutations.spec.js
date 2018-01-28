@@ -18,7 +18,7 @@ describe('store/files/mutations', () => {
           d: { name: 'ddd' }
         }
       })
-      expect(state).toMatchObject({
+      expect(state).toEqual({
         files: {
           a: { name: 'a' },
           b: { name: 'bbb' },
@@ -43,7 +43,7 @@ describe('store/files/mutations', () => {
           d: { write: true }
         }
       })
-      expect(state).toMatchObject({
+      expect(state).toEqual({
         fileAuthorities: {
           a: true,
           b: true,
@@ -68,7 +68,7 @@ describe('store/files/mutations', () => {
           d: { name: 'ddd' }
         }
       })
-      expect(state).toMatchObject({
+      expect(state).toEqual({
         sharedFiles: {
           a: { name: 'a' },
           b: { name: 'bbb' },
@@ -93,7 +93,7 @@ describe('store/files/mutations', () => {
           d: { write: true }
         }
       })
-      expect(state).toMatchObject({
+      expect(state).toEqual({
         sharedFileAuthorities: {
           a: true,
           b: true,
@@ -127,7 +127,7 @@ describe('store/files/mutations', () => {
         }
       }
       mutations[mutationTypes.CLEAR_FILES](state)
-      expect(state).toMatchObject({
+      expect(state).toEqual({
         files: {},
         fileAuthorities: {},
         sharedFiles: {},
@@ -143,7 +143,7 @@ describe('store/files/mutations', () => {
       mutations[mutationTypes.SET_PERMISSION_DENIED](state, {
         permissionDenied: true
       })
-      expect(state).toMatchObject({
+      expect(state).toEqual({
         permissionDenied: true
       })
     })

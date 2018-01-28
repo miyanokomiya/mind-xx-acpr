@@ -129,15 +129,15 @@ describe('utils/model', () => {
         parentKey: 'a',
         positions
       })
-      expect(positions.a).toMatchObject({
+      expect(positions.a).toEqual({
         x: 0,
         y: 0
       })
-      expect(positions.b).toMatchObject({
+      expect(positions.b).toEqual({
         x: 10 + NODE_MARGIN_X + (500 + 400) * NODE_ADDITIONAL_MARGIN_X_RATE,
         y: -200 / 2 + 100 / 2
       })
-      expect(positions.c).toMatchObject({
+      expect(positions.c).toEqual({
         x:
           10 +
           20 +
@@ -145,7 +145,7 @@ describe('utils/model', () => {
           (500 + 400) * NODE_ADDITIONAL_MARGIN_X_RATE * 2,
         y: -200 / 2 + 100 / 2 - (500 + 400) / 2 + 200 / 2
       })
-      expect(positions.d).toMatchObject({
+      expect(positions.d).toEqual({
         x:
           10 +
           20 +
@@ -214,15 +214,15 @@ describe('utils/model', () => {
         parentKey: 'a',
         positions
       })
-      expect(positions.a).toMatchObject({
+      expect(positions.a).toEqual({
         x: 0,
         y: 0
       })
-      expect(positions.b).toMatchObject({
+      expect(positions.b).toEqual({
         x: 10 + NODE_MARGIN_X + 1000 * NODE_ADDITIONAL_MARGIN_X_RATE,
         y: 500 - 200 / 2
       })
-      expect(positions.c).toMatchObject({
+      expect(positions.c).toEqual({
         x:
           10 +
           20 +
@@ -230,7 +230,7 @@ describe('utils/model', () => {
           (1000 + 500 + 400) * NODE_ADDITIONAL_MARGIN_X_RATE,
         y: 500 - (500 + 400) / 2
       })
-      expect(positions.d).toMatchObject({
+      expect(positions.d).toEqual({
         x:
           10 +
           20 +
@@ -704,7 +704,7 @@ describe('utils/model', () => {
     const origin = modelUtils.createNode()
     it('should get complete copy', () => {
       const copy = modelUtils.copyNode(origin)
-      expect(copy).toMatchObject(origin)
+      expect(copy).toEqual(origin)
     })
     it('should do deep clone', () => {
       const copy = modelUtils.copyNode(origin)
@@ -731,7 +731,7 @@ describe('utils/model', () => {
         newParentKey: 'a',
         order: 1
       })
-      expect(updatedNodes).toMatchObject({
+      expect(updatedNodes).toEqual({
         a: Object.assign({}, a, {
           children: ['b', 'c', 'e']
         }),
@@ -750,7 +750,7 @@ describe('utils/model', () => {
         newParentKey: 'd',
         order: 1
       })
-      expect(updatedNodes).toMatchObject({
+      expect(updatedNodes).toEqual({
         a: Object.assign({}, a, {
           children: ['b']
         }),
@@ -880,7 +880,8 @@ describe('utils/model', () => {
         childKey: 'c',
         dif: 1
       })
-      expect(res).toMatchObject({
+      expect(res).toEqual({
+        ...nodes,
         b: Object.assign({}, b, {
           children: ['d', 'c', 'e']
         })
@@ -892,7 +893,8 @@ describe('utils/model', () => {
         childKey: 'e',
         dif: 1
       })
-      expect(res).toMatchObject({
+      expect(res).toEqual({
+        ...nodes,
         b: Object.assign({}, b, {
           children: ['e', 'c', 'd']
         })
@@ -904,7 +906,8 @@ describe('utils/model', () => {
         childKey: 'e',
         dif: -1
       })
-      expect(res).toMatchObject({
+      expect(res).toEqual({
+        ...nodes,
         b: Object.assign({}, b, {
           children: ['c', 'e', 'd']
         })
@@ -916,7 +919,8 @@ describe('utils/model', () => {
         childKey: 'c',
         dif: -1
       })
-      expect(res).toMatchObject({
+      expect(res).toEqual({
+        ...nodes,
         b: Object.assign({}, b, {
           children: ['d', 'e', 'c']
         })
@@ -948,7 +952,7 @@ describe('utils/model', () => {
     }
     it('should get correct connectors', () => {
       const res = modelUtils.getConnectors({ nodes, positions, sizes })
-      expect(res).toMatchObject({
+      expect(res).toEqual({
         'a-b': {
           sx: 10 - CONNECTOR_INNTER_MARGIN_X,
           sy: 10,
@@ -1003,7 +1007,7 @@ describe('utils/model', () => {
         positions,
         sizes
       })
-      expect(res).toMatchObject({
+      expect(res).toEqual({
         'depend_c-d': {
           sx: -50 + 50,
           sy: -50 + 20 / 2,
@@ -1050,7 +1054,7 @@ describe('utils/model', () => {
         newParentKey: 'a',
         newChildOrder: 0
       })
-      expect(res).toMatchObject({
+      expect(res).toEqual({
         sx: 10 - CONNECTOR_INNTER_MARGIN_X,
         sy: 10,
         ex: 50,
@@ -1066,7 +1070,7 @@ describe('utils/model', () => {
         newParentKey: 'a',
         newChildOrder: 1
       })
-      expect(res).toMatchObject({
+      expect(res).toEqual({
         sx: 10 - CONNECTOR_INNTER_MARGIN_X,
         sy: 10,
         ex: 50,
@@ -1082,7 +1086,7 @@ describe('utils/model', () => {
         newParentKey: 'a',
         newChildOrder: 2
       })
-      expect(res).toMatchObject({
+      expect(res).toEqual({
         sx: 10 - CONNECTOR_INNTER_MARGIN_X,
         sy: 10,
         ex: 50,
@@ -1098,7 +1102,7 @@ describe('utils/model', () => {
         newParentKey: 'c',
         newChildOrder: 0
       })
-      expect(res).toMatchObject({
+      expect(res).toEqual({
         sx: 150 - CONNECTOR_INNTER_MARGIN_X,
         sy: -40,
         ex: 150 + NODE_MARGIN_X,
@@ -1129,7 +1133,7 @@ describe('utils/model', () => {
         nodes,
         updatedNodes
       })
-      expect(res).toMatchObject({
+      expect(res).toEqual({
         b: modelUtils.createNode({
           text: '6'
         }),
@@ -1151,7 +1155,7 @@ describe('utils/model', () => {
       nodes,
       updatedNodes
     })
-    expect(res).toMatchObject({
+    expect(res).toEqual({
       a: null
     })
   })
@@ -1232,7 +1236,7 @@ describe('utils/model', () => {
       const res = modelUtils.rescueConflict({
         nodes
       })
-      expect(res).toMatchObject({
+      expect(res).toEqual({
         [ROOT_NODE]: modelUtils.createNode({
           children: []
         })
@@ -1250,7 +1254,7 @@ describe('utils/model', () => {
       const res = modelUtils.rescueConflict({
         nodes
       })
-      expect(res).toMatchObject({
+      expect(res).toEqual({
         [ROOT_NODE]: modelUtils.createNode({
           children: ['b']
         }),

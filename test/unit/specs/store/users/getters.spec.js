@@ -12,7 +12,7 @@ describe('store/users/getters', () => {
         }
       }
       const res = getters[getterTypes.USERS](state)
-      expect(res).toMatchObject({
+      expect(res).toEqual({
         aaa: createUser({ uid: 'aaa' }),
         bbb: createUser({ uid: 'bbb' })
       })
