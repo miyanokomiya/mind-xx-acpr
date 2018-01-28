@@ -28,7 +28,7 @@
     </div>
     <v-flex
       xs-12
-      v-for="(file, key) in currentFiles"
+      v-for="(file, key) in sortedFileList"
       :key="key"
     >
       <v-card class="file-card">
@@ -157,9 +157,13 @@ export default {
         return { ...this.sharedFileAuthorities, ...this.fileAuthorities }
       }
     },
-    fileList () {
+    sortedFileList () {
+      const sortBy = [this.pagination.sortBy]
+      const coefficient = this.pagination.descending ? -1 : 1
       return Object.keys(this.currentFiles).map(key => {
         return Object.assign({}, this.currentFiles[key], { key })
+      }).sort((a, b) => {
+        return (a[sortBy] - b[sortBy]) * coefficient
       })
     },
     canWrite () {
