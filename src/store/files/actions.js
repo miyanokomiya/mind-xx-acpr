@@ -240,6 +240,7 @@ export default {
     const file =
       context.state.files[baseKey] || context.state.sharedFiles[baseKey]
     if (file) {
+      // New file belongs to the operator.
       return createFileFB(context, { file }).then(({ fileKey }) => {
         const newKey = fileKey
         const reloadFile = () => {
