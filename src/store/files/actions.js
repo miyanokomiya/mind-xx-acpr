@@ -2,6 +2,54 @@ import { actionTypes, mutationTypes, getterTypes } from './types'
 import firebase from '@/firebase'
 import { createFile } from '@/utils/model'
 
+const createFileFB = (context, { file }) => {
+  const uid = firebase.auth().currentUser.uid
+  // get new key
+  const fileKey = firebase
+    .database()
+    .ref()
+    .child('file_authorities')
+    .push().key
+  // create the authority setting at first
+  return firebase
+    .database()
+    .ref(`/file_authorities/${fileKey}/users/${uid}`)
+    .set({
+      write: true,
+      owner: true
+    })
+    .then(() => {
+      // local commit the authority
+      context.commit(mutationTypes.UPDATE_FILE_AUTHORITIES, {
+        fileAuthorities: {
+          [fileKey]: {
+            users: {
+              [uid]: {
+                write: true,
+                owner: true
+              }
+            }
+          }
+        }
+      })
+      // create the file
+      const newFile = Object.assign({}, createFile(file), {
+        created: firebase.database.ServerValue.TIMESTAMP,
+        updated: firebase.database.ServerValue.TIMESTAMP
+      })
+      const updates = {}
+      updates[`/files/${fileKey}`] = newFile
+      updates[`/work_spaces/${uid}/files/${fileKey}`] = true
+      return firebase
+        .database()
+        .ref()
+        .update(updates)
+        .then(() => {
+          return Promise.resolve({ fileKey })
+        })
+    })
+}
+
 export default {
   [actionTypes.LOAD_FILE] (context, { key }) {
     // reset permission status as first
@@ -172,62 +220,57 @@ export default {
       })
   },
   [actionTypes.CREATE_FILE] (context, { file = {} }) {
-    const uid = firebase.auth().currentUser.uid
-    // get new key
-    const fileKey = firebase
-      .database()
-      .ref()
-      .child('file_authorities')
-      .push().key
-    // create the authority setting at first
-    firebase
-      .database()
-      .ref(`/file_authorities/${fileKey}/users/${uid}`)
-      .set({
-        write: true,
-        owner: true
-      })
-      .then(() => {
-        // local commit the authority
-        context.commit(mutationTypes.UPDATE_FILE_AUTHORITIES, {
-          fileAuthorities: {
-            [fileKey]: {
-              users: {
-                [uid]: {
-                  write: true,
-                  owner: true
-                }
-              }
+    return createFileFB(context, { file }).then(({ fileKey }) => {
+      // reload the file
+      return firebase
+        .database()
+        .ref(`/files/${fileKey}`)
+        .once('value')
+        .then(snapshot => {
+          context.commit(mutationTypes.UPDATE_FILES, {
+            files: {
+              [fileKey]: snapshot.val()
             }
-          }
+          })
         })
-        // create the file
-        const newFile = Object.assign({}, createFile(file), {
-          created: firebase.database.ServerValue.TIMESTAMP,
-          updated: firebase.database.ServerValue.TIMESTAMP
-        })
-        const updates = {}
-        updates[`/files/${fileKey}`] = newFile
-        updates[`/work_spaces/${uid}/files/${fileKey}`] = true
+    })
+  },
+  [actionTypes.CLONE_FILE] (context, { fileKey }) {
+    const baseKey = fileKey
+    const file = context.state.files[baseKey]
+    if (file) {
+      return createFileFB(context, { file }).then(({ fileKey }) => {
+        const newKey = fileKey
+        // load nodes
         return firebase
           .database()
-          .ref()
-          .update(updates)
-      })
-      .then(() => {
-        // reload the file
-        return firebase
-          .database()
-          .ref(`/files/${fileKey}`)
+          .ref('nodes/' + baseKey)
           .once('value')
+          .then(snapshot => {
+            // save nodes
+            return firebase
+              .database()
+              .ref('nodes/' + newKey)
+              .update(snapshot.val())
+          })
+          .then(() => {
+            // reload the file
+            return firebase
+              .database()
+              .ref(`/files/${newKey}`)
+              .once('value')
+              .then(snapshot => {
+                context.commit(mutationTypes.UPDATE_FILES, {
+                  files: {
+                    [newKey]: snapshot.val()
+                  }
+                })
+              })
+          })
       })
-      .then(snapshot => {
-        context.commit(mutationTypes.UPDATE_FILES, {
-          files: {
-            [fileKey]: snapshot.val()
-          }
-        })
-      })
+    } else {
+      return Promise.reject(new Error(`not found the file: ${baseKey}`))
+    }
   },
   [actionTypes.DELETE_FILES] (context, { files }) {
     const uid = firebase.auth().currentUser.uid

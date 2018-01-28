@@ -8,6 +8,7 @@
     :user="user"
     @changeName="updateFiles"
     @createFile="createFile"
+    @cloneFile="cloneFile"
     @deleteFiles="deleteFiles"
   />
 </div>
@@ -43,6 +44,7 @@ export default {
       loadFiles: actionTypes.LOAD_FILES,
       updateFiles: actionTypes.UPDATE_FILES,
       createFile: actionTypes.CREATE_FILE,
+      cloneFile: actionTypes.CLONE_FILE,
       deleteFiles: actionTypes.DELETE_FILES
     })
   }

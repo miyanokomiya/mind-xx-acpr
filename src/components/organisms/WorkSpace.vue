@@ -28,12 +28,12 @@
     </div>
     <v-flex
       xs-12
-      v-for="(file, key) in sortedFileList"
-      :key="key"
+      v-for="(file) in sortedFileList"
+      :key="file.key"
     >
       <v-card class="file-card">
         <v-card-title class="card-title">
-          <div class="content-box" @click="$router.push({name: 'Map', params: { fileKey: key }})">
+          <div class="content-box" @click="$router.push({name: 'Map', params: { fileKey: file.key }})">
             <p class="file-name mb-0">{{file.name || 'untitled'}}</p>
             <dl>
               <dt>Nodes: </dt><dd>{{file.nodeCount}}</dd>
@@ -44,10 +44,10 @@
             </dl>
           </div>
           <div class="button-box">
-            <v-chip v-if="sharedFileAuthorities[key]" class="shared-tag">shared</v-chip>
+            <v-chip v-if="sharedFileAuthorities[file.key]" class="shared-tag">shared</v-chip>
             <v-edit-dialog
               lazy
-              v-if="canWrite[key]"
+              v-if="canWrite[file.key]"
             >
               <v-btn
                 dark fab small color="blue" class="file-button edit-name"
@@ -59,20 +59,19 @@
                 slot="input"
                 label="Edit"
                 :value="file.name"
-                @change="val => changeName({ key: key, name: val })"
+                @change="val => changeName({ key: file.key, name: val })"
               ></v-text-field>
             </v-edit-dialog>
-            <!-- TODO feature -->
-            <!-- <v-btn
-              dark fab small outline color="black" class="file-button"
-              @click="cloneFile(key)"
-            >
-              <v-icon>content_copy</v-icon>
-            </v-btn> -->
             <v-btn
               dark fab small outline color="black" class="file-button"
-              v-if="!sharedFileAuthorities[key]"
-              @click="deleteFile(key)"
+              @click="cloneFile(file.key)"
+            >
+              <v-icon>content_copy</v-icon>
+            </v-btn>
+            <v-btn
+              dark fab small outline color="black" class="file-button"
+              v-if="!sharedFileAuthorities[file.key]"
+              @click="deleteFile(file.key)"
             >
               <v-icon>delete</v-icon>
             </v-btn>
@@ -223,7 +222,7 @@ export default {
     cloneFile (key) {
       const file = this.currentFiles[key]
       if (file) {
-        this.$emit('cloneFile', { file })
+        this.$emit('cloneFile', { fileKey: key })
       }
     },
     dateFormat (ms) {
