@@ -241,32 +241,40 @@ export default {
     if (file) {
       return createFileFB(context, { file }).then(({ fileKey }) => {
         const newKey = fileKey
-        // load nodes
-        return firebase
-          .database()
-          .ref('nodes/' + baseKey)
-          .once('value')
-          .then(snapshot => {
-            // save nodes
-            return firebase
-              .database()
-              .ref('nodes/' + newKey)
-              .update(snapshot.val())
-          })
-          .then(() => {
-            // reload the file
-            return firebase
-              .database()
-              .ref(`/files/${newKey}`)
-              .once('value')
-              .then(snapshot => {
-                context.commit(mutationTypes.UPDATE_FILES, {
-                  files: {
-                    [newKey]: snapshot.val()
-                  }
-                })
+        const reloadFile = () => {
+          return firebase
+            .database()
+            .ref(`/files/${newKey}`)
+            .once('value')
+            .then(snapshot => {
+              context.commit(mutationTypes.UPDATE_FILES, {
+                files: {
+                  [newKey]: snapshot.val()
+                }
               })
-          })
+            })
+        }
+        if (file.nodeCount > 0) {
+          // load nodes
+          return firebase
+            .database()
+            .ref('nodes/' + baseKey)
+            .once('value')
+            .then(snapshot => {
+              // save nodes
+              return firebase
+                .database()
+                .ref('nodes/' + newKey)
+                .update(snapshot.val())
+            })
+            .then(() => {
+              // reload the file
+              return reloadFile()
+            })
+        } else {
+          // reload the file
+          return reloadFile()
+        }
       })
     } else {
       return Promise.reject(new Error(`not found the file: ${baseKey}`))
