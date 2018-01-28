@@ -237,7 +237,8 @@ export default {
   },
   [actionTypes.CLONE_FILE] (context, { fileKey }) {
     const baseKey = fileKey
-    const file = context.state.files[baseKey]
+    const file =
+      context.state.files[baseKey] || context.state.sharedFiles[baseKey]
     if (file) {
       return createFileFB(context, { file }).then(({ fileKey }) => {
         const newKey = fileKey
