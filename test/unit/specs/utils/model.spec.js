@@ -957,19 +957,25 @@ describe('utils/model', () => {
           sx: 10 - CONNECTOR_INNTER_MARGIN_X,
           sy: 10,
           ex: 50,
-          ey: 75
+          ey: 75,
+          from: 'a',
+          to: 'b'
         },
         'b-c': {
           sx: 80 - CONNECTOR_INNTER_MARGIN_X,
           sy: 75,
           ex: 0,
-          ey: -40
+          ey: -40,
+          from: 'b',
+          to: 'c'
         },
         'b-d': {
           sx: 80 - CONNECTOR_INNTER_MARGIN_X,
           sy: 75,
           ex: 100,
-          ey: 520
+          ey: 520,
+          from: 'b',
+          to: 'd'
         }
       })
     })
