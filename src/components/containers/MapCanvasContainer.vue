@@ -119,11 +119,12 @@ export default {
     this.loadNodes({ fileKey: this.fileKey })
   },
   destroyed () {
-    this.disconnect()
+    this.disconnectNodes()
+    this.disconnectFile({ key: this.fileKey })
   },
   methods: {
     ...mapActions('nodes', {
-      disconnect: nodesActionTypes.DISCONNECT,
+      disconnectNodes: nodesActionTypes.DISCONNECT,
       updateNodes: nodesActionTypes.UPDATE_NODES,
       _setSelectedNodes: nodesActionTypes.SET_SELECTED_NODES,
       clearSelect: nodesActionTypes.CLEAR_SELECT,
@@ -132,6 +133,7 @@ export default {
       _redo: nodesActionTypes.REDO_NODES
     }),
     ...mapActions('files', {
+      disconnectFile: filesActionTypes.DISCONNECT_FILE,
       loadFile: filesActionTypes.LOAD_FILE
     }),
     ...mapActions('settings', {

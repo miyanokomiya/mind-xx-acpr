@@ -50,92 +50,103 @@ const createFileFB = (context, { file }) => {
     })
 }
 
-export default {
-  [actionTypes.LOAD_FILE] (context, { key }) {
-    // reset permission status as first
-    firebase
-      .database()
-      .ref('/file_authorities')
-      .off()
-    context.commit(mutationTypes.SET_PERMISSION_DENIED, {
-      permissionDenied: false
-    })
-    // start loading
-    let isMyFile = false
-    let promise
-    if (firebase.auth().currentUser) {
-      const uid = firebase.auth().currentUser.uid
-      promise = firebase
-        .database()
-        .ref(`/work_spaces/${uid}/files/${key}`)
-        .once('value')
-        .then(snapshot => {
-          isMyFile = snapshot.exists()
-          return Promise.resolve()
+const disconnectFile =
+  process.env.NODE_ENV === 'test'
+    ? () => Promise.resolve()
+    : (context, { key }) => {
+        context.commit(mutationTypes.SET_PERMISSION_DENIED, {
+          permissionDenied: false
         })
-    } else {
-      promise = Promise.resolve()
-    }
-    return promise.then(() => {
-      // watch the authority
-      firebase
-        .database()
-        .ref(`/file_authorities/${key}`)
-        .on(
-          'value',
-          snapshot => {
-            context.commit(mutationTypes.SET_PERMISSION_DENIED, {
-              permissionDenied: false
-            })
-            const fileAuthority = snapshot.val()
+        firebase
+          .database()
+          .ref(`/file_authorities/${key}`)
+          .off()
+        return Promise.resolve()
+      }
+
+export default {
+  [actionTypes.DISCONNECT_FILE] (context, { key }) {
+    return disconnectFile(context, { key })
+  },
+  [actionTypes.LOAD_FILE] (context, { key }) {
+    // reset permission status of this file at first
+    return disconnectFile(context, { key }).then(() => {
+      // start loading
+      let isMyFile = false
+      let promise
+      if (firebase.auth().currentUser) {
+        const uid = firebase.auth().currentUser.uid
+        promise = firebase
+          .database()
+          .ref(`/work_spaces/${uid}/files/${key}`)
+          .once('value')
+          .then(snapshot => {
+            isMyFile = snapshot.exists()
+            return Promise.resolve()
+          })
+      } else {
+        promise = Promise.resolve()
+      }
+      return promise.then(() => {
+        // watch the authority
+        firebase
+          .database()
+          .ref(`/file_authorities/${key}`)
+          .on(
+            'value',
+            snapshot => {
+              context.commit(mutationTypes.SET_PERMISSION_DENIED, {
+                permissionDenied: false
+              })
+              const fileAuthority = snapshot.val()
+              if (isMyFile) {
+                context.commit(mutationTypes.UPDATE_FILE_AUTHORITIES, {
+                  fileAuthorities: {
+                    [key]: fileAuthority
+                  }
+                })
+              } else {
+                context.commit(mutationTypes.UPDATE_SHARED_FILE_AUTHORITIES, {
+                  sharedFileAuthorities: {
+                    [key]: fileAuthority
+                  }
+                })
+              }
+            },
+            e => {
+              // if enter this route, '.on' is expired
+              context.commit(mutationTypes.SET_PERMISSION_DENIED, {
+                permissionDenied: true
+              })
+            }
+          )
+        firebase
+          .database()
+          .ref(`/files/${key}`)
+          .once('value')
+          .then(snapshot => {
+            const file = snapshot.val()
             if (isMyFile) {
-              context.commit(mutationTypes.UPDATE_FILE_AUTHORITIES, {
-                fileAuthorities: {
-                  [key]: fileAuthority
+              context.commit(mutationTypes.UPDATE_FILES, {
+                files: {
+                  [key]: file
                 }
               })
             } else {
-              context.commit(mutationTypes.UPDATE_SHARED_FILE_AUTHORITIES, {
-                sharedFileAuthorities: {
-                  [key]: fileAuthority
+              context.commit(mutationTypes.UPDATE_SHARED_FILES, {
+                sharedFiles: {
+                  [key]: file
                 }
               })
             }
-          },
-          e => {
-            // if enter this route, '.on' is expired
-            console.log(`can not load the authority of this file: ${key}`, e)
+          })
+          .catch(e => {
             context.commit(mutationTypes.SET_PERMISSION_DENIED, {
               permissionDenied: true
             })
-          }
-        )
-      firebase
-        .database()
-        .ref(`/files/${key}`)
-        .once('value')
-        .then(snapshot => {
-          const file = snapshot.val()
-          if (isMyFile) {
-            context.commit(mutationTypes.UPDATE_FILES, {
-              files: {
-                [key]: file
-              }
-            })
-          } else {
-            context.commit(mutationTypes.UPDATE_SHARED_FILES, {
-              sharedFiles: {
-                [key]: file
-              }
-            })
-          }
-        })
-        .catch(e => {
-          context.commit(mutationTypes.SET_PERMISSION_DENIED, {
-            permissionDenied: true
+            return Promise.resolve()
           })
-          return Promise.resolve()
-        })
+      })
     })
   },
   [actionTypes.LOAD_FILES] (context, payload) {

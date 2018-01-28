@@ -10,6 +10,7 @@ export const getterTypes = {
 }
 
 export const actionTypes = {
+  DISCONNECT_FILE: 'DISCONNECT_FILE',
   LOAD_FILE: 'LOAD_FILE',
   LOAD_FILES: 'LOAD_FILES',
   UPDATE_FILES: 'UPDATE_FILES',
