@@ -47,7 +47,7 @@
             <v-chip v-if="sharedFileAuthorities[file.key]" class="shared-tag">shared</v-chip>
             <v-edit-dialog
               lazy
-              v-if="canWrite[file.key]"
+              :class="{hidden: !canWrite[file.key]}"
             >
               <v-btn
                 dark fab small color="blue" class="file-button edit-name"
@@ -70,7 +70,7 @@
             </v-btn>
             <v-btn
               dark fab small outline color="black" class="file-button"
-              v-if="!sharedFileAuthorities[file.key]"
+              :class="{hidden: sharedFileAuthorities[file.key]}"
               @click="deleteFile(file.key)"
             >
               <v-icon>delete</v-icon>
@@ -309,6 +309,9 @@ export default {
 
     &.edit-name {
       margin-left: 0;
+    }
+    &.hidden {
+      visibility: hidden;
     }
   }
 }
