@@ -485,7 +485,9 @@ export function getConnectors ({ nodes, positions, sizes }) {
           ex: isChildLeftFromParent
             ? childPosition.x + childSize.width
             : childPosition.x,
-          ey: childPosition.y + childSize.height / 2
+          ey: childPosition.y + childSize.height / 2,
+          from: parentKey,
+          to: childKey
         }
       }
     })
