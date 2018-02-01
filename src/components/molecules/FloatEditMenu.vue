@@ -126,15 +126,19 @@ export default {
         },
         {
           color: '#000',
-          backgroundColor: '#C8E6C9'
+          backgroundColor: '#81C784'
         },
         {
           color: '#000',
-          backgroundColor: '#FFE0B2'
+          backgroundColor: '#FFF176'
         },
         {
           color: '#000',
-          backgroundColor: '#F8BBD0'
+          backgroundColor: '#FFB74D'
+        },
+        {
+          color: '#000',
+          backgroundColor: '#E57373'
         },
         {
           color: '#000',
