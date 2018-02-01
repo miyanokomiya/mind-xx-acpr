@@ -117,7 +117,7 @@ exports.inviteUserToFile = functions.database
                     user.uid
                   }`
                 )
-                return Promise.resolve()
+                return event.data.ref.remove()
               } else {
                 const updates = {
                   [`/file_authorities/${fileId}/users/${user.uid}`]: {
