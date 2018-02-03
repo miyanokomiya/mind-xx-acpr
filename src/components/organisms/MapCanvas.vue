@@ -94,6 +94,7 @@
         :stroke="getStrokeColor(key)"
         :fill="node.backgroundColor"
         :textFill="node.color"
+        :closed="nodes[key].closed"
         @calcSize="size => calcSize({key, size})"
         @mousedown.native.prevent="e => canWrite ? ($isMobile.any ? '' : nodeCursorDown(e, key)) : ''"
         @mouseup.native.prevent="e => canWrite ? ($isMobile.any ?  '' : nodeCursorUp(key, {shift: e.shiftKey})) : ''"
@@ -112,6 +113,7 @@
         :stroke="selectedNodes[key] ? 'blue' : 'black'"
         :fill="nodes[key].backgroundColor"
         :textFill="nodes[key].color"
+        :closed="nodes[key].closed"
       />
     </SvgCanvas>
   </div>
@@ -132,11 +134,12 @@
     />
   </div>
   <div class="fix-left-box"
-    v-if="editMenuTargetNode"
+    v-if="editMenuTargetNode && editMenuTargetNode.children.length > 0"
     :style="{
-      left: `${editTargetPosition.x - 22}px`,
-      top: `${editTargetPosition.y - 4}px`
+      left: `${fixLeftBoxPosition.x}px`,
+      top: `${fixLeftBoxPosition.y}px`
     }"
+    @mousewheel.prevent="e => $isMobile.any ? '' : mousewheel(e)"
   >
     <v-btn icon small outline color="black" class="fix-left-item"
       v-if="editMenuTargetNode.closed"
@@ -373,6 +376,19 @@ export default {
         const x = (position.x - this.x) * this.scale
         const y = (position.y - this.y) * this.scale
         return { x, y }
+      } else {
+        return null
+      }
+    },
+    fixLeftBoxPosition () {
+      const key = this.editMenuTarget
+      if (key) {
+        const size = this.nodeSizes[key]
+        const position = this.editTargetPosition
+        return {
+          x: position.x - 20,
+          y: position.y - 28 / 2 + size.height / 2 * this.scale
+        }
       } else {
         return null
       }

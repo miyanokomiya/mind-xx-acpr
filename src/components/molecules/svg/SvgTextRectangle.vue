@@ -1,11 +1,15 @@
 <template>
 <g>
+  <g v-if="closed">
+    <circle :cx="x + width" :cy="y" r="5" fill="black"/>
+    <circle :cx="x + width" :cy="y + height" r="5" fill="black"/>
+  </g>
   <SvgRectangle
     :x="x"
     :y="y"
     :rx="3"
     :ry="3"
-    :width="textWidth"
+    :width="width"
     :height="height"
     :stroke-width="strokeWidth"
     :stroke="stroke"
@@ -77,6 +81,10 @@ export default {
     textFill: {
       type: String,
       default: 'black'
+    },
+    closed: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {

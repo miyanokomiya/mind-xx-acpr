@@ -33,3 +33,16 @@ storiesOf('molecules/svg/SvgTextRectangle', module)
       data: () => ({})
     }
   })
+  .add('closed', () => {
+    return {
+      components: { SvgTextRectangle },
+      template: `
+        <svg-wrapper>
+          <SvgTextRectangle :x="10" :y="10" text="abcde fef" fill="white" :closed="true"/>
+          <SvgTextRectangle :x="10" :y="60" text="abcde fef" fill="red" :closed="true"/>
+          <SvgTextRectangle :x="10" :y="110" text="abcde fef" fill="blue" :closed="true"/>
+        </svg-wrapper>
+      `,
+      data: () => ({})
+    }
+  })

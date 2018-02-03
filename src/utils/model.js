@@ -222,7 +222,8 @@ export function getUpdatedNodesWhenCreateChildNode ({
   const updatedNodes = {
     [key]: node,
     [parentKey]: Object.assign({}, parent, {
-      children: nextChildren
+      children: nextChildren,
+      closed: false
     })
   }
   return updatedNodes

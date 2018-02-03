@@ -528,7 +528,8 @@ describe('utils/model', () => {
 
   describe('getUpdatedNodesWhenCreateChildNode', () => {
     const a = modelUtils.createNode({
-      children: ['c']
+      children: ['c'],
+      closed: true
     })
     const c = modelUtils.createNode()
     const nodes = { a, c }
@@ -540,7 +541,8 @@ describe('utils/model', () => {
       })
       expect(updatedNodes).toEqual({
         a: Object.assign({}, a, {
-          children: ['c', 'b']
+          children: ['c', 'b'],
+          closed: false
         }),
         b: modelUtils.createNode()
       })
