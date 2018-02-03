@@ -16,7 +16,8 @@ export const createNode = obj =>
       children: [],
       backgroundColor: '#B3E5FC',
       color: '#000000',
-      dependencies: {}
+      dependencies: {},
+      closed: false
     },
     obj
   )
@@ -45,6 +46,9 @@ export const isSameNode = (n1, n2) => {
         return false
       }
     }
+  }
+  if (n1.closed !== n2.closed) {
+    return false
   }
   return true
 }
@@ -154,7 +158,11 @@ export function calcFamilySizes ({ nodes, sizes, familySizes, parentKey }) {
         height: 0
       }
     )
-    size.height += NODE_MARGIN_Y * (parentNode.children.length - 1)
+    if (parentNode.closed) {
+      size.height = sizes[parentKey].height
+    } else {
+      size.height += NODE_MARGIN_Y * (parentNode.children.length - 1)
+    }
     familySizes[parentKey] = {
       width: sizes[parentKey].width + size.width + NODE_MARGIN_X,
       height: Math.max(sizes[parentKey].height, size.height),
@@ -214,7 +222,8 @@ export function getUpdatedNodesWhenCreateChildNode ({
   const updatedNodes = {
     [key]: node,
     [parentKey]: Object.assign({}, parent, {
-      children: nextChildren
+      children: nextChildren,
+      closed: false
     })
   }
   return updatedNodes
@@ -343,6 +352,7 @@ export function getUpdatedNodesWhenFitClosestParent ({
   movingPositions
 }) {
   const rectangles = {}
+  const hiddenNodes = getHiddenNodes({ nodes })
   const familyKeys = getFamilyKeys({ nodes, parentKey: targetKey })
   const keys = Object.keys(nodes)
   keys.forEach(key => {
@@ -350,10 +360,10 @@ export function getUpdatedNodesWhenFitClosestParent ({
     if (!getParentKey({ nodes, childKey: key })) {
       return
     }
-    // remove family
-    // if (familyKeys.indexOf(key) > -1) {
-    //   return
-    // }
+    // remove hidden nodes
+    if (hiddenNodes[key]) {
+      return
+    }
     rectangles[key] = {
       x: positions[key].x,
       y: positions[key].y,
@@ -445,6 +455,10 @@ export function getNodeFrom ({ nodes, to, targetKey }) {
       }
     }
   }
+  const hiddenNodes = getHiddenNodes({ nodes })
+  if (hiddenNodes[ret]) {
+    ret = targetKey
+  }
   return ret
 }
 
@@ -468,26 +482,29 @@ export function getUpdatedNodesWhenChangeChildOrder ({ nodes, childKey, dif }) {
 
 export function getConnectors ({ nodes, positions, sizes }) {
   const ret = {}
+  const hiddenNodes = getHiddenNodes({ nodes })
   Object.keys(nodes).forEach(parentKey => {
     const parent = nodes[parentKey]
     const parentPosition = positions[parentKey]
     const parentSize = sizes[parentKey]
     parent.children.forEach(childKey => {
-      const childPosition = positions[childKey]
-      const childSize = sizes[childKey]
-      if (parentSize && childSize) {
-        const isChildLeftFromParent =
-          childPosition.x + childSize.width / 2 <
-          parentPosition.x + parentSize.width / 2
-        ret[`${parentKey}-${childKey}`] = {
-          sx: parentPosition.x + parentSize.width - CONNECTOR_INNTER_MARGIN_X,
-          sy: parentPosition.y + parentSize.height / 2,
-          ex: isChildLeftFromParent
-            ? childPosition.x + childSize.width
-            : childPosition.x,
-          ey: childPosition.y + childSize.height / 2,
-          from: parentKey,
-          to: childKey
+      if (!hiddenNodes[parentKey] && !hiddenNodes[childKey]) {
+        const childPosition = positions[childKey]
+        const childSize = sizes[childKey]
+        if (parentSize && childSize) {
+          const isChildLeftFromParent =
+            childPosition.x + childSize.width / 2 <
+            parentPosition.x + parentSize.width / 2
+          ret[`${parentKey}-${childKey}`] = {
+            sx: parentPosition.x + parentSize.width - CONNECTOR_INNTER_MARGIN_X,
+            sy: parentPosition.y + parentSize.height / 2,
+            ex: isChildLeftFromParent
+              ? childPosition.x + childSize.width
+              : childPosition.x,
+            ey: childPosition.y + childSize.height / 2,
+            from: parentKey,
+            to: childKey
+          }
         }
       }
     })
@@ -497,27 +514,31 @@ export function getConnectors ({ nodes, positions, sizes }) {
 
 export function getDependencyConnectors ({ nodes, positions, sizes }) {
   const ret = {}
+  const hiddenNodes = getHiddenNodes({ nodes })
   Object.keys(nodes).forEach(toKey => {
     const to = nodes[toKey]
-    const toPosition = positions[toKey]
-    const toSize = sizes[toKey]
-    Object.keys(to.dependencies).forEach(fromKey => {
-      const to = nodes[toKey]
-      if (to) {
-        const fromPosition = positions[fromKey]
-        const fromSize = sizes[fromKey]
-        if (fromSize && toSize) {
-          ret[`depend_${fromKey}-${toKey}`] = {
-            sx: fromPosition.x + fromSize.width,
-            sy: fromPosition.y + fromSize.height / 2,
-            ex: toPosition.x,
-            ey: toPosition.y + toSize.height / 2,
-            from: fromKey,
-            to: toKey
+    if (!hiddenNodes[toKey]) {
+      const toPosition = positions[toKey]
+      const toSize = sizes[toKey]
+      Object.keys(to.dependencies).forEach(fromKey => {
+        if (!hiddenNodes[fromKey]) {
+          if (to) {
+            const fromPosition = positions[fromKey]
+            const fromSize = sizes[fromKey]
+            if (fromSize && toSize) {
+              ret[`depend_${fromKey}-${toKey}`] = {
+                sx: fromPosition.x + fromSize.width,
+                sy: fromPosition.y + fromSize.height / 2,
+                ex: toPosition.x,
+                ey: toPosition.y + toSize.height / 2,
+                from: fromKey,
+                to: toKey
+              }
+            }
           }
         }
-      }
-    })
+      })
+    }
   })
   return ret
 }
@@ -664,6 +685,20 @@ export function rescueConflict ({ nodes }) {
       children,
       dependencies
     })
+    return p
+  }, {})
+}
+
+export function getHiddenNodes ({ nodes }) {
+  return Object.keys(nodes).reduce((p, key) => {
+    const node = nodes[key]
+    // ignore if this node is hidden already
+    if (!p[key] && node.closed) {
+      const familyKeys = getFamilyKeys({ nodes, parentKey: key })
+      for (let childKey of familyKeys) {
+        p[childKey] = true
+      }
+    }
     return p
   }, {})
 }

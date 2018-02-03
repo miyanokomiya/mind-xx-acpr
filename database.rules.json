@@ -134,7 +134,8 @@
         "color": {
           ".validate": "newData.isString()"
         },
-        "dependencies": {}
+        "dependencies": {},
+        "closed": false
       }
     },
 

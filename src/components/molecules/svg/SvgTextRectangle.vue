@@ -1,11 +1,22 @@
 <template>
 <g>
+  <g v-if="closed">
+    <!-- <circle :cx="x + width + countCircleRadius / 2" :cy="y" :r="countCircleRadius" fill="#444"/> -->
+    <ellipse :cx="x + width + countCircleRadius / 2" :cy="y" :rx="Math.max(countCircleRadius, countFontSize)" :ry="countFontSize" fill="#444"/>
+    <SvgText
+      :text="`${hiddenFamilyCount}`"
+      :x="x + width + 1"
+      :y="y + 3.5"
+      :font-size="countFontSize"
+      fill="white"
+    />
+  </g>
   <SvgRectangle
     :x="x"
     :y="y"
     :rx="3"
     :ry="3"
-    :width="textWidth"
+    :width="width"
     :height="height"
     :stroke-width="strokeWidth"
     :stroke="stroke"
@@ -77,6 +88,10 @@ export default {
     textFill: {
       type: String,
       default: 'black'
+    },
+    hiddenFamilyCount: {
+      type: Number,
+      default: 0
     }
   },
   computed: {
@@ -100,6 +115,18 @@ export default {
     },
     textPaddingX () {
       return 5
+    },
+    closed () {
+      return this.hiddenFamilyCount > 0
+    },
+    countLength () {
+      return `${this.hiddenFamilyCount}`.length
+    },
+    countFontSize () {
+      return this.fontSize
+    },
+    countCircleRadius () {
+      return 4 + this.countFontSize * 0.5 * this.countLength
     }
   },
   watch: {

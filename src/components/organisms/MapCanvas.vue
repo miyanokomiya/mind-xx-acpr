@@ -94,6 +94,7 @@
         :stroke="getStrokeColor(key)"
         :fill="node.backgroundColor"
         :textFill="node.color"
+        :hiddenFamilyCount="closedNodeFamilyCounts[key]"
         @calcSize="size => calcSize({key, size})"
         @mousedown.native.prevent="e => canWrite ? ($isMobile.any ? '' : nodeCursorDown(e, key)) : ''"
         @mouseup.native.prevent="e => canWrite ? ($isMobile.any ?  '' : nodeCursorUp(key, {shift: e.shiftKey})) : ''"
@@ -112,6 +113,7 @@
         :stroke="selectedNodes[key] ? 'blue' : 'black'"
         :fill="nodes[key].backgroundColor"
         :textFill="nodes[key].color"
+        :hiddenFamilyCount="closedNodeFamilyCounts[key]"        
       />
     </SvgCanvas>
   </div>
@@ -130,6 +132,27 @@
       @undo="$emit('undo')"
       @redo="$emit('redo')"
     />
+  </div>
+  <div class="fix-left-box"
+    v-if="editMenuTargetNode && editMenuTargetNode.children.length > 0"
+    :style="{
+      left: `${fixLeftBoxPosition.x}px`,
+      top: `${fixLeftBoxPosition.y}px`
+    }"
+    @mousewheel.prevent="e => $isMobile.any ? '' : mousewheel(e)"
+  >
+    <v-btn icon small outline color="black" class="fix-left-item"
+      v-if="editMenuTargetNode.closed"
+      @click="openNode(editMenuTarget)"
+    >
+      <v-icon>arrow_drop_down</v-icon>
+    </v-btn>
+    <v-btn icon small outline color="black" class="fix-left-item"
+      v-else
+      @click="closeNode(editMenuTarget)"
+    >
+      <v-icon>arrow_drop_up</v-icon>
+    </v-btn>
   </div>
   <FloatTextInput
     ref="floatTextInput"
@@ -179,12 +202,14 @@ import {
   getUpdatedNodesWhenCreateBrotherdNode,
   getUpdatedNodesWhenFitClosestParent,
   getParentKey,
+  getFamilyKeys,
   getNearestFamilyKey,
   getNodeFrom,
   getUpdatedNodesWhenChangeChildOrder,
   getConnectors,
   getDependencyConnectors,
-  getBetterConnector
+  getBetterConnector,
+  getHiddenNodes
 } from '@/utils/model'
 import { getCoveredRectangle, isCoveredRectangle } from '@/utils/geometry'
 import * as canvasUtils from '@/utils/canvas'
@@ -325,6 +350,9 @@ export default {
     editTextTargetNode () {
       return this.nodes[this.editTextTarget]
     },
+    editMenuTargetNode () {
+      return this.nodes[this.editMenuTarget]
+    },
     editDependencyTarget () {
       return this.mode === CANVAS_MODE.DEPENDENCY ? this.editMenuTarget : null
     },
@@ -340,6 +368,30 @@ export default {
         return this.getFloatMenuPosition(this.editMenuTarget, 80, this.floatEditMenuWidth)
       } else {
         return { x: 0, y: 0 }
+      }
+    },
+    editTargetPosition () {
+      const key = this.editMenuTarget
+      if (key) {
+        const position = this.nodePositions[key]
+        const x = (position.x - this.x) * this.scale
+        const y = (position.y - this.y) * this.scale
+        return { x, y }
+      } else {
+        return null
+      }
+    },
+    fixLeftBoxPosition () {
+      const key = this.editMenuTarget
+      if (key) {
+        const size = this.nodeSizes[key]
+        const position = this.editTargetPosition
+        return {
+          x: position.x - 20,
+          y: position.y - 28 / 2 + size.height / 2 * this.scale
+        }
+      } else {
+        return null
       }
     },
     nodePositions () {
@@ -393,9 +445,18 @@ export default {
       })
     },
     rectangleCoveringAllNode () {
+      const positions = {}
+      const sizes = {}
+      Object.keys(this.nodes).forEach(key => {
+        // remove hidden nodes
+        if (!this.hiddenNodes[key]) {
+          positions[key] = this.nodePositions[key]
+          sizes[key] = this.nodeSizes[key]
+        }
+      })
       const coveredRec = getCoveredRectangle({
-        positions: this.nodePositions,
-        sizes: this.nodeSizes
+        positions,
+        sizes
       })
       const max = Math.max(coveredRec.width, coveredRec.height)
       // TODO brush better margin
@@ -423,13 +484,15 @@ export default {
           // The node that has not been calculated its size and position should be rendered and calc them.
           p[key] = true
         } else {
-          // If the sizes of nodes that are not rendered are changed they do not reflect until they are rendered.
-          const left = position.x
-          const right = left + size.width
-          const top = position.y
-          const bottom = top + size.height
-          if (this.isInViewBox({ left, right, top, bottom })) {
-            p[key] = true
+          if (!this.hiddenNodes[key]) {
+            // If the sizes of nodes that are not rendered are changed they do not reflect until they are rendered.
+            const left = position.x
+            const right = left + size.width
+            const top = position.y
+            const bottom = top + size.height
+            if (this.isInViewBox({ left, right, top, bottom })) {
+              p[key] = true
+            }
           }
         }
         return p
@@ -444,6 +507,19 @@ export default {
         const bottom = Math.max(connector.sy, connector.ey)
         if (this.isInViewBox({ left, right, top, bottom })) {
           p[key] = true
+        }
+        return p
+      }, {})
+    },
+    hiddenNodes () {
+      return getHiddenNodes({ nodes: this.nodes })
+    },
+    closedNodeFamilyCounts () {
+      return Object.keys(this.nodes).reduce((p, key) => {
+        const node = this.nodes[key]
+        if (node.closed) {
+          const familyKeys = getFamilyKeys({ nodes: this.nodes, parentKey: key })
+          p[key] = familyKeys.length
         }
         return p
       }, {})
@@ -888,6 +964,22 @@ export default {
         }
         this.$emit('updateNodes', { [from]: updated })
       }
+    },
+    openNode (key) {
+      const node = this.nodes[key]
+      this.$emit('updateNodes', { [key]: {
+        ...node,
+        closed: false
+      } })
+    },
+    closeNode (key) {
+      // clear other selections
+      this.selectNode(key)
+      const node = this.nodes[key]
+      this.$emit('updateNodes', { [key]: {
+        ...node,
+        closed: true
+      } })
     }
   }
 }
@@ -935,6 +1027,17 @@ export default {
   }
   .history-tool {
     right: 6px;
+  }
+  .fix-left-box {
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: white;
+
+    .fix-left-item {
+      margin: 0;
+    }
   }
 }
 </style>
