@@ -133,27 +133,15 @@
       @redo="$emit('redo')"
     />
   </div>
-  <div class="fix-left-box"
-    v-if="editMenuTargetNode && editMenuTargetNode.children.length > 0"
-    :style="{
-      left: `${fixLeftBoxPosition.x}px`,
-      top: `${fixLeftBoxPosition.y}px`
-    }"
+  <ToggleCloseButton
+    v-if="showEditMenu && editMenuTargetNode.children.length > 0"
+    :x="fixLeftBoxPosition.x"
+    :y="fixLeftBoxPosition.y"
+    :closed="editMenuTargetNode.closed"
+    @open="openNode(editMenuTarget)"
+    @close="closeNode(editMenuTarget)"
     @mousewheel.prevent="e => $isMobile.any ? '' : mousewheel(e)"
-  >
-    <v-btn icon small outline color="black" class="fix-left-item"
-      v-if="editMenuTargetNode.closed"
-      @click="openNode(editMenuTarget)"
-    >
-      <v-icon>arrow_drop_down</v-icon>
-    </v-btn>
-    <v-btn icon small outline color="black" class="fix-left-item"
-      v-else
-      @click="closeNode(editMenuTarget)"
-    >
-      <v-icon>arrow_drop_up</v-icon>
-    </v-btn>
-  </div>
+  />
   <FloatTextInput
     ref="floatTextInput"
     v-if="showTextInput"
@@ -223,6 +211,7 @@ import FloatTextInput from '@/components/molecules/FloatTextInput'
 import FloatEditMenu from '@/components/molecules/FloatEditMenu'
 import ScaleToolBox from '@/components/molecules/ScaleToolBox'
 import HistoryToolBox from '@/components/molecules/HistoryToolBox'
+import ToggleCloseButton from '@/components/molecules/ToggleCloseButton'
 
 export default {
   name: 'MapCanvas',
@@ -235,7 +224,8 @@ export default {
     FloatTextInput,
     FloatEditMenu,
     ScaleToolBox,
-    HistoryToolBox
+    HistoryToolBox,
+    ToggleCloseButton
   },
   data: () => ({
     x: 0,
@@ -1027,17 +1017,6 @@ export default {
   }
   .history-tool {
     right: 6px;
-  }
-  .fix-left-box {
-    position: absolute;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background-color: white;
-
-    .fix-left-item {
-      margin: 0;
-    }
   }
 }
 </style>
