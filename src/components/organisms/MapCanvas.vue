@@ -445,9 +445,18 @@ export default {
       })
     },
     rectangleCoveringAllNode () {
+      const positions = {}
+      const sizes = {}
+      Object.keys(this.nodes).forEach(key => {
+        // remove hidden nodes
+        if (!this.hiddenNodes[key]) {
+          positions[key] = this.nodePositions[key]
+          sizes[key] = this.nodeSizes[key]
+        }
+      })
       const coveredRec = getCoveredRectangle({
-        positions: this.nodePositions,
-        sizes: this.nodeSizes
+        positions,
+        sizes
       })
       const max = Math.max(coveredRec.width, coveredRec.height)
       // TODO brush better margin
