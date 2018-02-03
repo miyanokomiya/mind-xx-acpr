@@ -94,7 +94,7 @@
         :stroke="getStrokeColor(key)"
         :fill="node.backgroundColor"
         :textFill="node.color"
-        :closed="nodes[key].closed"
+        :hiddenFamilyCount="closedNodeFamilyCounts[key]"
         @calcSize="size => calcSize({key, size})"
         @mousedown.native.prevent="e => canWrite ? ($isMobile.any ? '' : nodeCursorDown(e, key)) : ''"
         @mouseup.native.prevent="e => canWrite ? ($isMobile.any ?  '' : nodeCursorUp(key, {shift: e.shiftKey})) : ''"
@@ -113,7 +113,7 @@
         :stroke="selectedNodes[key] ? 'blue' : 'black'"
         :fill="nodes[key].backgroundColor"
         :textFill="nodes[key].color"
-        :closed="nodes[key].closed"
+        :hiddenFamilyCount="closedNodeFamilyCounts[key]"        
       />
     </SvgCanvas>
   </div>
@@ -202,6 +202,7 @@ import {
   getUpdatedNodesWhenCreateBrotherdNode,
   getUpdatedNodesWhenFitClosestParent,
   getParentKey,
+  getFamilyKeys,
   getNearestFamilyKey,
   getNodeFrom,
   getUpdatedNodesWhenChangeChildOrder,
@@ -503,6 +504,16 @@ export default {
     },
     hiddenNodes () {
       return getHiddenNodes({ nodes: this.nodes })
+    },
+    closedNodeFamilyCounts () {
+      return Object.keys(this.nodes).reduce((p, key) => {
+        const node = this.nodes[key]
+        if (node.closed) {
+          const familyKeys = getFamilyKeys({ nodes: this.nodes, parentKey: key })
+          p[key] = familyKeys.length
+        }
+        return p
+      }, {})
     }
   },
   watch: {
