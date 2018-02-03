@@ -135,7 +135,9 @@
           ".validate": "newData.isString()"
         },
         "dependencies": {},
-        "closed": false
+        "closed": {
+          ".validate": "newData.isBoolean()"
+        }
       }
     },
 
