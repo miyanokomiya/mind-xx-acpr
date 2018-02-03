@@ -131,6 +131,26 @@
       @redo="$emit('redo')"
     />
   </div>
+  <div class="fix-left-box"
+    v-if="editMenuTargetNode"
+    :style="{
+      left: `${editTargetPosition.x - 22}px`,
+      top: `${editTargetPosition.y - 4}px`
+    }"
+  >
+    <v-btn icon small outline color="black" class="fix-left-item"
+      v-if="editMenuTargetNode.closed"
+      @click="openNode(editMenuTarget)"
+    >
+      <v-icon>arrow_drop_down</v-icon>
+    </v-btn>
+    <v-btn icon small outline color="black" class="fix-left-item"
+      v-else
+      @click="closeNode(editMenuTarget)"
+    >
+      <v-icon>arrow_drop_up</v-icon>
+    </v-btn>
+  </div>
   <FloatTextInput
     ref="floatTextInput"
     v-if="showTextInput"
@@ -184,7 +204,8 @@ import {
   getUpdatedNodesWhenChangeChildOrder,
   getConnectors,
   getDependencyConnectors,
-  getBetterConnector
+  getBetterConnector,
+  getHiddenNodes
 } from '@/utils/model'
 import { getCoveredRectangle, isCoveredRectangle } from '@/utils/geometry'
 import * as canvasUtils from '@/utils/canvas'
@@ -325,6 +346,9 @@ export default {
     editTextTargetNode () {
       return this.nodes[this.editTextTarget]
     },
+    editMenuTargetNode () {
+      return this.nodes[this.editMenuTarget]
+    },
     editDependencyTarget () {
       return this.mode === CANVAS_MODE.DEPENDENCY ? this.editMenuTarget : null
     },
@@ -340,6 +364,17 @@ export default {
         return this.getFloatMenuPosition(this.editMenuTarget, 80, this.floatEditMenuWidth)
       } else {
         return { x: 0, y: 0 }
+      }
+    },
+    editTargetPosition () {
+      const key = this.editMenuTarget
+      if (key) {
+        const position = this.nodePositions[key]
+        const x = (position.x - this.x) * this.scale
+        const y = (position.y - this.y) * this.scale
+        return { x, y }
+      } else {
+        return null
       }
     },
     nodePositions () {
@@ -423,13 +458,15 @@ export default {
           // The node that has not been calculated its size and position should be rendered and calc them.
           p[key] = true
         } else {
-          // If the sizes of nodes that are not rendered are changed they do not reflect until they are rendered.
-          const left = position.x
-          const right = left + size.width
-          const top = position.y
-          const bottom = top + size.height
-          if (this.isInViewBox({ left, right, top, bottom })) {
-            p[key] = true
+          if (!this.hiddenNodes[key]) {
+            // If the sizes of nodes that are not rendered are changed they do not reflect until they are rendered.
+            const left = position.x
+            const right = left + size.width
+            const top = position.y
+            const bottom = top + size.height
+            if (this.isInViewBox({ left, right, top, bottom })) {
+              p[key] = true
+            }
           }
         }
         return p
@@ -447,6 +484,9 @@ export default {
         }
         return p
       }, {})
+    },
+    hiddenNodes () {
+      return getHiddenNodes({ nodes: this.nodes })
     }
   },
   watch: {
@@ -888,6 +928,22 @@ export default {
         }
         this.$emit('updateNodes', { [from]: updated })
       }
+    },
+    openNode (key) {
+      const node = this.nodes[key]
+      this.$emit('updateNodes', { [key]: {
+        ...node,
+        closed: false
+      } })
+    },
+    closeNode (key) {
+      // clear other selections
+      this.selectNode(key)
+      const node = this.nodes[key]
+      this.$emit('updateNodes', { [key]: {
+        ...node,
+        closed: true
+      } })
     }
   }
 }
@@ -935,6 +991,17 @@ export default {
   }
   .history-tool {
     right: 6px;
+  }
+  .fix-left-box {
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: white;
+
+    .fix-left-item {
+      margin: 0;
+    }
   }
 }
 </style>

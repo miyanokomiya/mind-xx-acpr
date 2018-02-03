@@ -10,8 +10,8 @@ storiesOf('molecules/FloatEditMenu', module).add('story', () => {
     max: 500,
     step: 1
   }
-  const x = number('x', 0, options1)
-  const y = number('y', 0, options1)
+  const x = number('x', 110, options1)
+  const y = number('y', 110, options1)
 
   return {
     components: { FloatEditMenu },

@@ -14,7 +14,8 @@ describe('utils/model', () => {
       children: ['a', 'b'],
       backgroundColor: '#B3E5FC',
       color: '#000000',
-      dependencies: { a: true }
+      dependencies: { a: true },
+      closed: false
     })
     it('should return true if two nodes are same', () => {
       const n2 = modelUtils.createNode({
@@ -22,7 +23,8 @@ describe('utils/model', () => {
         children: ['a', 'b'],
         backgroundColor: '#B3E5FC',
         color: '#000000',
-        dependencies: { a: true }
+        dependencies: { a: true },
+        closed: false
       })
       const res = modelUtils.isSameNode(n1, n2)
       expect(res).toBe(true)
@@ -259,6 +261,41 @@ describe('utils/model', () => {
         a: {
           width: 10,
           height: 100,
+          othersHeight: 0
+        }
+      })
+    })
+    it('should calc correct size of a node that is closed', () => {
+      const a = modelUtils.createNode({
+        children: ['b'],
+        closed: true
+      })
+      const b = modelUtils.createNode()
+      const nodes = {
+        a,
+        b
+      }
+      const sizes = {
+        a: {
+          width: 10,
+          height: 100
+        },
+        b: {
+          width: 20,
+          height: 200
+        }
+      }
+      const familySizes = {}
+      modelUtils.calcFamilySizes({ nodes, sizes, familySizes, parentKey: 'a' })
+      expect(familySizes).toEqual({
+        a: {
+          width: 10 + 20 + NODE_MARGIN_X,
+          height: 100,
+          othersHeight: 100
+        },
+        b: {
+          width: 20,
+          height: 200,
           othersHeight: 0
         }
       })
@@ -764,12 +801,6 @@ describe('utils/model', () => {
     })
   })
 
-  // describe('getUpdatedNodesWhenFitClosestParent', () => {
-  //   it('', () => {
-
-  //   })
-  // })
-
   describe('getNodeFrom', () => {
     const a = modelUtils.createNode({
       children: ['b']
@@ -860,6 +891,19 @@ describe('utils/model', () => {
         targetKey: 'c'
       })
       expect(res).toBe('e')
+    })
+    it('should get a key of the target if the to-node is hidden', () => {
+      const b = modelUtils.createNode({
+        children: ['c', 'd', 'e'],
+        closed: true
+      })
+      const nodes = { a, b, c, d, e }
+      const res = modelUtils.getNodeFrom({
+        nodes,
+        to: 'right',
+        targetKey: 'b'
+      })
+      expect(res).toBe('b')
     })
   })
 
@@ -979,6 +1023,40 @@ describe('utils/model', () => {
         }
       })
     })
+    it('should ommit connectors of hidden nodes', () => {
+      const a = modelUtils.createNode({
+        children: ['b', 'c']
+      })
+      const b = modelUtils.createNode({
+        children: ['d'],
+        closed: true
+      })
+      const d = modelUtils.createNode({
+        children: ['e'],
+        closed: true
+      })
+      const e = modelUtils.createNode()
+      const nodes = { a, b, c, d, e }
+      const res = modelUtils.getConnectors({ nodes, positions, sizes })
+      expect(res).toEqual({
+        'a-b': {
+          sx: 10 - CONNECTOR_INNTER_MARGIN_X,
+          sy: 10,
+          ex: 50,
+          ey: 75,
+          from: 'a',
+          to: 'b'
+        },
+        'a-c': {
+          sx: 10 - CONNECTOR_INNTER_MARGIN_X,
+          sy: 10,
+          ex: 0,
+          ey: -40,
+          from: 'a',
+          to: 'c'
+        }
+      })
+    })
   })
 
   describe('getDependencyConnectors', () => {
@@ -1007,7 +1085,7 @@ describe('utils/model', () => {
       c: { width: 50, height: 20 },
       d: { width: 40, height: 40 }
     }
-    it('should get correct connectors', () => {
+    it('should get correct dependent connectors', () => {
       const res = modelUtils.getDependencyConnectors({
         nodes,
         positions,
@@ -1023,6 +1101,24 @@ describe('utils/model', () => {
           to: 'd'
         }
       })
+    })
+    it('should ommit dependent connectors of hidden nodes', () => {
+      const b = modelUtils.createNode({
+        children: ['c', 'd'],
+        closed: true
+      })
+      const d = modelUtils.createNode({
+        dependencies: {
+          a: true
+        }
+      })
+      const nodes = { a, b, c, d }
+      const res = modelUtils.getDependencyConnectors({
+        nodes,
+        positions,
+        sizes
+      })
+      expect(res).toEqual({})
     })
   })
 
@@ -1298,6 +1394,48 @@ describe('utils/model', () => {
         b: modelUtils.createNode({
           children: []
         })
+      })
+    })
+  })
+  describe('getHiddenNodes', () => {
+    it('should get currect hidden nodes having children', () => {
+      const nodes = {
+        [ROOT_NODE]: modelUtils.createNode({
+          children: ['a', 'b']
+        }),
+        a: modelUtils.createNode({
+          children: ['c'],
+          closed: true
+        }),
+        b: modelUtils.createNode(),
+        c: modelUtils.createNode()
+      }
+      const res = modelUtils.getHiddenNodes({
+        nodes
+      })
+      expect(res).toEqual({
+        c: true
+      })
+    })
+    it('should get currect hidden nodes having grandsons', () => {
+      const nodes = {
+        [ROOT_NODE]: modelUtils.createNode({
+          children: ['a', 'b'],
+          closed: true
+        }),
+        a: modelUtils.createNode({
+          children: ['c']
+        }),
+        b: modelUtils.createNode(),
+        c: modelUtils.createNode()
+      }
+      const res = modelUtils.getHiddenNodes({
+        nodes
+      })
+      expect(res).toEqual({
+        a: true,
+        b: true,
+        c: true
       })
     })
   })
