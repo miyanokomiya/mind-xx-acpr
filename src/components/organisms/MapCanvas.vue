@@ -140,13 +140,14 @@
     :closed="editMenuTargetNode.closed"
     @open="openNode(editMenuTarget)"
     @close="closeNode(editMenuTarget)"
-    @mousewheel.prevent="e => $isMobile.any ? '' : mousewheel(e)"
+    @mousewheel.native.prevent="e => $isMobile.any ? '' : mousewheel(e)"
   />
   <FloatButton
     v-if="showEditMenu"
     :x="fixTopBoxPosition.x - fixButtonMargin"
     :y="fixTopBoxPosition.y"
     @click="deleteNode"
+    @mousewheel.native.prevent="e => $isMobile.any ? '' : mousewheel(e)"
   >
     <v-icon>delete</v-icon>
   </FloatButton>
@@ -156,6 +157,7 @@
     :y="fixTopBoxPosition.y"
     color="indigo"
     @click="readyEditText(editMenuTarget)"
+    @mousewheel.native.prevent="e => $isMobile.any ? '' : mousewheel(e)"
   >
     <v-icon>edit</v-icon>
   </FloatButton>
@@ -165,6 +167,7 @@
     :y="fixBottomBoxPosition.y"
     :color="mode === CANVAS_MODE.DEPENDENCY ? 'deep-orange' : 'indigo'"
     @click="editDependency"
+    @mousewheel.native.prevent="e => $isMobile.any ? '' : mousewheel(e)"
   >
     <v-icon>call_missed</v-icon>
   </FloatButton>
@@ -174,6 +177,7 @@
     :y="fixBottomBoxPosition.y"
     color="indigo"
     @click="createNode(true)"
+    @mousewheel.native.prevent="e => $isMobile.any ? '' : mousewheel(e)"
   >
     <v-icon>add</v-icon>
   </FloatButton>
@@ -183,6 +187,7 @@
     :y="fixBottomBoxPosition.y"
     color="indigo"
     @click="createNode(false)"
+    @mousewheel.native.prevent="e => $isMobile.any ? '' : mousewheel(e)"
   >
     <v-icon>subdirectory_arrow_right</v-icon>
   </FloatButton>
