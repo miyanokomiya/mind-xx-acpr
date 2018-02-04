@@ -961,19 +961,21 @@ export default {
     },
     selectRectangle (rectangle) {
       const selectedNodes = Object.keys(this.nodes).reduce((p, c) => {
-        const rec = {
-          x: this.nodePositions[c].x,
-          y: this.nodePositions[c].y,
-          width: this.nodeSizes[c].width,
-          height: this.nodeSizes[c].height
-        }
-        const selected = isCoveredRectangle({
-          outer: rectangle,
-          inner: rec
-        })
-        if (selected) {
-          p[c] = true
-          this.editMenuTarget = c
+        if (!this.hiddenNodes[c]) {
+          const rec = {
+            x: this.nodePositions[c].x,
+            y: this.nodePositions[c].y,
+            width: this.nodeSizes[c].width,
+            height: this.nodeSizes[c].height
+          }
+          const selected = isCoveredRectangle({
+            outer: rectangle,
+            inner: rec
+          })
+          if (selected) {
+            p[c] = true
+            this.editMenuTarget = c
+          }
         }
         return p
       }, {})

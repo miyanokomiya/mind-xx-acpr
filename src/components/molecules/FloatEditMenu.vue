@@ -85,8 +85,8 @@ export default {
 
   .list-item {
     margin: 2px 6px;
-    width: 36px;
-    height: 36px;
+    width: 28px;
+    height: 28px;
   }
 }
 .button-box {
