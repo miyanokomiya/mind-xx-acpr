@@ -860,7 +860,7 @@ export default {
         this.$emit('updateNodes', {
           [targetKey]: next
         })
-        this.editMenuTarget = targetKey
+        this.selectNode(targetKey)
         this.editTextTarget = null
         this.editingText = ''
         this.$refs.svgCanvasWrapper.focus()
