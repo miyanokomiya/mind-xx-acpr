@@ -1,28 +1,6 @@
 <template>
-<div
-  class="float-edit-menu-wrapper"
-  :class="{mobile: $isMobile.any}"
-  :style="{top: `${_y}px`, left: `${_x}px`, width: width}"
->
+<div class="float-edit-menu-wrapper">
   <div v-if="!colorMode" class="button-box">
-    <v-btn icon small outline color="indigo" class="list-item"
-      v-if="!multiSelect"
-      @click="$emit('editText')"
-    >
-      <v-icon>edit</v-icon>
-    </v-btn>
-    <v-btn icon small outline color="indigo" class="list-item"
-      v-if="!root && !multiSelect"
-      @click="$emit('addBrother')"
-    >
-      <v-icon>add</v-icon>
-    </v-btn>
-    <v-btn icon small outline color="indigo" class="list-item"
-      v-if="!multiSelect"
-      @click="$emit('addChild')"
-    >
-      <v-icon>subdirectory_arrow_right</v-icon>
-    </v-btn>
     <v-btn icon small outline :color="modeDependency ? 'red lighten-2' : 'indigo'" class="list-item"
       v-if="!multiSelect"
       @click="$emit('editDependency')"
@@ -74,14 +52,6 @@ export default {
     colorMode: false
   }),
   props: {
-    x: {
-      type: Number,
-      default: 0
-    },
-    y: {
-      type: Number,
-      default: 0
-    },
     root: {
       type: Boolean,
       default: false
@@ -106,15 +76,6 @@ export default {
     }
   },
   computed: {
-    _x () {
-      return this.$isMobile.any ? 0 : this.x
-    },
-    _y () {
-      return this.$isMobile.any ? 0 : this.y
-    },
-    width () {
-      return this.$isMobile.any ? '100%' : ''
-    },
     modeDependency () {
       return this.mode === CANVAS_MODE.DEPENDENCY
     },
@@ -176,17 +137,14 @@ export default {
 <style lang="scss" scoped>
 .float-edit-menu-wrapper {
   position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
   border: 1px solid black;
   border-radius: 4px;
   background-color: #fff;
   padding: 0 3px;
 
-  .list-item {
-    margin-left: 3px;
-    margin-right: 3px;
-  }
-}
-.float-edit-menu-wrapper.mobile {
   .list-item {
     margin: 2px 6px;
     width: 36px;

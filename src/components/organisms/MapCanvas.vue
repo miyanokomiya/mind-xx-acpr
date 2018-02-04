@@ -1,6 +1,8 @@
 <template>
 <div
   class="map-canvas-wrapper"
+  @mouseup="e => $isMobile.any ? '' : canvasCursorUp()"
+  @touchend="e => $isMobile.any ? canvasCursorUp() : ''"
 >
   <!-- this setting, @mousewheel.prevent, make a event of mousewheel in the canvas better on Safari -->
   <div
@@ -37,9 +39,7 @@
       @selectRectangle="selectRectangle"
       @click="clearSelect"
       @mousemove.native="e => $isMobile.any ? '' : canvasCursorMove(e)"
-      @mouseup.native="e => $isMobile.any ? '' : canvasCursorUp(e)"
       @touchmove.native="e => $isMobile.any ? canvasCursorMove(e) : ''"
-      @touchend.native="e => $isMobile.any ? canvasCursorUp(e) : ''"
     >
       <!-- connectors of dependencies -->
       <SvgBridgeConnector
@@ -142,12 +142,37 @@
     @close="closeNode(editMenuTarget)"
     @mousewheel.prevent="e => $isMobile.any ? '' : mousewheel(e)"
   />
+  <FloatButton
+    v-if="showEditMenu"
+    :x="fixTopBoxPosition.x"
+    :y="fixTopBoxPosition.y"
+    color="indigo"
+    @click="readyEditText(editMenuTarget)"
+  >
+    <v-icon>edit</v-icon>
+  </FloatButton>
+  <FloatButton
+    v-if="showEditMenu"
+    :x="fixBottomBoxPosition.x + 32"
+    :y="fixBottomBoxPosition.y"
+    color="indigo"
+    @click="createNode(false)"
+  >
+    <v-icon>subdirectory_arrow_right</v-icon>
+  </FloatButton>
+  <FloatButton
+    v-if="showEditMenu && editMenuTarget !== ROOT_NODE"
+    :x="fixBottomBoxPosition.x"
+    :y="fixBottomBoxPosition.y"
+    color="indigo"
+    @click="createNode(true)"
+  >
+    <v-icon>add</v-icon>
+  </FloatButton>
   <FloatTextInput
     ref="floatTextInput"
     v-if="showTextInput"
     v-model="editingText"
-    :x="editTextTargetPosition.x"
-    :y="editTextTargetPosition.y"
     :targetKey="editTextTarget"
     @done="doneEditText"
     @mousewheel.native.prevent="e => $isMobile.any ? '' : mousewheel(e)"
@@ -156,14 +181,9 @@
     ref="floatEditMenu"
     v-if="showEditMenu"
     :root="editMenuTarget === ROOT_NODE"
-    :x="editMenuTargetPosition.x"
-    :y="editMenuTargetPosition.y"
     :mode="mode"
     :defaultNodeProps="defaultNodeProps"
     :multiSelect="isMultiSelect"
-    @editText="readyEditText(editMenuTarget)"
-    @addBrother="createNode(true)"
-    @addChild="createNode(false)"
     @editDependency="editDependency"
     @selectProp="prop => $emit('selectProp', prop)"
     @delete="deleteNode"
@@ -212,6 +232,7 @@ import FloatEditMenu from '@/components/molecules/FloatEditMenu'
 import ScaleToolBox from '@/components/molecules/ScaleToolBox'
 import HistoryToolBox from '@/components/molecules/HistoryToolBox'
 import ToggleCloseButton from '@/components/molecules/ToggleCloseButton'
+import FloatButton from '@/components/molecules/FloatButton'
 
 export default {
   name: 'MapCanvas',
@@ -225,7 +246,8 @@ export default {
     FloatEditMenu,
     ScaleToolBox,
     HistoryToolBox,
-    ToggleCloseButton
+    ToggleCloseButton,
+    FloatButton
   },
   data: () => ({
     x: 0,
@@ -346,20 +368,6 @@ export default {
     editDependencyTarget () {
       return this.mode === CANVAS_MODE.DEPENDENCY ? this.editMenuTarget : null
     },
-    editTextTargetPosition () {
-      if (this.editTextTarget) {
-        return this.getFloatMenuPosition(this.editTextTarget, 80, this.floatTextInputWidth)
-      } else {
-        return { x: 0, y: 0 }
-      }
-    },
-    editMenuTargetPosition () {
-      if (this.editMenuTarget) {
-        return this.getFloatMenuPosition(this.editMenuTarget, 80, this.floatEditMenuWidth)
-      } else {
-        return { x: 0, y: 0 }
-      }
-    },
     editTargetPosition () {
       const key = this.editMenuTarget
       if (key) {
@@ -377,8 +385,47 @@ export default {
         const size = this.nodeSizes[key]
         const position = this.editTargetPosition
         return {
-          x: position.x - 20,
+          x: position.x - 19,
           y: position.y - 28 / 2 + size.height / 2 * this.scale
+        }
+      } else {
+        return null
+      }
+    },
+    fixTopBoxPosition () {
+      const key = this.editMenuTarget
+      if (key) {
+        const size = this.nodeSizes[key]
+        const position = this.editTargetPosition
+        return {
+          x: position.x - 2 + size.width / 2 * this.scale,
+          y: position.y - 29
+        }
+      } else {
+        return null
+      }
+    },
+    fixRightBoxPosition () {
+      const key = this.editMenuTarget
+      if (key) {
+        const size = this.nodeSizes[key]
+        const position = this.editTargetPosition
+        return {
+          x: position.x + 11 + size.width * this.scale,
+          y: position.y - 28 / 2 + size.height / 2 * this.scale
+        }
+      } else {
+        return null
+      }
+    },
+    fixBottomBoxPosition () {
+      const key = this.editMenuTarget
+      if (key) {
+        const size = this.nodeSizes[key]
+        const position = this.editTargetPosition
+        return {
+          x: position.x - 2 + size.width / 2 * this.scale,
+          y: position.y + 1 + size.height * this.scale
         }
       } else {
         return null
@@ -677,7 +724,10 @@ export default {
         }
       }
     },
-    canvasCursorUp (e) {
+    canvasCursorUp () {
+      if (this.$refs.svgCanvas) {
+        this.$refs.svgCanvas.canvasCursorUp()
+      }
       this.adjustParentWithMoving(true)
       this.beforeMoveP = null
       this.movingNodePositions = {}
@@ -892,24 +942,6 @@ export default {
     },
     mousewheel (e) {
       this.$refs.svgCanvas.canvasWheel(e)
-    },
-    getFloatMenuPosition (key, bottom, menuWidth) {
-      const position = this.nodePositions[key]
-      const size = this.nodeSizes[key]
-      const viewBottom = (this.viewRectangle.y + this.viewRectangle.height - this.y) * this.scale
-      const nodeViewY = (position.y - this.y) * this.scale
-      const nodeViewBottom = (position.y - this.y + size.height) * this.scale
-      let y = Math.min(nodeViewBottom, viewBottom - bottom) + 5
-      y = Math.max(y, nodeViewY)
-      const viewLeft = (this.viewRectangle.x - this.x) * this.scale
-      const nodeViewX = (position.x - this.x) * this.scale
-      const nodeViewRight = (position.x + size.width - this.x) * this.scale
-      // FIXME 8 is only a better number, padding-left of the canvas should be concerned in fact
-      let x = Math.max(nodeViewX, viewLeft + 20) + 8
-      x = Math.min(x, nodeViewRight)
-      x = Math.min(x, this.width - menuWidth - 6)
-      x = Math.max(x, nodeViewX - menuWidth)
-      return { x, y }
     },
     selectRectangle (rectangle) {
       const selectedNodes = Object.keys(this.nodes).reduce((p, c) => {

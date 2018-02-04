@@ -2,11 +2,11 @@
 <g>
   <g v-if="closed">
     <!-- <circle :cx="x + width + countCircleRadius / 2" :cy="y" :r="countCircleRadius" fill="#444"/> -->
-    <ellipse :cx="x + width + countCircleRadius / 2" :cy="y" :rx="Math.max(countCircleRadius, countFontSize)" :ry="countFontSize" fill="#444"/>
+    <ellipse :cx="x + width + countCircleRadius / 2" :cy="y + height / 2" :rx="rx" :ry="ry" fill="#444"/>
     <SvgText
       :text="`${hiddenFamilyCount}`"
       :x="x + width + 1"
-      :y="y + 3.5"
+      :y="y + height / 2 + 3.5"
       :font-size="countFontSize"
       fill="white"
     />
@@ -127,6 +127,12 @@ export default {
     },
     countCircleRadius () {
       return 4 + this.countFontSize * 0.5 * this.countLength
+    },
+    rx () {
+      return this.closed ? Math.max(this.countCircleRadius, this.countFontSize) : 0
+    },
+    ry () {
+      return this.closed ? this.fontSize : 0
     }
   },
   watch: {
