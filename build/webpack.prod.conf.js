@@ -76,7 +76,8 @@ const webpackConfig = merge(baseWebpackConfig, {
         // https://github.com/kangax/html-minifier#options-quick-reference
       },
       // necessary to consistently work with multiple chunks via CommonsChunkPlugin
-      chunksSortMode: 'dependency'
+      chunksSortMode: 'dependency',
+      appVersion: require('../package.json').version
     }),
     // keep module.id stable when vender modules does not change
     new webpack.HashedModuleIdsPlugin(),
@@ -115,7 +116,15 @@ const webpackConfig = merge(baseWebpackConfig, {
       {
         from: path.resolve(__dirname, '../static'),
         to: config.build.assetsSubDirectory,
-        ignore: ['.*']
+        ignore: ['.*', 'manifest.json']
+      },
+      {
+        from: path.resolve(__dirname, '../static/manifest.json'),
+        to:
+          config.build.assetsSubDirectory +
+          '/manifest.' +
+          require('../package.json').version +
+          '.json'
       }
     ])
   ]

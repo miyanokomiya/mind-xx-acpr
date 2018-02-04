@@ -53,7 +53,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       filename: 'index.html',
       template: 'index.html',
       inject: true,
-      appVersion: JSON.stringify(require('../package.json').version)
+      appVersion: require('../package.json').version
     })
   ]
 })
