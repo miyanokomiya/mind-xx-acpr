@@ -28,6 +28,9 @@ const methods = {
   },
   clearSelect () {
     this.selectedNodes = {}
+  },
+  selectProp (args) {
+    console.log('change props:', args)
   }
 }
 
@@ -55,6 +58,7 @@ storiesOf('organisms/MapCanvas', module)
             @createNode="createNode"
             @setSelectedNodes="setSelectedNodes"
             @clearSelect="clearSelect"
+            @selectProp="selectProp"
           />
         </div>
       </v-app>

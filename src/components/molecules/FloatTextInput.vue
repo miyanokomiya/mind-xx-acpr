@@ -1,9 +1,5 @@
 <template>
-<div
-  class="float-text-input-wrapper"
-  :class="{mobile: $isMobile.any}"
-  :style="{top: `${_y}px`, left: `${_x}px`, width: width}"
->
+<div class="float-text-input-wrapper">
   <v-text-field
     class="text-field"
     multi-line
@@ -27,14 +23,6 @@ export default {
       type: String,
       required: true
     },
-    x: {
-      type: Number,
-      default: 0
-    },
-    y: {
-      type: Number,
-      default: 0
-    },
     targetKey: {
       type: String,
       required: true
@@ -54,15 +42,6 @@ export default {
     },
     rows () {
       return 3
-    },
-    _x () {
-      return this.$isMobile.any ? 0 : this.x
-    },
-    _y () {
-      return this.$isMobile.any ? 0 : this.y
-    },
-    width () {
-      return this.$isMobile.any ? '100%' : '40%'
     }
   },
   methods: {
@@ -79,6 +58,9 @@ export default {
 <style lang="scss" scoped>
 .float-text-input-wrapper {
   position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
   border: 1px solid black;
   border-radius: 4px;
   background-color: #fff;

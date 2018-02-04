@@ -6,14 +6,14 @@
     @mousemove.prevent="e => $isMobile.any ? '' : canvasCursorMove(e)"
     @mousedown="e => $isMobile.any ? '' : canvasCursorDown(e)"
     @mousedown.self="e => $isMobile.any ? '' : canvasCursorDownSelf(e)"
-    @mouseup.self="e => $isMobile.any ? '' : canvasCursorUpSelf(e)"
-    @mouseup="e => $isMobile.any ? '' : canvasCursorUp(e)"
+    @mouseup.self="e => $isMobile.any ? '' : canvasCursorUpSelf()"
+    @mouseup="e => $isMobile.any ? '' : canvasCursorUp()"
     @mousewheel.prevent="e => $isMobile.any ? '' : canvasWheel(e)"
     @touchmove.prevent="e => $isMobile.any ? canvasCursorMove(e) : ''"
     @touchstart="e => $isMobile.any ? canvasCursorDown(e) : ''"
     @touchstart.self="e => $isMobile.any ? canvasCursorDownSelf(e) : ''"
     @touchend.self="e => $isMobile.any ? canvasCursorUpSelf(e) : ''"
-    @touchend="e => $isMobile.any ? canvasCursorUp(e) : ''"
+    @touchend="e => $isMobile.any ? canvasCursorUp() : ''"
   >
     <slot />
     <SvgRectangle
@@ -238,7 +238,7 @@ export default {
         }
       }
     },
-    canvasCursorUp (e) {
+    canvasCursorUp () {
       if (this.selectRectangle) {
         this.$emit('selectRectangle', this.selectRectangle)
       }
