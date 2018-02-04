@@ -144,7 +144,15 @@
   />
   <FloatButton
     v-if="showEditMenu"
-    :x="fixTopBoxPosition.x"
+    :x="fixTopBoxPosition.x - fixButtonMargin"
+    :y="fixTopBoxPosition.y"
+    @click="deleteNode"
+  >
+    <v-icon>delete</v-icon>
+  </FloatButton>
+  <FloatButton
+    v-if="showEditMenu"
+    :x="fixTopBoxPosition.x + fixButtonMargin"
     :y="fixTopBoxPosition.y"
     color="indigo"
     @click="readyEditText(editMenuTarget)"
@@ -153,12 +161,12 @@
   </FloatButton>
   <FloatButton
     v-if="showEditMenu"
-    :x="fixBottomBoxPosition.x + 32"
+    :x="fixBottomBoxPosition.x - fixButtonMargin"
     :y="fixBottomBoxPosition.y"
-    color="indigo"
-    @click="createNode(false)"
+    :color="mode === CANVAS_MODE.DEPENDENCY ? 'deep-orange' : 'indigo'"
+    @click="editDependency"
   >
-    <v-icon>subdirectory_arrow_right</v-icon>
+    <v-icon>call_missed</v-icon>
   </FloatButton>
   <FloatButton
     v-if="showEditMenu && editMenuTarget !== ROOT_NODE"
@@ -168,6 +176,15 @@
     @click="createNode(true)"
   >
     <v-icon>add</v-icon>
+  </FloatButton>
+  <FloatButton
+    v-if="showEditMenu"
+    :x="fixBottomBoxPosition.x + fixButtonMargin"
+    :y="fixBottomBoxPosition.y"
+    color="indigo"
+    @click="createNode(false)"
+  >
+    <v-icon>subdirectory_arrow_right</v-icon>
   </FloatButton>
   <FloatTextInput
     ref="floatTextInput"
@@ -189,6 +206,14 @@
     @delete="deleteNode"
     @mousewheel.native.prevent="e => $isMobile.any ? '' : mousewheel(e)"
   />
+  <v-snackbar
+    bottom
+    right
+    :timeout="2000"
+    v-model="comfirmDelete"
+  >
+    One more click to delete.
+  </v-snackbar>
 </div>
 </template>
 
@@ -267,7 +292,8 @@ export default {
     mode: CANVAS_MODE.NORMAL,
 
     adjustParentWithMovingTimer: null,
-    insertInformationOfMovingNodes: null
+    insertInformationOfMovingNodes: null,
+    comfirmDelete: false
   }),
   props: {
     width: {
@@ -312,18 +338,13 @@ export default {
     })
   },
   computed: {
-    ROOT_NODE () {
-      return ROOT_NODE
-    },
-    NODE_MARGIN_Y () {
-      return NODE_MARGIN_Y
-    },
+    ROOT_NODE: () => ROOT_NODE,
+    NODE_MARGIN_Y: () => NODE_MARGIN_Y,
     MIN_SCALE_RATE () {
       return Math.min(Math.log(this.scaleCoveringAllNode) / Math.log(1.1) - 3, -5)
     },
-    MAX_SCALE_RATE () {
-      return 25
-    },
+    MAX_SCALE_RATE: () => 25,
+    CANVAS_MODE: () => CANVAS_MODE,
     viewRectangle () {
       return {
         x: this.x,
@@ -405,19 +426,6 @@ export default {
         return null
       }
     },
-    fixRightBoxPosition () {
-      const key = this.editMenuTarget
-      if (key) {
-        const size = this.nodeSizes[key]
-        const position = this.editTargetPosition
-        return {
-          x: position.x + 11 + size.width * this.scale,
-          y: position.y - 28 / 2 + size.height / 2 * this.scale
-        }
-      } else {
-        return null
-      }
-    },
     fixBottomBoxPosition () {
       const key = this.editMenuTarget
       if (key) {
@@ -430,6 +438,9 @@ export default {
       } else {
         return null
       }
+    },
+    fixButtonMargin () {
+      return 36
     },
     nodePositions () {
       const size = { width: 50, height: 20 }
@@ -876,6 +887,11 @@ export default {
       })
     },
     deleteNode () {
+      if (!this.comfirmDelete) {
+        this.comfirmDelete = true
+        return
+      }
+      this.comfirmDelete = false
       if (this.isMultiSelect) {
         const updatedNodes = getUpdatedNodesWhenDeleteNodes({
           nodes: this.nodes,

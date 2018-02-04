@@ -1,65 +1,23 @@
 <template>
 <div class="float-edit-menu-wrapper">
-  <div v-if="!colorMode" class="button-box">
-    <v-btn icon small outline :color="modeDependency ? 'red lighten-2' : 'indigo'" class="list-item"
-      v-if="!multiSelect"
-      @click="$emit('editDependency')"
-    >
-      <v-icon>call_missed</v-icon>
-    </v-btn>
-    <v-btn icon small class="list-item"
-      :style="{color: defaultNodeProps.color, background: defaultNodeProps.backgroundColor}"
-      @click="colorMode = true"
-    >
-      <v-icon>text_format</v-icon>
-    </v-btn>
-    <v-btn icon small outline color="grey" class="list-item"
-      @click="clickDelete"
-    >
-      <v-icon>delete</v-icon>
-    </v-btn>
-  </div>
-  <div v-else class="button-box">
+  <div class="button-box">
     <v-btn icon small class="list-item color"
       v-for="(prop, i) in colorProps"
       :key="i"
-      :class="{selected: i === selectedProp}"
       :style="{color: prop.color, background: prop.backgroundColor}"
       @click="selectProp(prop)"
     >
       <v-icon>text_format</v-icon>
     </v-btn>
   </div>
-  <v-snackbar
-    bottom
-    right
-    :timeout="2000"
-    v-model="snackbar"
-  >
-    One more click to delete.
-  </v-snackbar>
 </div>
 </template>
 
 <script>
-import {
-  CANVAS_MODE
-} from '@/constants'
-
 export default {
   data: () => ({
-    snackbar: false,
-    colorMode: false
   }),
   props: {
-    root: {
-      type: Boolean,
-      default: false
-    },
-    mode: {
-      type: String,
-      default: CANVAS_MODE.NORMAL
-    },
     defaultNodeProps: {
       color: {
         type: String,
@@ -69,16 +27,9 @@ export default {
         type: String,
         default: '#fff'
       }
-    },
-    multiSelect: {
-      type: Boolean,
-      default: false
     }
   },
   computed: {
-    modeDependency () {
-      return this.mode === CANVAS_MODE.DEPENDENCY
-    },
     colorProps () {
       return [
         {
@@ -110,22 +61,9 @@ export default {
           backgroundColor: '#000'
         }
       ]
-    },
-    selectedProp () {
-      return this.colorProps.findIndex(prop => {
-        return prop.color === this.defaultNodeProps.color && prop.backgroundColor === this.defaultNodeProps.backgroundColor
-      })
     }
   },
   methods: {
-    clickDelete () {
-      if (this.snackbar) {
-        this.$emit('delete')
-        this.snackbar = false
-      } else {
-        this.snackbar = true
-      }
-    },
     selectProp (prop) {
       this.$emit('selectProp', prop)
       this.colorMode = false

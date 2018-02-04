@@ -5,13 +5,13 @@
       top: `${y}px`
     }"
   >
-    <v-btn icon small outline color="black" class="button"
+    <v-btn icon small outline color="indigo" class="button"
       v-if="closed"
       @click="$emit('open')"
     >
       <v-icon>arrow_drop_down</v-icon>
     </v-btn>
-    <v-btn icon small outline color="black" class="button"
+    <v-btn icon small outline color="indigo" class="button"
       v-else
       @click="$emit('close')"
     >
