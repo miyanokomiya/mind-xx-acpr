@@ -135,8 +135,8 @@
   </div>
   <ToggleCloseButton
     v-if="showEditMenu && editMenuTargetNode.children.length > 0"
-    :x="fixLeftBoxPosition.x"
-    :y="fixLeftBoxPosition.y"
+    :x="fixTopBoxPosition.x"
+    :y="fixTopBoxPosition.y"
     :closed="editMenuTargetNode.closed"
     @open="openNode(editMenuTarget)"
     @close="closeNode(editMenuTarget)"
