@@ -153,8 +153,8 @@
   </FloatButton>
   <FloatButton
     v-if="showEditMenu"
-    :x="fixRightBoxPosition.x"
-    :y="fixRightBoxPosition.y"
+    :x="fixBottomBoxPosition.x + 32"
+    :y="fixBottomBoxPosition.y"
     color="indigo"
     @click="createNode(false)"
   >
