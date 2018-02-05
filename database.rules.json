@@ -124,19 +124,50 @@
         ".write":
           "root.child('file_authorities/' + $file_id + '/public/write').val() === true || root.child('file_authorities/' + $file_id + '/users/' + auth.uid + '/write').val() === true",
 
-        "text": {
-          ".validate": "newData.isString()"
-        },
-        "children": {},
-        "backgroundColor": {
-          ".validate": "newData.isString()"
-        },
-        "color": {
-          ".validate": "newData.isString()"
-        },
-        "dependencies": {},
-        "closed": {
-          ".validate": "newData.isBoolean()"
+        "$node_id": {
+          "text": {
+            ".validate": "newData.isString()"
+          },
+          "children": {},
+          "backgroundColor": {
+            ".validate": "newData.isString()"
+          },
+          "color": {
+            ".validate": "newData.isString()"
+          },
+          "dependencies": {},
+          "closed": {
+            ".validate": "newData.isBoolean()"
+          }
+        }
+      }
+    },
+    "comments": {
+      "$file_id": {
+        ".read":
+          "root.child('file_authorities/' + $file_id + '/public').exists() || root.child('file_authorities/' + $file_id + '/users/' + auth.uid).exists()",
+        ".write":
+          "root.child('file_authorities/' + $file_id + '/public/write').val() === true || root.child('file_authorities/' + $file_id + '/users/' + auth.uid + '/write').val() === true",
+
+        "$comment_id": {
+          "uid": {
+            ".validate": "newData.val() === auth.uid"
+          },
+          "nodeId": {
+            ".validate":
+              "root.child('nodes/' + $file_id + '/' + newData.val()).exists()"
+          },
+          "text": {
+            ".validate": "newData.isString()"
+          },
+          "created": {
+            ".validate": "newData.isNumber()"
+          },
+          "updated": {
+            ".validate": "newData.isNumber()"
+          },
+
+          "$other": { ".validate": false }
         }
       }
     },
