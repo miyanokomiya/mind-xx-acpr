@@ -66,6 +66,7 @@ function deleteFile (fileId) {
       updates[`/file_authorities/${fileId}`] = null
       updates[`/files/${fileId}`] = null
       updates[`/nodes/${fileId}`] = null
+      updates[`/comments/${fileId}`] = null
       if (authorities) {
         Object.keys(authorities).forEach(userId => {
           updates[`/work_spaces/${userId}/files/${fileId}`] = null
