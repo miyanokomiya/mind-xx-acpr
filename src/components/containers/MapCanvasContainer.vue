@@ -10,12 +10,15 @@
     :user="user"
     :canWrite="canWrite"
     :defaultNodeProps="defaultNodeProps"
+    :comments="comments"
+    :users="users"
     @updateNodes="nodes => updateNodes({ nodes })"
     @setSelectedNodes="selectedNodes => setSelectedNodes({ selectedNodes })"
     @clearSelect="clearSelect"
     @undo="undo"
     @redo="redo"
     @selectProp="selectProp"
+    @postComment="postComment"
   />
   <div class="center-box" v-if="permissionDenied">
     <PermissionDeniedMessage/>
@@ -40,6 +43,8 @@ import PermissionDeniedMessage from '@/components/molecules/PermissionDeniedMess
 import { mapGetters, mapActions } from 'vuex'
 import { getterTypes as layoutsGetterTypes } from '@/store/layouts/types'
 import { getterTypes as nodesGetterTypes, actionTypes as nodesActionTypes } from '@/store/nodes/types'
+import { getterTypes as commentsGetterTypes, actionTypes as commentsActionTypes } from '@/store/comments/types'
+import { getterTypes as usersGetterTypes, actionTypes as usersActionTypes } from '@/store/users/types'
 import { getterTypes as filesGetterTypes, actionTypes as filesActionTypes } from '@/store/files/types'
 import { getterTypes as userGetterTypes } from '@/store/user/types'
 import { getterTypes as settingsGetterTypes, actionTypes as settingsActionTypes } from '@/store/settings/types'
@@ -70,6 +75,12 @@ export default {
       nodes: nodesGetterTypes.NODES,
       selectedNodes: nodesGetterTypes.SELECTED_NODES,
       initialLoading: nodesGetterTypes.INITIAL_LOADING
+    }),
+    ...mapGetters('comments', {
+      comments: commentsGetterTypes.COMMENTS
+    }),
+    ...mapGetters('users', {
+      users: usersGetterTypes.USERS
     }),
     ...mapGetters('files', {
       fileFromKey: filesGetterTypes.FILE_FROM_KEY,
@@ -114,9 +125,25 @@ export default {
       }
     }
   },
+  watch: {
+    comments: {
+      handler (to) {
+        const users = Object.keys(this.comments).reduce((p, key) => {
+          const comment = this.comments[key]
+          if (!this.users[comment.uid]) {
+            p[comment.uid] = true
+          }
+          return p
+        }, {})
+        this.loadUsers({ users })
+      },
+      deep: true
+    }
+  },
   mounted () {
     this.loadFile({ key: this.fileKey })
     this.loadNodes({ fileKey: this.fileKey })
+    this.loadComments({ fileKey: this.fileKey })
   },
   destroyed () {
     this.disconnectNodes()
@@ -131,6 +158,14 @@ export default {
       loadNodes: nodesActionTypes.LOAD_NODES,
       _undo: nodesActionTypes.UNDO_NODES,
       _redo: nodesActionTypes.REDO_NODES
+    }),
+    ...mapActions('comments', {
+      disconnectComments: commentsActionTypes.DISCONNECT,
+      loadComments: commentsActionTypes.LOAD_COMMENTS,
+      updateComments: commentsActionTypes.UPDATE_COMMENTS
+    }),
+    ...mapActions('users', {
+      loadUsers: usersActionTypes.LOAD_USERS
     }),
     ...mapActions('files', {
       disconnectFile: filesActionTypes.DISCONNECT_FILE,
@@ -178,6 +213,12 @@ export default {
       this.changeSelectedNodesProps({ color, backgroundColor })
       this.setTextColor({textColor: color})
       this.setNodeColor({nodeColor: backgroundColor})
+    },
+    postComment ({ comment, key }) {
+      const comments = {
+        [key]: comment
+      }
+      this.updateComments({ comments })
     }
   }
 }

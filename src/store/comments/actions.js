@@ -75,9 +75,9 @@ export default {
     connect(context, { fileKey })
   },
   [actionTypes.UPDATE_COMMENTS] (context, { comments }) {
-    // local commit
-    context.commit(mutationTypes.UPDATE_COMMENTS, { comments })
     // push firebase
     updateComments(context, { comments })
+    // local commit
+    context.commit(mutationTypes.UPDATE_COMMENTS, { comments })
   }
 }

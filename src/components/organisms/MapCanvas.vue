@@ -211,6 +211,14 @@
     @delete="deleteNode"
     @mousewheel.native.prevent="e => $isMobile.any ? '' : mousewheel(e)"
   />
+  <CommentList
+    class="comment-list"
+    v-if="showEditMenu"
+    :comments="targetNodeComments"
+    :users="users"
+    :user="user"
+    @postComment="postComment"
+  />
   <v-snackbar
     bottom
     right
@@ -247,7 +255,8 @@ import {
   getConnectors,
   getDependencyConnectors,
   getBetterConnector,
-  getHiddenNodes
+  getHiddenNodes,
+  createComment
 } from '@/utils/model'
 import { getCoveredRectangle, isCoveredRectangle } from '@/utils/geometry'
 import * as canvasUtils from '@/utils/canvas'
@@ -263,6 +272,7 @@ import ScaleToolBox from '@/components/molecules/ScaleToolBox'
 import HistoryToolBox from '@/components/molecules/HistoryToolBox'
 import ToggleCloseButton from '@/components/molecules/ToggleCloseButton'
 import FloatButton from '@/components/molecules/FloatButton'
+import CommentList from './CommentList'
 
 export default {
   name: 'MapCanvas',
@@ -277,7 +287,8 @@ export default {
     ScaleToolBox,
     HistoryToolBox,
     ToggleCloseButton,
-    FloatButton
+    FloatButton,
+    CommentList
   },
   data: () => ({
     x: 0,
@@ -335,6 +346,14 @@ export default {
     canWrite: {
       type: Boolean,
       default: false
+    },
+    comments: {
+      type: Object,
+      default: () => ({})
+    },
+    users: {
+      type: Object,
+      default: () => ({})
     }
   },
   mounted () {
@@ -573,6 +592,15 @@ export default {
         if (node.closed) {
           const familyKeys = getFamilyKeys({ nodes: this.nodes, parentKey: key })
           p[key] = familyKeys.length
+        }
+        return p
+      }, {})
+    },
+    targetNodeComments () {
+      return Object.keys(this.comments).reduce((p, key) => {
+        const comment = this.comments[key]
+        if (comment.nodeId === this.editMenuTarget) {
+          p[key] = comment
         }
         return p
       }, {})
@@ -1025,6 +1053,23 @@ export default {
         ...node,
         closed: true
       } })
+    },
+    postComment ({ comment, key }) {
+      const nodeId = this.editMenuTarget
+      if (nodeId) {
+        const _key = key || firebase
+          .database()
+          .ref()
+          .push().getKey()
+        const updatedComment = createComment({
+          ...comment,
+          uid: this.user.uid
+        })
+        this.$emit('postComment', {
+          comment: updatedComment,
+          key: _key
+        })
+      }
     }
   }
 }
@@ -1072,6 +1117,16 @@ export default {
   }
   .history-tool {
     right: 6px;
+  }
+  .comment-list {
+    position: absolute;
+    right: 0;
+    top: 34px;
+    max-height: calc(100% - 34px - 44px);
+    width: 40%;
+    max-width: 240px;
+    overflow: auto;
+    border-radius: 4px;
   }
 }
 </style>

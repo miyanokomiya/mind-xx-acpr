@@ -3,7 +3,7 @@ import Vue from 'vue'
 
 import MapCanvas from '@/components/organisms/MapCanvas'
 
-import { createNode, createUser } from '@/utils/model'
+import { createNode, createUser, createComment } from '@/utils/model'
 
 const methods = {
   updateNodes (nextNodes) {
@@ -31,6 +31,10 @@ const methods = {
   },
   selectProp (args) {
     console.log('change props:', args)
+  },
+  postComment ({ comment, key }) {
+    console.log('post comment:', comment, key)
+    Vue.set(this.comments, key, comment)
   }
 }
 
@@ -54,11 +58,14 @@ storiesOf('organisms/MapCanvas', module)
             :selectedNodes="selectedNodes"
             :canWrite="true"
             :user="user"
+            :comments="comments"
+            :users="users"
             @updateNodes="updateNodes"
             @createNode="createNode"
             @setSelectedNodes="setSelectedNodes"
             @clearSelect="clearSelect"
             @selectProp="selectProp"
+            @postComment="postComment"
           />
         </div>
       </v-app>
@@ -72,7 +79,19 @@ storiesOf('organisms/MapCanvas', module)
           d: createNode({ text: 'dddd' })
         },
         selectedNodes: {},
-        user
+        user,
+        comments: {
+          a: createComment({ uid: 'a', text: 'aaa\naaa', nodeId: 'b' }),
+          aa: createComment({ uid: 'a', text: 'aaa\naaa', nodeId: 'b' }),
+          aaa: createComment({ uid: 'a', text: 'aaa\naaa', nodeId: 'c' }),
+          aaaa: createComment({ uid: 'a', text: 'aaa\naaa', nodeId: 'b' }),
+          b: createComment({ uid: 'b', text: 'bbb', nodeId: 'c' })
+        },
+        users: {
+          a: createUser({ displayName: 'aabb' }),
+          b: createUser({ displayName: 'bbaa' }),
+          user
+        }
       }),
       methods
     }
