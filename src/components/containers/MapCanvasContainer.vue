@@ -146,6 +146,7 @@ export default {
     this.loadComments({ fileKey: this.fileKey })
   },
   destroyed () {
+    this.disconnectComments()
     this.disconnectNodes()
     this.disconnectFile({ key: this.fileKey })
   },
