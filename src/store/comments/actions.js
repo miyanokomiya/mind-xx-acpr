@@ -77,7 +77,5 @@ export default {
   [actionTypes.UPDATE_COMMENTS] (context, { comments }) {
     // push firebase
     updateComments(context, { comments })
-    // local commit
-    context.commit(mutationTypes.UPDATE_COMMENTS, { comments })
   }
 }
