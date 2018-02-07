@@ -273,17 +273,31 @@ export default {
             })
         }
         if (file.nodeCount > 0) {
-          // load nodes
+          // clone nodes
           return firebase
             .database()
             .ref('nodes/' + baseKey)
             .once('value')
             .then(snapshot => {
-              // save nodes
+              // save
               return firebase
                 .database()
                 .ref('nodes/' + newKey)
                 .update(snapshot.val())
+            })
+            .then(() => {
+              // clone comments
+              return firebase
+                .database()
+                .ref('comments/' + baseKey)
+                .once('value')
+                .then(snapshot => {
+                  // save
+                  return firebase
+                    .database()
+                    .ref('comments/' + newKey)
+                    .update(snapshot.val())
+                })
             })
             .then(() => {
               // reload the file

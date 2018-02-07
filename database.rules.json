@@ -151,7 +151,8 @@
 
         "$comment_id": {
           "uid": {
-            ".validate": "newData.val() === auth.uid"
+            ".validate":
+              "!data.exists() || (newData.val() === auth.uid && data.val() === auth.uid)"
           },
           "nodeId": {
             ".validate":
