@@ -1074,11 +1074,11 @@ export default {
           .database()
           .ref()
           .push().getKey()
-        const updatedComment = createComment({
+        const updatedComment = comment ? createComment({
           ...comment,
           uid: this.user.uid,
           nodeId
-        })
+        }) : null
         this.$emit('postComment', {
           comment: updatedComment,
           key: _key
@@ -1090,6 +1090,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '~@/assets/styles/responsive';
+
 .map-canvas-wrapper {
   position: relative;
   overflow: hidden;
@@ -1137,10 +1139,14 @@ export default {
     right: 0;
     top: 34px;
     max-height: calc(100% - 34px - 44px);
-    width: 40%;
-    max-width: 240px;
+    width: 260px;
     overflow: auto;
     border-radius: 4px;
+
+    @include mq-down() {
+      width: 100%;
+      max-height: 50%;
+    }
   }
 }
 </style>
