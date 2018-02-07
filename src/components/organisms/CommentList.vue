@@ -194,7 +194,7 @@ export default {
     }
     .avatar.list__tile__avatar {
       min-width: 48px;
-      margin-top: 4px;
+      align-items: center;
     }
     .list--three-line .list__tile__sub-title {
       -webkit-line-clamp: initial;
