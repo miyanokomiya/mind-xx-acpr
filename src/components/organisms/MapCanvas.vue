@@ -95,6 +95,7 @@
         :fill="node.backgroundColor"
         :textFill="node.color"
         :hiddenFamilyCount="closedNodeFamilyCounts[key]"
+        :commentCount="commentCounts[key]"
         @calcSize="size => calcSize({key, size})"
         @mousedown.native.prevent="e => canWrite ? ($isMobile.any ? '' : nodeCursorDown(e, key)) : ''"
         @mouseup.native.prevent="e => canWrite ? ($isMobile.any ?  '' : nodeCursorUp(key, {shift: e.shiftKey})) : ''"
@@ -113,7 +114,8 @@
         :stroke="selectedNodes[key] ? 'blue' : 'black'"
         :fill="nodes[key].backgroundColor"
         :textFill="nodes[key].color"
-        :hiddenFamilyCount="closedNodeFamilyCounts[key]"        
+        :hiddenFamilyCount="closedNodeFamilyCounts[key]" 
+        :commentCount="commentCounts[key]"       
       />
     </SvgCanvas>
   </div>
@@ -601,6 +603,17 @@ export default {
         const comment = this.comments[key]
         if (comment.nodeId === this.editMenuTarget) {
           p[key] = comment
+        }
+        return p
+      }, {})
+    },
+    commentCounts () {
+      return Object.keys(this.comments).reduce((p, c) => {
+        const comment = this.comments[c]
+        if (comment.nodeId in p) {
+          p[comment.nodeId]++
+        } else {
+          p[comment.nodeId] = 1
         }
         return p
       }, {})

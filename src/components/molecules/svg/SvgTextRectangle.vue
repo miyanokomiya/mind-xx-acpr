@@ -1,8 +1,17 @@
 <template>
 <g>
+  <g v-if="commentCount > 0">
+    <ellipse :cx="x + width / 2" :cy="y + height - 2" :rx="width / 2" :ry="fontSize * 1.7" fill="#ddd"/>
+    <SvgText
+      :text="`${commentCount}`"
+      :x="x + width / 2 - commentCircleRadius / 2"
+      :y="y + height + fontSize + 1"
+      :font-size="commentFontSize"
+      fill="black"
+    />
+  </g>
   <g v-if="closed">
-    <!-- <circle :cx="x + width + countCircleRadius / 2" :cy="y" :r="countCircleRadius" fill="#444"/> -->
-    <ellipse :cx="x + width + countCircleRadius / 2" :cy="y + height / 2" :rx="rx" :ry="ry" fill="#444"/>
+    <ellipse :cx="x + width + countCircleRadius / 2" :cy="y + height / 2" :rx="rightRx" :ry="fontSize" fill="#444"/>
     <SvgText
       :text="`${hiddenFamilyCount}`"
       :x="x + width + 1"
@@ -92,6 +101,10 @@ export default {
     hiddenFamilyCount: {
       type: Number,
       default: 0
+    },
+    commentCount: {
+      type: Number,
+      default: 0
     }
   },
   computed: {
@@ -128,11 +141,20 @@ export default {
     countCircleRadius () {
       return 4 + this.countFontSize * 0.5 * this.countLength
     },
-    rx () {
+    rightRx () {
       return this.closed ? Math.max(this.countCircleRadius, this.countFontSize) : 0
     },
-    ry () {
-      return this.closed ? this.fontSize : 0
+    commentLength () {
+      return `${this.commentCount}`.length
+    },
+    commentFontSize () {
+      return this.fontSize
+    },
+    commentCircleRadius () {
+      return 3 + this.commentFontSize * 0.5 * this.commentLength
+    },
+    leftRx () {
+      return this.commentCount > 0 ? Math.max(this.commentCircleRadius, this.commentFontSize) : 0
     }
   },
   watch: {
