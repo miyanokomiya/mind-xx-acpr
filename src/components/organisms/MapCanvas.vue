@@ -213,7 +213,7 @@
   />
   <CommentList
     class="comment-list"
-    v-if="showEditMenu"
+    v-show="showEditMenu"
     :comments="targetNodeComments"
     :users="users"
     :user="user"
@@ -1063,7 +1063,8 @@ export default {
           .push().getKey()
         const updatedComment = createComment({
           ...comment,
-          uid: this.user.uid
+          uid: this.user.uid,
+          nodeId
         })
         this.$emit('postComment', {
           comment: updatedComment,
