@@ -10,6 +10,7 @@ import { withKnobs } from '@storybook/addon-knobs'
 import 'ress'
 import 'vuetify/dist/vuetify.min.css'
 import '@/assets/styles/icons.css'
+import '@/assets/styles/main.scss'
 
 Vue.use(Vuetify)
 
