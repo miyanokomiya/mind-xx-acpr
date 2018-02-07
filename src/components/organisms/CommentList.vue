@@ -33,9 +33,9 @@
             <img :src="users[comment.uid] ? users[comment.uid].photoURL : ''"/>
           </v-list-tile-avatar>
           <v-list-tile-content>
-            <v-list-tile-title>{{users[comment.uid] ? users[comment.uid].displayName : '---'}}</v-list-tile-title>
+            <!-- <v-list-tile-title>{{users[comment.uid] ? users[comment.uid].displayName : '---'}}</v-list-tile-title> -->
             <v-list-tile-sub-title><pre class="text">{{comment.text}}</pre></v-list-tile-sub-title>
-            <v-list-tile-sub-title class="date">{{dateFormat(comment.updated)}}</v-list-tile-sub-title>
+            <v-list-tile-sub-title class="comment-info">{{users[comment.uid] ? users[comment.uid].displayName : '---'}}, {{dateFormat(comment.updated)}}</v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>
         <v-divider :key="`line_${comment.key}`"/>
@@ -168,8 +168,9 @@ export default {
     white-space: pre-wrap;
     word-wrap: break-word;
   }
-  .date {
+  .comment-info {
     text-align: right;
+    font-size: 0.8em;
   }
   .form {
     margin: 0 12px;

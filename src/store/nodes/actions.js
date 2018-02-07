@@ -12,8 +12,19 @@ const updateNodes =
     ? () => Promise.resolve()
     : (context, { nodes }) => {
         const fileKey = context.state.fileKey
+        const comments = context.rootState.comments.comments
+        const commentKeys = Object.keys(comments)
         const updates = Object.keys(nodes).reduce((p, c) => {
           p[`/nodes/${fileKey}/${c}`] = nodes[c]
+          if (!nodes[c]) {
+            // delete comments of this node
+            commentKeys.forEach(key => {
+              const comment = comments[key]
+              if (comment.nodeId === c) {
+                p[`/comments/${fileKey}/${key}`] = null
+              }
+            })
+          }
           return p
         }, {})
         updates[`/files/${fileKey}/updated`] =
