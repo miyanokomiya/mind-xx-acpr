@@ -13,7 +13,6 @@ const updateNodes =
     : (context, { nodes }) => {
         const fileKey = context.state.fileKey
         const updates = Object.keys(nodes).reduce((p, c) => {
-          // get new keys for new nodes
           p[`/nodes/${fileKey}/${c}`] = nodes[c]
           return p
         }, {})
@@ -46,8 +45,8 @@ const connect =
   process.env.NODE_ENV === 'test'
     ? () => Promise.resolve()
     : (context, { fileKey }) => {
-        var commentsRef = firebase.database().ref('nodes/' + fileKey)
-        commentsRef.on('child_added', data => {
+        var nodesRef = firebase.database().ref('nodes/' + fileKey)
+        nodesRef.on('child_added', data => {
           const nodes = {
             [data.key]: createNode(data.val())
           }
@@ -58,13 +57,13 @@ const connect =
             })
           }
         })
-        commentsRef.on('child_changed', function (data) {
+        nodesRef.on('child_changed', function (data) {
           const nodes = {
             [data.key]: createNode(data.val())
           }
           context.commit(mutationTypes.UPDATE_NODES, { nodes })
         })
-        commentsRef.on('child_removed', function (data) {
+        nodesRef.on('child_removed', function (data) {
           const nodes = {
             [data.key]: null
           }

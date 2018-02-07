@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import layouts from './layouts'
 import nodes from './nodes'
+import comments from './comments'
 import user from './user'
 import users from './users'
 import files from './files'
@@ -17,6 +18,7 @@ export default new Vuex.Store({
     files,
     layouts,
     nodes,
+    comments,
     settings,
     user,
     users

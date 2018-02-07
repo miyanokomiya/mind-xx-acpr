@@ -48,3 +48,18 @@ storiesOf('molecules/svg/SvgTextRectangle', module)
       data: () => ({})
     }
   })
+  .add('comments', () => {
+    return {
+      components: { SvgTextRectangle },
+      template: `
+        <svg-wrapper>
+          <SvgTextRectangle :x="50" :y="10" text="abcde fef" fill="white" :commentCount="1"/>
+          <SvgTextRectangle :x="50" :y="60" text="abcde fef" fill="red" :commentCount="2"/>
+          <SvgTextRectangle :x="50" :y="110" text="abcde fef" fill="blue" :commentCount="33"/>
+          <SvgTextRectangle :x="50" :y="160" text="abcde fef" fill="blue" :commentCount="332"/>
+          <SvgTextRectangle :x="50" :y="210" text="abcde fef" fill="blue" :commentCount="3232"/>
+        </svg-wrapper>
+      `,
+      data: () => ({})
+    }
+  })

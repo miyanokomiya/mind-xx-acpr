@@ -22,6 +22,19 @@ export const createNode = obj =>
     obj
   )
 
+export const createComment = obj =>
+  Object.assign(
+    {},
+    {
+      uid: '',
+      nodeId: '',
+      text: '',
+      created: 0,
+      updated: 0
+    },
+    obj
+  )
+
 export const isSameNode = (n1, n2) => {
   if (n1.text !== n2.text) {
     return false
