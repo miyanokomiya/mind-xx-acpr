@@ -1343,7 +1343,8 @@ describe('utils/model', () => {
       expect(res).toEqual({
         [ROOT_NODE]: modelUtils.createNode({
           children: []
-        })
+        }),
+        b: null
       })
     })
     it('should omit children which are not exist', () => {

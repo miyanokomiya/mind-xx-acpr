@@ -151,7 +151,12 @@ describe('store/nodes/actions', () => {
           },
           {
             type: mutationTypes.UPDATE_NODES,
-            payload: { nodes: { [ROOT_NODE]: createNode({ text: 'a' }) } }
+            payload: {
+              nodes: {
+                [ROOT_NODE]: createNode({ text: 'a' }),
+                b: null
+              }
+            }
           }
         ],
         done

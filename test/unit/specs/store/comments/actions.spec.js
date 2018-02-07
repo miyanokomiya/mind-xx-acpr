@@ -49,12 +49,7 @@ describe('store/comments/actions', () => {
         {
           comments: { b: createComment({ text: 'b' }) }
         },
-        [
-          {
-            type: mutationTypes.UPDATE_COMMENTS,
-            payload: { comments: { a: createComment({ text: 'a' }) } }
-          }
-        ],
+        [],
         done
       )
     })

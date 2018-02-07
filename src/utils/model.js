@@ -673,7 +673,10 @@ export function rescueConflict ({ nodes }) {
   return Object.keys(nodes).reduce((p, key) => {
     if (key !== ROOT_NODE) {
       if (!getParentKey({ nodes, childKey: key })) {
-        return p
+        return {
+          ...p,
+          [key]: null
+        }
       }
     }
     const children = nodes[key].children.filter(childKey => {
