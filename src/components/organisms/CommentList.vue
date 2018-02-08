@@ -1,5 +1,5 @@
 <template>
-  <v-card class="comment-list">
+  <v-card class="comment-list" v-if="user || commentList.length > 0">
     <div class="switch-buttons">
       <v-btn flat small color="black" v-if="open" @click="open = false">
         <v-icon dark>keyboard_arrow_up</v-icon>
@@ -30,10 +30,10 @@
         </form>
         <v-list-tile v-else avatar :key="comment.key" class="comment-tile" :class="{editable: canEdit(comment.key)}" @click="readyEdit(comment.key)">
           <v-list-tile-avatar>
-            <img :src="users[comment.uid] ? users[comment.uid].photoURL : ''"/>
+            <img v-if="users[comment.uid]" :src="users[comment.uid].photoURL"/>
+            <v-icon class="unknown-user" v-else>account_circle</v-icon>
           </v-list-tile-avatar>
           <v-list-tile-content>
-            <!-- <v-list-tile-title>{{users[comment.uid] ? users[comment.uid].displayName : '---'}}</v-list-tile-title> -->
             <v-list-tile-sub-title><pre class="text">{{comment.text}}</pre></v-list-tile-sub-title>
             <v-list-tile-sub-title class="comment-info">{{users[comment.uid] ? users[comment.uid].displayName : '---'}}, {{dateFormat(comment.updated)}}</v-list-tile-sub-title>
           </v-list-tile-content>
@@ -41,7 +41,7 @@
         <v-divider :key="`line_${comment.key}`"/>
       </template>
     </v-list>
-    <form v-if="!editKey && open" class="form">
+    <form v-if="!editKey && open && user" class="form">
       <v-text-field
         label="Comment"
         multi-line
@@ -103,7 +103,7 @@ export default {
   methods: {
     canEdit (key) {
       const comment = this.comments[key]
-      return this.user.uid === comment.uid
+      return this.user && this.user.uid === comment.uid
     },
     readyEdit (key) {
       if (this.canEdit(key)) {
@@ -175,6 +175,9 @@ export default {
     span {
       margin-left: 6px;
     }
+  }
+  .unknown-user {
+    line-height: 40px;
   }
   .text {
     overflow: auto;
