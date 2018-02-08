@@ -46,7 +46,7 @@
               v-model="readOnly"
             />
             <div class="text-xs-right">
-              <v-btn>Invite</v-btn>
+              <v-btn @click="invite">Invite</v-btn>
             </div>
           </form>
         </v-card-text>
