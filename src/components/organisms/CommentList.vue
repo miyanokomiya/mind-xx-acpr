@@ -21,7 +21,7 @@
           <v-btn flat icon small color="black" @click="deleteComment">
             <v-icon dark>delete</v-icon>
           </v-btn>
-          <v-btn flat icon small color="primary" @click="editKey = ''">
+          <v-btn flat icon small color="primary" @click="cancelEdit">
             <v-icon dark>cancel</v-icon>
           </v-btn>
           <v-btn flat icon small color="primary" :disabled="!editText.trim()" @click="updateComment">
@@ -71,7 +71,7 @@ export default {
     editKey: '',
     editText: '',
     snackbar: false,
-    open: false
+    open: true
   }),
   props: {
     comments: {
@@ -92,6 +92,12 @@ export default {
       return Object.keys(this.comments).map(key => ({ ...this.comments[key], key })).sort((a, b) => {
         return a.created - b.created
       })
+    }
+  },
+  watch: {
+    comments () {
+      this.editKey = ''
+      this.snackbar = false
     }
   },
   methods: {
@@ -123,6 +129,11 @@ export default {
         key: this.editKey
       })
       this.editKey = ''
+      this.snackbar = false
+    },
+    cancelEdit () {
+      this.editKey = ''
+      this.snackbar = false
     },
     deleteComment () {
       if (!this.snackbar) {
@@ -137,7 +148,9 @@ export default {
       }
     },
     clear () {
+      this.editKey = ''
       this.text = ''
+      this.snackbar = false
     },
     dateFormat (ms) {
       const date = new Date(ms)
