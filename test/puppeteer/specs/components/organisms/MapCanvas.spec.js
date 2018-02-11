@@ -1,7 +1,8 @@
 const puppeteer = require('puppeteer')
 jest.setTimeout(100000)
-const INTERVAL = 500
-const SCREENSHOT_DIR = 'test/puppeteer/screenshots/'
+const INTERVAL = 50
+const SCREENSHOT_DIR =
+  'test/puppeteer/screenshots/components/organisms/MapCanvas/'
 
 const screenshot = async ({ page, title }) => {
   await page.screenshot({
@@ -11,10 +12,14 @@ const screenshot = async ({ page, title }) => {
   await page.waitFor(INTERVAL)
 }
 
-describe('Open map page', () => {
-  const url = 'http://localhost:8080/map/-L1kwty1260tXvUgU0Bp'
+describe('Map page', () => {
+  const url =
+    'http://localhost:9001/iframe.html?selectedKind=organisms%2FMapCanvas&selectedStory=some%20nodes'
 
   const selectNode = async ({ page, $node, clear = false }) => {
+    await page.waitFor(INTERVAL)
+    await page.keyboard.press('Escape')
+    await page.waitFor(INTERVAL)
     const box = await page.evaluate($node => {
       const box = $node.getBoundingClientRect()
       return {
@@ -23,7 +28,7 @@ describe('Open map page', () => {
       }
     }, $node)
     // clear select
-    await page.mouse.move(box.left - 1, box.top + 1)
+    await page.mouse.move(box.left - 3, box.top + 3)
     await page.mouse.down()
     await page.mouse.up()
     await page.waitFor(INTERVAL)
@@ -51,6 +56,11 @@ describe('Open map page', () => {
     return $button
   }
 
+  const getComments = async ({ page }) => {
+    const $doms = await page.$$('.comment-list > ul > li')
+    return $doms
+  }
+
   const getContent = async ({ page, $dom }) => {
     const content = await page.evaluate($dom => {
       return $dom.textContent.trim()
@@ -58,15 +68,51 @@ describe('Open map page', () => {
     return content
   }
 
+  const input = async ({ page, text, query }) => {
+    await page.waitFor(INTERVAL)
+    page.focus(query)
+    await page.waitFor(INTERVAL)
+    await page.evaluate(query => {
+      document.querySelector(query).value = ''
+    }, query)
+    await page.waitFor(INTERVAL)
+    await page.type(query, text)
+    await page.waitFor(INTERVAL)
+  }
+
   const inputAndSubmit = async ({ page, text }) => {
-    const textareaQ = '.float-text-input-wrapper textarea'
-    await page.evaluate(textareaQ => {
-      document.querySelector(textareaQ).value = ''
-    }, textareaQ)
-    await page.waitFor(INTERVAL)
-    await page.type(textareaQ, text)
-    await page.waitFor(INTERVAL)
+    await input({ page, text, query: '.float-text-input-wrapper textarea' })
     await page.click('.float-text-input-wrapper .submit')
+    await page.waitFor(INTERVAL)
+  }
+
+  const inputAndSubmitComment = async ({ page, text }) => {
+    await input({ page, text, query: '.comment-list form textarea' })
+    await page.click('.comment-list form button')
+    await page.waitFor(INTERVAL)
+  }
+
+  const inputComment = async ({ page, text }) => {
+    await input({ page, text, query: '.comment-list form textarea' })
+  }
+
+  const editComment = async ({ page }) => {
+    const $buttons = await page.$$('.comment-list form button')
+    await $buttons[2].click()
+    await page.waitFor(INTERVAL)
+  }
+
+  const cancelEditComment = async ({ page }) => {
+    const $buttons = await page.$$('.comment-list form button')
+    await $buttons[1].click()
+    await page.waitFor(INTERVAL)
+  }
+
+  const deleteComment = async ({ page }) => {
+    const $buttons = await page.$$('.comment-list form button')
+    await $buttons[0].click()
+    await page.waitFor(INTERVAL)
+    await $buttons[0].click()
     await page.waitFor(INTERVAL)
   }
 
@@ -87,14 +133,11 @@ describe('Open map page', () => {
       browser = await puppeteer.launch({ headless: false })
       page = await browser.newPage()
       await page.setViewport({ width: 800, height: 800 })
-      await page.goto(url)
-      await page.waitFor(3000)
+      await page.goto(url, { waitUntil: 'networkidle2' })
       // clear nodes
       await clearNodes({ page })
     })
     afterEach(async () => {
-      // clear nodes
-      await clearNodes({ page })
       browser.close()
     })
 
@@ -193,9 +236,9 @@ describe('Open map page', () => {
       await page.waitFor(INTERVAL)
       $nodes = await getNodes({ page })
       await selectNode({ page, $node: $nodes[2] })
+      await page.waitFor(INTERVAL)
       $buttons = await getButtons({ page })
       createChildButton = $buttons[$buttons.length - 1]
-      await page.waitFor(INTERVAL)
       expect($buttons.length).toBe(5)
       await createChildButton.click()
       await page.waitFor(INTERVAL)
@@ -226,6 +269,67 @@ describe('Open map page', () => {
       await screenshot({ page, title: '3.5 open_children' })
       $nodes = await getNodes({ page })
       expect($nodes.length).toBe(4)
+    })
+
+    test('Add a comment', async () => {
+      // select a node
+      await page.waitFor(INTERVAL)
+      let $nodes = await getNodes({ page })
+      await selectNode({ page, $node: $nodes[0] })
+      await page.waitFor(INTERVAL)
+
+      // add a comment
+      await inputAndSubmitComment({ page, text: 'new comment' })
+      let $comments = await getComments({ page })
+      await screenshot({ page, title: '4.1 new_comment' })
+      expect($comments.length).toBe(1)
+      let $pre = await $comments[0].$('pre')
+      let content = await getContent({ page, $dom: $pre })
+      expect(content).toBe('new comment')
+
+      // add second comment
+      await inputAndSubmitComment({ page, text: 'second comment' })
+      $comments = await getComments({ page })
+      await screenshot({ page, title: '4.2 second_comment' })
+      expect($comments.length).toBe(2)
+      $pre = await $comments[1].$('pre')
+      content = await getContent({ page, $dom: $pre })
+      expect(content).toBe('second comment')
+
+      // edit first comment
+      $comments = await getComments({ page })
+      await $comments[0].click()
+      await inputComment({ page, text: 'edit first comment' })
+      await screenshot({ page, title: '4.3 editing_comment' })
+      await editComment({ page })
+      await screenshot({ page, title: '4.4 edit_comment' })
+      $comments = await getComments({ page })
+      expect($comments.length).toBe(2)
+      $pre = await $comments[0].$('pre')
+      content = await getContent({ page, $dom: $pre })
+      expect(content).toBe('edit first comment')
+
+      // cancel edit comment
+      $comments = await getComments({ page })
+      await $comments[0].click()
+      await inputComment({ page, text: 'cancel first comment' })
+      await cancelEditComment({ page })
+      await screenshot({ page, title: '4.5 cancel_edit_comment' })
+      $comments = await getComments({ page })
+      $pre = await $comments[0].$('pre')
+      content = await getContent({ page, $dom: $pre })
+      expect(content).toBe('edit first comment')
+
+      // delete comment
+      $comments = await getComments({ page })
+      await $comments[0].click()
+      await deleteComment({ page })
+      await screenshot({ page, title: '4.6 delete_comment' })
+      $comments = await getComments({ page })
+      expect($comments.length).toBe(1)
+      $pre = await $comments[0].$('pre')
+      content = await getContent({ page, $dom: $pre })
+      expect(content).toBe('second comment')
     })
   })
 })
