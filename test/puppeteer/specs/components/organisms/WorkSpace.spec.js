@@ -3,7 +3,7 @@ import {
   getScreenshotFn
   // inputForm,
   // getContent
-} from '@/../test/puppeteer/specs/utils'
+} from '@/specs/utils'
 
 jest.setTimeout(100000)
 const screenshot = getScreenshotFn(
