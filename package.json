@@ -5,14 +5,17 @@
   "author": "miyanokomiya",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+    "dev":
+      "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
     "unit": "jest --config test/unit/jest.conf.js --watch",
+    "puppeteer": "jest --config test/puppeteer/jest.conf.js",
     "unit-coverage": "jest --config test/unit/jest.conf.js --coverage --watch",
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit && npm run e2e",
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs",
-    "move-map": "rm -rf ./sourcemap/js && mkdir ./sourcemap/js && mv ./public/static/js/*.map ./sourcemap/js",
+    "move-map":
+      "rm -rf ./sourcemap/js && mkdir ./sourcemap/js && mv ./public/static/js/*.map ./sourcemap/js",
     "build": "node build/build.js && npm run move-map",
     "deploy": "npm run build && firebase deploy",
     "deploy-hosting": "npm run build && firebase deploy --only hosting",
@@ -74,6 +77,7 @@
     "postcss-import": "^11.0.0",
     "postcss-loader": "^2.1.0",
     "prettier": "^1.10.2",
+    "puppeteer": "^1.0.0",
     "rimraf": "^2.6.0",
     "sass-loader": "^6.0.6",
     "selenium-server": "^3.9.1",
@@ -95,9 +99,5 @@
     "node": ">= 4.0.0",
     "npm": ">= 3.0.0"
   },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not ie <= 8"
-  ]
+  "browserslist": ["> 1%", "last 2 versions", "not ie <= 8"]
 }
