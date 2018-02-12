@@ -2,9 +2,7 @@ import puppeteer from 'puppeteer'
 import { getScreenshotFn, inputForm, getContent } from '@/specs/utils'
 
 jest.setTimeout(100000)
-const screenshot = getScreenshotFn(
-  'test/puppeteer/screenshots/components/organisms/MapCanvas/'
-)
+const screenshot = getScreenshotFn('components/organisms/MapCanvas/')
 
 const url =
   'http://localhost:9001/iframe.html?selectedKind=organisms%2FMapCanvas&selectedStory=some%20nodes'

@@ -2,9 +2,7 @@ import puppeteer from 'puppeteer'
 import { getScreenshotFn, inputForm, getContent } from '@/specs/utils'
 
 jest.setTimeout(100000)
-const screenshot = getScreenshotFn(
-  'test/puppeteer/screenshots/components/organisms/WorkSpace/'
-)
+const screenshot = getScreenshotFn('components/organisms/WorkSpace/')
 
 describe('Map page', () => {
   const url =

@@ -1,23 +1,24 @@
 import * as fs from 'fs'
 
-const DEFAULT_SCREENSHOT_DIR = 'test/puppeteer/screenshots/tmp/'
-// const INTERVAL = 50
+const SCREENSHOT_DIR_ROOT = 'test/puppeteer/screenshots/'
+const DEFAULT_SCREENSHOT_DIR = 'tmp'
 
-export const getScreenshotFn = (SCREENSHOT_DIR = DEFAULT_SCREENSHOT_DIR) => {
+export const getScreenshotFn = (dir = DEFAULT_SCREENSHOT_DIR) => {
+  const fullPath = SCREENSHOT_DIR_ROOT + dir
   // delete the directory
-  if (fs.existsSync(SCREENSHOT_DIR)) {
-    const targetRemoveFiles = fs.readdirSync(SCREENSHOT_DIR)
+  if (fs.existsSync(fullPath)) {
+    const targetRemoveFiles = fs.readdirSync(fullPath)
     for (let file in targetRemoveFiles) {
-      fs.unlinkSync(SCREENSHOT_DIR + targetRemoveFiles[file])
+      fs.unlinkSync(fullPath + targetRemoveFiles[file])
     }
-    fs.rmdirSync(SCREENSHOT_DIR)
+    fs.rmdirSync(fullPath)
   }
   // create directory
-  fs.mkdirSync(SCREENSHOT_DIR)
+  fs.mkdirSync(fullPath)
   // return the function to take a screenshot
   return async ({ page, title }) => {
     await page.screenshot({
-      path: `${SCREENSHOT_DIR}${title}.png`,
+      path: `${fullPath}${title}.png`,
       fullPage: true
     })
   }
