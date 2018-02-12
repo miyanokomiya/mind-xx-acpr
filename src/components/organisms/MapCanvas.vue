@@ -83,6 +83,7 @@
         @up="e => canWrite ? nodeCursorUp(key, {shift: e.shiftKey}) : ''"
         @open="openNode(key)"
         @close="closeNode(key)"
+        @clickComment="showComments(key)"
       />
       <!-- a marker of switching a parent -->
       <g v-if="connectorOfMovingNodes" class="inserting-marker">
@@ -218,6 +219,7 @@
   <CommentList
     class="comment-list"
     v-show="showEditMenu"
+    ref="commentList"
     :comments="targetNodeComments"
     :users="users"
     :user="user"
@@ -1090,6 +1092,10 @@ export default {
           key: _key
         })
       }
+    },
+    showComments (key) {
+      this.selectNode(key)
+      this.$refs.commentList.open = true
     }
   }
 }

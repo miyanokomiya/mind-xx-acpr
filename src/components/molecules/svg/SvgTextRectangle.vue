@@ -1,6 +1,6 @@
 <template>
 <g>
-  <g v-if="commentCount > 0" class="ignore-cursor">
+  <g v-if="commentCount > 0" @click="$emit('clickComment')">
     <ellipse :cx="x + width / 2" :cy="y + height - 2" :rx="width / 2" :ry="fontSize * 1.7" fill="#ddd"/>
     <SvgText
       :text="`${commentCount}`"
@@ -210,10 +210,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.ignore-cursor {
-  cursor: initial;
-}
-</style>
-
