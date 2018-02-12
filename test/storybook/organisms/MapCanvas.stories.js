@@ -3,7 +3,12 @@ import Vue from 'vue'
 
 import MapCanvas from '@/components/organisms/MapCanvas'
 
-import { createNode, createUser, createComment } from '@/utils/model'
+import {
+  createNode,
+  createUser,
+  createComment,
+  createDefaultNodes
+} from '@/utils/model'
 
 const methods = {
   updateNodes (nextNodes) {
@@ -14,6 +19,9 @@ const methods = {
         Vue.delete(this.nodes, key)
       }
     })
+    if (Object.keys(this.nodes).length === 0) {
+      this.nodes = createDefaultNodes()
+    }
   },
   createNode (createNodes) {
     this.nodes = Object.assign({}, this.nodes, createNodes)
@@ -34,7 +42,11 @@ const methods = {
   },
   postComment ({ comment, key }) {
     console.log('post comment:', comment, key)
-    Vue.set(this.comments, key, comment)
+    if (comment) {
+      Vue.set(this.comments, key, comment)
+    } else {
+      Vue.delete(this.comments, key)
+    }
   }
 }
 
@@ -50,10 +62,10 @@ storiesOf('organisms/MapCanvas', module)
       components: { MapCanvas },
       template: `
       <v-app>
-        <div style="width: 420px; height: 400px;">
+        <div style="width: 620px; height: 600px;">
           <MapCanvas
-            :width="400"
-            :height="400"
+            :width="600"
+            :height="600"
             :nodes="nodes"
             :selectedNodes="selectedNodes"
             :canWrite="true"
@@ -105,10 +117,10 @@ storiesOf('organisms/MapCanvas', module)
       components: { MapCanvas },
       template: `
       <v-app>
-      <div style="width: 420px; height: 400px;">
+      <div style="width: 620px; height: 600px;">
           <MapCanvas
-            :width="400"
-            :height="400"
+            :width="600"
+            :height="600"
             :nodes="nodes"
             :selectedNodes="selectedNodes"
             :canWrite="false"

@@ -3,6 +3,8 @@ import { storiesOf } from '@storybook/vue'
 import InviteUserDialog from '@/components/organisms/InviteUserDialog'
 import { createUser } from '@/utils/model'
 
+const user = createUser({ uid: 'user' })
+
 storiesOf('organisms/InviteUserDialog', module)
   .add('view', () => {
     return {
@@ -12,12 +14,14 @@ storiesOf('organisms/InviteUserDialog', module)
       <InviteUserDialog
         :publicFile="publicFile"
         :publicReadOnly="publicReadOnly"
+        :user="user"
       />
     </v-app>
     `,
       data: () => ({
         publicFile: false,
-        publicReadOnly: false
+        publicReadOnly: false,
+        user
       })
     }
   })
@@ -30,12 +34,14 @@ storiesOf('organisms/InviteUserDialog', module)
         :publicFile="publicFile"
         :publicReadOnly="publicReadOnly"
         :canEditPublic="false"
+        :user="user"
       />
     </v-app>
     `,
       data: () => ({
         publicFile: true,
-        publicReadOnly: false
+        publicReadOnly: false,
+        user
       })
     }
   })
@@ -49,6 +55,7 @@ storiesOf('organisms/InviteUserDialog', module)
         :publicReadOnly="publicReadOnly"
         :userAuthorities="userAuthorities"
         :users="users"
+        :user="user"
       />
     </v-app>
     `,
@@ -64,7 +71,8 @@ storiesOf('organisms/InviteUserDialog', module)
           a: createUser({ uid: 'a', displayName: 'aa aa', email: 'aa@aa' }),
           b: createUser({ uid: 'b', displayName: 'bb bb', email: 'bb@bb' }),
           c: createUser({ uid: 'c', displayName: 'cc cc', email: 'cc@cc' })
-        }
+        },
+        user
       })
     }
   })

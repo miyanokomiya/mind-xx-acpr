@@ -18,6 +18,7 @@ storiesOf('organisms/WorkSpace', module).add('view', () => {
         @changeName="changeName"
         @createFile="createFile"
         @deleteFiles="deleteFiles"
+        @cloneFile="cloneFile"
       />
     </v-app>
     `,
@@ -75,14 +76,34 @@ storiesOf('organisms/WorkSpace', module).add('view', () => {
           key,
           createFile({
             name: key,
-            created: Date.now().toString(),
-            updated: Date.now().toString()
+            created: Date.now(),
+            updated: Date.now()
           })
         )
+        Vue.set(this.fileAuthorities, key, {
+          users: {
+            user: { write: true, owner: true }
+          }
+        })
       },
       deleteFiles ({ files }) {
         Object.keys(files).forEach(key => {
           Vue.delete(this.files, key)
+        })
+      },
+      cloneFile ({ fileKey }) {
+        const file = this.files[fileKey] || this.sharedFiles[fileKey]
+        const key = Math.random()
+        Vue.set(this.files, key, {
+          ...file,
+          name: file.name + ' clone',
+          created: Date.now(),
+          updated: Date.now()
+        })
+        Vue.set(this.fileAuthorities, key, {
+          users: {
+            user: { write: true, owner: true }
+          }
         })
       }
     }
