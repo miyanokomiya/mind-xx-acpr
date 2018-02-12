@@ -61,6 +61,29 @@
         :ex="connector.ex"
         :ey="connector.ey"
       />
+      <!-- standard nodes -->
+      <SvgTextRectangle
+        class="mind-node"
+        :class="{ 'moving-origin': movingNodePositions[key] }"
+        v-for="(node, key) in nodes"
+        v-if="isShowNodes[key]"
+        :key="key"
+        :x="nodePositions[key].x"
+        :y="nodePositions[key].y"
+        :text="key === editTextTarget ? editingText : node.text"
+        :strokeWidth="getStrokeWidth(key)"
+        :stroke="getStrokeColor(key)"
+        :fill="node.backgroundColor"
+        :textFill="node.color"
+        :hiddenFamilyCount="closedNodeFamilyCounts[key]"
+        :commentCount="commentCounts[key]"
+        :childrenCount="node.children.length"
+        @calcSize="size => calcSize({key, size})"
+        @down="e => canWrite ? nodeCursorDown(e, key) : ''"
+        @up="e => canWrite ? nodeCursorUp(key, {shift: e.shiftKey}) : ''"
+        @open="openNode(key)"
+        @close="closeNode(key)"
+      />
       <!-- a marker of switching a parent -->
       <g v-if="connectorOfMovingNodes" class="inserting-marker">
         <SvgConnector
@@ -80,28 +103,6 @@
           fill="blue"
         />
       </g>
-      <!-- standard nodes -->
-      <SvgTextRectangle
-        class="mind-node"
-        :class="{ 'moving-origin': movingNodePositions[key] }"
-        v-for="(node, key) in nodes"
-        v-if="isShowNodes[key]"
-        :key="key"
-        :x="nodePositions[key].x"
-        :y="nodePositions[key].y"
-        :text="key === editTextTarget ? editingText : node.text"
-        :strokeWidth="getStrokeWidth(key)"
-        :stroke="getStrokeColor(key)"
-        :fill="node.backgroundColor"
-        :textFill="node.color"
-        :hiddenFamilyCount="closedNodeFamilyCounts[key]"
-        :commentCount="commentCounts[key]"
-        @calcSize="size => calcSize({key, size})"
-        @mousedown.native.prevent="e => canWrite ? ($isMobile.any ? '' : nodeCursorDown(e, key)) : ''"
-        @mouseup.native.prevent="e => canWrite ? ($isMobile.any ?  '' : nodeCursorUp(key, {shift: e.shiftKey})) : ''"
-        @touchstart.native.prevent="e => canWrite ? ($isMobile.any ? nodeCursorDown(e, key) : '') : ''"
-        @touchend.native.prevent="e => canWrite ? ($isMobile.any ?  nodeCursorUp(key, {shift: e.shiftKey}) : '') : ''"
-      />
       <!-- moving shadow of switching a parent -->
       <SvgTextRectangle
         class="mind-node moving-copy"
@@ -115,7 +116,8 @@
         :fill="nodes[key].backgroundColor"
         :textFill="nodes[key].color"
         :hiddenFamilyCount="closedNodeFamilyCounts[key]" 
-        :commentCount="commentCounts[key]"       
+        :commentCount="commentCounts[key]"     
+        :childrenCount="nodes[key].children.length"  
       />
     </SvgCanvas>
   </div>
@@ -1060,7 +1062,11 @@ export default {
     },
     closeNode (key) {
       // clear other selections
-      this.selectNode(key)
+      if (this.selectedNodes[key]) {
+        this.selectNode(key)
+      } else {
+        this.clearSelect()
+      }
       const node = this.nodes[key]
       this.$emit('updateNodes', { [key]: {
         ...node,

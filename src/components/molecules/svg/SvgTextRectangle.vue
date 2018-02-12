@@ -1,6 +1,6 @@
 <template>
 <g>
-  <g v-if="commentCount > 0">
+  <g v-if="commentCount > 0" class="ignore-cursor">
     <ellipse :cx="x + width / 2" :cy="y + height - 2" :rx="width / 2" :ry="fontSize * 1.7" fill="#ddd"/>
     <SvgText
       :text="`${commentCount}`"
@@ -10,7 +10,7 @@
       fill="black"
     />
   </g>
-  <g v-if="closed">
+  <g v-if="closed" @click="$emit('open')">
     <ellipse :cx="x + width + countCircleRadius / 2" :cy="y + height / 2" :rx="rightRx" :ry="fontSize" fill="#444"/>
     <SvgText
       :text="`${hiddenFamilyCount}`"
@@ -20,36 +20,53 @@
       fill="white"
     />
   </g>
-  <SvgRectangle
-    :x="x"
-    :y="y"
-    :rx="3"
-    :ry="3"
-    :width="width"
-    :height="height"
-    :stroke-width="strokeWidth"
-    :stroke="stroke"
-    :fill="fill"
-  />
-  <SvgText
-    v-for="(l, i) in lines"
-    :ref="`svgLine`"
-    :key="i"
-    :x="textX"
-    :y="textY + textHeight * (i + 1)"
-    :font-size="fontSize"
-    :text="l"
-    :fill="textFill"
-  />
-  <!-- empty text causes errors of getting the positions on Safari -->
-  <SvgText
-    v-if="!text"
-    text="-XXACPR-"
-    :x="textX"
-    :y="textY + textHeight"
-    :font-size="fontSize"
-    :fill="textFill"
-  />
+  <g v-if="!closed && childrenCount > 0" @click="$emit('close')">
+    <ellipse :cx="x + width + countCircleRadius / 2" :cy="y + height / 2" :rx="rightRx" :ry="fontSize" fill="#aaa"/>
+    <SvgText
+      text="-"
+      :x="x + width + 3"
+      :y="y + height / 2 + 3.5"
+      :font-size="countFontSize"
+      fill="white"
+    />
+  </g>
+  <g
+    @mousedown.prevent="e => $isMobile.any ? '' : $emit('down', e)"
+    @mouseup.prevent="e => $isMobile.any ? '' : $emit('up', e)"
+    @touchstart.prevent="e => $isMobile.any ? $emit('down', e) : ''"
+    @touchend.prevent="e => $isMobile.any ? $emit('up', e) : ''"
+  >
+    <SvgRectangle
+      :x="x"
+      :y="y"
+      :rx="3"
+      :ry="3"
+      :width="width"
+      :height="height"
+      :stroke-width="strokeWidth"
+      :stroke="stroke"
+      :fill="fill"
+    />
+    <SvgText
+      v-for="(l, i) in lines"
+      :ref="`svgLine`"
+      :key="i"
+      :x="textX"
+      :y="textY + textHeight * (i + 1)"
+      :font-size="fontSize"
+      :text="l"
+      :fill="textFill"
+    />
+    <!-- empty text causes errors of getting the positions on Safari -->
+    <SvgText
+      v-if="!text"
+      text="-XXACPR-"
+      :x="textX"
+      :y="textY + textHeight"
+      :font-size="fontSize"
+      :fill="textFill"
+    />
+  </g>
 </g>
 </template>
 
@@ -105,6 +122,10 @@ export default {
     commentCount: {
       type: Number,
       default: 0
+    },
+    childrenCount: {
+      type: Number,
+      default: 0
     }
   },
   computed: {
@@ -133,16 +154,19 @@ export default {
       return this.hiddenFamilyCount > 0
     },
     countLength () {
-      return `${this.hiddenFamilyCount}`.length
+      return this.closed ? `${this.hiddenFamilyCount}`.length : 1
     },
     countFontSize () {
       return this.fontSize
+    },
+    countCircleMinRadius () {
+      return 4 + this.countFontSize * 0.5 * 1
     },
     countCircleRadius () {
       return 4 + this.countFontSize * 0.5 * this.countLength
     },
     rightRx () {
-      return this.closed ? Math.max(this.countCircleRadius, this.countFontSize) : 0
+      return Math.max(this.countCircleRadius, this.countFontSize)
     },
     commentLength () {
       return `${this.commentCount}`.length
@@ -186,3 +210,10 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.ignore-cursor {
+  cursor: initial;
+}
+</style>
+

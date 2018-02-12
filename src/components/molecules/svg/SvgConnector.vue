@@ -1,6 +1,6 @@
 <template>
   <path stroke="black" stroke-width="1" fill="none"
-    :d="`M ${sx} ${sy} Q ${qx} ${qy} ${ex} ${ey}`"
+    :d="d"
   />
 </template>
 
@@ -22,6 +22,10 @@ export default {
     ey: {
       type: Number,
       required: true
+    },
+    curve: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -36,6 +40,13 @@ export default {
     },
     cy () {
       return (this.sy + this.ey) / 2
+    },
+    d () {
+      if (this.curve) {
+        return `M ${this.sx} ${this.sy} Q ${this.qx} ${this.qy} ${this.ex} ${this.ey}`
+      } else {
+        return `M ${this.sx} ${this.sy} L ${this.sx + 20} ${this.sy} L ${this.sx + 20} ${this.ey} L ${this.ex} ${this.ey}`
+      }
     }
   },
   methods: {

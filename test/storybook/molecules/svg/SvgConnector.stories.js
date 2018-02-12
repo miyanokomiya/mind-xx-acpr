@@ -8,6 +8,7 @@ storiesOf('molecules/svg/SvgConnector', module).add('story', () => ({
     <svg-wrapper>
       <SvgConnector :sx="0" :sy="0" :ex="100" :ey="100" />
       <SvgConnector :sx="0" :sy="100" :ex="50" :ey="200" />
+      <SvgConnector :sx="0" :sy="200" :ex="50" :ey="300" curve />
     </svg-wrapper>
   `
 }))
