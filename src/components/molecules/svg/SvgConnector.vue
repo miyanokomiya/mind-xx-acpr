@@ -30,7 +30,11 @@ export default {
   },
   computed: {
     qx () {
-      return this.sx * 7 / 10 + this.ex * 3 / 10
+      if (this.opposite) {
+        return this.sx * 3 / 10 + this.ex * 7 / 10
+      } else {
+        return this.sx * 7 / 10 + this.ex * 3 / 10
+      }
     },
     qy () {
       return this.sy * 1 / 10 + this.ey * 9 / 10
@@ -45,8 +49,15 @@ export default {
       if (this.curve) {
         return `M ${this.sx} ${this.sy} Q ${this.qx} ${this.qy} ${this.ex} ${this.ey}`
       } else {
-        return `M ${this.sx} ${this.sy} L ${this.sx + 20} ${this.sy} L ${this.sx + 20} ${this.ey} L ${this.ex} ${this.ey}`
+        if (this.opposite) {
+          return `M ${this.sx} ${this.sy} L ${this.sx - 20} ${this.sy} L ${this.sx - 20} ${this.ey} L ${this.ex} ${this.ey}`
+        } else {
+          return `M ${this.sx} ${this.sy} L ${this.sx + 20} ${this.sy} L ${this.sx + 20} ${this.ey} L ${this.ex} ${this.ey}`
+        }
       }
+    },
+    opposite () {
+      return this.sx > this.ex
     }
   },
   methods: {

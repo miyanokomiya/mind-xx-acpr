@@ -117,8 +117,23 @@ export const calcPositions = ({ nodes, sizes, parentKey }) => {
     root: true
   })
   const familySizes = {}
-  calcFamilySizes({ nodes, sizes, familySizes, parentKey, opposite: false, root: true })
-  calcFamilyPositions({ nodes, sizes, familySizes, parentKey, positions, opposite: false, root: true })
+  calcFamilySizes({
+    nodes,
+    sizes,
+    familySizes,
+    parentKey,
+    opposite: false,
+    root: true
+  })
+  calcFamilyPositions({
+    nodes,
+    sizes,
+    familySizes,
+    parentKey,
+    positions,
+    opposite: false,
+    root: true
+  })
   return positions
 }
 
@@ -547,16 +562,16 @@ export function getConnectors ({ nodes, positions, sizes }) {
     const parent = nodes[parentKey]
     const parentPosition = positions[parentKey]
     const parentSize = sizes[parentKey]
-    parent.children.forEach(childKey => {
+    parent.children.concat(parent.oppositeChildren).forEach(childKey => {
       if (!hiddenNodes[parentKey] && !hiddenNodes[childKey]) {
         const childPosition = positions[childKey]
         const childSize = sizes[childKey]
         if (parentSize && childSize) {
-          const isChildLeftFromParent =
-            childPosition.x + childSize.width / 2 <
-            parentPosition.x + parentSize.width / 2
+          const isChildLeftFromParent = childPosition.x < parentPosition.x
           ret[`${parentKey}-${childKey}`] = {
-            sx: parentPosition.x + parentSize.width - CONNECTOR_INNTER_MARGIN_X,
+            sx: isChildLeftFromParent
+              ? parentPosition.x + CONNECTOR_INNTER_MARGIN_X
+              : parentPosition.x + parentSize.width - CONNECTOR_INNTER_MARGIN_X,
             sy: parentPosition.y + parentSize.height / 2,
             ex: isChildLeftFromParent
               ? childPosition.x + childSize.width

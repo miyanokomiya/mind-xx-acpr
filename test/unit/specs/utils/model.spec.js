@@ -1157,7 +1157,7 @@ describe('utils/model', () => {
           to: 'b'
         },
         'b-c': {
-          sx: 80 - CONNECTOR_INNTER_MARGIN_X,
+          sx: 50 + CONNECTOR_INNTER_MARGIN_X,
           sy: 75,
           ex: 0,
           ey: -40,
@@ -1199,12 +1199,45 @@ describe('utils/model', () => {
           to: 'b'
         },
         'a-c': {
-          sx: 10 - CONNECTOR_INNTER_MARGIN_X,
+          sx: 0 - CONNECTOR_INNTER_MARGIN_X,
           sy: 10,
           ex: 0,
           ey: -40,
           from: 'a',
           to: 'c'
+        }
+      })
+    })
+    it('should get correct connectors of opposite children', () => {
+      const a = modelUtils.createNode({
+        oppositeChildren: ['b']
+      })
+      const nodes = { a, b, c, d }
+      const res = modelUtils.getConnectors({ nodes, positions, sizes })
+      expect(res).toEqual({
+        'a-b': {
+          sx: 10 - CONNECTOR_INNTER_MARGIN_X,
+          sy: 10,
+          ex: 50,
+          ey: 75,
+          from: 'a',
+          to: 'b'
+        },
+        'b-c': {
+          sx: 50 + CONNECTOR_INNTER_MARGIN_X,
+          sy: 75,
+          ex: 0,
+          ey: -40,
+          from: 'b',
+          to: 'c'
+        },
+        'b-d': {
+          sx: 80 - CONNECTOR_INNTER_MARGIN_X,
+          sy: 75,
+          ex: 100,
+          ey: 520,
+          from: 'b',
+          to: 'd'
         }
       })
     })
