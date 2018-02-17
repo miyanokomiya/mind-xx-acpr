@@ -235,9 +235,12 @@ describe('Edit nodes', async () => {
 
   test('Add a comment', async () => {
     // select a node
-
     let $nodes = await getNodes({ page })
     await selectNode({ page, $node: $nodes[0] })
+
+    // open comments
+    let openButton = await page.$('.comment-list .switch-buttons')
+    await openButton.click()
 
     // add a comment
     await inputAndSubmitComment({ page, text: 'new comment' })
