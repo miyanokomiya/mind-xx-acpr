@@ -254,7 +254,10 @@ export function calcFamilySizes ({
 export function getParentKey ({ nodes, childKey }) {
   const ret = Object.keys(nodes).find(key => {
     const node = nodes[key]
-    return node.children.indexOf(childKey) !== -1
+    return (
+      node.children.indexOf(childKey) !== -1 ||
+      node.oppositeChildren.indexOf(childKey) !== -1
+    )
   })
   return ret || null
 }
@@ -265,11 +268,16 @@ export function getNearestFamilyKey ({ nodes, childKey }) {
     return null
   }
   const parent = nodes[parentKey]
-  const index = parent.children.indexOf(childKey)
+  let index = parent.children.indexOf(childKey)
   if (index > 0) {
     return parent.children[index - 1]
   } else {
-    return parentKey
+    index = parent.oppositeChildren.indexOf(childKey)
+    if (index > 0) {
+      return parent.oppositeChildren[index - 1]
+    } else {
+      return parentKey
+    }
   }
 }
 
@@ -287,17 +295,19 @@ export function getFamilyKeys ({ nodes, parentKey }) {
 export function getUpdatedNodesWhenCreateChildNode ({
   nodes,
   parentKey,
-  newKey = `key_${Math.random()}`
+  newKey = `key_${Math.random()}`,
+  opposite = false
 }) {
+  const childList = opposite ? 'oppositeChildren' : 'children'
   const node = createNode()
   const key = newKey
   const parent = nodes[parentKey]
-  const nextChildren = parent.children.concat()
+  const nextChildren = parent[childList].concat()
   nextChildren.push(key)
   const updatedNodes = {
     [key]: node,
     [parentKey]: Object.assign({}, parent, {
-      children: nextChildren,
+      [childList]: nextChildren,
       closed: false
     })
   }
@@ -310,16 +320,20 @@ export function getUpdatedNodesWhenCreateBrotherdNode ({
   newKey = `key_${Math.random()}`
 }) {
   const parentKey = getParentKey({ nodes, childKey: brotherKey })
+  const parentNode = nodes[parentKey]
+  const opposite = parentNode.oppositeChildren.indexOf(brotherKey) !== -1
   const updatedNodes = getUpdatedNodesWhenCreateChildNode({
     nodes,
     parentKey,
-    newKey
+    newKey,
+    opposite
   })
   // replace newKey after brotherKey
-  const parent = updatedNodes[parentKey]
-  parent.children.pop()
-  const brotherIndex = parent.children.indexOf(brotherKey)
-  parent.children.splice(brotherIndex + 1, 0, newKey)
+  const nextParentNode = updatedNodes[parentKey]
+  const childList = opposite ? 'oppositeChildren' : 'children'
+  nextParentNode[childList].pop()
+  const brotherIndex = nextParentNode[childList].indexOf(brotherKey)
+  nextParentNode[childList].splice(brotherIndex + 1, 0, newKey)
   return updatedNodes
 }
 

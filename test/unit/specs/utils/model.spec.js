@@ -606,12 +606,23 @@ describe('utils/model', () => {
       })
       expect(parentKey).toBe('b')
     })
-    it('should get null when no parent ', () => {
+    it('should get null when no parent', () => {
       const parentKey = modelUtils.getParentKey({
         nodes,
         childKey: 'a'
       })
       expect(parentKey).toBe(null)
+    })
+    it('should get correct parent key, if the child is oppsite', () => {
+      const a = modelUtils.createNode({
+        oppositeChildren: ['b']
+      })
+      const nodes = { a, b, c, d }
+      const parentKey = modelUtils.getParentKey({
+        nodes,
+        childKey: 'b'
+      })
+      expect(parentKey).toBe('a')
     })
   })
 
@@ -645,6 +656,20 @@ describe('utils/model', () => {
         childKey: 'a'
       })
       expect(parentKey).toBe(null)
+    })
+    it('should get correct elder brother key if it exists, if the children are opposite', () => {
+      const a = modelUtils.createNode({
+        oppositeChildren: ['b', 'c']
+      })
+      const b = modelUtils.createNode({
+        children: ['d']
+      })
+      const nodes = { a, b, c, d }
+      const key = modelUtils.getNearestFamilyKey({
+        nodes,
+        childKey: 'c'
+      })
+      expect(key).toBe('b')
     })
   })
 
@@ -696,6 +721,22 @@ describe('utils/model', () => {
         b: modelUtils.createNode()
       })
     })
+    it('should get correct nodes when creating opposite child node', () => {
+      const updatedNodes = modelUtils.getUpdatedNodesWhenCreateChildNode({
+        nodes,
+        parentKey: 'a',
+        newKey: 'b',
+        opposite: true
+      })
+      expect(updatedNodes).toEqual({
+        a: Object.assign({}, a, {
+          children: ['c'],
+          oppositeChildren: ['b'],
+          closed: false
+        }),
+        b: modelUtils.createNode()
+      })
+    })
   })
 
   describe('getUpdatedNodesWhenCreateBrotherdNode', () => {
@@ -727,6 +768,23 @@ describe('utils/model', () => {
       expect(updatedNodes).toEqual({
         a: Object.assign({}, a, {
           children: ['b', 'c', 'd']
+        }),
+        d: modelUtils.createNode()
+      })
+    })
+    it('should get correct nodes when creating opposite brother node', () => {
+      const a = modelUtils.createNode({
+        oppositeChildren: ['b', 'c']
+      })
+      const nodes = { a, b, c }
+      const updatedNodes = modelUtils.getUpdatedNodesWhenCreateBrotherdNode({
+        nodes,
+        brotherKey: 'c',
+        newKey: 'd'
+      })
+      expect(updatedNodes).toEqual({
+        a: Object.assign({}, a, {
+          oppositeChildren: ['b', 'c', 'd']
         }),
         d: modelUtils.createNode()
       })
