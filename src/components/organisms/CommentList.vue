@@ -71,7 +71,7 @@ export default {
     editKey: '',
     editText: '',
     snackbar: false,
-    open: true
+    open: false
   }),
   props: {
     comments: {
