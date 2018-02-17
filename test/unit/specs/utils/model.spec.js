@@ -241,6 +241,95 @@ describe('utils/model', () => {
         y: 500 - (500 + 400) / 2 + 500 + NODE_MARGIN_Y
       })
     })
+    it('should calc correct position of a node that has grandson, oppsite option', () => {
+      const a = modelUtils.createNode({
+        oppositeChildren: ['b']
+      })
+      const b = modelUtils.createNode({
+        children: ['c', 'd']
+      })
+      const c = modelUtils.createNode()
+      const d = modelUtils.createNode()
+      const nodes = { a, b, c, d }
+      const sizes = {
+        a: {
+          width: 10,
+          height: 100
+        },
+        b: {
+          width: 20,
+          height: 200
+        },
+        c: {
+          width: 50,
+          height: 500
+        },
+        d: {
+          width: 40,
+          height: 400
+        }
+      }
+      const familySizes = {
+        a: {
+          width: 10 + 20 + 50,
+          height: 500 + 400,
+          othersHeight: 500 + 400
+        },
+        b: {
+          width: 20 + 50,
+          height: 500 + 400,
+          othersHeight: 500 + 400
+        },
+        c: {
+          width: 50,
+          height: 500,
+          othersHeight: 0
+        },
+        d: {
+          width: 40,
+          height: 400,
+          othersHeight: 0
+        }
+      }
+      const positions = {
+        a: { x: 0, y: 0 }
+      }
+      modelUtils.calcFamilyPositions({
+        nodes,
+        sizes,
+        familySizes,
+        parentKey: 'a',
+        positions,
+        opposite: true,
+        root: true
+      })
+      expect(positions.a).toEqual({
+        x: 0,
+        y: 0
+      })
+      const bx =
+        -1 * (NODE_MARGIN_X + (500 + 400) * NODE_ADDITIONAL_MARGIN_X_RATE) - 20
+      expect(positions.b).toEqual({
+        x: bx,
+        y: -200 / 2 + 100 / 2
+      })
+      expect(positions.c).toEqual({
+        x:
+          bx -
+          NODE_MARGIN_X -
+          (500 + 400) * NODE_ADDITIONAL_MARGIN_X_RATE * 2 -
+          50,
+        y: -200 / 2 + 100 / 2 - (500 + 400) / 2 + 200 / 2
+      })
+      expect(positions.d).toEqual({
+        x:
+          bx -
+          NODE_MARGIN_X -
+          (500 + 400) * NODE_ADDITIONAL_MARGIN_X_RATE * 2 -
+          40,
+        y: -200 / 2 + 100 / 2 - (500 + 400) / 2 + 200 / 2 + 500 + NODE_MARGIN_Y
+      })
+    })
   })
 
   describe('calcFamilySizes', () => {
@@ -415,6 +504,66 @@ describe('utils/model', () => {
       }
       const familySizes = {}
       modelUtils.calcFamilySizes({ nodes, sizes, familySizes, parentKey: 'a' })
+      expect(familySizes).toEqual({
+        a: {
+          width: 10 + 20 + 50 + NODE_MARGIN_X * 2,
+          height: 500 + 400 + NODE_MARGIN_Y,
+          othersHeight: 500 + 400 + NODE_MARGIN_Y
+        },
+        b: {
+          width: 20 + 50 + NODE_MARGIN_X,
+          height: 500 + 400 + NODE_MARGIN_Y,
+          othersHeight: 500 + 400 + NODE_MARGIN_Y
+        },
+        c: {
+          width: 50,
+          height: 500,
+          othersHeight: 0
+        },
+        d: {
+          width: 40,
+          height: 400,
+          othersHeight: 0
+        }
+      })
+    })
+    it('should calc correct size of a node that has opposite children', () => {
+      const a = modelUtils.createNode({
+        oppositeChildren: ['b']
+      })
+      const b = modelUtils.createNode({
+        children: ['c', 'd']
+      })
+      const c = modelUtils.createNode()
+      const d = modelUtils.createNode()
+      const nodes = { a, b, c, d }
+      const sizes = {
+        a: {
+          width: 10,
+          height: 100
+        },
+        b: {
+          width: 20,
+          height: 200
+        },
+        c: {
+          width: 50,
+          height: 500
+        },
+        d: {
+          width: 40,
+          height: 400
+        }
+      }
+      const familySizes = {}
+      modelUtils.calcFamilySizes({
+        nodes,
+        sizes,
+        familySizes,
+        parentKey: 'a',
+        opposite: true,
+        root: true
+      })
       expect(familySizes).toEqual({
         a: {
           width: 10 + 20 + 50 + NODE_MARGIN_X * 2,

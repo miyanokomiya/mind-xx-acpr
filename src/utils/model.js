@@ -17,7 +17,8 @@ export const createNode = obj =>
       backgroundColor: '#B3E5FC',
       color: '#000000',
       dependencies: {},
-      closed: false
+      closed: false,
+      oppositeChildren: []
     },
     obj
   )
@@ -97,9 +98,27 @@ export const createUser = obj =>
 export const calcPositions = ({ nodes, sizes, parentKey }) => {
   const positions = {}
   positions[parentKey] = { x: 0, y: 0 }
+  const oppositeFamilySizes = {}
+  calcFamilySizes({
+    nodes,
+    sizes,
+    familySizes: oppositeFamilySizes,
+    parentKey,
+    opposite: true,
+    root: true
+  })
+  calcFamilyPositions({
+    nodes,
+    sizes,
+    familySizes: oppositeFamilySizes,
+    parentKey,
+    positions,
+    opposite: true,
+    root: true
+  })
   const familySizes = {}
-  calcFamilySizes({ nodes, sizes, familySizes, parentKey })
-  calcFamilyPositions({ nodes, sizes, familySizes, parentKey, positions })
+  calcFamilySizes({ nodes, sizes, familySizes, parentKey, opposite: false, root: true })
+  calcFamilyPositions({ nodes, sizes, familySizes, parentKey, positions, opposite: false, root: true })
   return positions
 }
 
@@ -108,11 +127,15 @@ export function calcFamilyPositions ({
   sizes,
   familySizes,
   parentKey,
-  positions
+  positions,
+  opposite = false,
+  root = false
 }) {
   const parentNode = nodes[parentKey]
   const parentPosition = positions[parentKey]
-  if (parentNode.children.length > 0) {
+  const children =
+    opposite && root ? parentNode.oppositeChildren : parentNode.children
+  if (children.length > 0) {
     const familySize = familySizes[parentKey]
     const left =
       parentPosition.x +
@@ -131,11 +154,17 @@ export function calcFamilyPositions ({
         familySize.othersHeight / 2 +
         sizes[parentKey].height / 2
     }
-    parentNode.children.forEach(childKey => {
+    children.forEach(childKey => {
       const childSize = sizes[childKey]
       const childFamilySize = familySizes[childKey]
+      const childLeft = opposite
+        ? parentPosition.x -
+          childSize.width -
+          NODE_MARGIN_X -
+          familySize.height * NODE_ADDITIONAL_MARGIN_X_RATE
+        : left
       positions[childKey] = {
-        x: left,
+        x: childLeft,
         y: top + childFamilySize.height / 2 - childSize.height / 2
       }
       top += childFamilySize.height
@@ -145,19 +174,37 @@ export function calcFamilyPositions ({
         sizes,
         familySizes,
         parentKey: childKey,
-        positions
+        positions,
+        opposite,
+        root: false
       })
     })
   }
 }
 
-export function calcFamilySizes ({ nodes, sizes, familySizes, parentKey }) {
+export function calcFamilySizes ({
+  nodes,
+  sizes,
+  familySizes,
+  parentKey,
+  opposite = false,
+  root = false
+}) {
   const parentNode = nodes[parentKey]
-  if (parentNode.children.length > 0) {
-    parentNode.children.forEach(childKey => {
-      calcFamilySizes({ nodes, sizes, familySizes, parentKey: childKey })
+  const children =
+    opposite && root ? parentNode.oppositeChildren : parentNode.children
+  if (children.length > 0) {
+    children.forEach(childKey => {
+      calcFamilySizes({
+        nodes,
+        sizes,
+        familySizes,
+        parentKey: childKey,
+        opposite,
+        root: false
+      })
     })
-    const size = parentNode.children.reduce(
+    const size = children.reduce(
       (p, c) => {
         const childWidth = familySizes[c].width
         const childHeight = Math.max(familySizes[c].height, sizes[c].height)
@@ -174,7 +221,7 @@ export function calcFamilySizes ({ nodes, sizes, familySizes, parentKey }) {
     if (parentNode.closed) {
       size.height = sizes[parentKey].height
     } else {
-      size.height += NODE_MARGIN_Y * (parentNode.children.length - 1)
+      size.height += NODE_MARGIN_Y * (children.length - 1)
     }
     familySizes[parentKey] = {
       width: sizes[parentKey].width + size.width + NODE_MARGIN_X,
