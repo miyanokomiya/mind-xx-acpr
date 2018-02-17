@@ -814,6 +814,24 @@ describe('utils/model', () => {
         c: null
       })
     })
+    it('should get correct nodes when deleting a opposite node', () => {
+      const a = modelUtils.createNode({
+        oppositeChildren: ['b', 'e']
+      })
+      const nodes = { a, b, c, d, e }
+      const updatedNodes = modelUtils.getUpdatedNodesWhenDeleteNode({
+        nodes,
+        deleteKey: 'b'
+      })
+      expect(updatedNodes).toEqual({
+        a: Object.assign({}, a, {
+          oppositeChildren: ['e']
+        }),
+        b: null,
+        c: null,
+        d: null
+      })
+    })
     it('should get correct nodes when deleting a node has children', () => {
       const updatedNodes = modelUtils.getUpdatedNodesWhenDeleteNode({
         nodes,
@@ -956,6 +974,8 @@ describe('utils/model', () => {
       const copy = modelUtils.copyNode(origin)
       expect(copy).not.toBe(origin)
       expect(copy.children).not.toBe(origin.children)
+      expect(copy.oppositeChildren).not.toBe(origin.oppositeChildren)
+      expect(copy.dependencies).not.toBe(origin.dependencies)
     })
   })
 
@@ -1007,6 +1027,55 @@ describe('utils/model', () => {
         }),
         e
       })
+    })
+    it('should get correct nodes, opposite pattern', () => {
+      const a = modelUtils.createNode({
+        oppositeChildren: ['b', 'e']
+      })
+      const b = modelUtils.createNode({
+        children: ['c', 'd']
+      })
+      const c = modelUtils.createNode()
+      const d = modelUtils.createNode()
+      const e = modelUtils.createNode()
+      const nodes = { a, b, c, d, e }
+      const updatedNodes = modelUtils.getUpdatedNodesWhenChangeParent({
+        nodes,
+        targetKey: 'c',
+        newParentKey: 'a',
+        order: 1,
+        opposite: true
+      })
+      expect(updatedNodes).toEqual({
+        a: Object.assign({}, a, {
+          oppositeChildren: ['b', 'c', 'e']
+        }),
+        b: Object.assign({}, b, {
+          children: ['d']
+        }),
+        c,
+        d,
+        e
+      })
+    })
+  })
+
+  describe('isOpposite', () => {
+    it('should return true if the center.x is opposite', () => {
+      expect(
+        modelUtils.isOpposite({
+          position: { x: -11, y: 100 },
+          size: { width: 20, height: 200 }
+        })
+      ).toBe(true)
+    })
+    it('should return false if the center.x is not opposite', () => {
+      expect(
+        modelUtils.isOpposite({
+          position: { x: -9, y: 100 },
+          size: { width: 20, height: 200 }
+        })
+      ).toBe(false)
     })
   })
 

@@ -98,7 +98,7 @@
           :y="connectorOfMovingNodes.ey - NODE_MARGIN_Y / 3 / 2"
           :rx="5"
           :ry="5"
-          :width="50"
+          :width="CONNECTOR_MARKER_WIDTH"
           :height="NODE_MARGIN_Y / 3"
           stroke="none"
           fill="blue"
@@ -244,7 +244,8 @@ import {
   INTERVAL_DOUBLE_CLICK,
   NODE_MARGIN_Y,
   ROOT_NODE,
-  CANVAS_MODE
+  CANVAS_MODE,
+  CONNECTOR_MARKER_WIDTH
 } from '@/constants'
 import {
   calcPositions,
@@ -262,7 +263,8 @@ import {
   getDependencyConnectors,
   getBetterConnector,
   getHiddenNodes,
-  createComment
+  createComment,
+  isOpposite
 } from '@/utils/model'
 import { getCoveredRectangle, isCoveredRectangle } from '@/utils/geometry'
 import * as canvasUtils from '@/utils/canvas'
@@ -370,6 +372,7 @@ export default {
   computed: {
     ROOT_NODE: () => ROOT_NODE,
     NODE_MARGIN_Y: () => NODE_MARGIN_Y,
+    CONNECTOR_MARKER_WIDTH: () => CONNECTOR_MARKER_WIDTH,
     MIN_SCALE_RATE () {
       return Math.min(Math.log(this.scaleCoveringAllNode) / Math.log(1.1) - 3, -5)
     },
@@ -519,7 +522,8 @@ export default {
         positions: this.nodePositions,
         targetKey: movingKey,
         newParentKey: info.parentKey,
-        newChildOrder: info.order
+        newChildOrder: info.order,
+        opposite: info.opposite
       })
     },
     rectangleCoveringAllNode () {
@@ -805,9 +809,16 @@ export default {
         })
         const newParentKey = getParentKey({ nodes, childKey: targetKey })
         const newParentNode = nodes[newParentKey]
+        const opposite = isOpposite({
+          size: this.nodeSizes[targetKey],
+          position: this.movingNodePositions[targetKey]
+        })
+        const childList =
+          opposite && newParentKey === ROOT_NODE ? 'oppositeChildren' : 'children'
         this.insertInformationOfMovingNodes = {
           parentKey: newParentKey,
-          order: newParentNode.children.indexOf(targetKey)
+          order: newParentNode[childList].indexOf(targetKey),
+          opposite
         }
 
         if (commit) {
