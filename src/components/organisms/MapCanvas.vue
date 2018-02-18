@@ -140,7 +140,7 @@
     />
   </div>
   <ToggleCloseButton
-    v-if="showEditMenu && editMenuTargetNode.children.length > 0"
+    v-if="showEditMenu && editMenuTargetNode.children.length > 0 && editMenuTarget !== ROOT_NODE"
     :x="fixTopBoxPosition.x"
     :y="fixTopBoxPosition.y"
     :closed="editMenuTargetNode.closed"

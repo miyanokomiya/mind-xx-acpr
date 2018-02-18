@@ -971,7 +971,7 @@ export function getHiddenNodes ({ nodes }) {
   return Object.keys(nodes).reduce((p, key) => {
     const node = nodes[key]
     // ignore if this node is hidden already
-    if (!p[key] && node.closed) {
+    if (!p[key] && node.closed && key !== ROOT_NODE) {
       const familyKeys = getFamilyKeys({
         nodes,
         parentKey: key

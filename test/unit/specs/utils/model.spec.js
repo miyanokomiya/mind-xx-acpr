@@ -1804,6 +1804,28 @@ describe('utils/model', () => {
     it('should get currect hidden nodes having grandsons', () => {
       const nodes = {
         [ROOT_NODE]: modelUtils.createNode({
+          children: ['a']
+        }),
+        a: modelUtils.createNode({
+          children: ['b'],
+          closed: true
+        }),
+        b: modelUtils.createNode({
+          children: ['c']
+        }),
+        c: modelUtils.createNode()
+      }
+      const res = modelUtils.getHiddenNodes({
+        nodes
+      })
+      expect(res).toEqual({
+        b: true,
+        c: true
+      })
+    })
+    it('should get currect hidden nodes except for the root', () => {
+      const nodes = {
+        [ROOT_NODE]: modelUtils.createNode({
           children: ['a', 'b'],
           closed: true
         }),
@@ -1817,9 +1839,6 @@ describe('utils/model', () => {
         nodes
       })
       expect(res).toEqual({
-        a: true,
-        b: true,
-        c: true
       })
     })
   })
