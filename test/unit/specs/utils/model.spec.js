@@ -1090,7 +1090,8 @@ describe('utils/model', () => {
 
   describe('getNodeFrom', () => {
     const a = modelUtils.createNode({
-      children: ['b']
+      children: ['b'],
+      oppositeChildren: ['f', 'g']
     })
     const b = modelUtils.createNode({
       children: ['c', 'd', 'e']
@@ -1098,7 +1099,9 @@ describe('utils/model', () => {
     const c = modelUtils.createNode()
     const d = modelUtils.createNode()
     const e = modelUtils.createNode()
-    const nodes = { a, b, c, d, e }
+    const f = modelUtils.createNode()
+    const g = modelUtils.createNode()
+    const nodes = { a, b, c, d, e, f, g }
     it('should get correct key, left, has a parent', () => {
       const res = modelUtils.getNodeFrom({
         nodes,
@@ -1106,14 +1109,6 @@ describe('utils/model', () => {
         targetKey: 'b'
       })
       expect(res).toBe('a')
-    })
-    it('should get correct key, left, has no parent', () => {
-      const res = modelUtils.getNodeFrom({
-        nodes,
-        to: 'left',
-        targetKey: 'a'
-      })
-      expect(res).toBe(null)
     })
     it('should get correct key, right, has children', () => {
       const res = modelUtils.getNodeFrom({
@@ -1192,11 +1187,20 @@ describe('utils/model', () => {
       })
       expect(res).toBe('b')
     })
+    it('should get correct key, left, at root having opposite children', () => {
+      const res = modelUtils.getNodeFrom({
+        nodes,
+        to: 'left',
+        targetKey: 'a'
+      })
+      expect(res).toBe('f')
+    })
   })
 
   describe('getUpdatedNodesWhenChangeChildOrder', () => {
     const a = modelUtils.createNode({
-      children: ['b']
+      children: ['b'],
+      oppositeChildren: ['f', 'g']
     })
     const b = modelUtils.createNode({
       children: ['c', 'd', 'e']
@@ -1204,7 +1208,9 @@ describe('utils/model', () => {
     const c = modelUtils.createNode()
     const d = modelUtils.createNode()
     const e = modelUtils.createNode()
-    const nodes = { a, b, c, d, e }
+    const f = modelUtils.createNode()
+    const g = modelUtils.createNode()
+    const nodes = { a, b, c, d, e, f, g }
     it('should get correct parent node, +1', () => {
       const res = modelUtils.getUpdatedNodesWhenChangeChildOrder({
         nodes,
@@ -1254,6 +1260,19 @@ describe('utils/model', () => {
         ...nodes,
         b: Object.assign({}, b, {
           children: ['d', 'e', 'c']
+        })
+      })
+    })
+    it('should get correct parent node, +1 if target is opposite', () => {
+      const res = modelUtils.getUpdatedNodesWhenChangeChildOrder({
+        nodes,
+        childKey: 'f',
+        dif: 1
+      })
+      expect(res).toEqual({
+        ...nodes,
+        a: Object.assign({}, a, {
+          oppositeChildren: ['g', 'f']
         })
       })
     })

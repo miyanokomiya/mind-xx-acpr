@@ -638,8 +638,10 @@ export function getNodeFrom ({ nodes, to, targetKey }) {
           console.error('invalid key')
         }
       } else {
-        if (baseNode.oppositeChildren.length > 0) {
-          ret = baseNode.oppositeChildren[0]
+        if (to === 'left') {
+          if (baseNode.oppositeChildren.length > 0) {
+            ret = baseNode.oppositeChildren[0]
+          }
         }
       }
     }
@@ -662,13 +664,15 @@ export function getUpdatedNodesWhenChangeChildOrder ({ nodes, childKey, dif }) {
     return null
   }
   const parentNode = nodes[parentKey]
-  const currentIndex = parentNode.children.indexOf(childKey)
+  const targetIsOpposite = parentNode.children.indexOf(childKey) === -1
+  const childList = targetIsOpposite ? 'oppositeChildren' : 'children'
+  const currentIndex = parentNode[childList].indexOf(childKey)
   let nextIndex = currentIndex + dif
-  nextIndex = nextIndex < 0 ? parentNode.children.length - 1 : nextIndex
-  nextIndex %= parentNode.children.length
+  nextIndex = nextIndex < 0 ? parentNode[childList].length - 1 : nextIndex
+  nextIndex %= parentNode[childList].length
   const updatedParent = copyNode(parentNode)
-  updatedParent.children.splice(currentIndex, 1)
-  updatedParent.children.splice(nextIndex, 0, childKey)
+  updatedParent[childList].splice(currentIndex, 1)
+  updatedParent[childList].splice(nextIndex, 0, childKey)
   return Object.assign({}, nodes, {
     [parentKey]: updatedParent
   })
