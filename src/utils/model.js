@@ -574,7 +574,6 @@ export function getUpdatedNodesWhenFitClosestParent ({
   const addToOpposite = isClosestRoot && opposite
   const childList = addToOpposite ? 'oppositeChildren' : 'children'
 
-  if (!closestNode) debugger
   const closestHasNoChildOrHasTarget =
     closestNode[childList].length === 0 ||
     (closestNode[childList].length === 1 &&
