@@ -17,7 +17,7 @@ Vue.use(Vuetify)
 Vue.component('svg-wrapper', {
   template: `
   <div style="width: 500px; height: 500px; border: 1px solid #000;">
-    <svg viewBox="0 0 400 400">
+    <svg viewBox="-200 -200 600 600">
       <slot/>
     </svg>
   </div>

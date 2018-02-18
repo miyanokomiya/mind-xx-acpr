@@ -10,25 +10,27 @@
       fill="black"
     />
   </g>
-  <g v-if="closed" @click="$emit('open')">
-    <ellipse :cx="x + width + countCircleRadius / 2" :cy="y + height / 2" :rx="rightRx" :ry="fontSize" fill="#444"/>
-    <SvgText
-      :text="`${hiddenFamilyCount}`"
-      :x="x + width + 1"
-      :y="y + height / 2 + 3.5"
-      :font-size="countFontSize"
-      fill="white"
-    />
-  </g>
-  <g v-if="!closed && childrenCount > 0" @click="$emit('close')">
-    <ellipse :cx="x + width + countCircleRadius / 2" :cy="y + height / 2" :rx="rightRx" :ry="fontSize" fill="#aaa"/>
-    <SvgText
-      text="-"
-      :x="x + width + 3"
-      :y="y + height / 2 + 3.5"
-      :font-size="countFontSize"
-      fill="white"
-    />
+  <g v-if="!root && childrenCount > 0">
+    <g v-if="closed" @click="$emit('open')">
+      <ellipse :cx="x + width + countCircleRadius / 2 + 1 - closeMarkerToLeft" :cy="y + height / 2" :rx="rightRx" :ry="fontSize" fill="#444"/>
+      <SvgText
+        :text="`${hiddenFamilyCount}`"
+        :x="x + width + 2 - closeMarkerToLeft"
+        :y="y + height / 2 + 3.5"
+        :font-size="countFontSize"
+        fill="white"
+      />
+    </g>
+    <g v-else @click="$emit('close')">
+      <ellipse :cx="x + width + countCircleRadius / 2 + 1 - closeMarkerToLeft" :cy="y + height / 2" :rx="rightRx" :ry="fontSize" fill="#aaa"/>
+      <SvgText
+        text="-"
+        :x="x + width + 4 - closeMarkerToLeft"
+        :y="y + height / 2 + 3.5"
+        :font-size="countFontSize"
+        fill="white"
+      />
+    </g>
   </g>
   <g
     @mousedown.prevent="e => $isMobile.any ? '' : $emit('down', e)"
@@ -126,6 +128,10 @@ export default {
     childrenCount: {
       type: Number,
       default: 0
+    },
+    root: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -179,6 +185,12 @@ export default {
     },
     leftRx () {
       return this.commentCount > 0 ? Math.max(this.commentCircleRadius, this.commentFontSize) : 0
+    },
+    opposite () {
+      return this.x + this.width / 2 < 0
+    },
+    closeMarkerToLeft () {
+      return  this.opposite ? this.width + this.countCircleRadius + 3 : 0
     }
   },
   watch: {

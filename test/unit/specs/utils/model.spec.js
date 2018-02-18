@@ -12,6 +12,7 @@ describe('utils/model', () => {
     const n1 = modelUtils.createNode({
       text: '11',
       children: ['a', 'b'],
+      oppositeChildren: ['c', 'd'],
       backgroundColor: '#B3E5FC',
       color: '#000000',
       dependencies: { a: true },
@@ -21,6 +22,7 @@ describe('utils/model', () => {
       const n2 = modelUtils.createNode({
         text: '11',
         children: ['a', 'b'],
+        oppositeChildren: ['c', 'd'],
         backgroundColor: '#B3E5FC',
         color: '#000000',
         dependencies: { a: true },
@@ -33,6 +35,7 @@ describe('utils/model', () => {
       const n1 = modelUtils.createNode({
         text: '11',
         children: [],
+        oppositeChildren: ['c', 'd'],
         backgroundColor: '#B3E5FC',
         color: '#000000',
         dependencies: { a: true }
@@ -40,6 +43,7 @@ describe('utils/model', () => {
       const n2 = modelUtils.createNode({
         text: '11',
         children: [],
+        oppositeChildren: ['c', 'd'],
         backgroundColor: '#B3E5FC',
         color: '#000000',
         dependencies: { a: true }
@@ -51,6 +55,7 @@ describe('utils/model', () => {
       const n2 = modelUtils.createNode({
         text: '11',
         children: ['a', 'b', 'c'],
+        oppositeChildren: ['c', 'd'],
         backgroundColor: '#B3E5FC',
         color: '#000000',
         dependencies: { a: true }
@@ -62,9 +67,22 @@ describe('utils/model', () => {
       const n2 = modelUtils.createNode({
         text: '11',
         children: ['a', 'b'],
+        oppositeChildren: ['c', 'd'],
         backgroundColor: '#B3E5FC',
         color: '#000000',
         dependencies: { b: true }
+      })
+      const res = modelUtils.isSameNode(n1, n2)
+      expect(res).toBe(false)
+    })
+    it('should return true if opposite children of two nodes are different', () => {
+      const n2 = modelUtils.createNode({
+        text: '11',
+        children: ['a', 'b'],
+        oppositeChildren: ['c'],
+        backgroundColor: '#B3E5FC',
+        color: '#000000',
+        dependencies: { a: true },
       })
       const res = modelUtils.isSameNode(n1, n2)
       expect(res).toBe(false)
@@ -239,6 +257,95 @@ describe('utils/model', () => {
           NODE_MARGIN_X * 2 +
           (1000 + 500 + 400) * NODE_ADDITIONAL_MARGIN_X_RATE,
         y: 500 - (500 + 400) / 2 + 500 + NODE_MARGIN_Y
+      })
+    })
+    it('should calc correct position of a node that has grandson, oppsite option', () => {
+      const a = modelUtils.createNode({
+        oppositeChildren: ['b']
+      })
+      const b = modelUtils.createNode({
+        children: ['c', 'd']
+      })
+      const c = modelUtils.createNode()
+      const d = modelUtils.createNode()
+      const nodes = { a, b, c, d }
+      const sizes = {
+        a: {
+          width: 10,
+          height: 100
+        },
+        b: {
+          width: 20,
+          height: 200
+        },
+        c: {
+          width: 50,
+          height: 500
+        },
+        d: {
+          width: 40,
+          height: 400
+        }
+      }
+      const familySizes = {
+        a: {
+          width: 10 + 20 + 50,
+          height: 500 + 400,
+          othersHeight: 500 + 400
+        },
+        b: {
+          width: 20 + 50,
+          height: 500 + 400,
+          othersHeight: 500 + 400
+        },
+        c: {
+          width: 50,
+          height: 500,
+          othersHeight: 0
+        },
+        d: {
+          width: 40,
+          height: 400,
+          othersHeight: 0
+        }
+      }
+      const positions = {
+        a: { x: 0, y: 0 }
+      }
+      modelUtils.calcFamilyPositions({
+        nodes,
+        sizes,
+        familySizes,
+        parentKey: 'a',
+        positions,
+        opposite: true,
+        root: true
+      })
+      expect(positions.a).toEqual({
+        x: 0,
+        y: 0
+      })
+      const bx =
+        -1 * (NODE_MARGIN_X + (500 + 400) * NODE_ADDITIONAL_MARGIN_X_RATE) - 20
+      expect(positions.b).toEqual({
+        x: bx,
+        y: -200 / 2 + 100 / 2
+      })
+      expect(positions.c).toEqual({
+        x:
+          bx -
+          NODE_MARGIN_X -
+          (500 + 400) * NODE_ADDITIONAL_MARGIN_X_RATE * 2 -
+          50,
+        y: -200 / 2 + 100 / 2 - (500 + 400) / 2 + 200 / 2
+      })
+      expect(positions.d).toEqual({
+        x:
+          bx -
+          NODE_MARGIN_X -
+          (500 + 400) * NODE_ADDITIONAL_MARGIN_X_RATE * 2 -
+          40,
+        y: -200 / 2 + 100 / 2 - (500 + 400) / 2 + 200 / 2 + 500 + NODE_MARGIN_Y
       })
     })
   })
@@ -438,6 +545,66 @@ describe('utils/model', () => {
         }
       })
     })
+    it('should calc correct size of a node that has opposite children', () => {
+      const a = modelUtils.createNode({
+        oppositeChildren: ['b']
+      })
+      const b = modelUtils.createNode({
+        children: ['c', 'd']
+      })
+      const c = modelUtils.createNode()
+      const d = modelUtils.createNode()
+      const nodes = { a, b, c, d }
+      const sizes = {
+        a: {
+          width: 10,
+          height: 100
+        },
+        b: {
+          width: 20,
+          height: 200
+        },
+        c: {
+          width: 50,
+          height: 500
+        },
+        d: {
+          width: 40,
+          height: 400
+        }
+      }
+      const familySizes = {}
+      modelUtils.calcFamilySizes({
+        nodes,
+        sizes,
+        familySizes,
+        parentKey: 'a',
+        opposite: true,
+        root: true
+      })
+      expect(familySizes).toEqual({
+        a: {
+          width: 10 + 20 + 50 + NODE_MARGIN_X * 2,
+          height: 500 + 400 + NODE_MARGIN_Y,
+          othersHeight: 500 + 400 + NODE_MARGIN_Y
+        },
+        b: {
+          width: 20 + 50 + NODE_MARGIN_X,
+          height: 500 + 400 + NODE_MARGIN_Y,
+          othersHeight: 500 + 400 + NODE_MARGIN_Y
+        },
+        c: {
+          width: 50,
+          height: 500,
+          othersHeight: 0
+        },
+        d: {
+          width: 40,
+          height: 400,
+          othersHeight: 0
+        }
+      })
+    })
   })
 
   describe('getParentKey', () => {
@@ -457,12 +624,23 @@ describe('utils/model', () => {
       })
       expect(parentKey).toBe('b')
     })
-    it('should get null when no parent ', () => {
+    it('should get null when no parent', () => {
       const parentKey = modelUtils.getParentKey({
         nodes,
         childKey: 'a'
       })
       expect(parentKey).toBe(null)
+    })
+    it('should get correct parent key, if the child is oppsite', () => {
+      const a = modelUtils.createNode({
+        oppositeChildren: ['b']
+      })
+      const nodes = { a, b, c, d }
+      const parentKey = modelUtils.getParentKey({
+        nodes,
+        childKey: 'b'
+      })
+      expect(parentKey).toBe('a')
     })
   })
 
@@ -497,11 +675,26 @@ describe('utils/model', () => {
       })
       expect(parentKey).toBe(null)
     })
+    it('should get correct elder brother key if it exists, if the children are opposite', () => {
+      const a = modelUtils.createNode({
+        oppositeChildren: ['b', 'c']
+      })
+      const b = modelUtils.createNode({
+        children: ['d']
+      })
+      const nodes = { a, b, c, d }
+      const key = modelUtils.getNearestFamilyKey({
+        nodes,
+        childKey: 'c'
+      })
+      expect(key).toBe('b')
+    })
   })
 
   describe('getFamilyKeys', () => {
     const a = modelUtils.createNode({
-      children: ['b', 'e']
+      children: ['b', 'e'],
+      oppositeChildren: ['f']
     })
     const b = modelUtils.createNode({
       children: ['c', 'd']
@@ -509,7 +702,15 @@ describe('utils/model', () => {
     const c = modelUtils.createNode()
     const d = modelUtils.createNode()
     const e = modelUtils.createNode()
-    const nodes = { a, b, c, d, e }
+    const f = modelUtils.createNode()
+    const nodes = { a, b, c, d, e, f }
+    it('should get correct keys, if parent has opposite children', () => {
+      const familyKeys = modelUtils.getFamilyKeys({
+        nodes,
+        parentKey: 'a'
+      })
+      expect(familyKeys).toEqual(['b', 'c', 'd', 'e', 'f'])
+    })
     it('should get correct keys', () => {
       const familyKeys = modelUtils.getFamilyKeys({
         nodes,
@@ -542,6 +743,22 @@ describe('utils/model', () => {
       expect(updatedNodes).toEqual({
         a: Object.assign({}, a, {
           children: ['c', 'b'],
+          closed: false
+        }),
+        b: modelUtils.createNode()
+      })
+    })
+    it('should get correct nodes when creating opposite child node', () => {
+      const updatedNodes = modelUtils.getUpdatedNodesWhenCreateChildNode({
+        nodes,
+        parentKey: 'a',
+        newKey: 'b',
+        opposite: true
+      })
+      expect(updatedNodes).toEqual({
+        a: Object.assign({}, a, {
+          children: ['c'],
+          oppositeChildren: ['b'],
           closed: false
         }),
         b: modelUtils.createNode()
@@ -582,6 +799,23 @@ describe('utils/model', () => {
         d: modelUtils.createNode()
       })
     })
+    it('should get correct nodes when creating opposite brother node', () => {
+      const a = modelUtils.createNode({
+        oppositeChildren: ['b', 'c']
+      })
+      const nodes = { a, b, c }
+      const updatedNodes = modelUtils.getUpdatedNodesWhenCreateBrotherdNode({
+        nodes,
+        brotherKey: 'c',
+        newKey: 'd'
+      })
+      expect(updatedNodes).toEqual({
+        a: Object.assign({}, a, {
+          oppositeChildren: ['b', 'c', 'd']
+        }),
+        d: modelUtils.createNode()
+      })
+    })
   })
 
   describe('getUpdatedNodesWhenDeleteNode', () => {
@@ -605,6 +839,24 @@ describe('utils/model', () => {
           children: ['d']
         }),
         c: null
+      })
+    })
+    it('should get correct nodes when deleting a opposite node', () => {
+      const a = modelUtils.createNode({
+        oppositeChildren: ['b', 'e']
+      })
+      const nodes = { a, b, c, d, e }
+      const updatedNodes = modelUtils.getUpdatedNodesWhenDeleteNode({
+        nodes,
+        deleteKey: 'b'
+      })
+      expect(updatedNodes).toEqual({
+        a: Object.assign({}, a, {
+          oppositeChildren: ['e']
+        }),
+        b: null,
+        c: null,
+        d: null
       })
     })
     it('should get correct nodes when deleting a node has children', () => {
@@ -749,6 +1001,8 @@ describe('utils/model', () => {
       const copy = modelUtils.copyNode(origin)
       expect(copy).not.toBe(origin)
       expect(copy.children).not.toBe(origin.children)
+      expect(copy.oppositeChildren).not.toBe(origin.oppositeChildren)
+      expect(copy.dependencies).not.toBe(origin.dependencies)
     })
   })
 
@@ -801,11 +1055,61 @@ describe('utils/model', () => {
         e
       })
     })
+    it('should get correct nodes, opposite pattern', () => {
+      const a = modelUtils.createNode({
+        oppositeChildren: ['b', 'e']
+      })
+      const b = modelUtils.createNode({
+        children: ['c', 'd']
+      })
+      const c = modelUtils.createNode()
+      const d = modelUtils.createNode()
+      const e = modelUtils.createNode()
+      const nodes = { a, b, c, d, e }
+      const updatedNodes = modelUtils.getUpdatedNodesWhenChangeParent({
+        nodes,
+        targetKey: 'c',
+        newParentKey: 'a',
+        order: 1,
+        opposite: true
+      })
+      expect(updatedNodes).toEqual({
+        a: Object.assign({}, a, {
+          oppositeChildren: ['b', 'c', 'e']
+        }),
+        b: Object.assign({}, b, {
+          children: ['d']
+        }),
+        c,
+        d,
+        e
+      })
+    })
+  })
+
+  describe('isOpposite', () => {
+    it('should return true if the center.x is opposite', () => {
+      expect(
+        modelUtils.isOpposite({
+          position: { x: -11, y: 100 },
+          size: { width: 20, height: 200 }
+        })
+      ).toBe(true)
+    })
+    it('should return false if the center.x is not opposite', () => {
+      expect(
+        modelUtils.isOpposite({
+          position: { x: -9, y: 100 },
+          size: { width: 20, height: 200 }
+        })
+      ).toBe(false)
+    })
   })
 
   describe('getNodeFrom', () => {
     const a = modelUtils.createNode({
-      children: ['b']
+      children: ['b'],
+      oppositeChildren: ['f', 'g']
     })
     const b = modelUtils.createNode({
       children: ['c', 'd', 'e']
@@ -813,7 +1117,9 @@ describe('utils/model', () => {
     const c = modelUtils.createNode()
     const d = modelUtils.createNode()
     const e = modelUtils.createNode()
-    const nodes = { a, b, c, d, e }
+    const f = modelUtils.createNode()
+    const g = modelUtils.createNode()
+    const nodes = { a, b, c, d, e, f, g }
     it('should get correct key, left, has a parent', () => {
       const res = modelUtils.getNodeFrom({
         nodes,
@@ -821,14 +1127,6 @@ describe('utils/model', () => {
         targetKey: 'b'
       })
       expect(res).toBe('a')
-    })
-    it('should get correct key, left, has no parent', () => {
-      const res = modelUtils.getNodeFrom({
-        nodes,
-        to: 'left',
-        targetKey: 'a'
-      })
-      expect(res).toBe(null)
     })
     it('should get correct key, right, has children', () => {
       const res = modelUtils.getNodeFrom({
@@ -907,11 +1205,20 @@ describe('utils/model', () => {
       })
       expect(res).toBe('b')
     })
+    it('should get correct key, left, at root having opposite children', () => {
+      const res = modelUtils.getNodeFrom({
+        nodes,
+        to: 'left',
+        targetKey: 'a'
+      })
+      expect(res).toBe('f')
+    })
   })
 
   describe('getUpdatedNodesWhenChangeChildOrder', () => {
     const a = modelUtils.createNode({
-      children: ['b']
+      children: ['b'],
+      oppositeChildren: ['f', 'g']
     })
     const b = modelUtils.createNode({
       children: ['c', 'd', 'e']
@@ -919,7 +1226,9 @@ describe('utils/model', () => {
     const c = modelUtils.createNode()
     const d = modelUtils.createNode()
     const e = modelUtils.createNode()
-    const nodes = { a, b, c, d, e }
+    const f = modelUtils.createNode()
+    const g = modelUtils.createNode()
+    const nodes = { a, b, c, d, e, f, g }
     it('should get correct parent node, +1', () => {
       const res = modelUtils.getUpdatedNodesWhenChangeChildOrder({
         nodes,
@@ -972,6 +1281,19 @@ describe('utils/model', () => {
         })
       })
     })
+    it('should get correct parent node, +1 if target is opposite', () => {
+      const res = modelUtils.getUpdatedNodesWhenChangeChildOrder({
+        nodes,
+        childKey: 'f',
+        dif: 1
+      })
+      expect(res).toEqual({
+        ...nodes,
+        a: Object.assign({}, a, {
+          oppositeChildren: ['g', 'f']
+        })
+      })
+    })
   })
 
   describe('getConnectors', () => {
@@ -1008,7 +1330,7 @@ describe('utils/model', () => {
           to: 'b'
         },
         'b-c': {
-          sx: 80 - CONNECTOR_INNTER_MARGIN_X,
+          sx: 50 + CONNECTOR_INNTER_MARGIN_X,
           sy: 75,
           ex: 0,
           ey: -40,
@@ -1050,12 +1372,45 @@ describe('utils/model', () => {
           to: 'b'
         },
         'a-c': {
-          sx: 10 - CONNECTOR_INNTER_MARGIN_X,
+          sx: 0 - CONNECTOR_INNTER_MARGIN_X,
           sy: 10,
           ex: 0,
           ey: -40,
           from: 'a',
           to: 'c'
+        }
+      })
+    })
+    it('should get correct connectors of opposite children', () => {
+      const a = modelUtils.createNode({
+        oppositeChildren: ['b']
+      })
+      const nodes = { a, b, c, d }
+      const res = modelUtils.getConnectors({ nodes, positions, sizes })
+      expect(res).toEqual({
+        'a-b': {
+          sx: 10 - CONNECTOR_INNTER_MARGIN_X,
+          sy: 10,
+          ex: 50,
+          ey: 75,
+          from: 'a',
+          to: 'b'
+        },
+        'b-c': {
+          sx: 50 + CONNECTOR_INNTER_MARGIN_X,
+          sy: 75,
+          ex: 0,
+          ey: -40,
+          from: 'b',
+          to: 'c'
+        },
+        'b-d': {
+          sx: 80 - CONNECTOR_INNTER_MARGIN_X,
+          sy: 75,
+          ex: 100,
+          ey: 520,
+          from: 'b',
+          to: 'd'
         }
       })
     })
@@ -1077,8 +1432,8 @@ describe('utils/model', () => {
     const nodes = { a, b, c, d }
     const positions = {
       a: { x: 0, y: 0 },
-      b: { x: 50, y: 50 },
-      c: { x: -50, y: -50 },
+      b: { x: 20, y: 20 },
+      c: { x: 50, y: -50 },
       d: { x: 100, y: 500 }
     }
     const sizes = {
@@ -1095,7 +1450,7 @@ describe('utils/model', () => {
       })
       expect(res).toEqual({
         'depend_c-d': {
-          sx: -50 + 50,
+          sx: 50 + 50,
           sy: -50 + 20 / 2,
           ex: 100,
           ey: 500 + 40 / 2,
@@ -1267,9 +1622,13 @@ describe('utils/model', () => {
     it('should return false if all nodes have parent', () => {
       const nodes = {
         [ROOT_NODE]: modelUtils.createNode({
-          children: ['b']
+          children: ['b'],
+          oppositeChildren: ['c']
         }),
         b: modelUtils.createNode({
+          children: []
+        }),
+        c: modelUtils.createNode({
           children: []
         })
       }
@@ -1297,6 +1656,20 @@ describe('utils/model', () => {
     const nodes = {
       [ROOT_NODE]: modelUtils.createNode({
         children: ['a', 'b']
+      }),
+      b: modelUtils.createNode({
+        children: []
+      })
+    }
+    const res = modelUtils.isConflict({
+      nodes
+    })
+    expect(res).toBe(true)
+  })
+  it('should return true if opposite children are not found', () => {
+    const nodes = {
+      [ROOT_NODE]: modelUtils.createNode({
+        oppositeChildren: ['a', 'b']
       }),
       b: modelUtils.createNode({
         children: []
@@ -1350,10 +1723,14 @@ describe('utils/model', () => {
     it('should omit children which are not exist', () => {
       const nodes = {
         [ROOT_NODE]: modelUtils.createNode({
-          children: ['a', 'b']
+          children: ['a', 'b'],
+          oppositeChildren: ['d', 'e']
         }),
         b: modelUtils.createNode({
           children: ['c']
+        }),
+        d: modelUtils.createNode({
+          children: []
         })
       }
       const res = modelUtils.rescueConflict({
@@ -1361,9 +1738,13 @@ describe('utils/model', () => {
       })
       expect(res).toEqual({
         [ROOT_NODE]: modelUtils.createNode({
-          children: ['b']
+          children: ['b'],
+          oppositeChildren: ['d']
         }),
         b: modelUtils.createNode({
+          children: []
+        }),
+        d: modelUtils.createNode({
           children: []
         })
       })

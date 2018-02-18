@@ -84,11 +84,21 @@ storiesOf('organisms/MapCanvas', module)
       `,
       data: () => ({
         nodes: {
-          root,
-          a: createNode({ text: 'aaaa', children: ['d'] }),
+          root: {
+            ...root,
+            oppositeChildren: ['zz', 'xx']
+          },
+          a: createNode({
+            text: 'aaaa',
+            children: ['d']
+          }),
           b: createNode({ text: 'bbbbbbbbbbbbbbbbbbbbbbbbb' }),
           c: createNode({ text: 'cccccccccccccccccccccccccccccccccccc' }),
-          d: createNode({ text: 'dddd' })
+          d: createNode({ text: 'dddd' }),
+          xx: createNode({ text: 'xxxx' }),
+          zz: createNode({ text: 'zzzz', children: ['yy', 'uu'] }),
+          yy: createNode({ text: 'yyyy' }),
+          uu: createNode({ text: 'uuuu' })
         },
         selectedNodes: {},
         user,

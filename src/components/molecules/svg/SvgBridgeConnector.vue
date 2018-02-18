@@ -30,13 +30,13 @@ export default {
   },
   computed: {
     qx1 () {
-      return this.sx + this.gap
+      return this.sx > 0 ? this.sx + this.gap : this.sx - this.gap
     },
     qy1 () {
       return this.sy
     },
     qx2 () {
-      return this.ex - this.gap
+      return this.ex > 0 ? this.ex - this.gap : this.ex + this.gap
     },
     qy2 () {
       return this.ey

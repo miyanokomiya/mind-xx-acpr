@@ -3,7 +3,8 @@ import {
   NODE_MARGIN_Y,
   NODE_ADDITIONAL_MARGIN_X_RATE,
   ROOT_NODE,
-  CONNECTOR_INNTER_MARGIN_X
+  CONNECTOR_INNTER_MARGIN_X,
+  CONNECTOR_MARKER_WIDTH
 } from '@/constants'
 
 import * as geometry from './geometry'
@@ -17,7 +18,8 @@ export const createNode = obj =>
       backgroundColor: '#B3E5FC',
       color: '#000000',
       dependencies: {},
-      closed: false
+      closed: false,
+      oppositeChildren: []
     },
     obj
   )
@@ -46,6 +48,9 @@ export const isSameNode = (n1, n2) => {
     return false
   }
   if (n1.children.join('/') !== n2.children.join('/')) {
+    return false
+  }
+  if (n1.oppositeChildren.join('/') !== n2.oppositeChildren.join('/')) {
     return false
   }
   {
@@ -96,10 +101,46 @@ export const createUser = obj =>
 
 export const calcPositions = ({ nodes, sizes, parentKey }) => {
   const positions = {}
-  positions[parentKey] = { x: 0, y: 0 }
+  positions[parentKey] = {
+    x: 0 - sizes[parentKey].width / 2,
+    y: 0
+  }
+  const oppositeFamilySizes = {}
+  calcFamilySizes({
+    nodes,
+    sizes,
+    familySizes: oppositeFamilySizes,
+    parentKey,
+    opposite: true,
+    root: true
+  })
+  calcFamilyPositions({
+    nodes,
+    sizes,
+    familySizes: oppositeFamilySizes,
+    parentKey,
+    positions,
+    opposite: true,
+    root: true
+  })
   const familySizes = {}
-  calcFamilySizes({ nodes, sizes, familySizes, parentKey })
-  calcFamilyPositions({ nodes, sizes, familySizes, parentKey, positions })
+  calcFamilySizes({
+    nodes,
+    sizes,
+    familySizes,
+    parentKey,
+    opposite: false,
+    root: true
+  })
+  calcFamilyPositions({
+    nodes,
+    sizes,
+    familySizes,
+    parentKey,
+    positions,
+    opposite: false,
+    root: true
+  })
   return positions
 }
 
@@ -108,11 +149,15 @@ export function calcFamilyPositions ({
   sizes,
   familySizes,
   parentKey,
-  positions
+  positions,
+  opposite = false,
+  root = false
 }) {
   const parentNode = nodes[parentKey]
   const parentPosition = positions[parentKey]
-  if (parentNode.children.length > 0) {
+  const children =
+    opposite && root ? parentNode.oppositeChildren : parentNode.children
+  if (children.length > 0) {
     const familySize = familySizes[parentKey]
     const left =
       parentPosition.x +
@@ -131,11 +176,17 @@ export function calcFamilyPositions ({
         familySize.othersHeight / 2 +
         sizes[parentKey].height / 2
     }
-    parentNode.children.forEach(childKey => {
+    children.forEach(childKey => {
       const childSize = sizes[childKey]
       const childFamilySize = familySizes[childKey]
+      const childLeft = opposite
+        ? parentPosition.x -
+          childSize.width -
+          NODE_MARGIN_X -
+          familySize.height * NODE_ADDITIONAL_MARGIN_X_RATE
+        : left
       positions[childKey] = {
-        x: left,
+        x: childLeft,
         y: top + childFamilySize.height / 2 - childSize.height / 2
       }
       top += childFamilySize.height
@@ -145,19 +196,37 @@ export function calcFamilyPositions ({
         sizes,
         familySizes,
         parentKey: childKey,
-        positions
+        positions,
+        opposite,
+        root: false
       })
     })
   }
 }
 
-export function calcFamilySizes ({ nodes, sizes, familySizes, parentKey }) {
+export function calcFamilySizes ({
+  nodes,
+  sizes,
+  familySizes,
+  parentKey,
+  opposite = false,
+  root = false
+}) {
   const parentNode = nodes[parentKey]
-  if (parentNode.children.length > 0) {
-    parentNode.children.forEach(childKey => {
-      calcFamilySizes({ nodes, sizes, familySizes, parentKey: childKey })
+  const children =
+    opposite && root ? parentNode.oppositeChildren : parentNode.children
+  if (children.length > 0) {
+    children.forEach(childKey => {
+      calcFamilySizes({
+        nodes,
+        sizes,
+        familySizes,
+        parentKey: childKey,
+        opposite,
+        root: false
+      })
     })
-    const size = parentNode.children.reduce(
+    const size = children.reduce(
       (p, c) => {
         const childWidth = familySizes[c].width
         const childHeight = Math.max(familySizes[c].height, sizes[c].height)
@@ -174,7 +243,7 @@ export function calcFamilySizes ({ nodes, sizes, familySizes, parentKey }) {
     if (parentNode.closed) {
       size.height = sizes[parentKey].height
     } else {
-      size.height += NODE_MARGIN_Y * (parentNode.children.length - 1)
+      size.height += NODE_MARGIN_Y * (children.length - 1)
     }
     familySizes[parentKey] = {
       width: sizes[parentKey].width + size.width + NODE_MARGIN_X,
@@ -192,31 +261,45 @@ export function calcFamilySizes ({ nodes, sizes, familySizes, parentKey }) {
 export function getParentKey ({ nodes, childKey }) {
   const ret = Object.keys(nodes).find(key => {
     const node = nodes[key]
-    return node.children.indexOf(childKey) !== -1
+    return (
+      node.children.indexOf(childKey) !== -1 ||
+      node.oppositeChildren.indexOf(childKey) !== -1
+    )
   })
   return ret || null
 }
 
 export function getNearestFamilyKey ({ nodes, childKey }) {
-  const parentKey = getParentKey({ nodes, childKey })
+  const parentKey = getParentKey({
+    nodes,
+    childKey
+  })
   if (!parentKey) {
     return null
   }
   const parent = nodes[parentKey]
-  const index = parent.children.indexOf(childKey)
+  let index = parent.children.indexOf(childKey)
   if (index > 0) {
     return parent.children[index - 1]
   } else {
-    return parentKey
+    index = parent.oppositeChildren.indexOf(childKey)
+    if (index > 0) {
+      return parent.oppositeChildren[index - 1]
+    } else {
+      return parentKey
+    }
   }
 }
 
 export function getFamilyKeys ({ nodes, parentKey }) {
   let familyKeys = []
   const parent = nodes[parentKey]
-  parent.children.forEach(childKey => {
+  parent.children.concat(parent.oppositeChildren).forEach(childKey => {
     familyKeys.push(childKey)
-    const childFamilyKeys = getFamilyKeys({ nodes, parentKey: childKey })
+    const childFamilyKeys = getFamilyKeys({
+      nodes,
+      parentKey: childKey
+    })
     familyKeys = familyKeys.concat(childFamilyKeys)
   })
   return familyKeys
@@ -225,17 +308,19 @@ export function getFamilyKeys ({ nodes, parentKey }) {
 export function getUpdatedNodesWhenCreateChildNode ({
   nodes,
   parentKey,
-  newKey = `key_${Math.random()}`
+  newKey = `key_${Math.random()}`,
+  opposite = false
 }) {
+  const childList = opposite ? 'oppositeChildren' : 'children'
   const node = createNode()
   const key = newKey
   const parent = nodes[parentKey]
-  const nextChildren = parent.children.concat()
+  const nextChildren = parent[childList].concat()
   nextChildren.push(key)
   const updatedNodes = {
     [key]: node,
     [parentKey]: Object.assign({}, parent, {
-      children: nextChildren,
+      [childList]: nextChildren,
       closed: false
     })
   }
@@ -247,40 +332,58 @@ export function getUpdatedNodesWhenCreateBrotherdNode ({
   brotherKey,
   newKey = `key_${Math.random()}`
 }) {
-  const parentKey = getParentKey({ nodes, childKey: brotherKey })
+  const parentKey = getParentKey({
+    nodes,
+    childKey: brotherKey
+  })
+  const parentNode = nodes[parentKey]
+  const opposite = parentNode.oppositeChildren.indexOf(brotherKey) !== -1
   const updatedNodes = getUpdatedNodesWhenCreateChildNode({
     nodes,
     parentKey,
-    newKey
+    newKey,
+    opposite
   })
   // replace newKey after brotherKey
-  const parent = updatedNodes[parentKey]
-  parent.children.pop()
-  const brotherIndex = parent.children.indexOf(brotherKey)
-  parent.children.splice(brotherIndex + 1, 0, newKey)
+  const nextParentNode = updatedNodes[parentKey]
+  const childList = opposite ? 'oppositeChildren' : 'children'
+  nextParentNode[childList].pop()
+  const brotherIndex = nextParentNode[childList].indexOf(brotherKey)
+  nextParentNode[childList].splice(brotherIndex + 1, 0, newKey)
   return updatedNodes
 }
 
 export function getUpdatedNodesWhenDeleteNode ({ nodes, deleteKey }) {
-  const familyKeys = getFamilyKeys({ nodes: nodes, parentKey: deleteKey })
+  const familyKeys = getFamilyKeys({
+    nodes: nodes,
+    parentKey: deleteKey
+  })
   const updatedNodes = {
     [deleteKey]: null
   }
   familyKeys.forEach(key => {
     updatedNodes[key] = null
   })
-  const parentKey = getParentKey({ nodes: nodes, childKey: deleteKey })
+  const parentKey = getParentKey({
+    nodes: nodes,
+    childKey: deleteKey
+  })
   if (parentKey) {
     const parentNode = nodes[parentKey]
     const nextParentNode = Object.assign({}, parentNode)
     nextParentNode.children = nextParentNode.children.filter(
       key => key !== deleteKey
     )
+    nextParentNode.oppositeChildren = nextParentNode.oppositeChildren.filter(
+      key => key !== deleteKey
+    )
     updatedNodes[parentKey] = nextParentNode
   }
   Object.keys(nodes).forEach(key => {
     const node = nodes[key]
-    const dependencies = { ...node.dependencies }
+    const dependencies = {
+      ...node.dependencies
+    }
     if (node.dependencies[deleteKey]) {
       delete dependencies[deleteKey]
     }
@@ -323,7 +426,11 @@ export function getUpdatedNodesWhenDeleteNodes ({ nodes, deleteKeys }) {
 
 export function copyNode (node) {
   return Object.assign({}, node, {
-    children: node.children.concat()
+    children: node.children.concat(),
+    oppositeChildren: node.oppositeChildren.concat(),
+    dependencies: {
+      ...node.dependencies
+    }
   })
 }
 
@@ -331,30 +438,48 @@ export function getUpdatedNodesWhenChangeParent ({
   nodes,
   targetKey,
   newParentKey,
-  order = 0
+  order = 0,
+  opposite = false
 }) {
   // exit current familly
-  const currentParentKey = getParentKey({ nodes, childKey: targetKey })
+  const currentParentKey = getParentKey({
+    nodes,
+    childKey: targetKey
+  })
   const updatedCurrentParent = copyNode(nodes[currentParentKey])
-  const currentChildIndex = updatedCurrentParent.children.indexOf(targetKey)
-  updatedCurrentParent.children.splice(currentChildIndex, 1)
+  // consider opposite children
+  const currentOpposite =
+    updatedCurrentParent.children.indexOf(targetKey) === -1
+  const childList = currentOpposite ? 'oppositeChildren' : 'children'
+  const newParentChildList = opposite ? 'oppositeChildren' : 'children'
+  const currentChildIndex = updatedCurrentParent[childList].indexOf(targetKey)
+
+  updatedCurrentParent[childList].splice(currentChildIndex, 1)
   if (currentParentKey === newParentKey) {
-    if (order <= currentChildIndex) {
-      updatedCurrentParent.children.splice(order, 0, targetKey)
+    if (childList === newParentChildList) {
+      if (order <= currentChildIndex) {
+        updatedCurrentParent[newParentChildList].splice(order, 0, targetKey)
+      } else {
+        updatedCurrentParent[newParentChildList].splice(order - 1, 0, targetKey)
+      }
     } else {
-      updatedCurrentParent.children.splice(order - 1, 0, targetKey)
+      updatedCurrentParent[newParentChildList].splice(order, 0, targetKey)
     }
     return Object.assign({}, nodes, {
       [currentParentKey]: updatedCurrentParent
     })
   } else {
     const updatedParent = copyNode(nodes[newParentKey])
-    updatedParent.children.splice(order, 0, targetKey)
+    updatedParent[newParentChildList].splice(order, 0, targetKey)
     return Object.assign({}, nodes, {
       [currentParentKey]: updatedCurrentParent,
       [newParentKey]: updatedParent
     })
   }
+}
+
+export function isOpposite ({ size, position }) {
+  return position.x + size.width / 2 < 0
 }
 
 export function getUpdatedNodesWhenFitClosestParent ({
@@ -365,12 +490,22 @@ export function getUpdatedNodesWhenFitClosestParent ({
   movingPositions
 }) {
   const rectangles = {}
-  const hiddenNodes = getHiddenNodes({ nodes })
-  const familyKeys = getFamilyKeys({ nodes, parentKey: targetKey })
+  const hiddenNodes = getHiddenNodes({
+    nodes
+  })
+  const familyKeys = getFamilyKeys({
+    nodes,
+    parentKey: targetKey
+  })
   const keys = Object.keys(nodes)
   keys.forEach(key => {
     // remove root
-    if (!getParentKey({ nodes, childKey: key })) {
+    if (
+      !getParentKey({
+        nodes,
+        childKey: key
+      })
+    ) {
       return
     }
     // remove hidden nodes
@@ -391,14 +526,40 @@ export function getUpdatedNodesWhenFitClosestParent ({
     height: sizes[targetKey].height
   }
 
+  const opposite = isOpposite({
+    size: sizes[targetKey],
+    position: movingPositions[targetKey]
+  })
+  for (let key in rectangles) {
+    if (
+      (rectangles[key].x > 0 && opposite) ||
+      (rectangles[key].x <= 0 && !opposite)
+    ) {
+      delete rectangles[key]
+    }
+  }
+
   // delete rectangles[targetKey]
   const closestKey = geometry.getClosestRectangleByPoint({
     rectangles,
     point: {
-      x: targetRectangle.x,
+      x: opposite
+        ? targetRectangle.x + targetRectangle.width
+        : targetRectangle.x,
       y: targetRectangle.y + targetRectangle.height / 2
     }
   })
+
+  if (!closestKey) {
+    // move to counter side and there are no current nodes on counter side
+    return getUpdatedNodesWhenChangeParent({
+      nodes,
+      targetKey,
+      newParentKey: ROOT_NODE,
+      order: 0,
+      opposite: opposite
+    })
+  }
 
   // change nothing if closest node is the target or its family
   if (familyKeys.indexOf(closestKey) > -1 || closestKey === targetKey) {
@@ -409,31 +570,52 @@ export function getUpdatedNodesWhenFitClosestParent ({
   const closestRectangle = rectangles[closestKey]
   const targetCenter = geometry.getCenterOfRectangle(targetRectangle)
 
+  const isClosestRoot = closestKey === ROOT_NODE
+  const addToOpposite = isClosestRoot && opposite
+  const childList = addToOpposite ? 'oppositeChildren' : 'children'
+
+  if (!closestNode) debugger
   const closestHasNoChildOrHasTarget =
-    closestNode.children.length === 0 ||
-    (closestNode.children.length === 1 &&
-      closestNode.children.indexOf(targetCenter) === -1)
+    closestNode[childList].length === 0 ||
+    (closestNode[childList].length === 1 &&
+      closestNode[childList].indexOf(targetKey) === -1)
   if (
     closestHasNoChildOrHasTarget &&
-    closestRectangle.x + closestRectangle.width / 2 < targetRectangle.x
+    ((!opposite && closestRectangle.x < targetRectangle.x) ||
+      (opposite &&
+        closestRectangle.x + closestRectangle.width >
+          targetRectangle.x + targetRectangle.width))
   ) {
     // add child to closest node
     return getUpdatedNodesWhenChangeParent({
       nodes,
       targetKey,
       newParentKey: closestKey,
-      order: 0
+      order: 0,
+      opposite: addToOpposite
     })
   } else {
     const isElder =
       targetCenter.y < closestRectangle.y + closestRectangle.height / 2
-    const closestParentKey = getParentKey({ nodes, childKey: closestKey })
-    const childIndex = nodes[closestParentKey].children.indexOf(closestKey)
+    const closestParentKey = getParentKey({
+      nodes,
+      childKey: closestKey
+    })
+
+    const isClosestParentRoot = closestParentKey === ROOT_NODE
+    let addToOpposite = false
+
+    let childIndex = nodes[closestParentKey].children.indexOf(closestKey)
+    if (childIndex === -1) {
+      childIndex = nodes[closestParentKey].oppositeChildren.indexOf(closestKey)
+      addToOpposite = isClosestParentRoot
+    }
     return getUpdatedNodesWhenChangeParent({
       nodes,
       targetKey,
       newParentKey: closestParentKey,
-      order: childIndex + (isElder ? 0 : 1)
+      order: childIndex + (isElder ? 0 : 1),
+      opposite: addToOpposite
     })
   }
 }
@@ -448,27 +630,40 @@ export function getNodeFrom ({ nodes, to, targetKey }) {
         ret = baseNode.children[0]
       }
     } else {
-      const parentKey = getParentKey({ nodes, childKey: baseKey })
+      const parentKey = getParentKey({
+        nodes,
+        childKey: baseKey
+      })
       if (parentKey) {
         const parentNode = nodes[parentKey]
+        const fromOpposite = parentNode.children.indexOf(baseKey) === -1
+        const childList = fromOpposite ? 'oppositeChildren' : 'children'
         if (to === 'left') {
           ret = parentKey
-        }
-        if (to === 'down') {
+        } else if (to === 'down') {
           const index =
-            (parentNode.children.indexOf(baseKey) + 1) %
-            parentNode.children.length
-          ret = parentNode.children[index]
+            (parentNode[childList].indexOf(baseKey) + 1) %
+            parentNode[childList].length
+          ret = parentNode[childList][index]
+        } else if (to === 'up') {
+          let index = parentNode[childList].indexOf(baseKey) - 1
+          index = index < 0 ? parentNode[childList].length - 1 : index
+          ret = parentNode[childList][index]
+        } else {
+          console.error('invalid key')
         }
-        if (to === 'up') {
-          let index = parentNode.children.indexOf(baseKey) - 1
-          index = index < 0 ? parentNode.children.length - 1 : index
-          ret = parentNode.children[index]
+      } else {
+        if (to === 'left') {
+          if (baseNode.oppositeChildren.length > 0) {
+            ret = baseNode.oppositeChildren[0]
+          }
         }
       }
     }
   }
-  const hiddenNodes = getHiddenNodes({ nodes })
+  const hiddenNodes = getHiddenNodes({
+    nodes
+  })
   if (hiddenNodes[ret]) {
     ret = targetKey
   }
@@ -476,18 +671,23 @@ export function getNodeFrom ({ nodes, to, targetKey }) {
 }
 
 export function getUpdatedNodesWhenChangeChildOrder ({ nodes, childKey, dif }) {
-  const parentKey = getParentKey({ nodes, childKey })
+  const parentKey = getParentKey({
+    nodes,
+    childKey
+  })
   if (!parentKey) {
     return null
   }
   const parentNode = nodes[parentKey]
-  const currentIndex = parentNode.children.indexOf(childKey)
+  const targetIsOpposite = parentNode.children.indexOf(childKey) === -1
+  const childList = targetIsOpposite ? 'oppositeChildren' : 'children'
+  const currentIndex = parentNode[childList].indexOf(childKey)
   let nextIndex = currentIndex + dif
-  nextIndex = nextIndex < 0 ? parentNode.children.length - 1 : nextIndex
-  nextIndex %= parentNode.children.length
+  nextIndex = nextIndex < 0 ? parentNode[childList].length - 1 : nextIndex
+  nextIndex %= parentNode[childList].length
   const updatedParent = copyNode(parentNode)
-  updatedParent.children.splice(currentIndex, 1)
-  updatedParent.children.splice(nextIndex, 0, childKey)
+  updatedParent[childList].splice(currentIndex, 1)
+  updatedParent[childList].splice(nextIndex, 0, childKey)
   return Object.assign({}, nodes, {
     [parentKey]: updatedParent
   })
@@ -495,21 +695,23 @@ export function getUpdatedNodesWhenChangeChildOrder ({ nodes, childKey, dif }) {
 
 export function getConnectors ({ nodes, positions, sizes }) {
   const ret = {}
-  const hiddenNodes = getHiddenNodes({ nodes })
+  const hiddenNodes = getHiddenNodes({
+    nodes
+  })
   Object.keys(nodes).forEach(parentKey => {
     const parent = nodes[parentKey]
     const parentPosition = positions[parentKey]
     const parentSize = sizes[parentKey]
-    parent.children.forEach(childKey => {
+    parent.children.concat(parent.oppositeChildren).forEach(childKey => {
       if (!hiddenNodes[parentKey] && !hiddenNodes[childKey]) {
         const childPosition = positions[childKey]
         const childSize = sizes[childKey]
         if (parentSize && childSize) {
-          const isChildLeftFromParent =
-            childPosition.x + childSize.width / 2 <
-            parentPosition.x + parentSize.width / 2
+          const isChildLeftFromParent = childPosition.x < parentPosition.x
           ret[`${parentKey}-${childKey}`] = {
-            sx: parentPosition.x + parentSize.width - CONNECTOR_INNTER_MARGIN_X,
+            sx: isChildLeftFromParent
+              ? parentPosition.x + CONNECTOR_INNTER_MARGIN_X
+              : parentPosition.x + parentSize.width - CONNECTOR_INNTER_MARGIN_X,
             sy: parentPosition.y + parentSize.height / 2,
             ex: isChildLeftFromParent
               ? childPosition.x + childSize.width
@@ -527,30 +729,44 @@ export function getConnectors ({ nodes, positions, sizes }) {
 
 export function getDependencyConnectors ({ nodes, positions, sizes }) {
   const ret = {}
-  const hiddenNodes = getHiddenNodes({ nodes })
+  const hiddenNodes = getHiddenNodes({
+    nodes
+  })
   Object.keys(nodes).forEach(toKey => {
     const to = nodes[toKey]
     if (!hiddenNodes[toKey]) {
       const toPosition = positions[toKey]
       const toSize = sizes[toKey]
-      Object.keys(to.dependencies).forEach(fromKey => {
-        if (!hiddenNodes[fromKey]) {
-          if (to) {
+      if (toSize) {
+        const isToOpposite = isOpposite({
+          size: toSize,
+          position: toPosition
+        })
+        const ex = isToOpposite ? toPosition.x + toSize.width : toPosition.x
+        Object.keys(to.dependencies).forEach(fromKey => {
+          if (!hiddenNodes[fromKey]) {
             const fromPosition = positions[fromKey]
             const fromSize = sizes[fromKey]
-            if (fromSize && toSize) {
+            if (fromSize) {
+              const isFromOpposite = isOpposite({
+                size: fromSize,
+                position: fromPosition
+              })
+              const sx = isFromOpposite
+                ? fromPosition.x
+                : fromPosition.x + fromSize.width
               ret[`depend_${fromKey}-${toKey}`] = {
-                sx: fromPosition.x + fromSize.width,
+                sx,
                 sy: fromPosition.y + fromSize.height / 2,
-                ex: toPosition.x,
+                ex,
                 ey: toPosition.y + toSize.height / 2,
                 from: fromKey,
                 to: toKey
               }
             }
           }
-        }
-      })
+        })
+      }
     }
   })
   return ret
@@ -562,56 +778,77 @@ export function getBetterConnector ({
   positions,
   targetKey,
   newParentKey,
-  newChildOrder
+  newChildOrder,
+  opposite = false
 }) {
+  const childList =
+    opposite && newParentKey === ROOT_NODE ? 'oppositeChildren' : 'children'
+
   const parentNode = nodes[newParentKey]
-  if (parentNode.children[newChildOrder] === targetKey) {
+  if (parentNode[childList][newChildOrder] === targetKey) {
     return
   }
   const parentPosition = positions[newParentKey]
   const parentSize = sizes[newParentKey]
   const start = {
-    sx: parentPosition.x + parentSize.width - CONNECTOR_INNTER_MARGIN_X,
+    sx: opposite
+      ? parentPosition.x
+      : parentPosition.x + parentSize.width - CONNECTOR_INNTER_MARGIN_X,
     sy: parentPosition.y + parentSize.height / 2
   }
-  if (parentNode.children.length === 0) {
+  if (parentNode[childList].length === 0) {
     return Object.assign({}, start, {
-      ex: start.sx + CONNECTOR_INNTER_MARGIN_X + NODE_MARGIN_X,
+      ex: opposite
+        ? start.sx -
+          CONNECTOR_INNTER_MARGIN_X -
+          NODE_MARGIN_X -
+          CONNECTOR_MARKER_WIDTH
+        : start.sx + CONNECTOR_INNTER_MARGIN_X + NODE_MARGIN_X,
       ey: start.sy
     })
   }
   let order = newChildOrder
-  const movingTargetIndex = parentNode.children.indexOf(targetKey)
+  const movingTargetIndex = parentNode[childList].indexOf(targetKey)
   if (movingTargetIndex !== -1) {
     if (movingTargetIndex < order) {
       order++
     }
   }
-  if (parentNode.children.length > order) {
-    const youngerBrotherKey = parentNode.children[order]
+  if (parentNode[childList].length > order) {
+    const youngerBrotherKey = parentNode[childList][order]
     const youngerBrotherPosition = positions[youngerBrotherKey]
+    const youngerBrotherSize = sizes[youngerBrotherKey]
+    const ex = opposite
+      ? youngerBrotherPosition.x +
+        youngerBrotherSize.width -
+        CONNECTOR_MARKER_WIDTH
+      : youngerBrotherPosition.x
     if (order > 0) {
-      const elderBrotherKey = parentNode.children[order - 1]
+      const elderBrotherKey = parentNode[childList][order - 1]
       const elderBrotherPosition = positions[elderBrotherKey]
       const elderBrotherSize = sizes[elderBrotherKey]
       const elderBrotherBottom =
         elderBrotherPosition.y + elderBrotherSize.height
       return Object.assign({}, start, {
-        ex: youngerBrotherPosition.x,
+        ex,
         ey: (youngerBrotherPosition.y + elderBrotherBottom) / 2
       })
     } else {
       return Object.assign({}, start, {
-        ex: youngerBrotherPosition.x,
+        ex,
         ey: youngerBrotherPosition.y - NODE_MARGIN_Y / 2
       })
     }
   } else {
-    const elderBrotherKey = parentNode.children[order - 1]
+    const elderBrotherKey = parentNode[childList][order - 1]
     const elderBrotherPosition = positions[elderBrotherKey]
     const elderBrotherSize = sizes[elderBrotherKey]
     return Object.assign({}, start, {
-      ex: elderBrotherPosition.x,
+      ex: opposite
+        ? elderBrotherPosition.x +
+          elderBrotherSize.width -
+          CONNECTOR_MARKER_WIDTH
+        : elderBrotherPosition.x,
       ey: elderBrotherPosition.y + elderBrotherSize.height + NODE_MARGIN_Y / 2
     })
   }
@@ -642,7 +879,12 @@ export function isConflict ({ nodes }) {
   let isConflict = false
   Object.keys(nodes).some(key => {
     if (key !== ROOT_NODE) {
-      if (!getParentKey({ nodes, childKey: key })) {
+      if (
+        !getParentKey({
+          nodes,
+          childKey: key
+        })
+      ) {
         isConflict = true
         return true
       }
@@ -655,6 +897,15 @@ export function isConflict ({ nodes }) {
         return true
       }
     })
+    if (!isConflict) {
+      // check children
+      node.oppositeChildren.some(childKey => {
+        if (!nodes[childKey]) {
+          isConflict = true
+          return true
+        }
+      })
+    }
     if (!isConflict) {
       // check dependencies
       Object.keys(node.dependencies).some(childKey => {
@@ -672,7 +923,12 @@ export function isConflict ({ nodes }) {
 export function rescueConflict ({ nodes }) {
   return Object.keys(nodes).reduce((p, key) => {
     if (key !== ROOT_NODE) {
-      if (!getParentKey({ nodes, childKey: key })) {
+      if (
+        !getParentKey({
+          nodes,
+          childKey: key
+        })
+      ) {
         return {
           ...p,
           [key]: null
@@ -680,6 +936,11 @@ export function rescueConflict ({ nodes }) {
       }
     }
     const children = nodes[key].children.filter(childKey => {
+      if (nodes[childKey]) {
+        return true
+      }
+    })
+    const oppositeChildren = nodes[key].oppositeChildren.filter(childKey => {
       if (nodes[childKey]) {
         return true
       }
@@ -699,6 +960,7 @@ export function rescueConflict ({ nodes }) {
     )
     p[key] = Object.assign({}, nodes[key], {
       children,
+      oppositeChildren,
       dependencies
     })
     return p
@@ -710,7 +972,10 @@ export function getHiddenNodes ({ nodes }) {
     const node = nodes[key]
     // ignore if this node is hidden already
     if (!p[key] && node.closed) {
-      const familyKeys = getFamilyKeys({ nodes, parentKey: key })
+      const familyKeys = getFamilyKeys({
+        nodes,
+        parentKey: key
+      })
       for (let childKey of familyKeys) {
         p[childKey] = true
       }

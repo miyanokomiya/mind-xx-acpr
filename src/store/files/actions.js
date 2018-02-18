@@ -279,11 +279,17 @@ export default {
             .ref('nodes/' + baseKey)
             .once('value')
             .then(snapshot => {
-              // save
-              return firebase
-                .database()
-                .ref('nodes/' + newKey)
-                .update(snapshot.val())
+              const nodes = snapshot.val()
+              if (nodes) {
+                // save
+                return firebase
+                  .database()
+                  .ref('nodes/' + newKey)
+                  .update(snapshot.val())
+              } else {
+                // needress to save
+                return Promise.resolve()
+              }
             })
             .then(() => {
               // clone comments
@@ -292,11 +298,17 @@ export default {
                 .ref('comments/' + baseKey)
                 .once('value')
                 .then(snapshot => {
-                  // save
-                  return firebase
-                    .database()
-                    .ref('comments/' + newKey)
-                    .update(snapshot.val())
+                  const comments = snapshot.val()
+                  if (comments) {
+                    // save
+                    return firebase
+                      .database()
+                      .ref('comments/' + newKey)
+                      .update(snapshot.val())
+                  } else {
+                    // needress to save
+                    return Promise.resolve()
+                  }
                 })
             })
             .then(() => {

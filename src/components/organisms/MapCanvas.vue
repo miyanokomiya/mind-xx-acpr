@@ -78,6 +78,7 @@
         :hiddenFamilyCount="closedNodeFamilyCounts[key]"
         :commentCount="commentCounts[key]"
         :childrenCount="node.children.length"
+        :root="key === ROOT_NODE"
         @calcSize="size => calcSize({key, size})"
         @down="e => canWrite ? nodeCursorDown(e, key) : ''"
         @up="e => canWrite ? nodeCursorUp(key, {shift: e.shiftKey}) : ''"
@@ -98,7 +99,7 @@
           :y="connectorOfMovingNodes.ey - NODE_MARGIN_Y / 3 / 2"
           :rx="5"
           :ry="5"
-          :width="50"
+          :width="CONNECTOR_MARKER_WIDTH"
           :height="NODE_MARGIN_Y / 3"
           stroke="none"
           fill="blue"
@@ -167,7 +168,7 @@
     <v-icon>edit</v-icon>
   </FloatButton>
   <FloatButton
-    v-if="showEditMenu"
+    v-if="showEditMenu && !isOppositeEditTarget && editMenuTarget !== ROOT_NODE"
     :x="fixBottomBoxPosition.x - fixButtonMargin"
     :y="fixBottomBoxPosition.y"
     :color="mode === CANVAS_MODE.DEPENDENCY ? 'deep-orange' : 'indigo'"
@@ -175,6 +176,26 @@
     @mousewheel.native.prevent="e => $isMobile.any ? '' : mousewheel(e)"
   >
     <v-icon>call_missed</v-icon>
+  </FloatButton>
+  <FloatButton
+    v-if="showEditMenu && isOppositeEditTarget && editMenuTarget !== ROOT_NODE"
+    :x="fixBottomBoxPosition.x + fixButtonMargin"
+    :y="fixBottomBoxPosition.y"
+    :color="mode === CANVAS_MODE.DEPENDENCY ? 'deep-orange' : 'indigo'"
+    @click="editDependency"
+    @mousewheel.native.prevent="e => $isMobile.any ? '' : mousewheel(e)"
+  >
+    <v-icon>call_missed_outgoing</v-icon>
+  </FloatButton>
+  <FloatButton
+    v-if="showEditMenu && editMenuTarget === ROOT_NODE"
+    :x="fixBottomBoxPosition.x - fixButtonMargin"
+    :y="fixBottomBoxPosition.y"
+    color="indigo"
+    @click="createNode(false, true)"
+    @mousewheel.native.prevent="e => $isMobile.any ? '' : mousewheel(e)"
+  >
+    <v-icon>subdirectory_arrow_left</v-icon>
   </FloatButton>
   <FloatButton
     v-if="showEditMenu && editMenuTarget !== ROOT_NODE"
@@ -187,7 +208,7 @@
     <v-icon>add</v-icon>
   </FloatButton>
   <FloatButton
-    v-if="showEditMenu"
+    v-if="showEditMenu && !isOppositeEditTarget"
     :x="fixBottomBoxPosition.x + fixButtonMargin"
     :y="fixBottomBoxPosition.y"
     color="indigo"
@@ -195,6 +216,16 @@
     @mousewheel.native.prevent="e => $isMobile.any ? '' : mousewheel(e)"
   >
     <v-icon>subdirectory_arrow_right</v-icon>
+  </FloatButton>
+  <FloatButton
+    v-if="showEditMenu && isOppositeEditTarget && editMenuTarget !== ROOT_NODE"
+    :x="fixBottomBoxPosition.x - fixButtonMargin"
+    :y="fixBottomBoxPosition.y"
+    color="indigo"
+    @click="createNode(false)"
+    @mousewheel.native.prevent="e => $isMobile.any ? '' : mousewheel(e)"
+  >
+    <v-icon>subdirectory_arrow_left</v-icon>
   </FloatButton>
   <FloatTextInput
     ref="floatTextInput"
@@ -244,7 +275,8 @@ import {
   INTERVAL_DOUBLE_CLICK,
   NODE_MARGIN_Y,
   ROOT_NODE,
-  CANVAS_MODE
+  CANVAS_MODE,
+  CONNECTOR_MARKER_WIDTH
 } from '@/constants'
 import {
   calcPositions,
@@ -262,7 +294,8 @@ import {
   getDependencyConnectors,
   getBetterConnector,
   getHiddenNodes,
-  createComment
+  createComment,
+  isOpposite
 } from '@/utils/model'
 import { getCoveredRectangle, isCoveredRectangle } from '@/utils/geometry'
 import * as canvasUtils from '@/utils/canvas'
@@ -370,6 +403,7 @@ export default {
   computed: {
     ROOT_NODE: () => ROOT_NODE,
     NODE_MARGIN_Y: () => NODE_MARGIN_Y,
+    CONNECTOR_MARKER_WIDTH: () => CONNECTOR_MARKER_WIDTH,
     MIN_SCALE_RATE () {
       return Math.min(Math.log(this.scaleCoveringAllNode) / Math.log(1.1) - 3, -5)
     },
@@ -429,6 +463,15 @@ export default {
       } else {
         return null
       }
+    },
+    isOppositeEditTarget () {
+      if (!this.editMenuTarget) {
+        return false
+      }
+      return isOpposite({
+        size: this.nodeSizes[this.editMenuTarget],
+        position: this.nodePositions[this.editMenuTarget]
+      })
     },
     fixLeftBoxPosition () {
       const key = this.editMenuTarget
@@ -519,7 +562,8 @@ export default {
         positions: this.nodePositions,
         targetKey: movingKey,
         newParentKey: info.parentKey,
-        newChildOrder: info.order
+        newChildOrder: info.order,
+        opposite: info.opposite
       })
     },
     rectangleCoveringAllNode () {
@@ -805,9 +849,16 @@ export default {
         })
         const newParentKey = getParentKey({ nodes, childKey: targetKey })
         const newParentNode = nodes[newParentKey]
+        const opposite = isOpposite({
+          size: this.nodeSizes[targetKey],
+          position: this.movingNodePositions[targetKey]
+        })
+        const childList =
+          opposite && newParentKey === ROOT_NODE ? 'oppositeChildren' : 'children'
         this.insertInformationOfMovingNodes = {
           parentKey: newParentKey,
-          order: newParentNode.children.indexOf(targetKey)
+          order: newParentNode[childList].indexOf(targetKey),
+          opposite
         }
 
         if (commit) {
@@ -911,7 +962,7 @@ export default {
         this.$refs.svgCanvasWrapper.focus()
       }
     },
-    createNode (brother = false) {
+    createNode (brother = false, opposite = false) {
       if (this.editMenuTarget === ROOT_NODE) {
         brother = false
       }
@@ -928,7 +979,8 @@ export default {
         : getUpdatedNodesWhenCreateChildNode({
             nodes: this.nodes,
             parentKey: this.editMenuTarget,
-            newKey: key
+            newKey: key,
+            opposite
           })
       updatedNodes[key] = Object.assign({}, updatedNodes[key], this.defaultNodeProps)
       this.$emit('updateNodes', updatedNodes)
@@ -992,6 +1044,11 @@ export default {
     moveSelect (to) {
       const targetKey = this.editMenuTarget
       if (targetKey) {
+        if (to === 'right' || to === 'left') {
+          if (isOpposite({size: this.nodeSizes[targetKey], position: this.nodePositions[targetKey]})) {
+            to = to === 'right' ? 'left' : 'right'
+          }
+        }
         const toKey = getNodeFrom({ nodes: this.nodes, to, targetKey })
         if (toKey) {
           this.selectNode(toKey)
