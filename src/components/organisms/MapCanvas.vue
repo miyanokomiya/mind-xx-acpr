@@ -407,7 +407,7 @@ export default {
     MIN_SCALE_RATE () {
       return Math.min(Math.log(this.scaleCoveringAllNode) / Math.log(1.1) - 3, -5)
     },
-    MAX_SCALE_RATE: () => 25,
+    MAX_SCALE_RATE: () => 15,
     CANVAS_MODE: () => CANVAS_MODE,
     viewRectangle () {
       return {
