@@ -12,6 +12,7 @@ describe('utils/model', () => {
     const n1 = modelUtils.createNode({
       text: '11',
       children: ['a', 'b'],
+      oppositeChildren: ['c', 'd'],
       backgroundColor: '#B3E5FC',
       color: '#000000',
       dependencies: { a: true },
@@ -21,6 +22,7 @@ describe('utils/model', () => {
       const n2 = modelUtils.createNode({
         text: '11',
         children: ['a', 'b'],
+        oppositeChildren: ['c', 'd'],
         backgroundColor: '#B3E5FC',
         color: '#000000',
         dependencies: { a: true },
@@ -33,6 +35,7 @@ describe('utils/model', () => {
       const n1 = modelUtils.createNode({
         text: '11',
         children: [],
+        oppositeChildren: ['c', 'd'],
         backgroundColor: '#B3E5FC',
         color: '#000000',
         dependencies: { a: true }
@@ -40,6 +43,7 @@ describe('utils/model', () => {
       const n2 = modelUtils.createNode({
         text: '11',
         children: [],
+        oppositeChildren: ['c', 'd'],
         backgroundColor: '#B3E5FC',
         color: '#000000',
         dependencies: { a: true }
@@ -51,6 +55,7 @@ describe('utils/model', () => {
       const n2 = modelUtils.createNode({
         text: '11',
         children: ['a', 'b', 'c'],
+        oppositeChildren: ['c', 'd'],
         backgroundColor: '#B3E5FC',
         color: '#000000',
         dependencies: { a: true }
@@ -62,9 +67,22 @@ describe('utils/model', () => {
       const n2 = modelUtils.createNode({
         text: '11',
         children: ['a', 'b'],
+        oppositeChildren: ['c', 'd'],
         backgroundColor: '#B3E5FC',
         color: '#000000',
         dependencies: { b: true }
+      })
+      const res = modelUtils.isSameNode(n1, n2)
+      expect(res).toBe(false)
+    })
+    it('should return true if opposite children of two nodes are different', () => {
+      const n2 = modelUtils.createNode({
+        text: '11',
+        children: ['a', 'b'],
+        oppositeChildren: ['c'],
+        backgroundColor: '#B3E5FC',
+        color: '#000000',
+        dependencies: { a: true },
       })
       const res = modelUtils.isSameNode(n1, n2)
       expect(res).toBe(false)

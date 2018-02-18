@@ -50,6 +50,9 @@ export const isSameNode = (n1, n2) => {
   if (n1.children.join('/') !== n2.children.join('/')) {
     return false
   }
+  if (n1.oppositeChildren.join('/') !== n2.oppositeChildren.join('/')) {
+    return false
+  }
   {
     const keys1 = Object.keys(n1.dependencies)
     const keys2 = Object.keys(n2.dependencies)
@@ -547,6 +550,17 @@ export function getUpdatedNodesWhenFitClosestParent ({
     }
   })
 
+  if (!closestKey) {
+    // move to counter side and there are no current nodes on counter side
+    return getUpdatedNodesWhenChangeParent({
+      nodes,
+      targetKey,
+      newParentKey: ROOT_NODE,
+      order: 0,
+      opposite: opposite
+    })
+  }
+
   // change nothing if closest node is the target or its family
   if (familyKeys.indexOf(closestKey) > -1 || closestKey === targetKey) {
     return nodes
@@ -560,6 +574,7 @@ export function getUpdatedNodesWhenFitClosestParent ({
   const addToOpposite = isClosestRoot && opposite
   const childList = addToOpposite ? 'oppositeChildren' : 'children'
 
+  if (!closestNode) debugger
   const closestHasNoChildOrHasTarget =
     closestNode[childList].length === 0 ||
     (closestNode[childList].length === 1 &&

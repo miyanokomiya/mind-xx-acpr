@@ -129,6 +129,7 @@
             ".validate": "newData.isString()"
           },
           "children": {},
+          "oppositeChildren": {},
           "backgroundColor": {
             ".validate": "newData.isString()"
           },
