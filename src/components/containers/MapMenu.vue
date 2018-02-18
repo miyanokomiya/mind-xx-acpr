@@ -2,6 +2,7 @@
 <div class="map-menu">
   <InviteUserDialog
     v-if="canShare"
+    ref="inviteUserDialog"
     :publicFile="!!publicFile"
     :publicReadOnly="publicFile ? !publicFile.write : false"
     :canEditPublic="canEditPublic"
@@ -13,7 +14,7 @@
     @updateUserAuthorities="updateUserAuthorities"
     @click.native="loadUsers"
   />
-  <MapHelpDialog/>
+  <MapHelpDialog ref="mapHelpDialog" />
 </div>
 </template>
 
@@ -77,6 +78,17 @@ export default {
     },
     userAuthorities () {
       return this.fileAuthority.users || {}
+    }
+  },
+  beforeRouteLeave (to, from, next) {
+    if (this.$refs.mapHelpDialog.dialog) {
+      this.$refs.mapHelpDialog.dialog = false
+      next(false)
+    } else if (this.$refs.inviteUserDialog.dialog) {
+      this.$refs.inviteUserDialog.dialog = false
+      next(false)
+    } else {
+      next()
     }
   },
   methods: {
