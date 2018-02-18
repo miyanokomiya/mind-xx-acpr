@@ -1386,8 +1386,8 @@ describe('utils/model', () => {
     const nodes = { a, b, c, d }
     const positions = {
       a: { x: 0, y: 0 },
-      b: { x: 50, y: 50 },
-      c: { x: -50, y: -50 },
+      b: { x: 20, y: 20 },
+      c: { x: 50, y: -50 },
       d: { x: 100, y: 500 }
     }
     const sizes = {
@@ -1404,7 +1404,7 @@ describe('utils/model', () => {
       })
       expect(res).toEqual({
         'depend_c-d': {
-          sx: -50 + 50,
+          sx: 50 + 50,
           sy: -50 + 20 / 2,
           ex: 100,
           ey: 500 + 40 / 2,

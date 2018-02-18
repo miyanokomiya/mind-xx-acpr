@@ -167,7 +167,7 @@
     <v-icon>edit</v-icon>
   </FloatButton>
   <FloatButton
-    v-if="showEditMenu"
+    v-if="showEditMenu && !isOppositeEditTarget && editMenuTarget !== ROOT_NODE"
     :x="fixBottomBoxPosition.x - fixButtonMargin"
     :y="fixBottomBoxPosition.y"
     :color="mode === CANVAS_MODE.DEPENDENCY ? 'deep-orange' : 'indigo'"
@@ -175,6 +175,26 @@
     @mousewheel.native.prevent="e => $isMobile.any ? '' : mousewheel(e)"
   >
     <v-icon>call_missed</v-icon>
+  </FloatButton>
+  <FloatButton
+    v-if="showEditMenu && isOppositeEditTarget && editMenuTarget !== ROOT_NODE"
+    :x="fixBottomBoxPosition.x + fixButtonMargin"
+    :y="fixBottomBoxPosition.y"
+    :color="mode === CANVAS_MODE.DEPENDENCY ? 'deep-orange' : 'indigo'"
+    @click="editDependency"
+    @mousewheel.native.prevent="e => $isMobile.any ? '' : mousewheel(e)"
+  >
+    <v-icon>call_missed_outgoing</v-icon>
+  </FloatButton>
+  <FloatButton
+    v-if="showEditMenu && editMenuTarget === ROOT_NODE"
+    :x="fixBottomBoxPosition.x - fixButtonMargin"
+    :y="fixBottomBoxPosition.y"
+    color="indigo"
+    @click="createNode(false, true)"
+    @mousewheel.native.prevent="e => $isMobile.any ? '' : mousewheel(e)"
+  >
+    <v-icon>subdirectory_arrow_left</v-icon>
   </FloatButton>
   <FloatButton
     v-if="showEditMenu && editMenuTarget !== ROOT_NODE"
@@ -187,7 +207,7 @@
     <v-icon>add</v-icon>
   </FloatButton>
   <FloatButton
-    v-if="showEditMenu"
+    v-if="showEditMenu && !isOppositeEditTarget"
     :x="fixBottomBoxPosition.x + fixButtonMargin"
     :y="fixBottomBoxPosition.y"
     color="indigo"
@@ -195,6 +215,16 @@
     @mousewheel.native.prevent="e => $isMobile.any ? '' : mousewheel(e)"
   >
     <v-icon>subdirectory_arrow_right</v-icon>
+  </FloatButton>
+  <FloatButton
+    v-if="showEditMenu && isOppositeEditTarget && editMenuTarget !== ROOT_NODE"
+    :x="fixBottomBoxPosition.x - fixButtonMargin"
+    :y="fixBottomBoxPosition.y"
+    color="indigo"
+    @click="createNode(false)"
+    @mousewheel.native.prevent="e => $isMobile.any ? '' : mousewheel(e)"
+  >
+    <v-icon>subdirectory_arrow_left</v-icon>
   </FloatButton>
   <FloatTextInput
     ref="floatTextInput"
@@ -432,6 +462,15 @@ export default {
       } else {
         return null
       }
+    },
+    isOppositeEditTarget () {
+      if (!this.editMenuTarget) {
+        return false
+      }
+      return isOpposite({
+        size: this.nodeSizes[this.editMenuTarget],
+        position: this.nodePositions[this.editMenuTarget]
+      })
     },
     fixLeftBoxPosition () {
       const key = this.editMenuTarget
@@ -922,7 +961,7 @@ export default {
         this.$refs.svgCanvasWrapper.focus()
       }
     },
-    createNode (brother = false) {
+    createNode (brother = false, opposite = false) {
       if (this.editMenuTarget === ROOT_NODE) {
         brother = false
       }
@@ -939,7 +978,8 @@ export default {
         : getUpdatedNodesWhenCreateChildNode({
             nodes: this.nodes,
             parentKey: this.editMenuTarget,
-            newKey: key
+            newKey: key,
+            opposite
           })
       updatedNodes[key] = Object.assign({}, updatedNodes[key], this.defaultNodeProps)
       this.$emit('updateNodes', updatedNodes)

@@ -712,24 +712,36 @@ export function getDependencyConnectors ({ nodes, positions, sizes }) {
     if (!hiddenNodes[toKey]) {
       const toPosition = positions[toKey]
       const toSize = sizes[toKey]
-      Object.keys(to.dependencies).forEach(fromKey => {
-        if (!hiddenNodes[fromKey]) {
-          if (to) {
+      if (toSize) {
+        const isToOpposite = isOpposite({
+          size: toSize,
+          position: toPosition
+        })
+        const ex = isToOpposite ? toPosition.x + toSize.width : toPosition.x
+        Object.keys(to.dependencies).forEach(fromKey => {
+          if (!hiddenNodes[fromKey]) {
             const fromPosition = positions[fromKey]
             const fromSize = sizes[fromKey]
-            if (fromSize && toSize) {
+            if (fromSize) {
+              const isFromOpposite = isOpposite({
+                size: fromSize,
+                position: fromPosition
+              })
+              const sx = isFromOpposite
+                ? fromPosition.x
+                : fromPosition.x + fromSize.width
               ret[`depend_${fromKey}-${toKey}`] = {
-                sx: fromPosition.x + fromSize.width,
+                sx,
                 sy: fromPosition.y + fromSize.height / 2,
-                ex: toPosition.x,
+                ex,
                 ey: toPosition.y + toSize.height / 2,
                 from: fromKey,
                 to: toKey
               }
             }
           }
-        }
-      })
+        })
+      }
     }
   })
   return ret
