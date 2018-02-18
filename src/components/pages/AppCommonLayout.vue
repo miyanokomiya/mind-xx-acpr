@@ -120,6 +120,14 @@ export default {
       return this.needAuth || this.needAuthLocal
     }
   },
+  beforeRouteLeave (to, from, next) {
+    if (this.leftDrawer) {
+      this.setLeftDrawer({ leftDrawer: false })
+      next(false)
+    } else {
+      next()
+    }
+  },
   methods: {
     ...mapActions('layouts', {
       setLeftDrawer: actionTypes.SET_LEFT_DRAWER
