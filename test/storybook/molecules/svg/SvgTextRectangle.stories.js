@@ -38,11 +38,17 @@ storiesOf('molecules/svg/SvgTextRectangle', module)
       components: { SvgTextRectangle },
       template: `
         <svg-wrapper>
-          <SvgTextRectangle :x="10" :y="10" text="abcde fef" fill="white" :hiddenFamilyCount="1"/>
-          <SvgTextRectangle :x="10" :y="60" text="abcde fef" fill="red" :hiddenFamilyCount="2"/>
-          <SvgTextRectangle :x="10" :y="110" text="abcde fef" fill="blue" :hiddenFamilyCount="33"/>
-          <SvgTextRectangle :x="10" :y="160" text="abcde fef" fill="blue" :hiddenFamilyCount="332"/>
-          <SvgTextRectangle :x="10" :y="210" text="abcde fef" fill="blue" :hiddenFamilyCount="3232"/>
+          <SvgTextRectangle :x="10" :y="10" text="abcde fef" fill="white" :hiddenFamilyCount="1" :childrenCount="2" />
+          <SvgTextRectangle :x="10" :y="60" text="abcde fef" fill="red" :hiddenFamilyCount="2" :childrenCount="2" />
+          <SvgTextRectangle :x="10" :y="110" text="abcde fef" fill="blue" :hiddenFamilyCount="33" :childrenCount="2" />
+          <SvgTextRectangle :x="10" :y="160" text="abcde fef" fill="blue" :hiddenFamilyCount="332" :childrenCount="2" />
+          <SvgTextRectangle :x="10" :y="210" text="abcde fef" fill="blue" :hiddenFamilyCount="3232" :childrenCount="2" />
+
+          <SvgTextRectangle :x="-100" :y="10" text="abcde fef" fill="white" :hiddenFamilyCount="1" :childrenCount="2" />
+          <SvgTextRectangle :x="-100" :y="60" text="abcde fef" fill="red" :hiddenFamilyCount="2" :childrenCount="2" />
+          <SvgTextRectangle :x="-100" :y="110" text="abcde fef" fill="blue" :hiddenFamilyCount="33" :childrenCount="2" />
+          <SvgTextRectangle :x="-100" :y="160" text="abcde fef" fill="blue" :hiddenFamilyCount="332" :childrenCount="2" />
+          <SvgTextRectangle :x="-100" :y="210" text="abcde fef" fill="blue" :hiddenFamilyCount="3232" :childrenCount="2" />
         </svg-wrapper>
       `,
       data: () => ({})

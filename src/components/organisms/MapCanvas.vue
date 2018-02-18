@@ -78,6 +78,7 @@
         :hiddenFamilyCount="closedNodeFamilyCounts[key]"
         :commentCount="commentCounts[key]"
         :childrenCount="node.children.length"
+        :root="key === ROOT_NODE"
         @calcSize="size => calcSize({key, size})"
         @down="e => canWrite ? nodeCursorDown(e, key) : ''"
         @up="e => canWrite ? nodeCursorUp(key, {shift: e.shiftKey}) : ''"
