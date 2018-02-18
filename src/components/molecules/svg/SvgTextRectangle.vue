@@ -1,18 +1,18 @@
 <template>
 <g>
   <g v-if="commentCount > 0" @click="$emit('clickComment')">
-    <ellipse :cx="x + width / 2" :cy="y + height - 2" :rx="width / 2" :ry="fontSize * 1.7" fill="#ddd"/>
+    <ellipse :cx="x + width / 2" :cy="y + height - 2" :rx="width / 2" :ry="adjustedFontSize * 1.7" fill="#ddd"/>
     <SvgText
       :text="`${commentCount}`"
       :x="x + width / 2 - commentCircleRadius / 2"
-      :y="y + height + fontSize + 1"
+      :y="y + height + adjustedFontSize + 1"
       :font-size="commentFontSize"
       fill="black"
     />
   </g>
   <g v-if="!root && childrenCount > 0">
     <g v-if="closed" @click="$emit('open')">
-      <ellipse :cx="x + width + countCircleRadius / 2 + 1 - closeMarkerToLeft" :cy="y + height / 2" :rx="rightRx" :ry="fontSize" fill="#444"/>
+      <ellipse :cx="x + width + countCircleRadius / 2 + 1 - closeMarkerToLeft" :cy="y + height / 2" :rx="rightRx" :ry="adjustedFontSize" fill="#444"/>
       <SvgText
         :text="`${hiddenFamilyCount}`"
         :x="x + width + 2 - closeMarkerToLeft"
@@ -22,7 +22,7 @@
       />
     </g>
     <g v-else @click="$emit('close')">
-      <ellipse :cx="x + width + countCircleRadius / 2 + 1 - closeMarkerToLeft" :cy="y + height / 2" :rx="rightRx" :ry="fontSize" fill="#aaa"/>
+      <ellipse :cx="x + width + countCircleRadius / 2 + 1 - closeMarkerToLeft" :cy="y + height / 2" :rx="rightRx" :ry="adjustedFontSize" fill="#aaa"/>
       <SvgText
         text="-"
         :x="x + width + 4 - closeMarkerToLeft"
@@ -55,7 +55,7 @@
       :key="i"
       :x="textX"
       :y="textY + textHeight * (i + 1)"
-      :font-size="fontSize"
+      :font-size="adjustedFontSize"
       :text="l"
       :fill="textFill"
     />
@@ -65,7 +65,7 @@
       text="-XXACPR-"
       :x="textX"
       :y="textY + textHeight"
-      :font-size="fontSize"
+      :font-size="adjustedFontSize"
       :fill="textFill"
     />
   </g>
@@ -145,7 +145,7 @@ export default {
       return this.textHeight * Math.max(1, this.lines.length) + 8
     },
     textHeight () {
-      return this.fontSize + 5
+      return this.adjustedFontSize + 5
     },
     textX () {
       return this.x + this.textPaddingX
@@ -163,7 +163,7 @@ export default {
       return this.closed ? `${this.hiddenFamilyCount}`.length : 1
     },
     countFontSize () {
-      return this.fontSize
+      return this.adjustedFontSize
     },
     countCircleMinRadius () {
       return 4 + this.countFontSize * 0.5 * 1
@@ -178,7 +178,7 @@ export default {
       return `${this.commentCount}`.length
     },
     commentFontSize () {
-      return this.fontSize
+      return this.adjustedFontSize
     },
     commentCircleRadius () {
       return 3 + this.commentFontSize * 0.5 * this.commentLength
@@ -191,6 +191,9 @@ export default {
     },
     closeMarkerToLeft () {
       return  this.opposite ? this.width + this.countCircleRadius + 3 : 0
+    },
+    adjustedFontSize () {
+      return this.root ? this.fontSize * 1.5 : this.fontSize
     }
   },
   watch: {
