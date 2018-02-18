@@ -675,7 +675,8 @@ describe('utils/model', () => {
 
   describe('getFamilyKeys', () => {
     const a = modelUtils.createNode({
-      children: ['b', 'e']
+      children: ['b', 'e'],
+      oppositeChildren: ['f']
     })
     const b = modelUtils.createNode({
       children: ['c', 'd']
@@ -683,7 +684,15 @@ describe('utils/model', () => {
     const c = modelUtils.createNode()
     const d = modelUtils.createNode()
     const e = modelUtils.createNode()
-    const nodes = { a, b, c, d, e }
+    const f = modelUtils.createNode()
+    const nodes = { a, b, c, d, e, f }
+    it('should get correct keys, if parent has opposite children', () => {
+      const familyKeys = modelUtils.getFamilyKeys({
+        nodes,
+        parentKey: 'a'
+      })
+      expect(familyKeys).toEqual(['b', 'c', 'd', 'e', 'f'])
+    })
     it('should get correct keys', () => {
       const familyKeys = modelUtils.getFamilyKeys({
         nodes,
@@ -1576,9 +1585,13 @@ describe('utils/model', () => {
     it('should return false if all nodes have parent', () => {
       const nodes = {
         [ROOT_NODE]: modelUtils.createNode({
-          children: ['b']
+          children: ['b'],
+          oppositeChildren: ['c']
         }),
         b: modelUtils.createNode({
+          children: []
+        }),
+        c: modelUtils.createNode({
           children: []
         })
       }
@@ -1606,6 +1619,20 @@ describe('utils/model', () => {
     const nodes = {
       [ROOT_NODE]: modelUtils.createNode({
         children: ['a', 'b']
+      }),
+      b: modelUtils.createNode({
+        children: []
+      })
+    }
+    const res = modelUtils.isConflict({
+      nodes
+    })
+    expect(res).toBe(true)
+  })
+  it('should return true if opposite children are not found', () => {
+    const nodes = {
+      [ROOT_NODE]: modelUtils.createNode({
+        oppositeChildren: ['a', 'b']
       }),
       b: modelUtils.createNode({
         children: []
@@ -1659,10 +1686,14 @@ describe('utils/model', () => {
     it('should omit children which are not exist', () => {
       const nodes = {
         [ROOT_NODE]: modelUtils.createNode({
-          children: ['a', 'b']
+          children: ['a', 'b'],
+          oppositeChildren: ['d', 'e']
         }),
         b: modelUtils.createNode({
           children: ['c']
+        }),
+        d: modelUtils.createNode({
+          children: []
         })
       }
       const res = modelUtils.rescueConflict({
@@ -1670,9 +1701,13 @@ describe('utils/model', () => {
       })
       expect(res).toEqual({
         [ROOT_NODE]: modelUtils.createNode({
-          children: ['b']
+          children: ['b'],
+          oppositeChildren: ['d']
         }),
         b: modelUtils.createNode({
+          children: []
+        }),
+        d: modelUtils.createNode({
           children: []
         })
       })

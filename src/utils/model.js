@@ -291,7 +291,7 @@ export function getNearestFamilyKey ({ nodes, childKey }) {
 export function getFamilyKeys ({ nodes, parentKey }) {
   let familyKeys = []
   const parent = nodes[parentKey]
-  parent.children.forEach(childKey => {
+  parent.children.concat(parent.oppositeChildren).forEach(childKey => {
     familyKeys.push(childKey)
     const childFamilyKeys = getFamilyKeys({
       nodes,
@@ -621,19 +621,25 @@ export function getNodeFrom ({ nodes, to, targetKey }) {
       })
       if (parentKey) {
         const parentNode = nodes[parentKey]
+        const fromOpposite = parentNode.children.indexOf(baseKey) === -1
+        const childList = fromOpposite ? 'oppositeChildren' : 'children'
         if (to === 'left') {
           ret = parentKey
-        }
-        if (to === 'down') {
+        } else if (to === 'down') {
           const index =
-            (parentNode.children.indexOf(baseKey) + 1) %
-            parentNode.children.length
-          ret = parentNode.children[index]
+            (parentNode[childList].indexOf(baseKey) + 1) %
+            parentNode[childList].length
+          ret = parentNode[childList][index]
+        } else if (to === 'up') {
+          let index = parentNode[childList].indexOf(baseKey) - 1
+          index = index < 0 ? parentNode[childList].length - 1 : index
+          ret = parentNode[childList][index]
+        } else {
+          console.error('invalid key')
         }
-        if (to === 'up') {
-          let index = parentNode.children.indexOf(baseKey) - 1
-          index = index < 0 ? parentNode.children.length - 1 : index
-          ret = parentNode.children[index]
+      } else {
+        if (baseNode.oppositeChildren.length > 0) {
+          ret = baseNode.oppositeChildren[0]
         }
       }
     }
@@ -873,6 +879,15 @@ export function isConflict ({ nodes }) {
       }
     })
     if (!isConflict) {
+      // check children
+      node.oppositeChildren.some(childKey => {
+        if (!nodes[childKey]) {
+          isConflict = true
+          return true
+        }
+      })
+    }
+    if (!isConflict) {
       // check dependencies
       Object.keys(node.dependencies).some(childKey => {
         if (!nodes[childKey]) {
@@ -906,6 +921,11 @@ export function rescueConflict ({ nodes }) {
         return true
       }
     })
+    const oppositeChildren = nodes[key].oppositeChildren.filter(childKey => {
+      if (nodes[childKey]) {
+        return true
+      }
+    })
     const dependencies = Object.keys(nodes[key].dependencies).reduce(
       (p, childKey) => {
         if (nodes[childKey]) {
@@ -921,6 +941,7 @@ export function rescueConflict ({ nodes }) {
     )
     p[key] = Object.assign({}, nodes[key], {
       children,
+      oppositeChildren,
       dependencies
     })
     return p

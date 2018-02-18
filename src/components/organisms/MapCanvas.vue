@@ -1043,6 +1043,11 @@ export default {
     moveSelect (to) {
       const targetKey = this.editMenuTarget
       if (targetKey) {
+        if (to === 'right' || to === 'left') {
+          if (isOpposite({size: this.nodeSizes[targetKey], position: this.nodePositions[targetKey]})) {
+            to = to === 'right' ? 'left' : 'right'
+          }
+        }
         const toKey = getNodeFrom({ nodes: this.nodes, to, targetKey })
         if (toKey) {
           this.selectNode(toKey)
