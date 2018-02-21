@@ -6,6 +6,7 @@ import '@/utils/isMobile'
 import '@/utils/track'
 import { addDecorator } from '@storybook/vue'
 import { withKnobs } from '@storybook/addon-knobs'
+import StoryRouter from 'storybook-router'
 
 import 'ress'
 import 'vuetify/dist/vuetify.min.css'
@@ -25,6 +26,7 @@ Vue.component('svg-wrapper', {
 })
 
 addDecorator(withKnobs)
+addDecorator(StoryRouter())
 
 const req = require.context('../test/storybook', true, /\.stories\.js$/)
 

@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import AppMaps from '@/components/pages/AppMaps'
 import AppCommonLayout from '@/components/pages/AppCommonLayout'
 import MapCanvasContainer from '@/components/containers/MapCanvasContainer'
 import MapMenu from '@/components/containers/MapMenu'
@@ -15,7 +14,21 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: { name: 'WorkSpace' }
+      component: AppCommonLayout,
+      props: {
+        needAuth: false,
+        hideLedfDrawer: true
+      },
+      children: [
+        {
+          path: '',
+          name: 'Top',
+          components: {
+            content: () => import('@/components/organisms/TopPage'),
+            headerTitle: HeaderTitle
+          }
+        }
+      ]
     },
     {
       path: '/map',

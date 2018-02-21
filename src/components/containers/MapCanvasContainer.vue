@@ -140,7 +140,7 @@ export default {
       deep: true
     }
   },
-  mounted () {
+  created () {
     this.loadFile({ key: this.fileKey })
     this.loadNodes({ fileKey: this.fileKey })
     this.loadComments({ fileKey: this.fileKey })

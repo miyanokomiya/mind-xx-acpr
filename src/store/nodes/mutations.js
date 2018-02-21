@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import { mutationTypes } from './types'
 import { createDefaultNodes, copyNode } from '@/utils/model'
+import { ROOT_NODE } from '@/constants'
 
 export default {
   [mutationTypes.UPDATE_NODES] (state, { nodes }) {
@@ -11,7 +12,7 @@ export default {
         Vue.delete(state.nodes, key)
       }
     })
-    if (Object.keys(state.nodes).length === 0) {
+    if (!state.nodes[ROOT_NODE]) {
       state.nodes = createDefaultNodes()
     }
     state.selectedNodes = Object.keys(state.selectedNodes).reduce((p, c) => {

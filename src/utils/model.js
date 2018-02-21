@@ -380,6 +380,9 @@ export function getUpdatedNodesWhenDeleteNode ({ nodes, deleteKey }) {
     updatedNodes[parentKey] = nextParentNode
   }
   Object.keys(nodes).forEach(key => {
+    if (updatedNodes[key] === null) {
+      return
+    }
     const node = nodes[key]
     const dependencies = {
       ...node.dependencies

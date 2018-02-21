@@ -36,7 +36,7 @@ export default {
       user: userGetterTYpes.USER
     })
   },
-  mounted () {
+  created () {
     this.loadFiles()
   },
   methods: {
