@@ -1,15 +1,18 @@
 <template>
 <div class="header-title-wrapper">
   <div v-if="file" class="header-title">
-    <v-btn icon small class="button"
-      v-if="file"
-      @click="moveToHome"
-    >
-      <v-icon>arrow_back</v-icon>
-    </v-btn>
+    <router-link style="text-decoration: none;" :to="{name: 'WorkSpace'}">
+      <v-btn icon small class="button"
+        v-if="file"
+      >
+        <v-icon>arrow_back</v-icon>
+      </v-btn>
+    </router-link>
     <h1 class="title-text">{{file.name || 'untitled'}}</h1>
   </div>
-  <v-btn v-else class="header-title" flat @click="moveToHome">MindXXACPR</v-btn>
+  <router-link v-else :to="{name: 'Top'}">
+    <v-btn class="header-title" flat>MindXXACPR</v-btn>
+  </router-link>
 </div>
 </template>
 
@@ -37,11 +40,6 @@ export default {
     }),
     file () {
       return this.fileFromKey({fileKey: this.fileKey})
-    }
-  },
-  methods: {
-    moveToHome () {
-      this.$router.push({name: 'WorkSpace'})
     }
   }
 }
