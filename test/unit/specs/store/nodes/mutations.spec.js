@@ -7,6 +7,7 @@ describe('store/nodes/mutations', () => {
     it('should update correct [nodes]', () => {
       const state = {
         nodes: {
+          ...createDefaultNodes(),
           a: { x: 0, y: 0 },
           b: { x: 10, y: 10 },
           c: { x: 40, y: 40 }
@@ -15,6 +16,7 @@ describe('store/nodes/mutations', () => {
       }
       mutations[mutationTypes.UPDATE_NODES](state, {
         nodes: {
+          ...createDefaultNodes(),
           b: { x: 20, y: 30 },
           c: null,
           d: { x: 40, y: 40 }
@@ -22,6 +24,7 @@ describe('store/nodes/mutations', () => {
       })
       expect(state).toEqual({
         nodes: {
+          ...createDefaultNodes(),
           a: { x: 0, y: 0 },
           b: { x: 20, y: 30 },
           d: { x: 40, y: 40 }
@@ -32,6 +35,7 @@ describe('store/nodes/mutations', () => {
     it('should clear select of deleted nodes', () => {
       const state = {
         nodes: {
+          ...createDefaultNodes(),
           a: { x: 0, y: 0 },
           b: { x: 10, y: 10 },
           c: { x: 40, y: 40 }
@@ -40,12 +44,14 @@ describe('store/nodes/mutations', () => {
       }
       mutations[mutationTypes.UPDATE_NODES](state, {
         nodes: {
+          ...createDefaultNodes(),
           b: { x: 20, y: 30 },
           c: null
         }
       })
       expect(state).toEqual({
         nodes: {
+          ...createDefaultNodes(),
           a: { x: 0, y: 0 },
           b: { x: 20, y: 30 }
         },

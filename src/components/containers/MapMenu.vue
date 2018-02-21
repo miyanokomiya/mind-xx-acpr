@@ -12,7 +12,7 @@
     @setStatus="setStatus"
     @invite="invite"
     @updateUserAuthorities="updateUserAuthorities"
-    @click.native="loadUsers"
+    @show="loadUsers"
   />
   <MapHelpDialog ref="mapHelpDialog" />
 </div>

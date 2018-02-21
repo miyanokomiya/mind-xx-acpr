@@ -1,76 +1,66 @@
 <template>
 <v-tabs grow>
-  <v-tabs-bar class="grey lighten-4" light>
-    <v-tabs-item v-if="canWrite" href="#left-drawer-edit" class="primary--text">
-      <v-icon>mode_edit</v-icon>
-    </v-tabs-item>
-    <v-tabs-item href="#left-drawer-file" class="primary--text">
-      <v-icon>insert_drive_file</v-icon>
-    </v-tabs-item>
-    <v-tabs-slider color="yellow"></v-tabs-slider>
-  </v-tabs-bar>
-  <v-tabs-items>
-    <v-tabs-content
-      v-if="canWrite"
-      :id="'left-drawer-edit'"
-    >
-      <v-list>
-        <v-list-tile :style="{background: nodeColor}" @click="showNodeColorPicker = !showNodeColorPicker">
-          <v-list-tile-action>
-            <v-icon :style="{color: textColor}">palette</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title :style="{color: textColor}"><b>Node Color</b></v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <li v-if="showNodeColorPicker" class="picker-box">
-          <ColorPicker :value="nodeColor" @input="val => $emit('changeNodeColor', val.hex)"/>
-        </li>
-        <v-list-tile :style="{background: nodeColor}" @click="showTextColorPicker = !showTextColorPicker">
-          <v-list-tile-action>
-            <v-icon :style="{color: textColor}">palette</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title :style="{color: textColor}"><b>Text Color</b></v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <li v-if="showTextColorPicker" class="picker-box">
-          <ColorPicker :value="textColor" @input="val => $emit('changeTextColor', val.hex)"/>
-        </li>
-      </v-list>
-    </v-tabs-content>
-    <v-tabs-content
-      :id="'left-drawer-file'"
-    >
-      <v-list>
-        <v-list-tile @click="printSvg">
-          <v-list-tile-action>
-            <v-icon>file_download</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>SVG</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <MapCanvas
-          v-if="renderCanvas"
-          ref="mapCanvas"
-          class="map-canvas"
-          :nodes="nodes"
-          :width="canvasWidth"
-          :height="canvasHeight"
-        />
-        <v-divider/>
-        <v-list-tile v-if="canWrite" @click="$emit('repairFile')">
-          <v-list-tile-action>
-            <v-icon>autorenew</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Repair file</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-      </v-list>
-    </v-tabs-content>
-  </v-tabs-items>
+  <v-tab ripple v-if="canWrite">
+    <v-icon>mode_edit</v-icon>
+  </v-tab>
+  <v-tab ripple>
+    <v-icon>insert_drive_file</v-icon>
+  </v-tab>
+  <v-tab-item v-if="canWrite">
+    <v-list>
+      <v-list-tile :style="{background: nodeColor}" @click="showNodeColorPicker = !showNodeColorPicker">
+        <v-list-tile-action>
+          <v-icon :style="{color: textColor}">palette</v-icon>
+        </v-list-tile-action>
+        <v-list-tile-content>
+          <v-list-tile-title :style="{color: textColor}"><b>Node Color</b></v-list-tile-title>
+        </v-list-tile-content>
+      </v-list-tile>
+      <li v-if="showNodeColorPicker" class="picker-box">
+        <ColorPicker :value="nodeColor" @input="val => $emit('changeNodeColor', val.hex)"/>
+      </li>
+      <v-list-tile :style="{background: nodeColor}" @click="showTextColorPicker = !showTextColorPicker">
+        <v-list-tile-action>
+          <v-icon :style="{color: textColor}">palette</v-icon>
+        </v-list-tile-action>
+        <v-list-tile-content>
+          <v-list-tile-title :style="{color: textColor}"><b>Text Color</b></v-list-tile-title>
+        </v-list-tile-content>
+      </v-list-tile>
+      <li v-if="showTextColorPicker" class="picker-box">
+        <ColorPicker :value="textColor" @input="val => $emit('changeTextColor', val.hex)"/>
+      </li>
+    </v-list>
+  </v-tab-item>
+  <v-tab-item>
+  <v-list>
+      <v-list-tile @click="printSvg">
+        <v-list-tile-action>
+          <v-icon>file_download</v-icon>
+        </v-list-tile-action>
+        <v-list-tile-content>
+          <v-list-tile-title>SVG</v-list-tile-title>
+        </v-list-tile-content>
+      </v-list-tile>
+      <MapCanvas
+        v-if="renderCanvas"
+        ref="mapCanvas"
+        class="map-canvas"
+        :nodes="nodes"
+        :width="canvasWidth"
+        :height="canvasHeight"
+      />
+      <v-divider/>
+      <v-list-tile v-if="canWrite" @click="$emit('repairFile')">
+        <v-list-tile-action>
+          <v-icon>autorenew</v-icon>
+        </v-list-tile-action>
+        <v-list-tile-content>
+          <v-list-tile-title>Repair file</v-list-tile-title>
+        </v-list-tile-content>
+      </v-list-tile>
+    </v-list>
+  </v-tab-item>
 </v-tabs>
 
 
