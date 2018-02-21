@@ -1030,7 +1030,11 @@ export default {
     },
     keydownShiftEnter () {
       if (this.editMenuTarget && !this.editTextTarget) {
-        this.createNode()
+        if (this.editMenuTarget === ROOT_NODE) {
+          this.createNode(false, true)  
+        } else {
+          this.createNode()
+        }
       }
     },
     keydownSpace () {
