@@ -62,6 +62,7 @@
     <!-- empty text causes errors of getting the positions on Safari -->
     <SvgText
       v-if="!text"
+      ref="emptySvgLine"
       text="-XXACPR-"
       :x="textX"
       :y="textY + textHeight"
@@ -213,7 +214,7 @@ export default {
       this.$emit('calcSize', bbox)
     },
     getBBox () {
-      const width = this.lines.reduce((p, c, i) => {
+      const width = this.$refs.emptySvgLine ? this.$refs.emptySvgLine.getBBox().width : this.lines.reduce((p, c, i) => {
         const width = this.$refs['svgLine'][i].getBBox().width
         return Math.max(p, width)
       }, 50)
