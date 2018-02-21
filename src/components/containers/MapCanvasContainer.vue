@@ -130,7 +130,7 @@ export default {
       handler (to) {
         const users = Object.keys(this.comments).reduce((p, key) => {
           const comment = this.comments[key]
-          if (!this.users[comment.uid]) {
+          if (comment.uid && !this.users[comment.uid]) {
             p[comment.uid] = true
           }
           return p

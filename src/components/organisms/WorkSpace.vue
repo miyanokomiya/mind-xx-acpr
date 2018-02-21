@@ -329,5 +329,8 @@ export default {
     visibility: hidden;
   }
 }
+.btn--floating.btn--small .icon {
+  line-height: 40px;
+}
 </style>
 

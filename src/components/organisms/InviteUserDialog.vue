@@ -64,7 +64,7 @@
                   <img :src="owner.photoURL"/>
                 </v-avatar>
               </v-badge>
-              <v-list-tile-content>
+              <v-list-tile-content class="user-content">
                 <v-list-tile-title>{{owner.displayName}}</v-list-tile-title>
                 <v-list-tile-sub-title>{{owner.email}}</v-list-tile-sub-title>
               </v-list-tile-content>
@@ -93,7 +93,7 @@
                   <img :src="users[uid].photoURL"/>
                 </v-avatar>
               </v-badge>
-              <v-list-tile-content :class="{deleted: updatedAuthorities[uid] === null}">
+              <v-list-tile-content class="user-content" :class="{deleted: updatedAuthorities[uid] === null}">
                 <v-list-tile-title>{{users[uid].displayName}}{{isMe(uid) ? ' ( you! )' : ''}}</v-list-tile-title>
                 <v-list-tile-sub-title>{{users[uid].email}}</v-list-tile-sub-title>
               </v-list-tile-content>
@@ -167,7 +167,7 @@ export default {
         return this.userAuthorities[uid].owner
       })
       if (ownerId) {
-        return this.users[ownerId]
+        return this.user.uid === ownerId ? this.user : this.users[ownerId]
       } else {
         return null
       }
@@ -184,6 +184,7 @@ export default {
     dialog (to) {
       if (to) {
         this.initData()
+        this.$emit('show')
       }
     }
   },
@@ -266,6 +267,9 @@ export default {
 }
 .updated {
   background-color: rgba(255, 0, 0, 0.2)
+}
+.user-content {
+  margin-left: 8px;
 }
 </style>
 
