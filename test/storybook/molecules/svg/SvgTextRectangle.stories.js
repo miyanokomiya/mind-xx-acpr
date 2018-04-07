@@ -69,3 +69,17 @@ storiesOf('molecules/svg/SvgTextRectangle', module)
       data: () => ({})
     }
   })
+  .add('checkbox', () => {
+    return {
+      components: { SvgTextRectangle },
+      template: `
+        <svg-wrapper>
+          <SvgTextRectangle :x="50" :y="10" text="abcde fef" fill="white" check :checked="checked" @toggleChecked="val => checked = val"/>
+          <SvgTextRectangle :x="50" :y="50" text="abcde fef\nbbbbb\neeee" fill="white" check :checked="checked" @toggleChecked="val => checked = val"/>
+        </svg-wrapper>
+      `,
+      data: () => ({
+        checked: 0
+      })
+    }
+  })

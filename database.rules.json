@@ -139,6 +139,9 @@
           "dependencies": {},
           "closed": {
             ".validate": "newData.isBoolean()"
+          },
+          "checked": {
+            ".validate": "newData.isNumber()"
           }
         }
       }

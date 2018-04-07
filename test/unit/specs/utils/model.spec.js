@@ -9,15 +9,16 @@ import {
 
 describe('utils/model', () => {
   describe('isSameNode', () => {
-    const n1 = modelUtils.createNode({
+    const n1 = {
       text: '11',
       children: ['a', 'b'],
       oppositeChildren: ['c', 'd'],
       backgroundColor: '#B3E5FC',
       color: '#000000',
       dependencies: { a: true },
-      closed: false
-    })
+      closed: false,
+      checked: -1
+    }
     it('should return true if two nodes are same', () => {
       const n2 = modelUtils.createNode({
         text: '11',
@@ -26,7 +27,8 @@ describe('utils/model', () => {
         backgroundColor: '#B3E5FC',
         color: '#000000',
         dependencies: { a: true },
-        closed: false
+        closed: false,
+        checked: -1
       })
       const res = modelUtils.isSameNode(n1, n2)
       expect(res).toBe(true)
@@ -82,7 +84,7 @@ describe('utils/model', () => {
         oppositeChildren: ['c'],
         backgroundColor: '#B3E5FC',
         color: '#000000',
-        dependencies: { a: true },
+        dependencies: { a: true }
       })
       const res = modelUtils.isSameNode(n1, n2)
       expect(res).toBe(false)
@@ -1838,8 +1840,7 @@ describe('utils/model', () => {
       const res = modelUtils.getHiddenNodes({
         nodes
       })
-      expect(res).toEqual({
-      })
+      expect(res).toEqual({})
     })
   })
 })

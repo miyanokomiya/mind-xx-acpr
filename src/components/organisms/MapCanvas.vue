@@ -79,12 +79,14 @@
         :commentCount="commentCounts[key]"
         :childrenCount="node.children.length"
         :root="key === ROOT_NODE"
+        :checked="node.checked"
         @calcSize="size => calcSize({key, size})"
         @down="e => canWrite ? nodeCursorDown(e, key) : ''"
         @up="e => canWrite ? nodeCursorUp(key, {shift: e.shiftKey}) : ''"
         @open="openNode(key)"
         @close="closeNode(key)"
         @clickComment="showComments(key)"
+        @toggleChecked="val => updateChecked({ key, val })"
       />
       <!-- a marker of switching a parent -->
       <g v-if="connectorOfMovingNodes" class="inserting-marker">
@@ -120,6 +122,7 @@
         :hiddenFamilyCount="closedNodeFamilyCounts[key]" 
         :commentCount="commentCounts[key]"     
         :childrenCount="nodes[key].children.length"  
+        :checked="nodes[key].checked"
       />
     </SvgCanvas>
   </div>
@@ -238,13 +241,9 @@
   <FloatEditMenu
     ref="floatEditMenu"
     v-if="showEditMenu"
-    :root="editMenuTarget === ROOT_NODE"
-    :mode="mode"
-    :defaultNodeProps="defaultNodeProps"
-    :multiSelect="isMultiSelect"
-    @editDependency="editDependency"
+    :check="editMenuTargetNode.checked !== -1"
     @selectProp="prop => $emit('selectProp', prop)"
-    @delete="deleteNode"
+    @toggleCheck="toggleCheck"
     @mousewheel.native.prevent="e => $isMobile.any ? '' : mousewheel(e)"
   />
   <CommentList
@@ -982,7 +981,11 @@ export default {
             newKey: key,
             opposite
           })
-      updatedNodes[key] = Object.assign({}, updatedNodes[key], this.defaultNodeProps)
+      updatedNodes[key] = {
+        ...updatedNodes[key],
+        ...this.defaultNodeProps,
+        checked: this.editMenuTargetNode.checked === -1 ? -1 : 0
+      }
       this.$emit('updateNodes', updatedNodes)
       this.$nextTick().then(() => {
         this.readyEditText(key)
@@ -1157,6 +1160,27 @@ export default {
     showComments (key) {
       this.selectNode(key)
       this.$refs.commentList.open = true
+    },
+    toggleCheck () {
+      const updatedChecked = this.editMenuTargetNode.checked === -1 ? 0 : -1
+      const nodes = Object.keys(this.selectedNodes).reduce((p, c) => {
+        const node = this.nodes[c]
+        p[c] = {
+          ...node,
+          checked: updatedChecked === -1 ? -1 : (node.checked === 1 ? 1 : 0)
+        }
+        return p
+      }, {})
+      this.$emit('updateNodes', nodes)
+    },
+    updateChecked ({ key, val }) {
+      const node = this.nodes[key]
+      this.$emit('updateNodes', {
+        [key]: {
+          ...node,
+          checked: val
+        }
+      })
     }
   }
 }
