@@ -19,7 +19,9 @@ export const createNode = obj =>
       color: '#000000',
       dependencies: {},
       closed: false,
-      oppositeChildren: []
+      oppositeChildren: [],
+      // -1: no checkbox 0: unchecked 1: checked
+      checked: -1
     },
     obj
   )
@@ -66,6 +68,9 @@ export const isSameNode = (n1, n2) => {
     }
   }
   if (n1.closed !== n2.closed) {
+    return false
+  }
+  if (n1.checked !== n2.checked) {
     return false
   }
   return true

@@ -58,6 +58,7 @@
       :font-size="adjustedFontSize"
       :text="l"
       :fill="textFill"
+      :textDecoration="textDecoration"
     />
     <!-- empty text causes errors of getting the positions on Safari -->
     <SvgText
@@ -68,22 +69,33 @@
       :y="textY + textHeight"
       :font-size="adjustedFontSize"
       :fill="textFill"
+      :textDecoration="textDecoration"
     />
   </g>
+  <SvgCheckbox
+    v-if="check"
+    :x="x + checkboxPaddingX"
+    :y="y + height / 2 - checkSize / 2"
+    :size="checkSize"
+    :value="checked === 1"
+    @input="$emit('toggleChecked', checked === 0 ? 1 : 0)"
+  />  
 </g>
 </template>
 
 <script>
 import SvgText from '@/components/atoms/svg/SvgText'
 import SvgRectangle from '@/components/atoms/svg/SvgRectangle'
+import SvgCheckbox from '@/components/atoms/svg/SvgCheckbox'
 
 export default {
   components: {
     SvgText,
-    SvgRectangle
+    SvgRectangle,
+    SvgCheckbox
   },
   data: () => ({
-    textWidth: 50
+    width: 50
   }),
   props: {
     text: {
@@ -133,14 +145,15 @@ export default {
     root: {
       type: Boolean,
       default: false
+    },
+    checked: {
+      type: Number,
+      default: -1
     }
   },
   computed: {
     lines () {
       return this.text ? this.text.split(/\n|\r\n/) : []
-    },
-    width () {
-      return this.textWidth
     },
     height () {
       return this.textHeight * Math.max(1, this.lines.length) + 8
@@ -149,13 +162,19 @@ export default {
       return this.adjustedFontSize + 5
     },
     textX () {
-      return this.x + this.textPaddingX
+      return this.x + this.textPaddingX + this.additionalWidthFromCheckbox - (this.check ? this.checkboxPaddingX : 0)
     },
     textY () {
       return this.y
     },
     textPaddingX () {
       return 5
+    },
+    checkboxPaddingX () {
+      return 3
+    },
+    additionalWidthFromCheckbox () {
+      return this.check ? this.checkSize + this.checkboxPaddingX * 2 : 0
     },
     closed () {
       return this.hiddenFamilyCount > 0
@@ -195,6 +214,11 @@ export default {
     },
     adjustedFontSize () {
       return this.root ? this.fontSize * 1.5 : this.fontSize
+    },
+    checkSize () { return 18 },
+    check () { return this.checked !== -1 },
+    textDecoration () {
+      return this.checked === 1 ? 'line-through' : ''
     }
   },
   watch: {
@@ -202,6 +226,13 @@ export default {
       this.$nextTick().then(() => {
         this.adjustTextWidth()
       })
+    },
+    checked (to, from) {
+      if (to === -1 && from !== -1 || to === 0 && from === -1) {
+        this.$nextTick().then(() => {
+          this.adjustTextWidth()
+        })
+      }
     }
   },
   mounted () {
@@ -210,8 +241,11 @@ export default {
   methods: {
     adjustTextWidth () {
       const bbox = this.getBBox()
-      this.textWidth = bbox.width
-      this.$emit('calcSize', bbox)
+      this.width = bbox.width + this.additionalWidthFromCheckbox
+      this.$emit('calcSize', {
+        ...bbox,
+        width: this.width
+      })
     },
     getBBox () {
       const width = this.$refs.emptySvgLine ? this.$refs.emptySvgLine.getBBox().width : this.lines.reduce((p, c, i) => {
