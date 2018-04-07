@@ -6,6 +6,7 @@
     :font-size="fontSize"
     :font-weight="fontWeight"
     :fill="fill"
+    :text-decoration="textDecoration"
     @click="isLink ? moveLink : ''"
   >
     {{isLink ? '' : text}}
@@ -46,6 +47,10 @@ export default {
     fontWeight: {
       type: Number,
       default: 500
+    },
+    textDecoration: {
+      type: String,
+      default: ''
     }
   },
   computed: {

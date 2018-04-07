@@ -9,6 +9,13 @@
     >
       <v-icon>text_format</v-icon>
     </v-btn>
+    <span class="split" />
+    <v-btn icon small class="list-item check"
+      :style="{color: check ? 'black' : 'grey'}"
+      @click="$emit('toggleCheck')"
+    >
+      <v-icon>check_box</v-icon>
+    </v-btn>
   </div>
 </div>
 </template>
@@ -18,15 +25,9 @@ export default {
   data: () => ({
   }),
   props: {
-    defaultNodeProps: {
-      color: {
-        type: String,
-        default: '#000'
-      },
-      backgroundColor: {
-        type: String,
-        default: '#fff'
-      }
+    check: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -83,15 +84,22 @@ export default {
   background-color: #fff;
   padding: 0 3px;
 
-  .list-item {
-    margin: 2px 6px;
-    width: 28px;
-    height: 28px;
+  .button-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .list-item {
+      margin: 2px 6px;
+      width: 28px;
+      height: 28px;
+    }
+    .split {
+      width: 2px;
+      height: 24px;
+      background-color: black;
+    }
   }
-}
-.button-box {
-  display: flex;
-  justify-content: center;
 }
 </style>
 
