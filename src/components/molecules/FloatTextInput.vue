@@ -1,17 +1,22 @@
 <template>
-<div class="float-text-input-wrapper">
+<div
+  class="float-text-input-wrapper"
+  :class="{ mobile: $isMobile.any }"
+  :style="{ left: $isMobile.any ? 0 : `${x}px`, top: $isMobile.any ? 0 : `${y}px` }"
+>
   <v-text-field
     class="text-field"
     multi-line
     hide-details
     autofocus
+    no-resize
     :rows="rows"
-    v-model="_value"
+    v-model="localValue"
     @keyup.esc="done"
     @blur="done"
   />
   <v-btn fab dark small color="primary" class="submit">
-    <v-icon dark>done</v-icon>
+    <v-icon dark style="line-height: 32px;">done</v-icon>
   </v-btn>
 </div>
 </template>
@@ -26,28 +31,32 @@ export default {
     targetKey: {
       type: String,
       required: true
+    },
+    x: {
+      type: Number,
+      default: 0
+    },
+    y: {
+      type: Number,
+      default: 0
     }
   },
   computed: {
-    _value: {
-      get () {
-        return this.value
-      },
-      set (val) {
-        this.$emit('input', val)
-      }
+    localValue: {
+      get () { return this.value },
+      set (val) { this.$emit('input', val) }
     },
     lines () {
-      return this._value.split(/\n|\r\n/)
+      return this.localValue.split(/\n|\r\n/)
     },
     rows () {
-      return 3
+      return Math.max(this.lines.length, 3)
     }
   },
   methods: {
     done () {
       this.$emit('done', {
-        value: this.value,
+        value: this.localValue,
         targetKey: this.targetKey
       })
     }
@@ -57,13 +66,16 @@ export default {
 
 <style lang="scss" scoped>
 .float-text-input-wrapper {
+  display: flex;
+  align-items: center;
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
+  width: 40%;
   border: 1px solid black;
   border-radius: 4px;
   background-color: #fff;
+  padding-left: 4px;
 
   .text-field {
     padding: 0;
@@ -73,7 +85,6 @@ export default {
   .submit {
     width: 32px;
     height: 32px;
-    margin: 0 0 2px 0;
   }
 }
 .float-text-input-wrapper.mobile {
@@ -82,6 +93,9 @@ export default {
     height: 36px;
     margin: 2px 2px 0 0;
   }
+}
+.float-text-input-wrapper.mobile {
+  width: 100%;
 }
 </style>
 
