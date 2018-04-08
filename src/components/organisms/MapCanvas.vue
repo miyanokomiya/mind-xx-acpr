@@ -235,6 +235,8 @@
     v-if="showTextInput"
     v-model="editingText"
     :targetKey="editTextTarget"
+    :x="editTextTargetPosition.x"
+    :y="editTextTargetPosition.y"
     @done="doneEditText"
     @mousewheel.native.prevent="e => $isMobile.any ? '' : mousewheel(e)"
   />
@@ -453,15 +455,10 @@ export default {
       return this.mode === CANVAS_MODE.DEPENDENCY ? this.editMenuTarget : null
     },
     editTargetPosition () {
-      const key = this.editMenuTarget
-      if (key) {
-        const position = this.nodePositions[key]
-        const x = (position.x - this.x) * this.scale
-        const y = (position.y - this.y) * this.scale
-        return { x, y }
-      } else {
-        return null
-      }
+      return this.getNodeViewPosition(this.editMenuTarget)
+    },
+    editTextTargetPosition () {
+      return this.getNodeViewPosition(this.editTextTarget)
     },
     isOppositeEditTarget () {
       if (!this.editMenuTarget) {
@@ -1181,6 +1178,16 @@ export default {
           checked: val
         }
       })
+    },
+    getNodeViewPosition (key) {
+      if (key) {
+        const position = this.nodePositions[key]
+        const x = (position.x - this.x) * this.scale
+        const y = (position.y - this.y) * this.scale
+        return { x, y }
+      } else {
+        return null
+      }
     }
   }
 }

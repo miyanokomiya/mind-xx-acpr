@@ -23,6 +23,13 @@ storiesOf('molecules/FloatTextInput', module).add('story', () => {
           :y="y"
           targetKey="targetKey"
         />
+        <FloatTextInput
+          v-model="text"
+          :x="100"
+          :y="80"
+          targetKey="targetKey"
+        />
+      </div>
       </div>
     `,
     data: () => ({
