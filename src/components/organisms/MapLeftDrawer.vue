@@ -61,9 +61,30 @@
       </v-list-tile>
     </v-list>
   </v-tab-item>
+    <v-dialog
+      max-width="400"
+      :value="!!svgString"
+      :persistent="false"
+      @input="svgString = ''"
+    >
+      <v-card>
+        <v-card-title class="headline">{{file.name}}</v-card-title>
+        <v-card-text class="text-xs-center">
+          <textarea ref="textarea" class="textarea" readonly v-model="svgString"></textarea>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="blue darken-1"
+            flat="flat"
+            @click="copySvg"
+          >
+            COPY
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 </v-tabs>
-
-
 </template>
 
 <script>
@@ -79,7 +100,8 @@ export default {
   data: () => ({
     renderCanvas: false,
     showNodeColorPicker: false,
-    showTextColorPicker: false
+    showTextColorPicker: false,
+    svgString: ''
   }),
   props: {
     nodes: {
@@ -123,15 +145,16 @@ export default {
           const svgCanvas = mapCanvas.$refs.svgCanvas
           const dom = svgCanvas.$el
           const xmlSerializer = new XMLSerializer()
-          const textXml = xmlSerializer.serializeToString(dom)
-          this.downloadText(textXml, this.file.name)
+          this.svgString = xmlSerializer.serializeToString(dom)
           this.renderCanvas = false
         })
       })
     },
-    downloadText (text, fileName) {
+    // TODO できなくなってしまっている
+    downloadSvg () {
+      const fileName = this.file.name
       const filteredName = fileName.replace(/^.*[(\\|/|:|*|?|"|<|>||)].*$/, '_')
-      var blob = new Blob([ text ], { 'type': 'image/svg+xml' })
+      var blob = new Blob([ this.svgString ], { 'type': 'image/svg+xml' })
       if (window.navigator.msSaveBlob) {
         window.navigator.msSaveBlob(blob, filteredName)
       } else {
@@ -140,7 +163,12 @@ export default {
         a.target = '_blank'
         a.download = fileName
         a.click()
+        this.svgString = ''
       }
+    },
+    copySvg () {
+      this.$refs.textarea.select()
+      document.execCommand('copy')
     }
   }
 }
@@ -152,6 +180,15 @@ export default {
 }
 .vc-swatches {
   width: auto;
+}
+.textarea {
+  width: 90%;
+  height: 200px;
+  text-align: left;
+  background-color: #eee;
+  border: 1px solid #aaa;
+  border-radius: 2px;
+  padding: 4px 6px;
 }
 </style>
 
