@@ -196,6 +196,9 @@ export default {
     .list.list--three-line {
       padding: 0;
     }
+    .list--three-line .list__tile__avatar {
+      margin-top: 0;
+    }
     .list__tile.list__tile--link.list__tile--avatar:hover {
       background-color: #fff;
       cursor: default;
@@ -207,6 +210,7 @@ export default {
     .list__tile.list__tile--avatar {
       padding: 0 6px;
       height: auto;
+      min-height: 50px;
     }
     .avatar.list__tile__avatar {
       min-width: 48px;
