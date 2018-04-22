@@ -46,7 +46,7 @@
         v-if="renderCanvas"
         ref="mapCanvas"
         class="map-canvas"
-        :nodes="nodes"
+        :nodes="toSvgNodes"
         :width="canvasWidth"
         :height="canvasHeight"
       />
@@ -68,9 +68,19 @@
       @input="svgString = ''"
     >
       <v-card>
-        <v-card-title class="headline">{{file.name}}</v-card-title>
+        <v-card-title class="headline">{{`${file.name}.svg`}}</v-card-title>
         <v-card-text class="text-xs-center">
-          <textarea ref="textarea" class="textarea" readonly v-model="svgString"></textarea>
+          <textarea ref="textarea" class="textarea" readonly v-model="svgString" @click="copySvg"></textarea>
+          <v-checkbox
+            hide-details
+            label="Expand all nodes"
+            v-model="expandAllNode"
+          />
+          <v-checkbox
+            hide-details
+            label="Landscape"
+            v-model="landscape"
+          />
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -80,6 +90,13 @@
             @click="copySvg"
           >
             COPY
+          </v-btn>
+          <v-btn
+            color="blue darken-1"
+            flat="flat"
+            @click="downloadSvg"
+          >
+            DOWNLOAD
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -101,7 +118,9 @@ export default {
     renderCanvas: false,
     showNodeColorPicker: false,
     showTextColorPicker: false,
-    svgString: ''
+    svgString: '',
+    expandAllNode: false,
+    landscape: true
   }),
   props: {
     nodes: {
@@ -130,40 +149,60 @@ export default {
   },
   computed: {
     canvasWidth () {
-      return 1024
+      return this.landscape ? 1024 : Math.floor(1024 / Math.SQRT2)
     },
     canvasHeight () {
-      return 1024
+      return this.landscape ? Math.floor(1024 / Math.SQRT2) : 1024
+    },
+    toSvgNodes () {
+      if (this.expandAllNode) {
+        return Object.keys(this.nodes).reduce((p, c) => {
+          p[c] = {
+            ...this.nodes[c],
+            closed: false
+          }
+          return p
+        }, {})
+      } else {
+        return this.nodes
+      }
     }
+  },
+  watch: {
+    expandAllNode () { this.printSvg() },
+    landscape () { this.printSvg() }
   },
   methods: {
     printSvg () {
       this.renderCanvas = true
       this.$nextTick().then(() => {
         const mapCanvas = this.$refs.mapCanvas
-        mapCanvas.clearZoom().then(() => {
-          const svgCanvas = mapCanvas.$refs.svgCanvas
-          const dom = svgCanvas.$el
-          const xmlSerializer = new XMLSerializer()
-          this.svgString = xmlSerializer.serializeToString(dom)
-          this.renderCanvas = false
-        })
+        if (mapCanvas) {
+          mapCanvas.clearZoom().then(() => {
+            const svgCanvas = mapCanvas.$refs.svgCanvas
+            const dom = svgCanvas.$el
+            const xmlSerializer = new XMLSerializer()
+            this.svgString = xmlSerializer.serializeToString(dom)
+            this.renderCanvas = false
+          })
+        }
       })
     },
-    // TODO できなくなってしまっている
     downloadSvg () {
       const fileName = this.file.name
-      const filteredName = fileName.replace(/^.*[(\\|/|:|*|?|"|<|>||)].*$/, '_')
+      const filteredName = fileName.replace(/^.*[(\\|/|:|*|?|"|<|>||)].*$/, '_') + '.svg'
       var blob = new Blob([ this.svgString ], { 'type': 'image/svg+xml' })
       if (window.navigator.msSaveBlob) {
         window.navigator.msSaveBlob(blob, filteredName)
       } else {
         var a = document.createElement('a')
         a.href = URL.createObjectURL(blob)
-        a.target = '_blank'
-        a.download = fileName
+        // This does not work because of popup blocking.
+        // a.target = '_blank'
+        a.download = filteredName
         a.click()
         this.svgString = ''
+        URL.revokeObjectURL(blob)
       }
     },
     copySvg () {
@@ -182,13 +221,14 @@ export default {
   width: auto;
 }
 .textarea {
-  width: 90%;
-  height: 200px;
+  width: 100%;
+  height: 60px;
   text-align: left;
   background-color: #eee;
   border: 1px solid #aaa;
   border-radius: 2px;
   padding: 4px 6px;
+  cursor: pointer;
 }
 </style>
 
