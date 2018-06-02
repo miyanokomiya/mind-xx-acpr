@@ -79,7 +79,7 @@
       <!-- standard nodes -->
       <SvgTextRectangle
         class="mind-node"
-        :class="{ 'moving-origin': movingNodePositions[key] }"
+        :class="{ 'moving-origin': movingNodeFamilyKeyList.includes(key) }"
         v-for="(node, key) in nodes"
         v-if="isShowNodes[key]"
         :key="key"
@@ -440,6 +440,11 @@ export default {
     },
     movingNodeCount () {
       return Object.keys(this.movingNodePositions).length
+    },
+    movingNodeTarget () {
+      return this.movingNodeCount > 0 ? Object.keys(this.movingNodePositions)[0] : null    },
+    movingNodeFamilyKeyList () {
+      return this.movingNodeTarget ? [this.movingNodeTarget, ...getFamilyKeys({ nodes: this.nodes, parentKey: this.movingNodeTarget })] : []
     },
     scale: {
       get () {
