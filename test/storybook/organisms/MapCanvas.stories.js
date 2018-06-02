@@ -38,7 +38,17 @@ const methods = {
     this.selectedNodes = {}
   },
   selectProp (args) {
-    console.log('change props:', args)
+    const selectedKeys = Object.keys(this.selectedNodes)
+      if (selectedKeys.length > 0) {
+        const updatedNodes = selectedKeys.reduce((p, key) => {
+          p[key] = {
+            ...this.nodes[key],
+            ...args
+          }
+          return p
+        }, {})
+        this.updateNodes(updatedNodes)
+      }
   },
   postComment ({ comment, key }) {
     console.log('post comment:', comment, key)

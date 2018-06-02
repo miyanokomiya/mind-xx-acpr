@@ -9,6 +9,7 @@
   :stroke="stroke"
   :stroke-width="strokeWidth"
   :fill="fill"
+  :fill-opacity="fillOpacity"
   :stroke-dasharray="strokeDasharray"
   :stroke-dashoffset="strokeDashoffset"
 />
@@ -52,6 +53,10 @@ export default {
     fill: {
       type: String,
       default: 'none'
+    },
+    fillOpacity: {
+      type: Number,
+      default: 1
     },
     strokeDasharray: {
       type: Number,

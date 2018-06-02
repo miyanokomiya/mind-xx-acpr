@@ -17,7 +17,8 @@ describe('utils/model', () => {
       color: '#000000',
       dependencies: { a: true },
       closed: false,
-      checked: -1
+      checked: -1,
+      grouping: false
     }
     it('should return true if two nodes are same', () => {
       const n2 = modelUtils.createNode({
@@ -28,7 +29,8 @@ describe('utils/model', () => {
         color: '#000000',
         dependencies: { a: true },
         closed: false,
-        checked: -1
+        checked: -1,
+        grouping: false
       })
       const res = modelUtils.isSameNode(n1, n2)
       expect(res).toBe(true)

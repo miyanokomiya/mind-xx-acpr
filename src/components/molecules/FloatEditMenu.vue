@@ -10,10 +10,17 @@
       <v-icon>text_format</v-icon>
     </v-btn>
     <span class="split" />
-    <v-btn icon small class="list-item check"
+    <v-btn icon small class="list-item"
       :style="{color: check ? 'black' : 'grey'}"
       @click="$emit('toggleCheck')"
     >
+      <v-icon>check_box</v-icon>
+    </v-btn>
+    <v-btn icon small class="list-item"
+      :style="{color: grouping ? 'black' : 'grey'}"
+      @click="$emit('toggleGrouping')"
+    >
+      <!-- FIXME replace better icon -->
       <v-icon>check_box</v-icon>
     </v-btn>
   </div>
@@ -26,6 +33,10 @@ export default {
   }),
   props: {
     check: {
+      type: Boolean,
+      default: false
+    },
+    grouping: {
       type: Boolean,
       default: false
     }
