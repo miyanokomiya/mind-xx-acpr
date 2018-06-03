@@ -20,8 +20,7 @@
       :style="{color: grouping ? 'black' : 'grey'}"
       @click="$emit('toggleGrouping')"
     >
-      <!-- FIXME replace better icon -->
-      <v-icon>check_box</v-icon>
+      <v-icon>crop_3_2</v-icon>
     </v-btn>
   </div>
 </div>
