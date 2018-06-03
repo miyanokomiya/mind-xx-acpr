@@ -142,6 +142,9 @@
           },
           "checked": {
             ".validate": "newData.isNumber()"
+          },
+          "grouping": {
+            ".validate": "newData.isBoolean()"
           }
         }
       }

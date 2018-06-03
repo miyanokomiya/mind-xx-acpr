@@ -21,7 +21,8 @@ export const createNode = obj =>
       closed: false,
       oppositeChildren: [],
       // -1: no checkbox 0: unchecked 1: checked
-      checked: -1
+      checked: -1,
+      grouping: false
     },
     obj
   )
@@ -71,6 +72,9 @@ export const isSameNode = (n1, n2) => {
     return false
   }
   if (n1.checked !== n2.checked) {
+    return false
+  }
+  if (n1.grouping !== n2.grouping) {
     return false
   }
   return true

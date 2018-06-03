@@ -1,7 +1,7 @@
 <template>
 <div class="float-edit-menu-wrapper">
   <div class="button-box">
-    <v-btn icon small class="list-item color"
+    <v-btn icon small class="list-item"
       v-for="(prop, i) in colorProps"
       :key="i"
       :style="{color: prop.color, background: prop.backgroundColor}"
@@ -10,11 +10,17 @@
       <v-icon>text_format</v-icon>
     </v-btn>
     <span class="split" />
-    <v-btn icon small class="list-item check"
+    <v-btn icon small class="list-item"
       :style="{color: check ? 'black' : 'grey'}"
       @click="$emit('toggleCheck')"
     >
       <v-icon>check_box</v-icon>
+    </v-btn>
+    <v-btn icon small class="list-item"
+      :style="{color: grouping ? 'black' : 'grey'}"
+      @click="$emit('toggleGrouping')"
+    >
+      <v-icon>crop_3_2</v-icon>
     </v-btn>
   </div>
 </div>
@@ -26,6 +32,10 @@ export default {
   }),
   props: {
     check: {
+      type: Boolean,
+      default: false
+    },
+    grouping: {
       type: Boolean,
       default: false
     }

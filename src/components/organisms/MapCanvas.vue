@@ -41,6 +41,21 @@
       @mousemove.native="e => $isMobile.any ? '' : canvasCursorMove(e)"
       @touchmove.native="e => $isMobile.any ? canvasCursorMove(e) : ''"
     >
+      <!-- family rectangles -->
+      <SvgRectangle
+        v-for="(rect, i) in sortedFamilyRectangles"
+        :key="`grouping_${i}`"
+        :x="rect.x"
+        :y="rect.y"
+        :rx="3"
+        :ry="3"
+        :width="rect.width"
+        :height="rect.height"
+        :stroke="rect.stroke"
+        :stroke-width="2"
+        :fill="rect.stroke"
+        :fillOpacity="0.2"
+      />
       <!-- connectors of dependencies -->
       <SvgBridgeConnector
         v-for="(connector, i) in dependencyConnectors"
@@ -64,7 +79,7 @@
       <!-- standard nodes -->
       <SvgTextRectangle
         class="mind-node"
-        :class="{ 'moving-origin': movingNodePositions[key] }"
+        :class="{ 'moving-origin': movingNodeFamilyKeyList.includes(key) }"
         v-for="(node, key) in nodes"
         v-if="isShowNodes[key]"
         :key="key"
@@ -244,8 +259,10 @@
     ref="floatEditMenu"
     v-if="showEditMenu"
     :check="editMenuTargetNode.checked !== -1"
+    :grouping="editMenuTargetNode.grouping"
     @selectProp="prop => $emit('selectProp', prop)"
     @toggleCheck="toggleCheck"
+    @toggleGrouping="toggleGrouping"
     @mousewheel.native.prevent="e => $isMobile.any ? '' : mousewheel(e)"
   />
   <CommentList
@@ -274,6 +291,7 @@ import firebase from '@/firebase'
 import {
   INTERVAL_CLICK,
   INTERVAL_DOUBLE_CLICK,
+  NODE_MARGIN_X,
   NODE_MARGIN_Y,
   ROOT_NODE,
   CANVAS_MODE,
@@ -423,6 +441,11 @@ export default {
     },
     movingNodeCount () {
       return Object.keys(this.movingNodePositions).length
+    },
+    movingNodeTarget () {
+      return this.movingNodeCount > 0 ? Object.keys(this.movingNodePositions)[0] : null    },
+    movingNodeFamilyKeyList () {
+      return this.movingNodeTarget ? [this.movingNodeTarget, ...getFamilyKeys({ nodes: this.nodes, parentKey: this.movingNodeTarget })] : []
     },
     scale: {
       get () {
@@ -661,6 +684,41 @@ export default {
         }
         return p
       }, {})
+    },
+    calcSizeCeompleted () {
+      return !Object.keys(this.nodes).find(key => !this.nodeSizes[key])
+    },
+    calcPositionCeompleted () {
+      return !Object.keys(this.nodes).find(key => !this.nodePositions[key])
+    },
+    familyRectangles () {
+      if (!this.calcSizeCeompleted || !this.calcPositionCeompleted) return {}
+      return Object.keys(this.nodes).reduce((p, c) => {
+        const node = this.nodes[c]
+        if (!node.grouping) return p
+        const familyKeys = [c, ...getFamilyKeys({nodes: this.nodes, parentKey: c})]
+        const { positions, sizes } = familyKeys.reduce(({ positions, sizes }, key) => {
+          positions[key] = this.nodePositions[key]
+          sizes[key] = this.nodeSizes[key]
+          return { positions, sizes }
+        }, { positions: {}, sizes: {} })
+        const rect = getCoveredRectangle({ positions, sizes })
+        return {
+          ...p,
+          [c]: {
+            x: rect.x - NODE_MARGIN_X / 3,
+            y: rect.y - NODE_MARGIN_Y / 3,
+            width: rect.width + NODE_MARGIN_X * 2 / 3,
+            height: rect.height + NODE_MARGIN_Y * 2 / 3,
+            stroke: node.backgroundColor
+          }
+        }
+      }, {})
+    },
+    sortedFamilyRectangles () {
+      return Object.values(this.familyRectangles).sort((a, b) => {
+        return (b.width * b.height) - (a.width * a.height)
+      })
     }
   },
   watch: {
@@ -1159,12 +1217,18 @@ export default {
       this.$refs.commentList.open = true
     },
     toggleCheck () {
-      const updatedChecked = this.editMenuTargetNode.checked === -1 ? 0 : -1
+      const checked = this.editMenuTargetNode.checked === -1 ? 0 : -1
+      this.batchUpdateNodes({ checked })
+    },
+    toggleGrouping () {
+      this.batchUpdateNodes({ grouping: !this.editMenuTargetNode.grouping })
+    },
+    batchUpdateNodes (props) {
       const nodes = Object.keys(this.selectedNodes).reduce((p, c) => {
         const node = this.nodes[c]
         p[c] = {
           ...node,
-          checked: updatedChecked === -1 ? -1 : (node.checked === 1 ? 1 : 0)
+          ...props
         }
         return p
       }, {})
