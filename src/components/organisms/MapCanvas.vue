@@ -259,6 +259,7 @@
     ref="floatEditMenu"
     v-if="showEditMenu"
     :check="editMenuTargetNode.checked !== -1"
+    :grouping="editMenuTargetNode.grouping"
     @selectProp="prop => $emit('selectProp', prop)"
     @toggleCheck="toggleCheck"
     @toggleGrouping="toggleGrouping"
