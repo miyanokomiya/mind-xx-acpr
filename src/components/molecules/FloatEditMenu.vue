@@ -1,7 +1,7 @@
 <template>
 <div class="float-edit-menu-wrapper">
   <div class="button-box">
-    <v-btn icon small class="list-item color"
+    <v-btn icon small class="list-item"
       v-for="(prop, i) in colorProps"
       :key="i"
       :style="{color: prop.color, background: prop.backgroundColor}"
