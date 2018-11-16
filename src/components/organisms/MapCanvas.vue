@@ -55,6 +55,7 @@
         :stroke-width="2"
         :fill="rect.stroke"
         :fillOpacity="0.2"
+        class="family-rectangle"
       />
       <!-- connectors of dependencies -->
       <SvgBridgeConnector
@@ -1267,6 +1268,9 @@ export default {
   .canvas-wrapper {
     outline: none;
     user-select: none;
+    .family-rectangle {
+      pointer-events: none;
+    }
   }
   .lock-button {
     position: absolute;
