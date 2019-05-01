@@ -135,9 +135,9 @@
         :stroke="selectedNodes[key] ? 'blue' : 'black'"
         :fill="nodes[key].backgroundColor"
         :textFill="nodes[key].color"
-        :hiddenFamilyCount="closedNodeFamilyCounts[key]" 
-        :commentCount="commentCounts[key]"     
-        :childrenCount="nodes[key].children.length"  
+        :hiddenFamilyCount="closedNodeFamilyCounts[key]"
+        :commentCount="commentCounts[key]"
+        :childrenCount="nodes[key].children.length"
         :checked="nodes[key].checked"
       />
     </SvgCanvas>
@@ -697,10 +697,14 @@ export default {
       return Object.keys(this.nodes).reduce((p, c) => {
         const node = this.nodes[c]
         if (!node.grouping) return p
+        if (!this.isShowNodes[c]) return p
+
         const familyKeys = [c, ...getFamilyKeys({nodes: this.nodes, parentKey: c})]
         const { positions, sizes } = familyKeys.reduce(({ positions, sizes }, key) => {
-          positions[key] = this.nodePositions[key]
-          sizes[key] = this.nodeSizes[key]
+          if (this.isShowNodes[key]) {
+            positions[key] = this.nodePositions[key]
+            sizes[key] = this.nodeSizes[key]
+          }
           return { positions, sizes }
         }, { positions: {}, sizes: {} })
         const rect = getCoveredRectangle({ positions, sizes })
@@ -1090,7 +1094,7 @@ export default {
     keydownShiftEnter () {
       if (this.editMenuTarget && !this.editTextTarget) {
         if (this.editMenuTarget === ROOT_NODE) {
-          this.createNode(false, true)  
+          this.createNode(false, true)
         } else {
           this.createNode()
         }
