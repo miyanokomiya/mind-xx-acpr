@@ -1,12 +1,6 @@
 const functions = require('firebase-functions')
 const admin = require('firebase-admin')
-
-// this account file is gitignored
-const serviceAccount = require('./mind-xx-acpr-firebase-adminsdk-wd2cq-854fdc9efc.json')
-
-const adminConfig = JSON.parse(process.env.FIREBASE_CONFIG)
-adminConfig.credential = admin.credential.cert(serviceAccount)
-admin.initializeApp(adminConfig)
+admin.initializeApp()
 
 exports.deleteUser = functions.auth.user().onDelete((data, context) => {
   const uid = context.auth.uid
