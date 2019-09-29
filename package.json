@@ -5,7 +5,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "storybook:build": "vue-cli-service storybook:build -c config/storybook",
+    "storybook:build": "vue-cli-service storybook:build -c config/storybook -o dist_storybook",
     "storybook:serve": "vue-cli-service storybook:serve -p 6006 -c config/storybook",
     "test:unit": "vue-cli-service test:unit",
     "test:pupp": "yarn test:unit -c tests/puppeteer/jest.conf.js"
