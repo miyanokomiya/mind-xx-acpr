@@ -719,11 +719,15 @@ export default {
       return Object.keys(this.nodes).reduce((p, c) => {
         const node = this.nodes[c]
         if (!node.grouping) return p
+        if (!this.isShowNodes[c]) return p
+
         const familyKeys = [c, ...getFamilyKeys({ nodes: this.nodes, parentKey: c })]
         const { positions, sizes } = familyKeys.reduce(
           ({ positions, sizes }, key) => {
-            positions[key] = this.nodePositions[key]
-            sizes[key] = this.nodeSizes[key]
+            if (this.isShowNodes[key]) {
+              positions[key] = this.nodePositions[key]
+              sizes[key] = this.nodeSizes[key]
+            }
             return { positions, sizes }
           },
           { positions: {}, sizes: {} },
