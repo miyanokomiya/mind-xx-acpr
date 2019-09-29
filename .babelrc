@@ -1,15 +1,8 @@
 {
-  "presets": [
-    ["env", {
-      "modules": false
-    }],
-    "stage-2"
-  ],
-  "plugins": ["transform-runtime"],
+  "presets": [["@babel/preset-env", { "modules": false }]],
   "env": {
     "test": {
-      "presets": ["env", "stage-2"],
-      "plugins": ["transform-es2015-modules-commonjs", "dynamic-import-node"]
+      "presets": [["@babel/preset-env", { "targets": { "node": "current" } }]]
     }
   }
 }

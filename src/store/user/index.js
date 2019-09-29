@@ -8,10 +8,10 @@ export default {
   namespaced: true,
   state: {
     user: null, // createUser(),
-    authorityLoading: true
+    authorityLoading: true,
   },
   modules: {},
   actions,
   mutations,
-  getters
+  getters,
 }

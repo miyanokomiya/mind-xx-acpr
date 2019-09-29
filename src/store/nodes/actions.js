@@ -1,11 +1,6 @@
 import { actionTypes, mutationTypes } from './types'
 import firebase from '@/firebase'
-import {
-  createNode,
-  getNodeDiff,
-  isConflict,
-  rescueConflict
-} from '@/utils/model'
+import { createNode, getNodeDiff, isConflict, rescueConflict } from '@/utils/model'
 
 const updateNodes =
   process.env.NODE_ENV === 'test'
@@ -27,14 +22,13 @@ const updateNodes =
           }
           return p
         }, {})
-        updates[`/files/${fileKey}/updated`] =
-          firebase.database.ServerValue.TIMESTAMP
+        updates[`/files/${fileKey}/updated`] = firebase.database.ServerValue.TIMESTAMP
         const newNodes = Object.assign({}, context.state.nodes, nodes)
         updates[`/files/${fileKey}/nodeCount`] = Object.keys(newNodes).reduce(
           (count, c) => {
             return newNodes[c] ? count + 1 : count
           },
-          0
+          0,
         )
         return firebase
           .database()
@@ -59,24 +53,24 @@ const connect =
         var nodesRef = firebase.database().ref('nodes/' + fileKey)
         nodesRef.on('child_added', data => {
           const nodes = {
-            [data.key]: createNode(data.val())
+            [data.key]: createNode(data.val()),
           }
           context.commit(mutationTypes.UPDATE_NODES, { nodes })
           if (context.state.initialLoading) {
             context.commit(mutationTypes.SET_INITIAL_LOADING, {
-              initialLoading: false
+              initialLoading: false,
             })
           }
         })
-        nodesRef.on('child_changed', function (data) {
+        nodesRef.on('child_changed', function(data) {
           const nodes = {
-            [data.key]: createNode(data.val())
+            [data.key]: createNode(data.val()),
           }
           context.commit(mutationTypes.UPDATE_NODES, { nodes })
         })
-        nodesRef.on('child_removed', function (data) {
+        nodesRef.on('child_removed', function(data) {
           const nodes = {
-            [data.key]: null
+            [data.key]: null,
           }
           context.commit(mutationTypes.UPDATE_NODES, { nodes })
         })
@@ -84,23 +78,26 @@ const connect =
       }
 
 export default {
-  [actionTypes.DISCONNECT] (context) {
+  [actionTypes.DISCONNECT](context) {
     if (context.state.fileKey) {
       disconnect(context)
     }
     context.commit(mutationTypes.CLEAR_NODES)
   },
-  [actionTypes.LOAD_NODES] (context, { fileKey }) {
+  [actionTypes.LOAD_NODES](context, { fileKey }) {
     context.dispatch(actionTypes.DISCONNECT)
     context.commit(mutationTypes.SET_FILE_KEY, { fileKey })
     context.commit(mutationTypes.SET_INITIAL_LOADING, { initialLoading: true })
-    connect(context, { fileKey })
+    connect(
+      context,
+      { fileKey },
+    )
   },
-  [actionTypes.UPDATE_NODES] (context, { nodes }) {
+  [actionTypes.UPDATE_NODES](context, { nodes }) {
     // get only diff
     const diff = getNodeDiff({
       nodes: context.state.nodes,
-      updatedNodes: nodes
+      updatedNodes: nodes,
     })
     if (Object.keys(diff).length === 0) {
       return
@@ -112,7 +109,7 @@ export default {
     // push firebase
     updateNodes(context, { nodes: diff })
   },
-  [actionTypes.UNDO_NODES] (context) {
+  [actionTypes.UNDO_NODES](context) {
     return new Promise((resolve, reject) => {
       const stacks = context.state.undoStacks
       if (stacks.length > 0) {
@@ -127,9 +124,7 @@ export default {
           }
           if (isConflict({ nodes: nextMerged })) {
             context.commit(mutationTypes.CLEAR_UNDO_STACKS)
-            return reject(
-              new Error('Failed to undo. Others may edit and conflicted.')
-            )
+            return reject(new Error('Failed to undo. Others may edit and conflicted.'))
           } else {
             // pop undo stack
             context.commit(mutationTypes.POP_UNDO_STACK)
@@ -145,7 +140,7 @@ export default {
       return resolve()
     })
   },
-  [actionTypes.REDO_NODES] (context) {
+  [actionTypes.REDO_NODES](context) {
     return new Promise((resolve, reject) => {
       const stacks = context.state.redoStacks
       if (stacks.length > 0) {
@@ -160,9 +155,7 @@ export default {
           }
           if (isConflict({ nodes: nextMerged })) {
             context.commit(mutationTypes.CLEAR_REDO_STACKS)
-            return reject(
-              new Error('Failed to redo. Others may edit and conflicted.')
-            )
+            return reject(new Error('Failed to redo. Others may edit and conflicted.'))
           } else {
             // pop redo stack
             context.commit(mutationTypes.POP_REDO_STACK)
@@ -178,7 +171,7 @@ export default {
       return resolve()
     })
   },
-  [actionTypes.RESCUE_CONFRICT] (context) {
+  [actionTypes.RESCUE_CONFRICT](context) {
     if (!isConflict({ nodes: context.state.nodes })) {
       return Promise.resolve()
     }
@@ -192,10 +185,10 @@ export default {
     // push firebase
     return updateNodes(context, { nodes })
   },
-  [actionTypes.SET_SELECTED_NODES] (context, { selectedNodes }) {
+  [actionTypes.SET_SELECTED_NODES](context, { selectedNodes }) {
     context.commit(mutationTypes.SET_SELECTED_NODES, { selectedNodes })
   },
-  [actionTypes.CLEAR_SELECT] (context) {
+  [actionTypes.CLEAR_SELECT](context) {
     context.commit(mutationTypes.SET_SELECTED_NODES, {})
-  }
+  },
 }

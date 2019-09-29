@@ -1,5 +1,9 @@
 <template>
-  <path :stroke="selected ? 'tomato' : 'green'" :stroke-width="selected ? 3 : 1" fill="none" stroke-dasharray="2 4"
+  <path
+    :stroke="selected ? 'tomato' : 'green'"
+    :stroke-width="selected ? 3 : 1"
+    fill="none"
+    stroke-dasharray="2 4"
     :d="`M ${sx} ${sy} C ${qx1} ${qy1} ${qx2} ${qy2} ${ex} ${ey}`"
   />
 </template>
@@ -9,47 +13,47 @@ export default {
   props: {
     sx: {
       type: Number,
-      required: true
+      required: true,
     },
     sy: {
       type: Number,
-      required: true
+      required: true,
     },
     ex: {
       type: Number,
-      required: true
+      required: true,
     },
     ey: {
       type: Number,
-      required: true
+      required: true,
     },
     selected: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   computed: {
-    qx1 () {
+    qx1() {
       return this.sx > 0 ? this.sx + this.gap : this.sx - this.gap
     },
-    qy1 () {
+    qy1() {
       return this.sy
     },
-    qx2 () {
+    qx2() {
       return this.ex > 0 ? this.ex - this.gap : this.ex + this.gap
     },
-    qy2 () {
+    qy2() {
       return this.ey
     },
-    xGap () {
+    xGap() {
       return Math.abs(this.sx - this.ex)
     },
-    yGap () {
+    yGap() {
       return Math.abs(this.sy - this.ey)
     },
-    gap () {
+    gap() {
       return this.xGap / 3 + this.yGap / 6
-    }
+    },
     // qx () {
     //   return this.sx * 5 / 10 + this.ex * 5 / 10 + this.distance * 0.3
     // },
@@ -63,7 +67,6 @@ export default {
     //   return (this.sy + this.ey) / 2
     // }
   },
-  methods: {
-  }
+  methods: {},
 }
 </script>

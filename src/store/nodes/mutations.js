@@ -4,7 +4,7 @@ import { createDefaultNodes, copyNode } from '@/utils/model'
 import { ROOT_NODE } from '@/constants'
 
 export default {
-  [mutationTypes.UPDATE_NODES] (state, { nodes }) {
+  [mutationTypes.UPDATE_NODES](state, { nodes }) {
     Object.keys(nodes).forEach(key => {
       if (nodes[key]) {
         Vue.set(state.nodes, key, nodes[key])
@@ -22,7 +22,7 @@ export default {
       return p
     }, {})
   },
-  [mutationTypes.SET_SELECTED_NODES] (state, { selectedNodes = {} }) {
+  [mutationTypes.SET_SELECTED_NODES](state, { selectedNodes = {} }) {
     state.selectedNodes = Object.keys(selectedNodes).reduce((p, c) => {
       if (selectedNodes[c]) {
         p[c] = true
@@ -30,20 +30,20 @@ export default {
       return p
     }, {})
   },
-  [mutationTypes.SET_FILE_KEY] (state, { fileKey }) {
+  [mutationTypes.SET_FILE_KEY](state, { fileKey }) {
     state.fileKey = fileKey
   },
-  [mutationTypes.CLEAR_NODES] (state) {
+  [mutationTypes.CLEAR_NODES](state) {
     state.fileKey = null
     state.nodes = createDefaultNodes()
     state.selectedNodes = {}
     state.undoStacks = []
     state.redoStacks = []
   },
-  [mutationTypes.SET_INITIAL_LOADING] (state, { initialLoading }) {
+  [mutationTypes.SET_INITIAL_LOADING](state, { initialLoading }) {
     state.initialLoading = initialLoading
   },
-  [mutationTypes.PUSH_UNDO_STACK] (state, { nodes }) {
+  [mutationTypes.PUSH_UNDO_STACK](state, { nodes }) {
     const current = Object.keys(nodes).reduce((p, c) => {
       p[c] = state.nodes[c] ? copyNode(state.nodes[c]) : null
       return p
@@ -51,7 +51,7 @@ export default {
     state.undoStacks.push(Object.assign({}, current))
     state.redoStacks = []
   },
-  [mutationTypes.POP_UNDO_STACK] (state) {
+  [mutationTypes.POP_UNDO_STACK](state) {
     if (state.undoStacks.length > 0) {
       const stack = state.undoStacks.pop()
       const current = Object.keys(stack).reduce((p, c) => {
@@ -61,7 +61,7 @@ export default {
       state.redoStacks.push(current)
     }
   },
-  [mutationTypes.POP_REDO_STACK] (state) {
+  [mutationTypes.POP_REDO_STACK](state) {
     if (state.redoStacks.length > 0) {
       const stack = state.redoStacks.pop()
       const current = Object.keys(stack).reduce((p, c) => {
@@ -71,14 +71,14 @@ export default {
       state.undoStacks.push(current)
     }
   },
-  [mutationTypes.CLEAR_STACKS] (state) {
+  [mutationTypes.CLEAR_STACKS](state) {
     state.undoStacks = []
     state.redoStacks = []
   },
-  [mutationTypes.CLEAR_UNDO_STACKS] (state) {
+  [mutationTypes.CLEAR_UNDO_STACKS](state) {
     state.undoStacks = []
   },
-  [mutationTypes.CLEAR_REDO_STACKS] (state) {
+  [mutationTypes.CLEAR_REDO_STACKS](state) {
     state.redoStacks = []
-  }
+  },
 }

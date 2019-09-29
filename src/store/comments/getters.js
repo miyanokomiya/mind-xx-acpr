@@ -1,10 +1,10 @@
 import { getterTypes } from './types'
 
 export default {
-  [getterTypes.COMMENTS] (state) {
+  [getterTypes.COMMENTS](state) {
     return state.comments
   },
-  [getterTypes.FILE_KEY] (state) {
+  [getterTypes.FILE_KEY](state) {
     return state.fileKey
-  }
+  },
 }

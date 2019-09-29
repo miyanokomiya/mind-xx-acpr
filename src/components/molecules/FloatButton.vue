@@ -1,14 +1,13 @@
 <template>
-  <div class="float-button-wrapper"
+  <div
+    class="float-button-wrapper"
     :style="{
       left: `${x}px`,
-      top: `${y}px`
+      top: `${y}px`,
     }"
   >
-    <v-btn icon small outline :color="color" class="button"
-      @click="$emit('click')"
-    >
-      <slot/>
+    <v-btn icon small outlined :color="color" class="button" @click="$emit('click')">
+      <slot />
     </v-btn>
   </div>
 </template>
@@ -18,17 +17,17 @@ export default {
   props: {
     x: {
       type: Number,
-      default: 0
+      default: 0,
     },
     y: {
       type: Number,
-      default: 0
+      default: 0,
     },
     color: {
       type: String,
-      default: 'black'
-    }
-  }
+      default: 'black',
+    },
+  },
 }
 </script>
 
@@ -45,4 +44,3 @@ export default {
   }
 }
 </style>
-

@@ -1,13 +1,13 @@
 import Vue from 'vue'
 
 const windowStatePlugin = {
-  install: function (Vue) {
+  install: function(Vue) {
     // ウィンドウの状態
     var state = {
       scrollX: 0,
       scrollY: 0,
       width: 0,
-      height: 0
+      height: 0,
     }
     // // スクロール数値を取得
     // var onScroll = function () {
@@ -16,7 +16,7 @@ const windowStatePlugin = {
     // }
     // document.addEventListener('scroll', onScroll)
     // ウィンドウのサイズを取得
-    var onResize = function () {
+    var onResize = function() {
       state.width = document.documentElement.clientWidth
       state.height = document.documentElement.clientHeight
     }
@@ -27,6 +27,6 @@ const windowStatePlugin = {
     // window.addEventListener('load', onScroll)
     // プロパティ $window を定義
     Vue.util.defineReactive(Vue.prototype, '$window', state)
-  }
+  },
 }
 Vue.use(windowStatePlugin)

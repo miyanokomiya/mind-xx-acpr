@@ -11,5 +11,5 @@ export const ROOT_NODE = 'root'
 
 export const CANVAS_MODE = {
   NORMAL: 'NORMAL',
-  DEPENDENCY: 'DEPENDENCY'
+  DEPENDENCY: 'DEPENDENCY',
 }

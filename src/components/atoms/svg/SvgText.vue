@@ -9,14 +9,14 @@
     :text-decoration="textDecoration"
     @click="isLink ? moveLink : ''"
   >
-    {{isLink ? '' : text}}
+    {{ isLink ? '' : text }}
     <a
       v-if="isLink"
       :xlink:href="text"
       target="_blank"
-      :style="{cursor: 'pointer', 'text-shadow': '1px 1px 0 blue'}"
+      :style="{ cursor: 'pointer', 'text-shadow': '1px 1px 0 blue' }"
     >
-      {{text}}
+      {{ text }}
     </a>
   </text>
 </template>
@@ -26,45 +26,45 @@ export default {
   props: {
     text: {
       type: String,
-      required: true
+      required: true,
     },
     x: {
       type: Number,
-      default: 0
+      default: 0,
     },
     y: {
       type: Number,
-      default: 0
+      default: 0,
     },
     fontSize: {
       type: Number,
-      default: 10
+      default: 10,
     },
     fill: {
       type: String,
-      default: 'black'
+      default: 'black',
     },
     fontWeight: {
       type: Number,
-      default: 500
+      default: 500,
     },
     textDecoration: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
   computed: {
-    isLink () {
+    isLink() {
       return this.text.indexOf('https://') === 0 || this.text.indexOf('http://') === 0
-    }
+    },
   },
   methods: {
-    getBBox () {
+    getBBox() {
       return this.$refs.text.getBBox()
     },
-    moveLink () {
+    moveLink() {
       window.open(this.text)
-    }
-  }
+    },
+  },
 }
 </script>
