@@ -4,7 +4,6 @@ node_js:
 cache: yarn
 script:
   - "yarn lint"
-  - "yarn unit --coverage"
-  - "yarn e2e"
+  - "yarn test:unit --coverage"
   - "yarn build"
   - "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
