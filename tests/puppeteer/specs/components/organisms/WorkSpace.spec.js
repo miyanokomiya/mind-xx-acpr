@@ -6,7 +6,7 @@ const screenshot = getScreenshotFn('components/organisms/WorkSpace/')
 
 describe('Map page', () => {
   const url =
-    'http://localhost:9001/iframe.html?selectedKind=organisms%2FWorkSpace&selectedStory=view&full=0&addons=1&stories=1&panelRight=0&addonPanel=storybook%2Factions%2Factions-panel'
+    'http://localhost:6006/iframe.html?selectedKind=organisms%2FWorkSpace&selectedStory=view&full=0&addons=1&stories=1&panelRight=0&addonPanel=storybook%2Factions%2Factions-panel'
 
   const getCreateButton = async ({ page }) => {
     const $dom = await page.$('.header-buttons button')
@@ -25,7 +25,7 @@ describe('Map page', () => {
 
   let browser, page
   beforeEach(async () => {
-    browser = await puppeteer.launch({ headless: false, slowMo: 20 })
+    browser = await puppeteer.launch({ headless: process.env.CI, slowMo: 20 })
     page = await browser.newPage()
     await page.setViewport({ width: 800, height: 800 })
     await page.goto(url, { waitUntil: 'networkidle2' })

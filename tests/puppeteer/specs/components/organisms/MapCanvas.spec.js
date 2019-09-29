@@ -5,7 +5,7 @@ jest.setTimeout(100000)
 const screenshot = getScreenshotFn('components/organisms/MapCanvas/')
 
 const url =
-  'http://localhost:9001/iframe.html?selectedKind=organisms%2FMapCanvas&selectedStory=some%20nodes'
+  'http://localhost:6006/iframe.html?selectedKind=organisms%2FMapCanvas&selectedStory=some%20nodes'
 
 const selectNode = async ({ page, $node, clear = false }) => {
   await page.keyboard.press('Escape')
@@ -46,22 +46,22 @@ const getToggleCloseButton = async ({ page }) => {
 }
 
 const getComments = async ({ page }) => {
-  const $doms = await page.$$('.comment-list > ul > li')
+  const $doms = await page.$$('.comment-list .comment-tile')
   return $doms
 }
 
 const inputAndSubmit = async ({ page, text }) => {
-  await inputForm({ page, text, query: '.float-text-input-wrapper textarea' })
+  await inputForm({ page, text, query: '.float-text-input-wrapper input' })
   await page.click('.float-text-input-wrapper .submit')
 }
 
 const inputAndSubmitComment = async ({ page, text }) => {
-  await inputForm({ page, text, query: '.comment-list form textarea' })
+  await inputForm({ page, text, query: '.comment-list form input' })
   await page.click('.comment-list form button')
 }
 
 const inputComment = async ({ page, text }) => {
-  await inputForm({ page, text, query: '.comment-list form textarea' })
+  await inputForm({ page, text, query: '.comment-list form input' })
 }
 
 const editComment = async ({ page }) => {
@@ -93,7 +93,7 @@ const clearNodes = async ({ page }) => {
 describe('Edit nodes', async () => {
   let browser, page
   beforeEach(async () => {
-    browser = await puppeteer.launch({ headless: false, slowMo: 20 })
+    browser = await puppeteer.launch({ headless: process.env.CI, slowMo: 20 })
     page = await browser.newPage()
     await page.setViewport({ width: 800, height: 800 })
     await page.goto(url, { waitUntil: 'networkidle2' })

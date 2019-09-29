@@ -1,9 +1,15 @@
 import * as fs from 'fs'
 
-const SCREENSHOT_DIR_ROOT = 'test/puppeteer/screenshots/'
+const SCREENSHOT_DIR_ROOT = 'tests/puppeteer/screenshots/'
 const DEFAULT_SCREENSHOT_DIR = 'tmp'
 
 export const getScreenshotFn = (dir = DEFAULT_SCREENSHOT_DIR) => {
+  if (process.env.CI) {
+    return () => {
+      return Promise.resolve()
+    }
+  }
+
   const fullPath = SCREENSHOT_DIR_ROOT + dir
   // delete the directory
   if (fs.existsSync(fullPath)) {
@@ -19,7 +25,7 @@ export const getScreenshotFn = (dir = DEFAULT_SCREENSHOT_DIR) => {
   return async ({ page, title }) => {
     await page.screenshot({
       path: `${fullPath}${title}.png`,
-      fullPage: true
+      fullPage: true,
     })
   }
 }
