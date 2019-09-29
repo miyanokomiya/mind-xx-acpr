@@ -31,7 +31,7 @@
     "vuex": "^3.0.1"
   },
   "devDependencies": {
-    "@storybook/addon-knobs": "^3.3.14",
+    "@storybook/addon-knobs": "^5.2.1",
     "@storybook/vue": "^3.3.14",
     "autoprefixer": "^8.0.0",
     "babel-core": "^6.22.1",
