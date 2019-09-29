@@ -8,6 +8,6 @@ storiesOf('organisms/MapHelpDialog', module).add('view', () => {
     <v-app>
       <MapHelpDialog/>
     </v-app>
-    `
+    `,
   }
 })

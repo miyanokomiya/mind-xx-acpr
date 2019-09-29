@@ -10,5 +10,5 @@ storiesOf('molecules/svg/SvgBridgeConnector', module).add('story', () => ({
       <SvgBridgeConnector :sx="10" :sy="100" :ex="50" :ey="200" />
       <SvgBridgeConnector :sx="100" :sy="200" :ex="50" :ey="300" />
     </svg-wrapper>
-  `
+  `,
 }))

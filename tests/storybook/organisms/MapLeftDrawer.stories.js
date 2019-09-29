@@ -29,11 +29,11 @@ storiesOf('organisms/MapLeftDrawer', module).add('view', () => {
     data: () => ({
       drawer: true,
       nodes: {
-        [ROOT_NODE]: createNode()
+        [ROOT_NODE]: createNode(),
       },
       file: createFile(),
       nodeColor: '#87cefa',
-      textColor: '#000000'
-    })
+      textColor: '#000000',
+    }),
   }
 })

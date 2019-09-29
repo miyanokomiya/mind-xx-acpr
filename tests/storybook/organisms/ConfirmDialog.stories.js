@@ -15,7 +15,7 @@ storiesOf('organisms/ConfirmDialog', module).add('view', () => {
     </v-app>
     `,
     data: () => ({
-      value: true
-    })
+      value: true,
+    }),
   }
 })

@@ -11,6 +11,6 @@ storiesOf('molecules/PermissionDeniedMessage', module).add('story', () => {
       </v-app>
     `,
     data: () => ({}),
-    methods: {}
+    methods: {},
   }
 })

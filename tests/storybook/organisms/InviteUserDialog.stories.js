@@ -21,8 +21,8 @@ storiesOf('organisms/InviteUserDialog', module)
       data: () => ({
         publicFile: false,
         publicReadOnly: false,
-        user
-      })
+        user,
+      }),
     }
   })
   .add('cannnot edit public settings', () => {
@@ -41,8 +41,8 @@ storiesOf('organisms/InviteUserDialog', module)
       data: () => ({
         publicFile: true,
         publicReadOnly: false,
-        user
-      })
+        user,
+      }),
     }
   })
   .add('users list', () => {
@@ -65,14 +65,14 @@ storiesOf('organisms/InviteUserDialog', module)
         userAuthorities: {
           a: { write: true, owner: true },
           b: { write: false },
-          c: { write: true }
+          c: { write: true },
         },
         users: {
           a: createUser({ uid: 'a', displayName: 'aa aa', email: 'aa@aa' }),
           b: createUser({ uid: 'b', displayName: 'bb bb', email: 'bb@bb' }),
-          c: createUser({ uid: 'c', displayName: 'cc cc', email: 'cc@cc' })
+          c: createUser({ uid: 'c', displayName: 'cc cc', email: 'cc@cc' }),
         },
-        user
-      })
+        user,
+      }),
     }
   })

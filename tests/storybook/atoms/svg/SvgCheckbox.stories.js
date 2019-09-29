@@ -14,6 +14,6 @@ storiesOf('atoms/svg/SvgCheckbox', module).add('story', () => ({
     </div>
   `,
   data: () => ({
-    value: false
-  })
+    value: false,
+  }),
 }))

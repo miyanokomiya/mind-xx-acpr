@@ -14,7 +14,7 @@ const selectNode = async ({ page, $node, clear = false }) => {
     const box = $node.getBoundingClientRect()
     return {
       top: box.top,
-      left: box.left
+      left: box.left,
     }
   }, $node)
   // clear select

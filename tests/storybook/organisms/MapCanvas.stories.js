@@ -3,15 +3,10 @@ import Vue from 'vue'
 
 import MapCanvas from '@/components/organisms/MapCanvas'
 
-import {
-  createNode,
-  createUser,
-  createComment,
-  createDefaultNodes
-} from '@/utils/model'
+import { createNode, createUser, createComment, createDefaultNodes } from '@/utils/model'
 
 const methods = {
-  updateNodes (nextNodes) {
+  updateNodes(nextNodes) {
     Object.keys(nextNodes).forEach(key => {
       if (nextNodes[key]) {
         Vue.set(this.nodes, key, nextNodes[key])
@@ -23,10 +18,10 @@ const methods = {
       this.nodes = createDefaultNodes()
     }
   },
-  createNode (createNodes) {
+  createNode(createNodes) {
     this.nodes = Object.assign({}, this.nodes, createNodes)
   },
-  setSelectedNodes (selectedNodes) {
+  setSelectedNodes(selectedNodes) {
     this.selectedNodes = Object.keys(selectedNodes).reduce((p, c) => {
       if (selectedNodes[c]) {
         p[c] = true
@@ -34,30 +29,30 @@ const methods = {
       return p
     }, {})
   },
-  clearSelect () {
+  clearSelect() {
     this.selectedNodes = {}
   },
-  selectProp (args) {
+  selectProp(args) {
     const selectedKeys = Object.keys(this.selectedNodes)
-      if (selectedKeys.length > 0) {
-        const updatedNodes = selectedKeys.reduce((p, key) => {
-          p[key] = {
-            ...this.nodes[key],
-            ...args
-          }
-          return p
-        }, {})
-        this.updateNodes(updatedNodes)
-      }
+    if (selectedKeys.length > 0) {
+      const updatedNodes = selectedKeys.reduce((p, key) => {
+        p[key] = {
+          ...this.nodes[key],
+          ...args,
+        }
+        return p
+      }, {})
+      this.updateNodes(updatedNodes)
+    }
   },
-  postComment ({ comment, key }) {
+  postComment({ comment, key }) {
     console.log('post comment:', comment, key)
     if (comment) {
       Vue.set(this.comments, key, comment)
     } else {
       Vue.delete(this.comments, key)
     }
-  }
+  },
 }
 
 const user = createUser({ uid: 'user' })
@@ -66,7 +61,7 @@ storiesOf('organisms/MapCanvas', module)
   .add('some nodes', () => {
     const root = createNode({
       text: 'root',
-      children: ['a', 'b', 'c']
+      children: ['a', 'b', 'c'],
     })
     return {
       components: { MapCanvas },
@@ -96,11 +91,11 @@ storiesOf('organisms/MapCanvas', module)
         nodes: {
           root: {
             ...root,
-            oppositeChildren: ['zz', 'xx']
+            oppositeChildren: ['zz', 'xx'],
           },
           a: createNode({
             text: 'aaaa',
-            children: ['d']
+            children: ['d'],
           }),
           b: createNode({ text: 'bbbbbbbbbbbbbbbbbbbbbbbbb' }),
           c: createNode({ text: 'cccccccccccccccccccccccccccccccccccc' }),
@@ -108,7 +103,7 @@ storiesOf('organisms/MapCanvas', module)
           xx: createNode({ text: 'xxxx' }),
           zz: createNode({ text: 'zzzz', children: ['yy', 'uu'] }),
           yy: createNode({ text: 'yyyy' }),
-          uu: createNode({ text: 'uuuu' })
+          uu: createNode({ text: 'uuuu' }),
         },
         selectedNodes: {},
         user,
@@ -117,21 +112,21 @@ storiesOf('organisms/MapCanvas', module)
           aa: createComment({ uid: 'a', text: 'aaa\naaa', nodeId: 'b' }),
           aaa: createComment({ uid: 'a', text: 'aaa\naaa', nodeId: 'c' }),
           aaaa: createComment({ uid: 'a', text: 'aaa\naaa', nodeId: 'b' }),
-          b: createComment({ uid: 'b', text: 'bbb', nodeId: 'c' })
+          b: createComment({ uid: 'b', text: 'bbb', nodeId: 'c' }),
         },
         users: {
           a: createUser({ displayName: 'aabb' }),
           b: createUser({ displayName: 'bbaa' }),
-          user
-        }
+          user,
+        },
       }),
-      methods
+      methods,
     }
   })
   .add('read only', () => {
     const root = createNode({
       text: 'root',
-      children: ['a', 'b', 'c']
+      children: ['a', 'b', 'c'],
     })
     return {
       components: { MapCanvas },
@@ -159,11 +154,11 @@ storiesOf('organisms/MapCanvas', module)
           a: createNode({ text: 'aaaa', children: ['d'] }),
           b: createNode({ text: 'bbbbbbbbbbbbbbbbbbbbbbbbb' }),
           c: createNode({ text: 'cccccccccccccccccccccccccccccccccccc' }),
-          d: createNode({ text: 'dddd' })
+          d: createNode({ text: 'dddd' }),
         },
         selectedNodes: {},
-        user
+        user,
       }),
-      methods
+      methods,
     }
   })

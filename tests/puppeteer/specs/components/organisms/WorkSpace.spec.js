@@ -53,7 +53,7 @@ describe('Map page', () => {
     await inputForm({
       page,
       text: 'edit name',
-      query: '.menuable__content__active input'
+      query: '.menuable__content__active input',
     })
     await screenshot({ page, title: '1.3 input_name' })
     await page.keyboard.press('Enter')

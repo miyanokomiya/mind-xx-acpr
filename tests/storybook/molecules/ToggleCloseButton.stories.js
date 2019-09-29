@@ -8,7 +8,7 @@ storiesOf('molecules/ToggleCloseButton', module).add('story', () => {
     range: true,
     min: 0,
     max: 500,
-    step: 1
+    step: 1,
   }
   const x = number('x', 110, options1)
   const y = number('y', 110, options1)
@@ -22,8 +22,8 @@ storiesOf('molecules/ToggleCloseButton', module).add('story', () => {
     data: () => ({
       x,
       y,
-      closed: false
+      closed: false,
     }),
-    methods: {}
+    methods: {},
   }
 })

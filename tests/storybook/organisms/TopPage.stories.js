@@ -11,7 +11,7 @@ storiesOf('organisms/TopPage', module).add('view', () => {
     </v-app>
     `,
     data: () => ({
-      value: true
-    })
+      value: true,
+    }),
   }
 })

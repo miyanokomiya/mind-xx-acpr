@@ -8,19 +8,19 @@ storiesOf('atoms/svg/SvgCanvas', module).add('story', () => {
     range: true,
     min: -1000,
     max: 1000,
-    step: 10
+    step: 10,
   }
   const options2 = {
     range: true,
     min: 20,
     max: 1000,
-    step: 10
+    step: 10,
   }
   const options3 = {
     range: true,
     min: 0.2,
     max: 20,
-    step: 0.2
+    step: 0.2,
   }
   const x = number('x', 0, options1)
   const y = number('y', 0, options1)
@@ -47,18 +47,18 @@ storiesOf('atoms/svg/SvgCanvas', module).add('story', () => {
       y,
       width,
       height,
-      scale
+      scale,
     }),
     methods: {
-      move ({ x, y }) {
+      move({ x, y }) {
         this.x = x
         this.y = y
       },
-      zoom ({ scale, x, y }) {
+      zoom({ scale, x, y }) {
         this.scale = scale
         this.x = x
         this.y = y
-      }
-    }
+      },
+    },
   }
 })

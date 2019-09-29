@@ -8,7 +8,7 @@ storiesOf('molecules/FloatTextInput', module).add('story', () => {
     range: true,
     min: 0,
     max: 500,
-    step: 1
+    step: 1,
   }
   const x = number('x', 0, options1)
   const y = number('y', 0, options1)
@@ -35,8 +35,8 @@ storiesOf('molecules/FloatTextInput', module).add('story', () => {
     data: () => ({
       text: 'text',
       x,
-      y
+      y,
     }),
-    methods: {}
+    methods: {},
   }
 })

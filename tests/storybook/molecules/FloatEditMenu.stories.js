@@ -16,8 +16,8 @@ storiesOf('molecules/FloatEditMenu', module).add('story', () => {
     `,
     data: () => ({
       text: 'text',
-      check: false
+      check: false,
     }),
-    methods: {}
+    methods: {},
   }
 })

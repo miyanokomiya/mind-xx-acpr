@@ -16,8 +16,8 @@ storiesOf('molecules/ScaleToolBox', module).add('story', () => {
       </v-app>
     `,
     data: () => ({
-      scaleRate: 1
+      scaleRate: 1,
     }),
-    methods: {}
+    methods: {},
   }
 })

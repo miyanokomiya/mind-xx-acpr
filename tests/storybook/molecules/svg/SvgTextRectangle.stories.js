@@ -17,8 +17,8 @@ storiesOf('molecules/svg/SvgTextRectangle', module)
         </svg-wrapper>
       `,
       data: () => ({
-        text1: `${text1}`
-      })
+        text1: `${text1}`,
+      }),
     }
   })
   .add('link', () => {
@@ -30,7 +30,7 @@ storiesOf('molecules/svg/SvgTextRectangle', module)
           <SvgTextRectangle :x="10" :y="40" text="あいうえお\nhttps://mind-xx-acpr.firebaseapp.com/map/-L1k9pQdQ248amP4NQOe\nかきくけこ"/>
         </svg-wrapper>
       `,
-      data: () => ({})
+      data: () => ({}),
     }
   })
   .add('closed', () => {
@@ -51,7 +51,7 @@ storiesOf('molecules/svg/SvgTextRectangle', module)
           <SvgTextRectangle :x="-100" :y="210" text="abcde fef" fill="blue" :hiddenFamilyCount="3232" :childrenCount="2" />
         </svg-wrapper>
       `,
-      data: () => ({})
+      data: () => ({}),
     }
   })
   .add('comments', () => {
@@ -66,7 +66,7 @@ storiesOf('molecules/svg/SvgTextRectangle', module)
           <SvgTextRectangle :x="50" :y="210" text="abcde fef" fill="blue" :commentCount="3232"/>
         </svg-wrapper>
       `,
-      data: () => ({})
+      data: () => ({}),
     }
   })
   .add('checkbox', () => {
@@ -79,7 +79,7 @@ storiesOf('molecules/svg/SvgTextRectangle', module)
         </svg-wrapper>
       `,
       data: () => ({
-        checked: 0
-      })
+        checked: 0,
+      }),
     }
   })

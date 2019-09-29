@@ -26,50 +26,50 @@ storiesOf('organisms/WorkSpace', module).add('view', () => {
       files: {
         a: createFile({ name: 'file a' }),
         b: createFile({ name: 'file b' }),
-        c: createFile({ name: 'file c'.repeat(15) })
+        c: createFile({ name: 'file c'.repeat(15) }),
       },
       user: createUser({ uid: 'user' }),
       fileAuthorities: {
         a: {
           users: {
-            user: { write: true }
-          }
+            user: { write: true },
+          },
         },
         b: {
           users: {
-            user: { write: true }
-          }
+            user: { write: true },
+          },
         },
         c: {
           users: {
-            user: { write: false }
-          }
-        }
+            user: { write: false },
+          },
+        },
       },
       sharedFiles: {
         d: createFile({ name: 'file d' }),
-        e: createFile({ name: 'file e' })
+        e: createFile({ name: 'file e' }),
       },
       sharedFileAuthorities: {
         d: {
           users: {
-            user: { write: true }
-          }
+            user: { write: true },
+          },
         },
         e: {
           users: {
-            user: { write: false }
-          }
-        }
-      }
+            user: { write: false },
+          },
+        },
+      },
     }),
     methods: {
-      changeName ({ files }) {
+      changeName({ files }) {
         Object.keys(files).forEach(key => {
           Vue.set(this.files, key, files[key])
         })
       },
-      createFile () {
+      createFile() {
         const key = Math.random()
         Vue.set(
           this.files,
@@ -77,35 +77,35 @@ storiesOf('organisms/WorkSpace', module).add('view', () => {
           createFile({
             name: key,
             created: Date.now(),
-            updated: Date.now()
-          })
+            updated: Date.now(),
+          }),
         )
         Vue.set(this.fileAuthorities, key, {
           users: {
-            user: { write: true, owner: true }
-          }
+            user: { write: true, owner: true },
+          },
         })
       },
-      deleteFiles ({ files }) {
+      deleteFiles({ files }) {
         Object.keys(files).forEach(key => {
           Vue.delete(this.files, key)
         })
       },
-      cloneFile ({ fileKey }) {
+      cloneFile({ fileKey }) {
         const file = this.files[fileKey] || this.sharedFiles[fileKey]
         const key = Math.random()
         Vue.set(this.files, key, {
           ...file,
           name: file.name + ' clone',
           created: Date.now(),
-          updated: Date.now()
+          updated: Date.now(),
         })
         Vue.set(this.fileAuthorities, key, {
           users: {
-            user: { write: true, owner: true }
-          }
+            user: { write: true, owner: true },
+          },
         })
-      }
-    }
+      },
+    },
   }
 })

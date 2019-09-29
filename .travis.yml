@@ -6,8 +6,10 @@ node_js:
 cache: yarn
 
 script:
+  - "storybook:serve &"
   - "yarn lint"
   - "yarn test:unit --coverage"
-  - "storybook:serve & && yarn test:pupp"
+  - "storybook:build"
+  - "yarn test:pupp"
   - "yarn build"
   - "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"

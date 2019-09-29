@@ -12,8 +12,8 @@ storiesOf('organisms/AuthDialog', module)
     </v-app>
     `,
       data: () => ({
-        value: true
-      })
+        value: true,
+      }),
     }
   })
   .add('reauth', () => {
@@ -25,7 +25,7 @@ storiesOf('organisms/AuthDialog', module)
     </v-app>
     `,
       data: () => ({
-        value: true
-      })
+        value: true,
+      }),
     }
   })

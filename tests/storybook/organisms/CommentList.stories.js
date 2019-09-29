@@ -19,13 +19,13 @@ storiesOf('organisms/CommentList', module).add('view', () => {
       comments: {
         a: createComment({ uid: 'a', text: 'aaa\naaa', created: 1 }),
         aa: createComment({ uid: 'aa', text: 'aaa\naaa', created: 5 }),
-        b: createComment({ uid: 'b', text: 'bbb', created: 2 })
+        b: createComment({ uid: 'b', text: 'bbb', created: 2 }),
       },
       users: {
         a: createUser({ displayName: 'aabb' }),
-        b: createUser({ displayName: 'bbaa' })
+        b: createUser({ displayName: 'bbaa' }),
       },
-      user: createUser({ uid: 'a', displayName: 'aabb' })
-    })
+      user: createUser({ uid: 'a', displayName: 'aabb' }),
+    }),
   }
 })

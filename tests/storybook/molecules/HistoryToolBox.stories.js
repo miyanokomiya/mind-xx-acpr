@@ -11,6 +11,6 @@ storiesOf('molecules/HistoryToolBox', module).add('story', () => {
       </v-app>
     `,
     data: () => ({}),
-    methods: {}
+    methods: {},
   }
 })
