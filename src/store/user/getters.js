@@ -2,10 +2,10 @@ import { getterTypes } from './types'
 import { getterTypes as filesGetterTypes } from '../files/types'
 
 export default {
-  [getterTypes.USER](state, getters) {
+  [getterTypes.USER](state) {
     return state.user
   },
-  [getterTypes.AUTHORITY_LOADING](state, getters) {
+  [getterTypes.AUTHORITY_LOADING](state) {
     return state.authorityLoading
   },
   [getterTypes.CAN_WRITE]: (state, getters, rootState, rootGetters) => ({ fileKey }) => {

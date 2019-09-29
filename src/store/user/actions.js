@@ -49,7 +49,7 @@ export default {
         })
     })
   },
-  [actionTypes.DELETE_USER](context) {
+  [actionTypes.DELETE_USER]() {
     const user = firebase.auth().currentUser
     return user.delete()
   },

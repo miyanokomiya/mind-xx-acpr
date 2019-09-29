@@ -208,7 +208,7 @@ export default {
         y: 0,
       }
     },
-    canvasCursorDown(e) {
+    canvasCursorDown() {
       this.stopProgressiveMove()
       this.pinchDistance = null
     },

@@ -11,43 +11,41 @@
       >
         <router-view name="leftDrawer" />
       </v-navigation-drawer>
-      <v-app-bar app clipped-left>
-        <v-toolbar color="blue darken-3" dark fixed dense>
-          <v-toolbar-title class="ml-0 pl-3">
-            <v-app-bar-nav-icon
-              v-if="!hideLedfDrawer"
-              class="left-drawer-activator"
-              @click.stop="setLeftDrawer({ leftDrawer: !leftDrawer })"
-            />
-            <router-view name="headerTitle" />
-          </v-toolbar-title>
-          <div class="d-flex align-center icon-box" style="margin-left: auto">
-            <router-view name="headerIconList" />
-            <v-menu bottom left offset-y :nudge-bottom="6" v-if="user">
-              <template v-slot:activator="{ on }">
-                <v-btn icon v-on="on" dark>
-                  <v-avatar size="32px">
-                    <img :src="user.photoURL" />
-                  </v-avatar>
-                </v-btn>
-              </template>
-              <v-list>
-                <v-list-item>
-                  <v-list-item-title>{{ user.displayName }}</v-list-item-title>
-                </v-list-item>
-                <v-divider />
-                <v-list-item @click="signOut">
-                  <v-list-item-title>Sign out</v-list-item-title>
-                </v-list-item>
-                <v-divider />
-                <v-list-item @click="deleteConfirm = true">
-                  <v-list-item-title>Delete account</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-            <v-btn v-else text @click="needAuthLocal = true">SIGN IN</v-btn>
-          </div>
-        </v-toolbar>
+      <v-app-bar app clipped-left color="blue darken-3" dark fixed dense>
+        <v-toolbar-title class="ml-0 pl-3">
+          <v-app-bar-nav-icon
+            v-if="!hideLedfDrawer"
+            class="left-drawer-activator"
+            @click.stop="setLeftDrawer({ leftDrawer: !leftDrawer })"
+          />
+          <router-view name="headerTitle" />
+        </v-toolbar-title>
+        <div class="d-flex align-center icon-box" style="margin-left: auto">
+          <router-view name="headerIconList" />
+          <v-menu bottom left offset-y :nudge-bottom="6" v-if="user">
+            <template v-slot:activator="{ on }">
+              <v-btn icon v-on="on" dark>
+                <v-avatar size="32px">
+                  <img :src="user.photoURL" />
+                </v-avatar>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item>
+                <v-list-item-title>{{ user.displayName }}</v-list-item-title>
+              </v-list-item>
+              <v-divider />
+              <v-list-item @click="signOut">
+                <v-list-item-title>Sign out</v-list-item-title>
+              </v-list-item>
+              <v-divider />
+              <v-list-item @click="deleteConfirm = true">
+                <v-list-item-title>Delete account</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+          <v-btn v-else text @click="needAuthLocal = true">SIGN IN</v-btn>
+        </div>
       </v-app-bar>
       <v-content ref="content">
         <v-container fluid fill-height>
@@ -155,7 +153,7 @@ export default {
         .then(() => {
           window.location.reload()
         })
-        .catch(e => {
+        .catch(() => {
           this.reauth = true
         })
     },

@@ -68,42 +68,44 @@
           :selected="selectedDependencyConnector[i]"
         />
         <!-- connectors of family -->
-        <SvgConnector
-          v-for="(connector, key) in connectors"
-          v-if="isShowConnectors[key]"
-          :key="key"
-          :sx="connector.sx"
-          :sy="connector.sy"
-          :ex="connector.ex"
-          :ey="connector.ey"
-        />
+        <template v-if="isShowConnectors[key]">
+          <SvgConnector
+            v-for="(connector, key) in connectors"
+            :key="key"
+            :sx="connector.sx"
+            :sy="connector.sy"
+            :ex="connector.ex"
+            :ey="connector.ey"
+          />
+        </template>
         <!-- standard nodes -->
-        <SvgTextRectangle
-          class="mind-node"
-          :class="{ 'moving-origin': movingNodeFamilyKeyList.includes(key) }"
-          v-for="(node, key) in nodes"
-          v-if="isShowNodes[key]"
-          :key="key"
-          :x="nodePositions[key].x"
-          :y="nodePositions[key].y"
-          :text="key === editTextTarget ? editingText : node.text"
-          :strokeWidth="getStrokeWidth(key)"
-          :stroke="getStrokeColor(key)"
-          :fill="node.backgroundColor"
-          :textFill="node.color"
-          :hiddenFamilyCount="closedNodeFamilyCounts[key]"
-          :commentCount="commentCounts[key]"
-          :childrenCount="node.children.length"
-          :root="key === ROOT_NODE"
-          :checked="node.checked"
-          @calcSize="size => calcSize({ key, size })"
-          @down="e => (canWrite ? nodeCursorDown(e, key) : '')"
-          @up="e => (canWrite ? nodeCursorUp(key, { shift: e.shiftKey }) : '')"
-          @open="openNode(key)"
-          @close="closeNode(key)"
-          @clickComment="showComments(key)"
-          @toggleChecked="val => updateChecked({ key, val })"
-        />
+        <template v-if="isShowNodes[key]">
+          <SvgTextRectangle
+            class="mind-node"
+            :class="{ 'moving-origin': movingNodeFamilyKeyList.includes(key) }"
+            v-for="(node, key) in nodes"
+            :key="key"
+            :x="nodePositions[key].x"
+            :y="nodePositions[key].y"
+            :text="key === editTextTarget ? editingText : node.text"
+            :strokeWidth="getStrokeWidth(key)"
+            :stroke="getStrokeColor(key)"
+            :fill="node.backgroundColor"
+            :textFill="node.color"
+            :hiddenFamilyCount="closedNodeFamilyCounts[key]"
+            :commentCount="commentCounts[key]"
+            :childrenCount="node.children.length"
+            :root="key === ROOT_NODE"
+            :checked="node.checked"
+            @calcSize="size => calcSize({ key, size })"
+            @down="e => (canWrite ? nodeCursorDown(e, key) : '')"
+            @up="e => (canWrite ? nodeCursorUp(key, { shift: e.shiftKey }) : '')"
+            @open="openNode(key)"
+            @close="closeNode(key)"
+            @clickComment="showComments(key)"
+            @toggleChecked="val => updateChecked({ key, val })"
+          />
+        </template>
         <!-- a marker of switching a parent -->
         <g v-if="connectorOfMovingNodes" class="inserting-marker">
           <SvgConnector
@@ -734,7 +736,7 @@ export default {
     },
   },
   watch: {
-    selectedNodes(to, from) {
+    selectedNodes(to) {
       const keys = Object.keys(to)
       if (keys.indexOf(this.editMenuTarget) === -1) {
         this.editMenuTarget = null

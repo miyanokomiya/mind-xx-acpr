@@ -144,7 +144,7 @@ export default {
   },
   watch: {
     comments: {
-      handler(to) {
+      handler() {
         const users = Object.keys(this.comments).reduce((p, key) => {
           const comment = this.comments[key]
           if (comment.uid && !this.users[comment.uid]) {
