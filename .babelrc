@@ -1,15 +1,8 @@
 {
-  "presets": [
-    ["env", {
-      "modules": false
-    }],
-    "stage-2"
-  ],
-  "plugins": ["transform-runtime"],
+  "presets": [["env", { "modules": false }]],
   "env": {
     "test": {
-      "presets": ["env", "stage-2"],
-      "plugins": ["transform-es2015-modules-commonjs", "dynamic-import-node"]
+      "presets": [["env", { "targets": { "node": "current" } }]]
     }
   }
 }

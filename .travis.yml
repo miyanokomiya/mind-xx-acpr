@@ -1,0 +1,10 @@
+language: node_js
+node_js:
+  - 10
+cache: yarn
+script:
+  - "yarn lint"
+  - "yarn unit-coverage"
+  - "yarn e2e"
+  - "yarn build"
+  - "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
