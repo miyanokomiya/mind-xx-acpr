@@ -1,19 +1,30 @@
 import { configure } from '@storybook/vue'
 import Vue from 'vue'
-import Vuetify from 'vuetify'
-import '@/utils/windowState'
-import '@/utils/isMobile'
-import '@/utils/track'
 import { addDecorator } from '@storybook/vue'
 import { withKnobs } from '@storybook/addon-knobs'
 import StoryRouter from 'storybook-router'
 
+import '@/utils/windowState'
+import '@/utils/isMobile'
+import '@/utils/track'
+
 import 'ress'
-import 'vuetify/dist/vuetify.min.css'
 import '@/assets/styles/icons.css'
 import '@/assets/styles/main.scss'
 
+import Vuetify from 'vuetify'
+import 'vuetify/dist/vuetify.min.css'
+
 Vue.use(Vuetify)
+const vuetify =  new Vuetify({
+  icons: {
+    iconfont: 'mdi',
+  },
+})
+addDecorator(() => ({
+  vuetify,
+  template: '<story/>',
+}))
 
 Vue.component('svg-wrapper', {
   template: `
@@ -28,9 +39,9 @@ Vue.component('svg-wrapper', {
 addDecorator(withKnobs)
 addDecorator(StoryRouter())
 
-const req = require.context('../test/storybook', true, /\.stories\.js$/)
+const req = require.context('../../tests/storybook', true, /.stories.js$/)
 
-const loadStories = () => {
+function loadStories() {
   req.keys().forEach(filename => req(filename))
 }
 
