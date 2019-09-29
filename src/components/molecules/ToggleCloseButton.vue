@@ -1,17 +1,28 @@
 <template>
-  <div class="toggle-close-button-wrapper"
+  <div
+    class="toggle-close-button-wrapper"
     :style="{
       left: `${x}px`,
-      top: `${y}px`
+      top: `${y}px`,
     }"
   >
-    <v-btn icon small outline color="indigo" class="button"
+    <v-btn
+      icon
+      small
+      outlined
+      color="indigo"
+      class="button"
       v-if="closed"
       @click="$emit('open')"
     >
       <v-icon>arrow_drop_down</v-icon>
     </v-btn>
-    <v-btn icon small outline color="indigo" class="button"
+    <v-btn
+      icon
+      small
+      outlined
+      color="indigo"
+      class="button"
       v-else
       @click="$emit('close')"
     >
@@ -25,17 +36,17 @@ export default {
   props: {
     x: {
       type: Number,
-      default: 0
+      default: 0,
     },
     y: {
       type: Number,
-      default: 0
+      default: 0,
     },
     closed: {
       type: Boolean,
-      default: false
-    }
-  }
+      default: false,
+    },
+  },
 }
 </script>
 
@@ -52,4 +63,3 @@ export default {
   }
 }
 </style>
-

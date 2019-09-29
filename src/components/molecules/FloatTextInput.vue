@@ -1,24 +1,27 @@
 <template>
-<div
-  class="float-text-input-wrapper"
-  :class="{ mobile: $isMobile.any }"
-  :style="{ left: $isMobile.any ? 0 : `${x}px`, top: $isMobile.any ? 0 : `${y}px` }"
->
-  <v-text-field
-    class="text-field"
-    multi-line
-    hide-details
-    autofocus
-    no-resize
-    :rows="rows"
-    v-model="localValue"
-    @keyup.esc="done"
-    @blur="done"
-  />
-  <v-btn fab dark small color="primary" class="submit">
-    <v-icon dark style="line-height: 32px;">done</v-icon>
-  </v-btn>
-</div>
+  <div
+    class="float-text-input-wrapper"
+    :class="{ mobile: $isMobile.any }"
+    :style="{
+      left: $isMobile.any ? 0 : `${x}px`,
+      top: $isMobile.any ? 0 : `${y}px`,
+    }"
+  >
+    <v-text-field
+      class="text-field"
+      multi-line
+      hide-details
+      autofocus
+      no-resize
+      :rows="rows"
+      v-model="localValue"
+      @keyup.esc="done"
+      @blur="done"
+    />
+    <v-btn fab dark small color="primary" class="submit">
+      <v-icon dark style="line-height: 32px;">done</v-icon>
+    </v-btn>
+  </div>
 </template>
 
 <script>
@@ -26,41 +29,45 @@ export default {
   props: {
     value: {
       type: String,
-      required: true
+      required: true,
     },
     targetKey: {
       type: String,
-      required: true
+      required: true,
     },
     x: {
       type: Number,
-      default: 0
+      default: 0,
     },
     y: {
       type: Number,
-      default: 0
-    }
+      default: 0,
+    },
   },
   computed: {
     localValue: {
-      get () { return this.value },
-      set (val) { this.$emit('input', val) }
+      get() {
+        return this.value
+      },
+      set(val) {
+        this.$emit('input', val)
+      },
     },
-    lines () {
+    lines() {
       return this.localValue.split(/\n|\r\n/)
     },
-    rows () {
+    rows() {
       return Math.max(this.lines.length, 3)
-    }
+    },
   },
   methods: {
-    done () {
+    done() {
       this.$emit('done', {
         value: this.localValue,
-        targetKey: this.targetKey
+        targetKey: this.targetKey,
       })
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -98,4 +105,3 @@ export default {
   width: 100%;
 }
 </style>
-

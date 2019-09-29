@@ -1,23 +1,27 @@
 <template>
-<div
-  class="scale-tool-wrapper"
-  :class="{mobile: $isMobile.any}"
->
-  <div class="scale-slider-wrapper">
-    <v-slider
-      class="slider"
-      hide-details
-      :step="step"
-      :min="min"
-      :max="max"
-      :value="scaleRate"
-      @input="val => $emit('changeScaleRate', val)"
-    />
+  <div class="scale-tool-wrapper" :class="{ mobile: $isMobile.any }">
+    <div class="scale-slider-wrapper">
+      <v-slider
+        class="slider"
+        hide-details
+        :step="step"
+        :min="min"
+        :max="max"
+        :value="scaleRate"
+        @input="val => $emit('changeScaleRate', val)"
+      />
+    </div>
+    <v-btn
+      icon
+      small
+      outlined
+      color="indigo"
+      class="pan-button"
+      @click="$emit('clearZoom')"
+    >
+      <v-icon>center_focus_weak</v-icon>
+    </v-btn>
   </div>
-  <v-btn icon small outline color="indigo" class="pan-button" @click="$emit('clearZoom')">
-    <v-icon>center_focus_weak</v-icon>
-  </v-btn>
-</div>
 </template>
 
 <script>
@@ -25,21 +29,21 @@ export default {
   props: {
     step: {
       type: Number,
-      default: 0.1
+      default: 0.1,
     },
     min: {
       type: Number,
-      default: -10
+      default: -10,
     },
     max: {
       type: Number,
-      default: 10
+      default: 10,
     },
     scaleRate: {
       type: Number,
-      default: 1
-    }
-  }
+      default: 1,
+    },
+  },
 }
 </script>
 
@@ -74,4 +78,3 @@ export default {
   }
 }
 </style>
-

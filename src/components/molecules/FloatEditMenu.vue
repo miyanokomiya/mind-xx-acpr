@@ -1,85 +1,93 @@
 <template>
-<div class="float-edit-menu-wrapper">
-  <div class="button-box">
-    <v-btn icon small class="list-item"
-      v-for="(prop, i) in colorProps"
-      :key="i"
-      :style="{color: prop.color, background: prop.backgroundColor}"
-      @click="selectProp(prop)"
-    >
-      <v-icon>text_format</v-icon>
-    </v-btn>
-    <span class="split" />
-    <v-btn icon small class="list-item"
-      :style="{color: check ? 'black' : 'grey'}"
-      @click="$emit('toggleCheck')"
-    >
-      <v-icon>check_box</v-icon>
-    </v-btn>
-    <v-btn icon small class="list-item"
-      :style="{color: grouping ? 'black' : 'grey'}"
-      @click="$emit('toggleGrouping')"
-    >
-      <v-icon>crop_3_2</v-icon>
-    </v-btn>
+  <div class="float-edit-menu-wrapper">
+    <div class="button-box">
+      <v-btn
+        icon
+        small
+        class="list-item"
+        v-for="(prop, i) in colorProps"
+        :key="i"
+        :style="{ color: prop.color, background: prop.backgroundColor }"
+        @click="selectProp(prop)"
+      >
+        <v-icon>text_format</v-icon>
+      </v-btn>
+      <span class="split" />
+      <v-btn
+        icon
+        small
+        class="list-item"
+        :style="{ color: check ? 'black' : 'grey' }"
+        @click="$emit('toggleCheck')"
+      >
+        <v-icon>check_box</v-icon>
+      </v-btn>
+      <v-btn
+        icon
+        small
+        class="list-item"
+        :style="{ color: grouping ? 'black' : 'grey' }"
+        @click="$emit('toggleGrouping')"
+      >
+        <v-icon>crop_3_2</v-icon>
+      </v-btn>
+    </div>
   </div>
-</div>
 </template>
 
 <script>
 export default {
-  data: () => ({
-  }),
+  data: () => ({}),
   props: {
     check: {
       type: Boolean,
-      default: false
+      default: false,
     },
     grouping: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   computed: {
-    colorProps () {
+    colorProps() {
       return [
         {
           color: '#000',
-          backgroundColor: '#B3E5FC'
+          backgroundColor: '#B3E5FC',
         },
         {
           color: '#000',
-          backgroundColor: '#81C784'
+          backgroundColor: '#81C784',
         },
         {
           color: '#000',
-          backgroundColor: '#FFF176'
+          backgroundColor: '#FFF176',
         },
         {
           color: '#000',
-          backgroundColor: '#FFB74D'
+          backgroundColor: '#FFB74D',
         },
         {
           color: '#000',
-          backgroundColor: '#E57373'
+          backgroundColor: '#E57373',
         },
         {
           color: '#000',
-          backgroundColor: '#fff'
+          backgroundColor: '#fff',
         },
         {
           color: '#fff',
-          backgroundColor: '#000'
-        }
+          backgroundColor: '#000',
+        },
       ]
-    }
+    },
   },
   methods: {
-    selectProp (prop) {
+    selectProp(prop) {
       this.$emit('selectProp', prop)
       this.colorMode = false
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -112,4 +120,3 @@ export default {
   }
 }
 </style>
-

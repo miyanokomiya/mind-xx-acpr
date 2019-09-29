@@ -1,63 +1,69 @@
 <template>
-<MapLeftDrawer
-  v-if="file"
-  :nodes="nodes"
-  :file="file"
-  :nodeColor="nodeColor"
-  :textColor="textColor"
-  :canWrite="canWrite"
-  @changeNodeColor="changeNodeColor"
-  @changeTextColor="changeTextColor"
-  @repairFile="repairFile"
-/>
+  <MapLeftDrawer
+    v-if="file"
+    :nodes="nodes"
+    :file="file"
+    :nodeColor="nodeColor"
+    :textColor="textColor"
+    :canWrite="canWrite"
+    @changeNodeColor="changeNodeColor"
+    @changeTextColor="changeTextColor"
+    @repairFile="repairFile"
+  />
 </template>
 
 <script>
 import MapLeftDrawer from '@/components/organisms/MapLeftDrawer'
 
 import { mapGetters, mapActions } from 'vuex'
-import { getterTypes as nodesGetterTypes, actionTypes as nodesActionTypes } from '@/store/nodes/types'
-import { getterTypes as settingsGetterTypes, actionTypes as settingsActionTypes } from '@/store/settings/types'
+import {
+  getterTypes as nodesGetterTypes,
+  actionTypes as nodesActionTypes,
+} from '@/store/nodes/types'
+import {
+  getterTypes as settingsGetterTypes,
+  actionTypes as settingsActionTypes,
+} from '@/store/settings/types'
 import { getterTypes as filesGetterTypes } from '@/store/files/types'
 import { getterTypes as userGetterTypes } from '@/store/user/types'
 
 export default {
   components: {
-    MapLeftDrawer
+    MapLeftDrawer,
   },
   computed: {
     ...mapGetters('nodes', {
       nodes: nodesGetterTypes.NODES,
       selectedNodes: nodesGetterTypes.SELECTED_NODES,
-      fileKey: nodesGetterTypes.FILE_KEY
+      fileKey: nodesGetterTypes.FILE_KEY,
     }),
     ...mapGetters('settings', {
       nodeColor: settingsGetterTypes.NODE_COLOR,
-      textColor: settingsGetterTypes.TEXT_COLOR
+      textColor: settingsGetterTypes.TEXT_COLOR,
     }),
     ...mapGetters('files', {
-      fileFromKey: filesGetterTypes.FILE_FROM_KEY
+      fileFromKey: filesGetterTypes.FILE_FROM_KEY,
     }),
     ...mapGetters('user', {
-      _canWrite: userGetterTypes.CAN_WRITE
+      _canWrite: userGetterTypes.CAN_WRITE,
     }),
-    canWrite () {
-      return this._canWrite({fileKey: this.fileKey})
+    canWrite() {
+      return this._canWrite({ fileKey: this.fileKey })
     },
-    file () {
+    file() {
       return this.fileFromKey({ fileKey: this.fileKey })
-    }
+    },
   },
   methods: {
     ...mapActions('nodes', {
       updateNodes: nodesActionTypes.UPDATE_NODES,
-      _repairFile: nodesActionTypes.RESCUE_CONFRICT
+      _repairFile: nodesActionTypes.RESCUE_CONFRICT,
     }),
     ...mapActions('settings', {
       setNodeColor: settingsActionTypes.SET_NODE_COLOR,
-      setTextColor: settingsActionTypes.SET_TEXT_COLOR
+      setTextColor: settingsActionTypes.SET_TEXT_COLOR,
     }),
-    changeSelectedNodesProps (props) {
+    changeSelectedNodesProps(props) {
       const selectedKeys = Object.keys(this.selectedNodes)
       if (selectedKeys.length > 0) {
         const updatedNodes = selectedKeys.reduce((p, key) => {
@@ -67,24 +73,21 @@ export default {
         this.updateNodes({ nodes: updatedNodes })
       }
     },
-    changeNodeColor (nodeColor) {
-      this.setNodeColor({nodeColor})
-      this.changeSelectedNodesProps({backgroundColor: nodeColor})
+    changeNodeColor(nodeColor) {
+      this.setNodeColor({ nodeColor })
+      this.changeSelectedNodesProps({ backgroundColor: nodeColor })
     },
-    changeTextColor (textColor) {
-      this.setTextColor({textColor})
-      this.changeSelectedNodesProps({color: textColor})
+    changeTextColor(textColor) {
+      this.setTextColor({ textColor })
+      this.changeSelectedNodesProps({ color: textColor })
     },
-    repairFile () {
+    repairFile() {
       this._repairFile().then(() => {
         location.reload()
       })
-    }
-  }
+    },
+  },
 }
 </script>
 
-<style lang="scss" scoped>
-
-</style>
-
+<style lang="scss" scoped></style>

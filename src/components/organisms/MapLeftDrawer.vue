@@ -1,66 +1,82 @@
 <template>
-<v-tabs grow>
-  <v-tab ripple v-if="canWrite">
-    <v-icon>mode_edit</v-icon>
-  </v-tab>
-  <v-tab ripple>
-    <v-icon>insert_drive_file</v-icon>
-  </v-tab>
-  <v-tab-item v-if="canWrite">
-    <v-list>
-      <v-list-tile :style="{background: nodeColor}" @click="showNodeColorPicker = !showNodeColorPicker">
-        <v-list-tile-action>
-          <v-icon :style="{color: textColor}">palette</v-icon>
-        </v-list-tile-action>
-        <v-list-tile-content>
-          <v-list-tile-title :style="{color: textColor}"><b>Node Color</b></v-list-tile-title>
-        </v-list-tile-content>
-      </v-list-tile>
-      <li v-if="showNodeColorPicker" class="picker-box">
-        <ColorPicker :value="nodeColor" @input="val => $emit('changeNodeColor', val.hex)"/>
-      </li>
-      <v-list-tile :style="{background: nodeColor}" @click="showTextColorPicker = !showTextColorPicker">
-        <v-list-tile-action>
-          <v-icon :style="{color: textColor}">palette</v-icon>
-        </v-list-tile-action>
-        <v-list-tile-content>
-          <v-list-tile-title :style="{color: textColor}"><b>Text Color</b></v-list-tile-title>
-        </v-list-tile-content>
-      </v-list-tile>
-      <li v-if="showTextColorPicker" class="picker-box">
-        <ColorPicker :value="textColor" @input="val => $emit('changeTextColor', val.hex)"/>
-      </li>
-    </v-list>
-  </v-tab-item>
-  <v-tab-item>
-  <v-list>
-      <v-list-tile @click="printSvg">
-        <v-list-tile-action>
-          <v-icon>file_download</v-icon>
-        </v-list-tile-action>
-        <v-list-tile-content>
-          <v-list-tile-title>SVG</v-list-tile-title>
-        </v-list-tile-content>
-      </v-list-tile>
-      <MapCanvas
-        v-if="renderCanvas"
-        ref="mapCanvas"
-        class="map-canvas"
-        :nodes="toSvgNodes"
-        :width="canvasWidth"
-        :height="canvasHeight"
-      />
-      <v-divider/>
-      <v-list-tile v-if="canWrite" @click="$emit('repairFile')">
-        <v-list-tile-action>
-          <v-icon>autorenew</v-icon>
-        </v-list-tile-action>
-        <v-list-tile-content>
-          <v-list-tile-title>Repair file</v-list-tile-title>
-        </v-list-tile-content>
-      </v-list-tile>
-    </v-list>
-  </v-tab-item>
+  <v-tabs grow>
+    <v-tab ripple v-if="canWrite">
+      <v-icon>mode_edit</v-icon>
+    </v-tab>
+    <v-tab ripple>
+      <v-icon>insert_drive_file</v-icon>
+    </v-tab>
+    <v-tab-item v-if="canWrite">
+      <v-list>
+        <v-list-item
+          :style="{ background: nodeColor }"
+          @click="showNodeColorPicker = !showNodeColorPicker"
+        >
+          <v-list-item-action>
+            <v-icon :style="{ color: textColor }">palette</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title :style="{ color: textColor }"
+              ><b>Node Color</b></v-list-item-title
+            >
+          </v-list-item-content>
+        </v-list-item>
+        <li v-if="showNodeColorPicker" class="picker-box">
+          <ColorPicker
+            :value="nodeColor"
+            @input="val => $emit('changeNodeColor', val.hex)"
+          />
+        </li>
+        <v-list-item
+          :style="{ background: nodeColor }"
+          @click="showTextColorPicker = !showTextColorPicker"
+        >
+          <v-list-item-action>
+            <v-icon :style="{ color: textColor }">palette</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title :style="{ color: textColor }"
+              ><b>Text Color</b></v-list-item-title
+            >
+          </v-list-item-content>
+        </v-list-item>
+        <li v-if="showTextColorPicker" class="picker-box">
+          <ColorPicker
+            :value="textColor"
+            @input="val => $emit('changeTextColor', val.hex)"
+          />
+        </li>
+      </v-list>
+    </v-tab-item>
+    <v-tab-item>
+      <v-list>
+        <v-list-item @click="printSvg">
+          <v-list-item-action>
+            <v-icon>file_download</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>SVG</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <MapCanvas
+          v-if="renderCanvas"
+          ref="mapCanvas"
+          class="map-canvas"
+          :nodes="toSvgNodes"
+          :width="canvasWidth"
+          :height="canvasHeight"
+        />
+        <v-divider />
+        <v-list-item v-if="canWrite" @click="$emit('repairFile')">
+          <v-list-item-action>
+            <v-icon>autorenew</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Repair file</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-tab-item>
     <v-dialog
       max-width="400"
       :value="!!svgString"
@@ -68,40 +84,30 @@
       @input="svgString = ''"
     >
       <v-card>
-        <v-card-title class="headline">{{`${file.name}.svg`}}</v-card-title>
+        <v-card-title class="headline">{{ `${file.name}.svg` }}</v-card-title>
         <v-card-text class="text-xs-center">
-          <textarea ref="textarea" class="textarea" readonly v-model="svgString" @click="copySvg"></textarea>
-          <v-checkbox
-            hide-details
-            label="Expand all nodes"
-            v-model="expandAllNode"
-          />
-          <v-checkbox
-            hide-details
-            label="Landscape"
-            v-model="landscape"
-          />
+          <textarea
+            ref="textarea"
+            class="textarea"
+            readonly
+            v-model="svgString"
+            @click="copySvg"
+          ></textarea>
+          <v-checkbox hide-details label="Expand all nodes" v-model="expandAllNode" />
+          <v-checkbox hide-details label="Landscape" v-model="landscape" />
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn
-            color="blue darken-1"
-            flat="flat"
-            @click="copySvg"
-          >
+          <v-btn color="blue darken-1" text @click="copySvg">
             COPY
           </v-btn>
-          <v-btn
-            color="blue darken-1"
-            flat="flat"
-            @click="downloadSvg"
-          >
+          <v-btn color="blue darken-1" text @click="downloadSvg">
             DOWNLOAD
           </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
-</v-tabs>
+  </v-tabs>
 </template>
 
 <script>
@@ -112,7 +118,7 @@ import { ROOT_NODE } from '@/constants'
 export default {
   components: {
     ColorPicker: Swatches,
-    MapCanvas
+    MapCanvas,
   },
   data: () => ({
     renderCanvas: false,
@@ -120,60 +126,64 @@ export default {
     showTextColorPicker: false,
     svgString: '',
     expandAllNode: false,
-    landscape: true
+    landscape: true,
   }),
   props: {
     nodes: {
       type: Object,
       required: true,
-      validator: (value) => {
-        return (ROOT_NODE in value)
-      }
+      validator: value => {
+        return ROOT_NODE in value
+      },
     },
     file: {
       type: Object,
-      required: true
+      required: true,
     },
     nodeColor: {
       type: String,
-      default: '#87cefa'
+      default: '#87cefa',
     },
     textColor: {
       type: String,
-      default: '#000000'
+      default: '#000000',
     },
     canWrite: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   computed: {
-    canvasWidth () {
+    canvasWidth() {
       return this.landscape ? 1024 : Math.floor(1024 / Math.SQRT2)
     },
-    canvasHeight () {
+    canvasHeight() {
       return this.landscape ? Math.floor(1024 / Math.SQRT2) : 1024
     },
-    toSvgNodes () {
+    toSvgNodes() {
       if (this.expandAllNode) {
         return Object.keys(this.nodes).reduce((p, c) => {
           p[c] = {
             ...this.nodes[c],
-            closed: false
+            closed: false,
           }
           return p
         }, {})
       } else {
         return this.nodes
       }
-    }
+    },
   },
   watch: {
-    expandAllNode () { this.printSvg() },
-    landscape () { this.printSvg() }
+    expandAllNode() {
+      this.printSvg()
+    },
+    landscape() {
+      this.printSvg()
+    },
   },
   methods: {
-    printSvg () {
+    printSvg() {
       this.renderCanvas = true
       this.$nextTick().then(() => {
         const mapCanvas = this.$refs.mapCanvas
@@ -188,10 +198,10 @@ export default {
         }
       })
     },
-    downloadSvg () {
+    downloadSvg() {
       const fileName = this.file.name
       const filteredName = fileName.replace(/^.*[(\\|/|:|*|?|"|<|>||)].*$/, '_') + '.svg'
-      var blob = new Blob([ this.svgString ], { 'type': 'image/svg+xml' })
+      var blob = new Blob([this.svgString], { type: 'image/svg+xml' })
       if (window.navigator.msSaveBlob) {
         window.navigator.msSaveBlob(blob, filteredName)
       } else {
@@ -205,11 +215,11 @@ export default {
         URL.revokeObjectURL(blob)
       }
     },
-    copySvg () {
+    copySvg() {
       this.$refs.textarea.select()
       document.execCommand('copy')
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -231,4 +241,3 @@ export default {
   cursor: pointer;
 }
 </style>
-

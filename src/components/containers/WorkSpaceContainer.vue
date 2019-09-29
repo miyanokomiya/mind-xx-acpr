@@ -1,17 +1,17 @@
 <template>
-<div class="work-space-wrapper">
-  <WorkSpace
-    :files="files"
-    :fileAuthorities="fileAuthorities"
-    :sharedFiles="sharedFiles"
-    :sharedFileAuthorities="sharedFileAuthorities"
-    :user="user"
-    @changeName="updateFiles"
-    @createFile="createFile"
-    @cloneFile="cloneFile"
-    @deleteFiles="deleteFiles"
-  />
-</div>
+  <div class="work-space-wrapper">
+    <WorkSpace
+      :files="files"
+      :fileAuthorities="fileAuthorities"
+      :sharedFiles="sharedFiles"
+      :sharedFileAuthorities="sharedFileAuthorities"
+      :user="user"
+      @changeName="updateFiles"
+      @createFile="createFile"
+      @cloneFile="cloneFile"
+      @deleteFiles="deleteFiles"
+    />
+  </div>
 </template>
 
 <script>
@@ -23,20 +23,20 @@ import { getterTypes as userGetterTYpes } from '@/store/user/types'
 
 export default {
   components: {
-    WorkSpace
+    WorkSpace,
   },
   computed: {
     ...mapGetters('files', {
       files: getterTypes.FILES,
       fileAuthorities: getterTypes.FILE_AUTHORITIES,
       sharedFiles: getterTypes.SHARED_FILES,
-      sharedFileAuthorities: getterTypes.SHARED_FILE_AUTHORITIES
+      sharedFileAuthorities: getterTypes.SHARED_FILE_AUTHORITIES,
     }),
     ...mapGetters('user', {
-      user: userGetterTYpes.USER
-    })
+      user: userGetterTYpes.USER,
+    }),
   },
-  created () {
+  created() {
     this.loadFiles()
   },
   methods: {
@@ -45,9 +45,9 @@ export default {
       updateFiles: actionTypes.UPDATE_FILES,
       createFile: actionTypes.CREATE_FILE,
       cloneFile: actionTypes.CLONE_FILE,
-      deleteFiles: actionTypes.DELETE_FILES
-    })
-  }
+      deleteFiles: actionTypes.DELETE_FILES,
+    }),
+  },
 }
 </script>
 
@@ -57,4 +57,3 @@ export default {
   width: 100%;
 }
 </style>
-

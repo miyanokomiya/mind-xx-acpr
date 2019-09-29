@@ -1,6 +1,6 @@
 <template>
   <v-app id="app">
-    <router-view/>
+    <router-view />
   </v-app>
 </template>
 
@@ -10,15 +10,14 @@ import { actionTypes } from '@/store/user/types'
 
 export default {
   name: 'app',
-  computed: {
-  },
-  mounted () {
+  computed: {},
+  mounted() {
     this.loadUser()
   },
   methods: {
     ...mapActions('user', {
-      loadUser: actionTypes.LOAD_USER
-    })
-  }
+      loadUser: actionTypes.LOAD_USER,
+    }),
+  },
 }
 </script>

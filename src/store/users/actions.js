@@ -2,7 +2,7 @@ import { actionTypes, mutationTypes, getterTypes } from './types'
 import firebase from '@/firebase'
 
 export default {
-  [actionTypes.LOAD_USER] (context, { uid }) {
+  [actionTypes.LOAD_USER](context, { uid }) {
     if (!context.rootState.user.user) {
       // unauthorized user cannot load users
       return Promise.resolve()
@@ -21,14 +21,14 @@ export default {
         if (user) {
           context.commit(mutationTypes.UPDATE_USERS, {
             users: {
-              [user.uid]: user
-            }
+              [user.uid]: user,
+            },
           })
         }
         return Promise.resolve()
       })
   },
-  [actionTypes.LOAD_USER_FROM_EMAIL] (context, { email }) {
+  [actionTypes.LOAD_USER_FROM_EMAIL](context, { email }) {
     if (!context.rootState.user.user) {
       // unauthorized user cannot load users
       return Promise.resolve()
@@ -51,25 +51,25 @@ export default {
           const users = snapshot.val()
           if (users) {
             context.commit(mutationTypes.UPDATE_USERS, {
-              users
+              users,
             })
           }
           return Promise.resolve()
         })
     }
   },
-  [actionTypes.LOAD_USERS] (context, { users }) {
+  [actionTypes.LOAD_USERS](context, { users }) {
     return Promise.all(
       Object.keys(users).map(uid => {
         return context.dispatch(actionTypes.LOAD_USER, { uid })
-      })
+      }),
     )
   },
-  [actionTypes.LOAD_USERS_FROM_EMAIL] (context, { emailList }) {
+  [actionTypes.LOAD_USERS_FROM_EMAIL](context, { emailList }) {
     return Promise.all(
       emailList.map(email => {
         return context.dispatch(actionTypes.LOAD_USER_FROM_EMAIL, { email })
-      })
+      }),
     )
-  }
+  },
 }

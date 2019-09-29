@@ -1,4 +1,4 @@
-export function getCoveredRectangle ({ positions, sizes }) {
+export function getCoveredRectangle({ positions, sizes }) {
   const keys = Object.keys(positions).filter(key => {
     return positions[key] && sizes[key]
   })
@@ -7,63 +7,60 @@ export function getCoveredRectangle ({ positions, sizes }) {
       x: 0,
       y: 0,
       width: 0,
-      height: 0
+      height: 0,
     }
   }
   let recP = keys.reduce(
     (p, key) => {
       return {
         x: Math.min(p.x, positions[key].x),
-        y: Math.min(p.y, positions[key].y)
+        y: Math.min(p.y, positions[key].y),
       }
     },
     {
       x: positions[keys[0]].x,
-      y: positions[keys[0]].y
-    }
+      y: positions[keys[0]].y,
+    },
   )
   const recS = keys.reduce(
     (p, key) => {
       return {
         width: Math.max(p.width, positions[key].x + sizes[key].width - recP.x),
-        height: Math.max(
-          p.height,
-          positions[key].y + sizes[key].height - recP.y
-        )
+        height: Math.max(p.height, positions[key].y + sizes[key].height - recP.y),
       }
     },
     {
       width: sizes[keys[0]].width,
-      height: sizes[keys[0]].height
-    }
+      height: sizes[keys[0]].height,
+    },
   )
   return {
     x: recP.x,
     y: recP.y,
     width: recS.width,
-    height: recS.height
+    height: recS.height,
   }
 }
 
-export function getCenterOfRectangle (rectangle) {
+export function getCenterOfRectangle(rectangle) {
   return {
     x: rectangle.x + rectangle.width / 2,
-    y: rectangle.y + rectangle.height / 2
+    y: rectangle.y + rectangle.height / 2,
   }
 }
 
-export function getCenter (p1, p2) {
+export function getCenter(p1, p2) {
   return {
     x: (p1.x + p2.x) / 2,
-    y: (p1.y + p2.y) / 2
+    y: (p1.y + p2.y) / 2,
   }
 }
 
-export function getDistance (p1, p2) {
+export function getDistance(p1, p2) {
   return Math.pow(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2), 1 / 2)
 }
 
-export function getClosestRectangle ({ rectangles, target }) {
+export function getClosestRectangle({ rectangles, target }) {
   const keys = Object.keys(rectangles)
   if (keys.length === 0) {
     return null
@@ -82,7 +79,7 @@ export function getClosestRectangle ({ rectangles, target }) {
   return ret
 }
 
-export function getRelationBetweenRectangleAndPoint ({ rectangle, point }) {
+export function getRelationBetweenRectangleAndPoint({ rectangle, point }) {
   if (point.x < rectangle.x) {
     if (point.y < rectangle.y) {
       return 1
@@ -110,7 +107,7 @@ export function getRelationBetweenRectangleAndPoint ({ rectangle, point }) {
   }
 }
 
-export function getDistanceBetweenRectangleAndPoint ({ rectangle, point }) {
+export function getDistanceBetweenRectangleAndPoint({ rectangle, point }) {
   const relation = getRelationBetweenRectangleAndPoint({ rectangle, point })
   switch (relation) {
     case 1:
@@ -120,7 +117,7 @@ export function getDistanceBetweenRectangleAndPoint ({ rectangle, point }) {
     case 3:
       return getDistance(point, {
         x: rectangle.x + rectangle.width,
-        y: rectangle.y
+        y: rectangle.y,
       })
     case 4:
       return rectangle.x - point.x
@@ -131,19 +128,19 @@ export function getDistanceBetweenRectangleAndPoint ({ rectangle, point }) {
     case 7:
       return getDistance(point, {
         x: rectangle.x,
-        y: rectangle.y + rectangle.height
+        y: rectangle.y + rectangle.height,
       })
     case 8:
       return point.y - (rectangle.y + rectangle.height)
     case 9:
       return getDistance(point, {
         x: rectangle.x + rectangle.width,
-        y: rectangle.y + rectangle.height
+        y: rectangle.y + rectangle.height,
       })
   }
 }
 
-export function getClosestRectangleByPoint ({ rectangles, point }) {
+export function getClosestRectangleByPoint({ rectangles, point }) {
   const keys = Object.keys(rectangles)
   if (keys.length === 0) {
     return null
@@ -153,7 +150,7 @@ export function getClosestRectangleByPoint ({ rectangles, point }) {
   keys.forEach(key => {
     const d = getDistanceBetweenRectangleAndPoint({
       rectangle: rectangles[key],
-      point
+      point,
     })
     if (d < minD) {
       ret = key
@@ -163,7 +160,7 @@ export function getClosestRectangleByPoint ({ rectangles, point }) {
   return ret
 }
 
-export function isCoveredRectangle ({ outer, inner }) {
+export function isCoveredRectangle({ outer, inner }) {
   if (outer.x > inner.x) {
     return false
   }

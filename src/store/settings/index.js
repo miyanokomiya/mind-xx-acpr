@@ -6,10 +6,10 @@ export default {
   namespaced: true,
   state: {
     nodeColor: '#B3E5FC',
-    textColor: '#000000'
+    textColor: '#000000',
   },
   modules: {},
   actions,
   mutations,
-  getters
+  getters,
 }

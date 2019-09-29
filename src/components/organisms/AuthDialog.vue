@@ -9,8 +9,8 @@
       <v-card>
         <v-card-title class="headline">Please sign in</v-card-title>
         <v-card-text class="text-xs-left">
-          <div>{{reauth ? 'and retry to continue' : ''}}</div>
-          <br>
+          <div>{{ reauth ? 'and retry to continue' : '' }}</div>
+          <br />
           <v-btn color="white" @click="authGoogle">
             <img class="image" src="../..//assets/images/googlelogo_color_90x40dp.png" />
           </v-btn>
@@ -27,23 +27,23 @@ export default {
   props: {
     value: {
       type: Boolean,
-      required: true
+      required: true,
     },
     reauth: {
       type: Boolean,
-      default: false
+      default: false,
     },
     persistent: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
   methods: {
-    authGoogle () {
+    authGoogle() {
       const provider = new firebase.auth.GoogleAuthProvider()
       firebase.auth().signInWithRedirect(provider)
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -54,4 +54,3 @@ export default {
   margin-top: 2px;
 }
 </style>
-

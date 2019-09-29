@@ -1,32 +1,28 @@
 import { getterTypes } from './types'
 
 export default {
-  [getterTypes.FILES] (state) {
+  [getterTypes.FILES](state) {
     return state.files
   },
-  [getterTypes.FILE_AUTHORITIES] (state) {
+  [getterTypes.FILE_AUTHORITIES](state) {
     return state.fileAuthorities
   },
-  [getterTypes.SHARED_FILES] (state) {
+  [getterTypes.SHARED_FILES](state) {
     return state.sharedFiles
   },
-  [getterTypes.SHARED_FILE_AUTHORITIES] (state) {
+  [getterTypes.SHARED_FILE_AUTHORITIES](state) {
     return state.sharedFileAuthorities
   },
   [getterTypes.FILE_FROM_KEY]: state => ({ fileKey }) => {
     return state.sharedFiles[fileKey] || state.files[fileKey] || null
   },
   [getterTypes.FILE_AUTHORITY_FROM_KEY]: state => ({ fileKey }) => {
-    return (
-      state.sharedFileAuthorities[fileKey] ||
-      state.fileAuthorities[fileKey] ||
-      null
-    )
+    return state.sharedFileAuthorities[fileKey] || state.fileAuthorities[fileKey] || null
   },
   [getterTypes.IS_MY_FILE_FROM_KEY]: state => ({ fileKey }) => {
     return fileKey in state.files
   },
-  [getterTypes.PERMISSION_DENIED] (state) {
+  [getterTypes.PERMISSION_DENIED](state) {
     return state.permissionDenied
-  }
+  },
 }

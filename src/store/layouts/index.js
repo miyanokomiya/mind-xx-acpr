@@ -5,10 +5,10 @@ import getters from './getters'
 export default {
   namespaced: true,
   state: {
-    leftDrawer: false
+    leftDrawer: false,
   },
   modules: {},
   actions,
   mutations,
-  getters
+  getters,
 }
