@@ -14,7 +14,7 @@ export const getScreenshotFn = (dir = DEFAULT_SCREENSHOT_DIR) => {
     fs.rmdirSync(fullPath)
   }
   // create directory
-  fs.mkdirSync(fullPath)
+  fs.mkdirSync(fullPath, { recursive: true })
   // return the function to take a screenshot
   return async ({ page, title }) => {
     await page.screenshot({
