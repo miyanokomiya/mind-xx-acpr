@@ -70,53 +70,51 @@
           </v-list>
           <v-list subheader>
             <v-subheader>Invited users</v-subheader>
-            <template v-if="users[uid]">
-              <v-list-item
-                v-for="(auth, uid) in invitedUserAuthorities"
-                v-bind:key="uid"
-                :class="{ updated: uid in updatedAuthorities }"
-              >
-                <v-badge
-                  overlay
-                  left
-                  overlap
-                  class="toggle-writable"
-                  :class="{ myself: isMe(uid) }"
-                  :color="
-                    updatedAuthorities[uid]
-                      ? updatedAuthorities[uid].write
-                        ? 'blue'
-                        : 'grey'
-                      : auth.write
+            <v-list-item
+              v-for="(auth, uid) in invitedUserAuthorities"
+              v-bind:key="uid"
+              :class="{ updated: uid in updatedAuthorities }"
+            >
+              <v-badge
+                overlay
+                left
+                overlap
+                class="toggle-writable"
+                :class="{ myself: isMe(uid) }"
+                :color="
+                  updatedAuthorities[uid]
+                    ? updatedAuthorities[uid].write
                       ? 'blue'
                       : 'grey'
-                  "
-                  @click.native="!isMe(uid) ? toggleWritableUser(uid) : ''"
+                    : auth.write
+                    ? 'blue'
+                    : 'grey'
+                "
+                @click.native="!isMe(uid) ? toggleWritableUser(uid) : ''"
+              >
+                <v-icon slot="badge" dark>edit</v-icon>
+                <v-avatar size="32px">
+                  <img :src="users[uid].photoURL" />
+                </v-avatar>
+              </v-badge>
+              <v-list-item-content
+                class="user-content"
+                :class="{ deleted: updatedAuthorities[uid] === null }"
+              >
+                <v-list-item-title
+                  >{{ users[uid].displayName
+                  }}{{ isMe(uid) ? ' ( you! )' : '' }}</v-list-item-title
                 >
-                  <v-icon slot="badge" dark>edit</v-icon>
-                  <v-avatar size="32px">
-                    <img :src="users[uid].photoURL" />
-                  </v-avatar>
-                </v-badge>
-                <v-list-item-content
-                  class="user-content"
-                  :class="{ deleted: updatedAuthorities[uid] === null }"
-                >
-                  <v-list-item-title
-                    >{{ users[uid].displayName
-                    }}{{ isMe(uid) ? ' ( you! )' : '' }}</v-list-item-title
+                <v-list-item-subtitle>{{ users[uid].email }}</v-list-item-subtitle>
+              </v-list-item-content>
+              <v-list-item-action>
+                <v-btn icon ripple :disabled="isMe(uid)" @click="toggleDeleteUser(uid)">
+                  <v-icon :color="updatedAuthorities[uid] === null ? 'red' : 'grey'"
+                    >delete</v-icon
                   >
-                  <v-list-item-subtitle>{{ users[uid].email }}</v-list-item-subtitle>
-                </v-list-item-content>
-                <v-list-item-action>
-                  <v-btn icon ripple :disabled="isMe(uid)" @click="toggleDeleteUser(uid)">
-                    <v-icon :color="updatedAuthorities[uid] === null ? 'red' : 'grey'"
-                      >delete</v-icon
-                    >
-                  </v-btn>
-                </v-list-item-action>
-              </v-list-item>
-            </template>
+                </v-btn>
+              </v-list-item-action>
+            </v-list-item>
           </v-list>
           <div class="text-xs-right">
             <v-btn @click="update">Update</v-btn>
@@ -187,10 +185,17 @@ export default {
       }
     },
     invitedUserAuthorities() {
-      const ret = Object.assign({}, this.userAuthorities)
+      const ret = Object.keys(this.userAuthorities).reduce((map, uid) => {
+        if (this.users[uid]) {
+          map[uid] = this.userAuthorities[uid]
+        }
+        return map
+      }, {})
+
       if (this.owner) {
         delete ret[this.owner.uid]
       }
+
       return ret
     },
   },

@@ -68,44 +68,40 @@
           :selected="selectedDependencyConnector[i]"
         />
         <!-- connectors of family -->
-        <template v-if="isShowConnectors[key]">
-          <SvgConnector
-            v-for="(connector, key) in connectors"
-            :key="key"
-            :sx="connector.sx"
-            :sy="connector.sy"
-            :ex="connector.ex"
-            :ey="connector.ey"
-          />
-        </template>
+        <SvgConnector
+          v-for="(connector, key) in visibleConnectors"
+          :key="key"
+          :sx="connector.sx"
+          :sy="connector.sy"
+          :ex="connector.ex"
+          :ey="connector.ey"
+        />
         <!-- standard nodes -->
-        <template v-if="isShowNodes[key]">
-          <SvgTextRectangle
-            class="mind-node"
-            :class="{ 'moving-origin': movingNodeFamilyKeyList.includes(key) }"
-            v-for="(node, key) in nodes"
-            :key="key"
-            :x="nodePositions[key].x"
-            :y="nodePositions[key].y"
-            :text="key === editTextTarget ? editingText : node.text"
-            :strokeWidth="getStrokeWidth(key)"
-            :stroke="getStrokeColor(key)"
-            :fill="node.backgroundColor"
-            :textFill="node.color"
-            :hiddenFamilyCount="closedNodeFamilyCounts[key]"
-            :commentCount="commentCounts[key]"
-            :childrenCount="node.children.length"
-            :root="key === ROOT_NODE"
-            :checked="node.checked"
-            @calcSize="size => calcSize({ key, size })"
-            @down="e => (canWrite ? nodeCursorDown(e, key) : '')"
-            @up="e => (canWrite ? nodeCursorUp(key, { shift: e.shiftKey }) : '')"
-            @open="openNode(key)"
-            @close="closeNode(key)"
-            @clickComment="showComments(key)"
-            @toggleChecked="val => updateChecked({ key, val })"
-          />
-        </template>
+        <SvgTextRectangle
+          class="mind-node"
+          :class="{ 'moving-origin': movingNodeFamilyKeyList.includes(key) }"
+          v-for="(node, key) in visibleNodes"
+          :key="key"
+          :x="nodePositions[key].x"
+          :y="nodePositions[key].y"
+          :text="key === editTextTarget ? editingText : node.text"
+          :strokeWidth="getStrokeWidth(key)"
+          :stroke="getStrokeColor(key)"
+          :fill="node.backgroundColor"
+          :textFill="node.color"
+          :hiddenFamilyCount="closedNodeFamilyCounts[key]"
+          :commentCount="commentCounts[key]"
+          :childrenCount="node.children.length"
+          :root="key === ROOT_NODE"
+          :checked="node.checked"
+          @calcSize="size => calcSize({ key, size })"
+          @down="e => (canWrite ? nodeCursorDown(e, key) : '')"
+          @up="e => (canWrite ? nodeCursorUp(key, { shift: e.shiftKey }) : '')"
+          @open="openNode(key)"
+          @close="closeNode(key)"
+          @clickComment="showComments(key)"
+          @toggleChecked="val => updateChecked({ key, val })"
+        />
         <!-- a marker of switching a parent -->
         <g v-if="connectorOfMovingNodes" class="inserting-marker">
           <SvgConnector
@@ -550,12 +546,28 @@ export default {
       })
       return calcPositions({ nodes: this.nodes, sizes, parentKey: ROOT_NODE })
     },
+    visibleNodes() {
+      return Object.keys(this.nodes).reduce((map, key) => {
+        if (this.isShowNodes[key]) {
+          map[key] = this.nodes[key]
+        }
+        return map
+      }, {})
+    },
     connectors() {
       return getConnectors({
         nodes: this.nodes,
         positions: this.nodePositions,
         sizes: this.nodeSizes,
       })
+    },
+    visibleConnectors() {
+      return Object.keys(this.connectors).reduce((map, key) => {
+        if (this.isShowConnectors[key]) {
+          map[key] = this.connectors[key]
+        }
+        return map
+      }, {})
     },
     dependencyConnectors() {
       return getDependencyConnectors({
