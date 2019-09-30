@@ -8,7 +8,7 @@
       @mousedown.self="e => ($isMobile.any ? '' : canvasCursorDownSelf(e))"
       @mouseup.self="e => ($isMobile.any ? '' : canvasCursorUpSelf())"
       @mouseup="e => ($isMobile.any ? '' : canvasCursorUp())"
-      @mousewheel.prevent="e => ($isMobile.any ? '' : canvasWheel(e))"
+      @wheel.prevent="e => ($isMobile.any ? '' : canvasWheel(e))"
       @touchmove.prevent="e => ($isMobile.any ? canvasCursorMove(e) : '')"
       @touchstart="e => ($isMobile.any ? canvasCursorDown(e) : '')"
       @touchstart.self="e => ($isMobile.any ? canvasCursorDownSelf(e) : '')"
@@ -191,11 +191,11 @@ export default {
     },
     canvasWheel(e) {
       this.stopProgressiveMove()
-      const dx = e.wheelDeltaX
-      const dy = e.wheelDeltaY
+      const dx = e.deltaX
+      const dy = e.deltaY
       this.$emit('move', {
-        x: this.x - dx / 3 / this.scale,
-        y: this.y - dy / 3 / this.scale,
+        x: this.x + dx / this.scale,
+        y: this.y + dy / this.scale,
       })
     },
     stopProgressiveMove() {

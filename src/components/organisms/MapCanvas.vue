@@ -4,7 +4,7 @@
     @mouseup="e => ($isMobile.any ? '' : canvasCursorUp())"
     @touchend="e => ($isMobile.any ? canvasCursorUp() : '')"
   >
-    <!-- this setting, @mousewheel.prevent, make a event of mousewheel in the canvas better on Safari -->
+    <!-- this setting, @wheel.prevent, make a event of wheel in the canvas better on Safari -->
     <div
       class="canvas-wrapper"
       :tabindex="canWrite ? '1' : ''"
@@ -24,7 +24,7 @@
       @keydown.self.90.meta.exact="$emit('undo')"
       @keydown.self.90.ctrl.shift.exact="$emit('redo')"
       @keydown.self.90.meta.shift.exact="$emit('redo')"
-      @mousewheel.prevent
+      @wheel.prevent
     >
       <v-icon v-if="!canWrite" class="lock-button">lock</v-icon>
       <SvgCanvas
@@ -164,14 +164,14 @@
       :closed="editMenuTargetNode.closed"
       @open="openNode(editMenuTarget)"
       @close="closeNode(editMenuTarget)"
-      @mousewheel.native.prevent="e => ($isMobile.any ? '' : mousewheel(e))"
+      @wheel.native.prevent="e => ($isMobile.any ? '' : wheel(e))"
     />
     <FloatButton
       v-if="showEditMenu"
       :x="fixTopBoxPosition.x - fixButtonMargin"
       :y="fixTopBoxPosition.y"
       @click="deleteNode"
-      @mousewheel.native.prevent="e => ($isMobile.any ? '' : mousewheel(e))"
+      @wheel.native.prevent="e => ($isMobile.any ? '' : wheel(e))"
     >
       <v-icon>delete</v-icon>
     </FloatButton>
@@ -181,7 +181,7 @@
       :y="fixTopBoxPosition.y"
       color="indigo"
       @click="readyEditText(editMenuTarget)"
-      @mousewheel.native.prevent="e => ($isMobile.any ? '' : mousewheel(e))"
+      @wheel.native.prevent="e => ($isMobile.any ? '' : wheel(e))"
     >
       <v-icon>edit</v-icon>
     </FloatButton>
@@ -191,7 +191,7 @@
       :y="fixBottomBoxPosition.y"
       :color="mode === CANVAS_MODE.DEPENDENCY ? 'deep-orange' : 'indigo'"
       @click="editDependency"
-      @mousewheel.native.prevent="e => ($isMobile.any ? '' : mousewheel(e))"
+      @wheel.native.prevent="e => ($isMobile.any ? '' : wheel(e))"
     >
       <v-icon>call_missed</v-icon>
     </FloatButton>
@@ -201,7 +201,7 @@
       :y="fixBottomBoxPosition.y"
       :color="mode === CANVAS_MODE.DEPENDENCY ? 'deep-orange' : 'indigo'"
       @click="editDependency"
-      @mousewheel.native.prevent="e => ($isMobile.any ? '' : mousewheel(e))"
+      @wheel.native.prevent="e => ($isMobile.any ? '' : wheel(e))"
     >
       <v-icon>call_missed_outgoing</v-icon>
     </FloatButton>
@@ -211,7 +211,7 @@
       :y="fixBottomBoxPosition.y"
       color="indigo"
       @click="createNode(false, true)"
-      @mousewheel.native.prevent="e => ($isMobile.any ? '' : mousewheel(e))"
+      @wheel.native.prevent="e => ($isMobile.any ? '' : wheel(e))"
     >
       <v-icon>subdirectory_arrow_left</v-icon>
     </FloatButton>
@@ -221,7 +221,7 @@
       :y="fixBottomBoxPosition.y"
       color="indigo"
       @click="createNode(true)"
-      @mousewheel.native.prevent="e => ($isMobile.any ? '' : mousewheel(e))"
+      @wheel.native.prevent="e => ($isMobile.any ? '' : wheel(e))"
     >
       <v-icon>add</v-icon>
     </FloatButton>
@@ -231,7 +231,7 @@
       :y="fixBottomBoxPosition.y"
       color="indigo"
       @click="createNode(false)"
-      @mousewheel.native.prevent="e => ($isMobile.any ? '' : mousewheel(e))"
+      @wheel.native.prevent="e => ($isMobile.any ? '' : wheel(e))"
     >
       <v-icon>subdirectory_arrow_right</v-icon>
     </FloatButton>
@@ -241,7 +241,7 @@
       :y="fixBottomBoxPosition.y"
       color="indigo"
       @click="createNode(false)"
-      @mousewheel.native.prevent="e => ($isMobile.any ? '' : mousewheel(e))"
+      @wheel.native.prevent="e => ($isMobile.any ? '' : wheel(e))"
     >
       <v-icon>subdirectory_arrow_left</v-icon>
     </FloatButton>
@@ -253,7 +253,7 @@
       :x="editTextTargetPosition.x"
       :y="editTextTargetPosition.y"
       @done="doneEditText"
-      @mousewheel.native.prevent="e => ($isMobile.any ? '' : mousewheel(e))"
+      @wheel.native.prevent="e => ($isMobile.any ? '' : wheel(e))"
     />
     <FloatEditMenu
       ref="floatEditMenu"
@@ -263,7 +263,7 @@
       @selectProp="prop => $emit('selectProp', prop)"
       @toggleCheck="toggleCheck"
       @toggleGrouping="toggleGrouping"
-      @mousewheel.native.prevent="e => ($isMobile.any ? '' : mousewheel(e))"
+      @wheel.native.prevent="e => ($isMobile.any ? '' : wheel(e))"
     />
     <CommentList
       class="comment-list"
@@ -1167,7 +1167,7 @@ export default {
       })
       this.$emit('updateNodes', updatedNodes)
     },
-    mousewheel(e) {
+    wheel(e) {
       this.$refs.svgCanvas.canvasWheel(e)
     },
     selectRectangle(rectangle) {
