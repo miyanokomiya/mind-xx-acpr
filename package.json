@@ -11,7 +11,7 @@
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
-    "core-js": "^2.6.5",
+    "core-js": "^3.2.1",
     "firebase": "^7.0.0",
     "ismobilejs": "^1.0.3",
     "register-service-worker": "^1.6.2",
