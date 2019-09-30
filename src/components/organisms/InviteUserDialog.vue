@@ -288,6 +288,7 @@ export default {
   background-color: rgba(255, 0, 0, 0.2);
 }
 .user-content {
-  margin-left: 8px;
+  margin-left: 10px;
+  text-align: left;
 }
 </style>

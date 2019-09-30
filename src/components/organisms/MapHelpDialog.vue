@@ -10,7 +10,7 @@
         <v-card-title>
           <span class="headline">Help</span>
         </v-card-title>
-        <v-list two-line subheader>
+        <v-list two-line subheader class="list">
           <v-divider></v-divider>
           <v-subheader>Select</v-subheader>
 
@@ -172,4 +172,8 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.list {
+  text-align: left;
+}
+</style>

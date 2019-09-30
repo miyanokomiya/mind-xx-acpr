@@ -40,8 +40,6 @@
               <dl>
                 <dt>Updated:</dt>
                 <dd>{{ dateFormat(file.updated) }}</dd>
-                <dt>Created:</dt>
-                <dd>{{ dateFormat(file.created) }}</dd>
               </dl>
             </div>
             <div class="button-box">
@@ -51,42 +49,44 @@
               >
                 shared
               </v-chip>
-              <v-edit-dialog lazy :class="{ hidden: !canWrite[file.key] }">
-                <v-btn dark fab small color="blue" class="file-button edit-name">
-                  <v-icon>textsms</v-icon>
+              <div class="buttons">
+                <v-edit-dialog lazy :class="{ hidden: !canWrite[file.key] }">
+                  <v-btn dark fab small color="blue" class="file-button edit-name">
+                    <v-icon>textsms</v-icon>
+                  </v-btn>
+                  <v-text-field
+                    single-line
+                    counter
+                    slot="input"
+                    label="Edit"
+                    :value="file.name"
+                    @change="val => changeName({ key: file.key, name: val })"
+                  ></v-text-field>
+                </v-edit-dialog>
+                <v-btn
+                  dark
+                  fab
+                  small
+                  outlined
+                  color="black"
+                  class="file-button"
+                  @click="cloneFile(file.key)"
+                >
+                  <v-icon>content_copy</v-icon>
                 </v-btn>
-                <v-text-field
-                  single-line
-                  counter
-                  slot="input"
-                  label="Edit"
-                  :value="file.name"
-                  @change="val => changeName({ key: file.key, name: val })"
-                ></v-text-field>
-              </v-edit-dialog>
-              <v-btn
-                dark
-                fab
-                small
-                outlined
-                color="black"
-                class="file-button"
-                @click="cloneFile(file.key)"
-              >
-                <v-icon>content_copy</v-icon>
-              </v-btn>
-              <v-btn
-                dark
-                fab
-                small
-                outlined
-                color="black"
-                class="file-button"
-                :class="{ hidden: sharedFileAuthorities[file.key] }"
-                @click="deleteFile(file.key)"
-              >
-                <v-icon>delete</v-icon>
-              </v-btn>
+                <v-btn
+                  dark
+                  fab
+                  small
+                  outlined
+                  color="black"
+                  class="file-button"
+                  :class="{ hidden: sharedFileAuthorities[file.key] }"
+                  @click="deleteFile(file.key)"
+                >
+                  <v-icon>delete</v-icon>
+                </v-btn>
+              </div>
             </div>
           </v-card-title>
         </v-card>
@@ -257,9 +257,7 @@ export default {
     padding: 0;
   }
   .header-buttons {
-    right: 0;
-    top: 0;
-    position: absolute;
+    margin-left: auto;
   }
   .header-tools {
     display: flex;
@@ -294,9 +292,15 @@ export default {
     }
     .button-box {
       margin-left: auto;
+      padding-right: 6px;
+      text-align: left;
     }
     .shared-tag {
       height: 24px;
+    }
+    .buttons {
+      display: flex;
+      margin-bottom: 4px;
     }
     dl {
       display: flex;
@@ -315,12 +319,8 @@ export default {
       margin-left: 0.3em;
     }
   }
-  .button-box {
-    margin-right: 8px;
-  }
   .file-button {
-    margin-left: 8px;
-    margin-right: 0;
+    margin: 2px 0 0 8px;
 
     &.edit-name {
       margin-left: 0;

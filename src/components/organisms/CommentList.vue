@@ -30,28 +30,27 @@
             <v-icon dark>done</v-icon>
           </v-btn>
         </form>
-        <v-list-tile
+        <v-list-item
           v-else
-          avatar
           :key="comment.key"
           class="comment-tile"
           :class="{ editable: canEdit(comment.key) }"
           @click="readyEdit(comment.key)"
         >
-          <v-list-tile-avatar>
+          <v-list-item-avatar>
             <img v-if="users[comment.uid]" :src="users[comment.uid].photoURL" />
             <v-icon class="unknown-user" v-else>account_circle</v-icon>
-          </v-list-tile-avatar>
-          <v-list-tile-content>
-            <v-list-tile-subtitle
-              ><pre class="text">{{ comment.text }}</pre></v-list-tile-subtitle
+          </v-list-item-avatar>
+          <v-list-item-content>
+            <v-list-item-subtitle
+              ><pre class="text">{{ comment.text }}</pre></v-list-item-subtitle
             >
-            <v-list-tile-subtitle class="comment-info"
+            <v-list-item-subtitle class="comment-info"
               >{{ users[comment.uid] ? users[comment.uid].displayName : '---' }},
-              {{ dateFormat(comment.updated) }}</v-list-tile-subtitle
+              {{ dateFormat(comment.updated) }}</v-list-item-subtitle
             >
-          </v-list-tile-content>
-        </v-list-tile>
+          </v-list-item-content>
+        </v-list-item>
         <v-divider :key="`line_${comment.key}`" />
       </template>
     </v-list>
@@ -188,6 +187,7 @@ export default {
     overflow: auto;
     white-space: pre-wrap;
     word-wrap: break-word;
+    text-align: left;
   }
   .comment-info {
     text-align: right;
