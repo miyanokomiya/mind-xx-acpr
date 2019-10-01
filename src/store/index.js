@@ -21,7 +21,7 @@ export default new Vuex.Store({
     comments,
     settings,
     user,
-    users
+    users,
   },
-  mutations: {}
+  mutations: {},
 })

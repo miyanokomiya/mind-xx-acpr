@@ -7,17 +7,13 @@
       @input="val => $emit('input', val)"
     >
       <v-card>
-        <v-card-title class="headline">{{title}}</v-card-title>
+        <v-card-title class="headline">{{ title }}</v-card-title>
         <v-card-text class="text-xs-left">
-          {{message}}
+          {{ message }}
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn
-            color="blue darken-1"
-            flat="flat"
-            @click="$emit('ok')"
-          >
+          <v-btn color="blue darken-1" text @click="$emit('ok')">
             OK
           </v-btn>
         </v-card-actions>
@@ -31,22 +27,19 @@ export default {
   props: {
     value: {
       type: Boolean,
-      required: true
+      required: true,
     },
     title: {
       type: String,
-      default: 'Info'
+      default: 'Info',
     },
     message: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
-  methods: {
-  }
+  methods: {},
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
-
+<style lang="scss" scoped></style>

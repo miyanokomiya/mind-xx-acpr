@@ -1,7 +1,7 @@
 import { getterTypes } from './types'
 
 export default {
-  [getterTypes.USERS] (state) {
+  [getterTypes.USERS](state) {
     return state.users
-  }
+  },
 }

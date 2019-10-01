@@ -10,15 +10,15 @@ export default {
   state: {
     fileKey: null,
     nodes: {
-      [ROOT_NODE]: createNode()
+      [ROOT_NODE]: createNode(),
     },
     selectedNodes: {},
     initialLoading: true,
     undoStacks: [],
-    redoStacks: []
+    redoStacks: [],
   },
   modules: {},
   actions,
   mutations,
-  getters
+  getters,
 }

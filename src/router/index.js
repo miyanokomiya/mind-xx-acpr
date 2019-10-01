@@ -17,7 +17,7 @@ export default new Router({
       component: AppCommonLayout,
       props: {
         needAuth: false,
-        hideLedfDrawer: true
+        hideLedfDrawer: true,
       },
       children: [
         {
@@ -25,17 +25,17 @@ export default new Router({
           name: 'Top',
           components: {
             content: () => import('@/components/organisms/TopPage'),
-            headerTitle: HeaderTitle
-          }
-        }
-      ]
+            headerTitle: HeaderTitle,
+          },
+        },
+      ],
     },
     {
       path: '/map',
       component: AppCommonLayout,
       props: {
         needAuth: false,
-        hideLedfDrawer: false
+        hideLedfDrawer: false,
       },
       children: [
         {
@@ -45,20 +45,20 @@ export default new Router({
             content: MapCanvasContainer,
             headerTitle: HeaderTitle,
             headerIconList: MapMenu,
-            leftDrawer: MapLeftDrawerContainer
+            leftDrawer: MapLeftDrawerContainer,
           },
           props: {
-            content: true
-          }
-        }
-      ]
+            content: true,
+          },
+        },
+      ],
     },
     {
       path: '/workspace',
       component: AppCommonLayout,
       props: {
         needAuth: true,
-        hideLedfDrawer: true
+        hideLedfDrawer: true,
       },
       children: [
         {
@@ -66,10 +66,10 @@ export default new Router({
           name: 'WorkSpace',
           components: {
             headerTitle: HeaderTitle,
-            content: WorkSpaceContainer
-          }
-        }
-      ]
-    }
-  ]
+            content: WorkSpaceContainer,
+          },
+        },
+      ],
+    },
+  ],
 })

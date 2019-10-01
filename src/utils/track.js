@@ -6,8 +6,8 @@ let _rollbarConfig = {
   accessToken: 'e04b82a2f3814043855eba2262729877',
   captureUncaught: process.env === 'production',
   payload: {
-    environment: 'production'
-  }
+    environment: 'production',
+  },
 }
 
 if (process.env === 'production') {

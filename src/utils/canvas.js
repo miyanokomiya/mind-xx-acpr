@@ -14,7 +14,7 @@ export const getPoint = e => {
   }
   return {
     x: x,
-    y: y
+    y: y,
   }
 }
 
@@ -40,7 +40,7 @@ export const getPoints = e => {
     let touch = e.touches[i]
     ret.push({
       x: touch.pageX - dx,
-      y: touch.pageY - dy
+      y: touch.pageY - dy,
     })
   }
 

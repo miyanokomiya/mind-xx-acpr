@@ -9,10 +9,10 @@ export default {
     fileAuthorities: {},
     sharedFiles: {},
     sharedFileAuthorities: {},
-    permissionDenied: false
+    permissionDenied: false,
   },
   modules: {},
   actions,
   mutations,
-  getters
+  getters,
 }

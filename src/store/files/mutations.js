@@ -2,7 +2,7 @@ import Vue from 'vue'
 import { mutationTypes } from './types'
 
 export default {
-  [mutationTypes.UPDATE_FILES] (state, { files }) {
+  [mutationTypes.UPDATE_FILES](state, { files }) {
     Object.keys(files).forEach(key => {
       if (files[key]) {
         Vue.set(state.files, key, files[key])
@@ -11,7 +11,7 @@ export default {
       }
     })
   },
-  [mutationTypes.UPDATE_FILE_AUTHORITIES] (state, { fileAuthorities }) {
+  [mutationTypes.UPDATE_FILE_AUTHORITIES](state, { fileAuthorities }) {
     Object.keys(fileAuthorities).forEach(key => {
       if (fileAuthorities[key]) {
         Vue.set(state.fileAuthorities, key, fileAuthorities[key])
@@ -20,7 +20,7 @@ export default {
       }
     })
   },
-  [mutationTypes.UPDATE_SHARED_FILES] (state, { sharedFiles }) {
+  [mutationTypes.UPDATE_SHARED_FILES](state, { sharedFiles }) {
     Object.keys(sharedFiles).forEach(key => {
       if (sharedFiles[key]) {
         Vue.set(state.sharedFiles, key, sharedFiles[key])
@@ -29,10 +29,7 @@ export default {
       }
     })
   },
-  [mutationTypes.UPDATE_SHARED_FILE_AUTHORITIES] (
-    state,
-    { sharedFileAuthorities }
-  ) {
+  [mutationTypes.UPDATE_SHARED_FILE_AUTHORITIES](state, { sharedFileAuthorities }) {
     Object.keys(sharedFileAuthorities).forEach(key => {
       if (sharedFileAuthorities[key]) {
         Vue.set(state.sharedFileAuthorities, key, sharedFileAuthorities[key])
@@ -41,13 +38,13 @@ export default {
       }
     })
   },
-  [mutationTypes.CLEAR_FILES] (state) {
+  [mutationTypes.CLEAR_FILES](state) {
     state.files = {}
     state.fileAuthorities = {}
     state.sharedFiles = {}
     state.sharedFileAuthorities = {}
   },
-  [mutationTypes.SET_PERMISSION_DENIED] (state, { permissionDenied }) {
+  [mutationTypes.SET_PERMISSION_DENIED](state, { permissionDenied }) {
     state.permissionDenied = permissionDenied
-  }
+  },
 }

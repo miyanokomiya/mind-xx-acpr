@@ -12,14 +12,11 @@ const updateComments =
           p[`/comments/${fileKey}/${c}`] = {
             ...comments[c],
             updated: firebase.database.ServerValue.TIMESTAMP,
-            created: current
-              ? current.created
-              : firebase.database.ServerValue.TIMESTAMP
+            created: current ? current.created : firebase.database.ServerValue.TIMESTAMP,
           }
           return p
         }, {})
-        updates[`/files/${fileKey}/updated`] =
-          firebase.database.ServerValue.TIMESTAMP
+        updates[`/files/${fileKey}/updated`] = firebase.database.ServerValue.TIMESTAMP
         return firebase
           .database()
           .ref()
@@ -43,19 +40,19 @@ const connect =
         var commentsRef = firebase.database().ref('comments/' + fileKey)
         commentsRef.on('child_added', data => {
           const comments = {
-            [data.key]: createComment(data.val())
+            [data.key]: createComment(data.val()),
           }
           context.commit(mutationTypes.UPDATE_COMMENTS, { comments })
         })
-        commentsRef.on('child_changed', function (data) {
+        commentsRef.on('child_changed', function(data) {
           const comments = {
-            [data.key]: createComment(data.val())
+            [data.key]: createComment(data.val()),
           }
           context.commit(mutationTypes.UPDATE_COMMENTS, { comments })
         })
-        commentsRef.on('child_removed', function (data) {
+        commentsRef.on('child_removed', function(data) {
           const comments = {
-            [data.key]: null
+            [data.key]: null,
           }
           context.commit(mutationTypes.UPDATE_COMMENTS, { comments })
         })
@@ -63,19 +60,22 @@ const connect =
       }
 
 export default {
-  [actionTypes.DISCONNECT] (context) {
+  [actionTypes.DISCONNECT](context) {
     if (context.state.fileKey) {
       disconnect(context)
     }
     context.commit(mutationTypes.CLEAR_COMMENTS)
   },
-  [actionTypes.LOAD_COMMENTS] (context, { fileKey }) {
+  [actionTypes.LOAD_COMMENTS](context, { fileKey }) {
     context.dispatch(actionTypes.DISCONNECT)
     context.commit(mutationTypes.SET_FILE_KEY, { fileKey })
-    connect(context, { fileKey })
+    connect(
+      context,
+      { fileKey },
+    )
   },
-  [actionTypes.UPDATE_COMMENTS] (context, { comments }) {
+  [actionTypes.UPDATE_COMMENTS](context, { comments }) {
     // push firebase
     updateComments(context, { comments })
-  }
+  },
 }

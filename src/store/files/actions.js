@@ -16,7 +16,7 @@ const createFileFB = (context, { file }) => {
     .ref(`/file_authorities/${fileKey}/users/${uid}`)
     .set({
       write: true,
-      owner: true
+      owner: true,
     })
     .then(() => {
       // local commit the authority
@@ -26,16 +26,16 @@ const createFileFB = (context, { file }) => {
             users: {
               [uid]: {
                 write: true,
-                owner: true
-              }
-            }
-          }
-        }
+                owner: true,
+              },
+            },
+          },
+        },
       })
       // create the file
       const newFile = Object.assign({}, createFile(file), {
         created: firebase.database.ServerValue.TIMESTAMP,
-        updated: firebase.database.ServerValue.TIMESTAMP
+        updated: firebase.database.ServerValue.TIMESTAMP,
       })
       const updates = {}
       updates[`/files/${fileKey}`] = newFile
@@ -55,7 +55,7 @@ const disconnectFile =
     ? () => Promise.resolve()
     : (context, { key }) => {
         context.commit(mutationTypes.SET_PERMISSION_DENIED, {
-          permissionDenied: false
+          permissionDenied: false,
         })
         firebase
           .database()
@@ -65,10 +65,10 @@ const disconnectFile =
       }
 
 export default {
-  [actionTypes.DISCONNECT_FILE] (context, { key }) {
+  [actionTypes.DISCONNECT_FILE](context, { key }) {
     return disconnectFile(context, { key })
   },
-  [actionTypes.LOAD_FILE] (context, { key }) {
+  [actionTypes.LOAD_FILE](context, { key }) {
     // reset permission status of this file at first
     return disconnectFile(context, { key }).then(() => {
       // start loading
@@ -96,29 +96,29 @@ export default {
             'value',
             snapshot => {
               context.commit(mutationTypes.SET_PERMISSION_DENIED, {
-                permissionDenied: false
+                permissionDenied: false,
               })
               const fileAuthority = snapshot.val()
               if (isMyFile) {
                 context.commit(mutationTypes.UPDATE_FILE_AUTHORITIES, {
                   fileAuthorities: {
-                    [key]: fileAuthority
-                  }
+                    [key]: fileAuthority,
+                  },
                 })
               } else {
                 context.commit(mutationTypes.UPDATE_SHARED_FILE_AUTHORITIES, {
                   sharedFileAuthorities: {
-                    [key]: fileAuthority
-                  }
+                    [key]: fileAuthority,
+                  },
                 })
               }
             },
-            e => {
+            () => {
               // if enter this route, '.on' is expired
               context.commit(mutationTypes.SET_PERMISSION_DENIED, {
-                permissionDenied: true
+                permissionDenied: true,
               })
-            }
+            },
           )
         firebase
           .database()
@@ -129,27 +129,27 @@ export default {
             if (isMyFile) {
               context.commit(mutationTypes.UPDATE_FILES, {
                 files: {
-                  [key]: file
-                }
+                  [key]: file,
+                },
               })
             } else {
               context.commit(mutationTypes.UPDATE_SHARED_FILES, {
                 sharedFiles: {
-                  [key]: file
-                }
+                  [key]: file,
+                },
               })
             }
           })
-          .catch(e => {
+          .catch(() => {
             context.commit(mutationTypes.SET_PERMISSION_DENIED, {
-              permissionDenied: true
+              permissionDenied: true,
             })
             return Promise.resolve()
           })
       })
     })
   },
-  [actionTypes.LOAD_FILES] (context, payload) {
+  [actionTypes.LOAD_FILES](context) {
     context.commit(mutationTypes.CLEAR_FILES)
 
     const uid = firebase.auth().currentUser.uid
@@ -173,8 +173,8 @@ export default {
               const fileAuthority = snapshot.val()
               context.commit(mutationTypes.UPDATE_FILE_AUTHORITIES, {
                 fileAuthorities: {
-                  [key]: fileAuthority
-                }
+                  [key]: fileAuthority,
+                },
               })
             })
           firebase
@@ -185,8 +185,8 @@ export default {
               const file = snapshot.val()
               context.commit(mutationTypes.UPDATE_FILES, {
                 files: {
-                  [key]: file
-                }
+                  [key]: file,
+                },
               })
             })
         })
@@ -199,8 +199,8 @@ export default {
               const fileAuthority = snapshot.val()
               context.commit(mutationTypes.UPDATE_SHARED_FILE_AUTHORITIES, {
                 sharedFileAuthorities: {
-                  [key]: fileAuthority
-                }
+                  [key]: fileAuthority,
+                },
               })
             })
           firebase
@@ -211,14 +211,14 @@ export default {
               const file = snapshot.val()
               context.commit(mutationTypes.UPDATE_SHARED_FILES, {
                 sharedFiles: {
-                  [key]: file
-                }
+                  [key]: file,
+                },
               })
             })
         })
       })
   },
-  [actionTypes.UPDATE_FILES] (context, { files = {} }) {
+  [actionTypes.UPDATE_FILES](context, { files = {} }) {
     const updates = Object.keys(files).reduce((p, c) => {
       p[`/files/${c}`] = files[c]
       return p
@@ -231,7 +231,7 @@ export default {
         context.commit(mutationTypes.UPDATE_FILES, { files })
       })
   },
-  [actionTypes.CREATE_FILE] (context, { file = {} }) {
+  [actionTypes.CREATE_FILE](context, { file = {} }) {
     return createFileFB(context, { file }).then(({ fileKey }) => {
       // reload the file
       return firebase
@@ -241,19 +241,18 @@ export default {
         .then(snapshot => {
           context.commit(mutationTypes.UPDATE_FILES, {
             files: {
-              [fileKey]: snapshot.val()
-            }
+              [fileKey]: snapshot.val(),
+            },
           })
         })
     })
   },
-  [actionTypes.CLONE_FILE] (context, { fileKey }) {
+  [actionTypes.CLONE_FILE](context, { fileKey }) {
     const baseKey = fileKey
-    const baseFile =
-      context.state.files[baseKey] || context.state.sharedFiles[baseKey]
+    const baseFile = context.state.files[baseKey] || context.state.sharedFiles[baseKey]
     const file = {
       ...baseFile,
-      name: `${baseFile.name} [${new Date().toString()}]`
+      name: `${baseFile.name} [${new Date().toString()}]`,
     }
     if (file) {
       // New file belongs to the operator.
@@ -267,8 +266,8 @@ export default {
             .then(snapshot => {
               context.commit(mutationTypes.UPDATE_FILES, {
                 files: {
-                  [newKey]: snapshot.val()
-                }
+                  [newKey]: snapshot.val(),
+                },
               })
             })
         }
@@ -324,7 +323,7 @@ export default {
       return Promise.reject(new Error(`not found the file: ${baseKey}`))
     }
   },
-  [actionTypes.DELETE_FILES] (context, { files }) {
+  [actionTypes.DELETE_FILES](context, { files }) {
     const uid = firebase.auth().currentUser.uid
     // this operation triggers cloud functions to delete files
     const updates = Object.keys(files).reduce((p, c) => {
@@ -341,7 +340,7 @@ export default {
         return Promise.resolve()
       })
   },
-  [actionTypes.INVITE_USER] (context, { email, fileKey, readOnly }) {
+  [actionTypes.INVITE_USER](context, { email, fileKey, readOnly }) {
     const key = firebase
       .database()
       .ref()
@@ -352,14 +351,14 @@ export default {
       .ref(`/file_invitations/${fileKey}/${key}`)
       .set({
         email,
-        write: !readOnly
+        write: !readOnly,
       })
       .then(() => {})
   },
-  [actionTypes.UPDATE_STATUS] (context, { publicFile, readOnly, fileKey }) {
+  [actionTypes.UPDATE_STATUS](context, { publicFile, readOnly, fileKey }) {
     const status = publicFile
       ? {
-          write: !readOnly
+          write: !readOnly,
         }
       : null
     return firebase
@@ -374,25 +373,25 @@ export default {
       })
       .then(snapshot => {
         const isMyFile = context.getters[getterTypes.IS_MY_FILE_FROM_KEY]({
-          fileKey
+          fileKey,
         })
         const fileAuthority = snapshot.val()
         if (isMyFile) {
           context.commit(mutationTypes.UPDATE_FILE_AUTHORITIES, {
             fileAuthorities: {
-              [fileKey]: fileAuthority
-            }
+              [fileKey]: fileAuthority,
+            },
           })
         } else {
           context.commit(mutationTypes.UPDATE_SHARED_FILE_AUTHORITIES, {
             sharedFileAuthorities: {
-              [fileKey]: fileAuthority
-            }
+              [fileKey]: fileAuthority,
+            },
           })
         }
       })
   },
-  [actionTypes.UPDATE_USER_AUTHORITIES] (context, { userAuthorities, fileKey }) {
+  [actionTypes.UPDATE_USER_AUTHORITIES](context, { userAuthorities, fileKey }) {
     const updates = Object.keys(userAuthorities).reduce((p, uid) => {
       const auth = userAuthorities[uid]
       if (auth) {
@@ -408,5 +407,5 @@ export default {
       .database()
       .ref()
       .update(updates)
-  }
+  },
 }

@@ -1,21 +1,21 @@
 <template>
-<div class="map-menu">
-  <InviteUserDialog
-    v-if="canShare"
-    ref="inviteUserDialog"
-    :publicFile="!!publicFile"
-    :publicReadOnly="publicFile ? !publicFile.write : false"
-    :canEditPublic="canEditPublic"
-    :userAuthorities="userAuthorities"
-    :users="users"
-    :user="user"
-    @setStatus="setStatus"
-    @invite="invite"
-    @updateUserAuthorities="updateUserAuthorities"
-    @show="loadUsers"
-  />
-  <MapHelpDialog ref="mapHelpDialog" />
-</div>
+  <div class="map-menu">
+    <InviteUserDialog
+      v-if="canShare"
+      ref="inviteUserDialog"
+      :publicFile="!!publicFile"
+      :publicReadOnly="publicFile ? !publicFile.write : false"
+      :canEditPublic="canEditPublic"
+      :userAuthorities="userAuthorities"
+      :users="users"
+      :user="user"
+      @setStatus="setStatus"
+      @invite="invite"
+      @updateUserAuthorities="updateUserAuthorities"
+      @show="loadUsers"
+    />
+    <MapHelpDialog ref="mapHelpDialog" />
+  </div>
 </template>
 
 <script>
@@ -24,37 +24,43 @@ import MapHelpDialog from '@/components/organisms/MapHelpDialog'
 
 import { mapGetters, mapActions } from 'vuex'
 import { getterTypes as nodesActionTypes } from '@/store/nodes/types'
-import { getterTypes as filesGetterTypes, actionTypes as filesActionTypes } from '@/store/files/types'
+import {
+  getterTypes as filesGetterTypes,
+  actionTypes as filesActionTypes,
+} from '@/store/files/types'
 import { getterTypes as userGetterTypes } from '@/store/user/types'
-import { getterTypes as usersGetterTypes, actionTypes as usersActionTypes } from '@/store/users/types'
+import {
+  getterTypes as usersGetterTypes,
+  actionTypes as usersActionTypes,
+} from '@/store/users/types'
 
 export default {
   components: {
     InviteUserDialog,
-    MapHelpDialog
+    MapHelpDialog,
   },
   computed: {
     ...mapGetters('nodes', {
-      fileKey: nodesActionTypes.FILE_KEY
+      fileKey: nodesActionTypes.FILE_KEY,
     }),
     ...mapGetters('files', {
       fileAuthorityFromKey: filesGetterTypes.FILE_AUTHORITY_FROM_KEY,
-      isMyFileFromKey: filesGetterTypes.IS_MY_FILE_FROM_KEY
+      isMyFileFromKey: filesGetterTypes.IS_MY_FILE_FROM_KEY,
     }),
     ...mapGetters('user', {
-      user: userGetterTypes.USER
+      user: userGetterTypes.USER,
     }),
     ...mapGetters('users', {
-      users: usersGetterTypes.USERS
+      users: usersGetterTypes.USERS,
     }),
-    fileAuthority () {
-      return this.fileAuthorityFromKey({fileKey: this.fileKey})
+    fileAuthority() {
+      return this.fileAuthorityFromKey({ fileKey: this.fileKey })
     },
-    canEditPublic () {
+    canEditPublic() {
       // only the file owenr can edit public settings
-      return this.isMyFileFromKey({fileKey: this.fileKey})
+      return this.isMyFileFromKey({ fileKey: this.fileKey })
     },
-    canShare () {
+    canShare() {
       if (!this.user) {
         return false
       }
@@ -68,7 +74,7 @@ export default {
         return false
       }
     },
-    publicFile () {
+    publicFile() {
       const fileAuthority = this.fileAuthority
       if (fileAuthority) {
         return fileAuthority.public
@@ -76,11 +82,11 @@ export default {
         return null
       }
     },
-    userAuthorities () {
+    userAuthorities() {
       return this.fileAuthority.users || {}
-    }
+    },
   },
-  beforeRouteLeave (to, from, next) {
+  beforeRouteLeave(to, from, next) {
     if (this.$refs.mapHelpDialog.dialog) {
       this.$refs.mapHelpDialog.dialog = false
       next(false)
@@ -95,41 +101,41 @@ export default {
     ...mapActions('files', {
       inviteUser: filesActionTypes.INVITE_USER,
       updateStatus: filesActionTypes.UPDATE_STATUS,
-      _updateUserAuthorities: filesActionTypes.UPDATE_USER_AUTHORITIES
+      _updateUserAuthorities: filesActionTypes.UPDATE_USER_AUTHORITIES,
     }),
     ...mapActions('users', {
       _loadUsers: usersActionTypes.LOAD_USERS,
-      _loadUsersFromEmail: usersActionTypes.LOAD_USERS_FROM_EMAIL
+      _loadUsersFromEmail: usersActionTypes.LOAD_USERS_FROM_EMAIL,
     }),
-    invite ({ email, readOnly }) {
+    invite({ email, readOnly }) {
       this.inviteUser({
         fileKey: this.fileKey,
         email,
-        readOnly
+        readOnly,
       })
       this._loadUsersFromEmail({
-        emailList: [email]
+        emailList: [email],
       })
     },
-    setStatus ({publicFile, readOnly}) {
+    setStatus({ publicFile, readOnly }) {
       this.updateStatus({
         publicFile,
         readOnly,
-        fileKey: this.fileKey
+        fileKey: this.fileKey,
       })
     },
-    loadUsers () {
+    loadUsers() {
       this._loadUsers({
-        users: this.userAuthorities
+        users: this.userAuthorities,
       })
     },
-    updateUserAuthorities (userAuthorities) {
+    updateUserAuthorities(userAuthorities) {
       this._updateUserAuthorities({
         userAuthorities,
-        fileKey: this.fileKey
+        fileKey: this.fileKey,
       })
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -138,4 +144,3 @@ export default {
   display: inherit;
 }
 </style>
-

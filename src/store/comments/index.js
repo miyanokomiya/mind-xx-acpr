@@ -6,10 +6,10 @@ export default {
   namespaced: true,
   state: {
     fileKey: null,
-    comments: {}
+    comments: {},
   },
   modules: {},
   actions,
   mutations,
-  getters
+  getters,
 }

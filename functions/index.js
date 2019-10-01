@@ -1,32 +1,10 @@
 const functions = require('firebase-functions')
 const admin = require('firebase-admin')
-// admin.initializeApp(functions.config().firebase)
+admin.initializeApp()
 
-// this account file is gitignored
-const serviceAccount = require('./mind-xx-acpr-firebase-adminsdk-wd2cq-854fdc9efc.json')
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: 'https://mind-xx-acpr.firebaseio.com'
-})
-
-// exports.createUser = functions.auth.user().onCreate(event => {
-//   const data = event.data
-//   const uid = data.uid
-//   return admin
-//     .database()
-//     .ref(`/users/${uid}`)
-//     .set({
-//       email: event.data.email,
-//       displayName: event.data.displayName,
-//       photoURL: event.data.photoURL,
-//       providerId: event.data.providerId
-//     })
-// })
-
-exports.deleteUser = functions.auth.user().onDelete(event => {
-  const uid = event.data.uid
-  return admin
+exports.deleteUser = functions.auth.user().onDelete((data, context) => {
+  const uid = context.auth.uid
+    return admin
     .database()
     .ref(`/work_spaces/${uid}/files`)
     .once('value')
@@ -82,23 +60,23 @@ function deleteFile (fileId) {
 
 exports.deleteFile = functions.database
   .ref('/work_spaces/{ownerId}/files/{fileId}')
-  .onDelete(event => {
-    if (!event.data.previous.exists()) {
+  .onDelete((snap, context) => {
+    if (!snap.exists()) {
       return Promise.resolve()
     } else {
-      const fileId = event.params.fileId
+      const fileId = context.params.fileId
       return deleteFile(fileId)
     }
   })
 
 exports.inviteUserToFile = functions.database
   .ref('/file_invitations/{fileId}/{tmpId}')
-  .onWrite(event => {
-    if (!event.data.exists()) {
+  .onWrite((change, context) => {
+    if (!change.after.exists()) {
       return Promise.resolve()
     }
-    const fileId = event.params.fileId
-    const original = event.data.val()
+    const fileId = context.params.fileId
+    const original = change.after.val()
     const email = original.email
     return admin
       .auth()
@@ -118,7 +96,7 @@ exports.inviteUserToFile = functions.database
                     user.uid
                   }`
                 )
-                return event.data.ref.remove()
+                return change.after.ref.remove()
               } else {
                 const updates = {
                   [`/file_authorities/${fileId}/users/${user.uid}`]: {
@@ -131,14 +109,14 @@ exports.inviteUserToFile = functions.database
                   .ref()
                   .update(updates)
                   .then(() => {
-                    return event.data.ref.remove()
+                    return change.after.ref.remove()
                   })
               }
             })
         } else {
           // the user is not found
           // return Promise.resolve()
-          return event.data.ref.remove()
+          return change.after.ref.remove()
         }
       })
   })

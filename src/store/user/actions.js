@@ -2,7 +2,7 @@ import { actionTypes, mutationTypes, getterTypes } from './types'
 import firebase from '@/firebase'
 
 export default {
-  [actionTypes.LOAD_USER] (context) {
+  [actionTypes.LOAD_USER](context) {
     context.commit(mutationTypes.SET_AUTHORITY_LOADING, true)
     return firebase.auth().onAuthStateChanged(user => {
       context.commit(mutationTypes.SET_AUTHORITY_LOADING, true)
@@ -32,7 +32,7 @@ export default {
       }
     })
   },
-  [actionTypes.SIGN_OUT] (context) {
+  [actionTypes.SIGN_OUT](context) {
     return new Promise((resolve, reject) => {
       firebase
         .auth()
@@ -49,8 +49,8 @@ export default {
         })
     })
   },
-  [actionTypes.DELETE_USER] (context) {
+  [actionTypes.DELETE_USER]() {
     const user = firebase.auth().currentUser
     return user.delete()
-  }
+  },
 }

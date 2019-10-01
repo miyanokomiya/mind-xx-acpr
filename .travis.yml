@@ -1,0 +1,28 @@
+language: node_js
+node_js:
+  - 10
+cache: yarn
+script:
+  - yarn storybook:serve &
+  - yarn lint
+  - yarn test:unit --coverage
+  - yarn storybook:build
+  - yarn test:pupp
+  - yarn build
+  - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+
+before_deploy:
+  - npm version patch
+  - yarn build
+deploy:
+  provider: firebase
+  token:
+    secure: "p11Qta3QPRbozvUQmMMvoXNeFYN0zgMUlz0kr/Swc1loD64S6ffQ4sy7uLz6LDPLBG+il0ZnqIu9HkmJWD2KE2aYZjrhzbr229tTpl2tIH3P9TDev7C+gI4lSpKuwaKGoU/C1BTAJH4aBJZG/rpHwOYjlOsgZQO0oQQ+lHtgomsM4uUEFvnZPKEmSNy6DK8thXUMd28HNlN86NuVR0v6MqDMlcilxgwAdbh3m2sLZDB/N56ygbqikqcQGA6y3CdGBmaLo3/awIctwvDTp761ea4+D+moJXOmj8q++MR9w3BEUgnKDyfESLhXMCj8nlQblNQihC3hEVIIkceSLWeDlCulXNBpXT9AOcK2eBY5Ayta1V7sw6H3bvD9bfTB0JnOFksnia/xNwDiZSg7jL1hRjRXtCvmRHBxrqH26tHhE8m2+/hHlZc1bDmOP4GqWk1gCmvAb8F3WxRCN4nUACTponLUQClgpyGJK9vLaZwgzeBB1xvhH+Ey44EILwZM89Cc4jW+d9njdNfc2TJnhd6vygwjlqrCWqIcWbyWYS4aE0wbUIZlK9/KlXgZpt1WE+Q67StuYxOFcJP8flBadk/5hXlprp/zOD3tBtnKShDTxUHfX2zVqy49IJAHFC03YWrgvPwVoyIEVU2hDzDXgPRdFiiH8WIh7cHjcM2OnABPvDM="
+  on:
+    branch: master
+after_deploy:
+  - git push --quiet https://${GITHUB_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git --tags
+
+env:
+  global:
+    secure: "wih7Vjy2KhCiz+CrOWLIBj1JuLRf7p4JTDKggV2E5FOP+fXjwLCzid3ax1xeKw+tU/6xaNQdN1gW6xqo+McIsnzCUDxphztUPARYC3KYdpm0NNe8wpZ4TJz156M857ce/I24sa7Qje91PR/5jkLSi8CjPH3a1+fWNO/VyXnHx7UIGmDSzwosnCbgY2VTs4PvLzwCaeISd4o7Z3ct9P2Hik4Qv1PvnlH1CycbQ8h/L782Ixey1oTrVrB+PTSisAHPKOFR0AS1nOHTn4fkzjesMM61CmLKCLWJkIek8s/9UEEN9z4SDTdgVxC+z2a8ne2MegO5PVwq+SiONkcE7k1LhVDQDh+kb0uRuFQOMxDrpBCrR8+R8IMuFpv98fMnpUDc+g4dw7BiGfMdmXMvU6rTRcWOIjjIX6L5IsK2ELrOUJURwvMQQZngZJy3Rs5S1xBqgDJN1X14b+lT1W5p8Xbzt97Hy2wkNFAGs5z64shGmg23/omE33t5bnXnkjl2fuXLqdpmkSMnYhLjbeXrNcIzAYMC6kIIusaIrb2j4rfluV5I2fgf27vmRKKnE/sylN/JcmJ8quXzkEKChcGpZeSmVIXnpapzAzEHzeKJ+8zDTVesCkc8DGayI4NOlyFWP6dlsKmryoJtvQ1UbyEctUnFHrfp6Z3fC4BR1A6MrQeJ/74="

@@ -1,22 +1,32 @@
 <template>
-<div
-  class="history-tool-wrapper"
-  :class="{mobile: $isMobile.any}"
->
-  <div class="history-box">
-    <v-btn icon small outline color="indigo" class="undo-button" @click="$emit('undo')">
-      <v-icon>undo</v-icon>
-    </v-btn>
-    <v-btn icon small outline color="indigo" class="redo-button" @click="$emit('redo')">
-      <v-icon>redo</v-icon>
-    </v-btn>
+  <div class="history-tool-wrapper" :class="{ mobile: $isMobile.any }">
+    <div class="history-box">
+      <v-btn
+        icon
+        small
+        outlined
+        color="indigo"
+        class="undo-button"
+        @click="$emit('undo')"
+      >
+        <v-icon>undo</v-icon>
+      </v-btn>
+      <v-btn
+        icon
+        small
+        outlined
+        color="indigo"
+        class="redo-button"
+        @click="$emit('redo')"
+      >
+        <v-icon>redo</v-icon>
+      </v-btn>
+    </div>
   </div>
-</div>
 </template>
 
 <script>
-export default {
-}
+export default {}
 </script>
 
 <style lang="scss" scoped>
@@ -26,7 +36,8 @@ export default {
   .history-box {
     display: inline-block;
 
-    .undo-button, .redo-button {
+    .undo-button,
+    .redo-button {
       width: 32px;
       height: 32px;
       margin: 0 0;
@@ -37,11 +48,11 @@ export default {
   .history-box {
     display: inline-block;
 
-    .undo-button, .redo-button {
+    .undo-button,
+    .redo-button {
       width: 36px;
       height: 36px;
     }
   }
 }
 </style>
-
