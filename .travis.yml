@@ -1,15 +1,29 @@
 language: node_js
-
 node_js:
   - 10
-
 cache: yarn
-
 script:
-  - "yarn storybook:serve &"
-  - "yarn lint"
-  - "yarn test:unit --coverage"
-  - "yarn storybook:build"
-  - "yarn test:pupp"
-  - "yarn build"
-  - "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+  - yarn storybook:serve &
+  - yarn lint
+  - yarn test:unit --coverage
+  - yarn storybook:build
+  - yarn test:pupp
+  - yarn build
+  - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+
+before_deploy:
+  - npm version patch
+  - yarn build
+deploy:
+  provider: firebase
+  token:
+    secure: "avucG9bw4rBiw+OMTwHBaLvskWH/Dg/8uUutacLNs13eOhPYJuesnaBBY6vn4kon3J6u0yHm7HqQcvEmaBKIqgZREh6plgeZL8ud389VcR07HZQSmPqMLClQAGUuweSNelqCqm5xPhiGYvAD/AaF4ueGurit/UlXPagDPQQ0AZM8YwGAd+IcoGSkLMuNPO0mw6NpqII55Fyz0JGYYEQvWKGF87qWGGYb2un+0ebA7ZxFEIuG8x2io5Vx7gnQ1YyZpbf57YJq97pkfvzgQ1mf7wzFPjanlkpz52mBF4DotOJHf2zsjCc0610e5+KC7RnXiV+X+J8NJb//SOcJkVGZjzKc30Iy3vw4xQSXArjrBGTuBrUrgkR5LVBX7V5Ph+ANSD31KSTbfjuug70LWG/WFkqLaCpOa7YcVIvbfat4QwaT5cdcRTayQ3e8xvKi9Rmu70HJP07m4rSKcE9J2RYJblmPDru448oH7gabRiz8n5kHUreiu5NWpyS3y44M4yuNUvtqMX0xpiRyYVUfLg+b/AWPYX/CVsH2svj6+aA7tcVw16aysCZ44gGGAlLsYsQLaNlxKEs56BvcfzyZvY8UtqG9/tSvBiWnJs1XZO505eWTvJEyRTTqQz6pt/sXpQ2xolPdx5EkPhwgfTNrt3YV246j5RQgLxc+EK21URzOxfc="
+  on:
+    branch: master
+after_deploy:
+  - git push --quiet https://${GITHUB_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git --tags
+
+env:
+  global:
+    secure: "bvZWKuwBvpUqMoMMTkTtssQsAbq/pLX6EkMS2IHFylQvUCgltnEvYkMEKFbkII3B58yawxmAoKavaHX4uxSUwEyOnuc4nOXM4PatQLad3rIqoZ3aCudAf84dzZzHkX3nhUyPPYu0aWlFIu2ywz0TWUJaZ0dUHD+3kdrLDRdf5XKurKWbHEEiJ0hOk7lfNlb/iZD5bb3j1LjUi+GAczay6UcrYw/PJbThPqz0OUskr5Gsjk8nPqZ4rFXmMW9GFQS1RDjd5TUbS8Bgh2+JKyCddKApVBrtRAyX0XrOpr7yXPHSIIcshxhtuKTiYwnIhs9SwhSQLwiUJzoPLXWFJmXQ9EY0G1FkGA65vdbcR7mV2K/+fvAll/+CiGt+HXO3jZcqboBDGqnUi0mJzDdJzA5TVNuXBQTSHvX+IPsFrv+BsDsqv5VXLV+2Yx2E2SGb1XssI4dbMgZsT/fkxu31/utv/wyK9GLMjjLOWLOJjWzfnU6HxRYwwOGeZZUAO/m49zust16SHiAlIBtBJ3YIE+8DEyYyvrLgPaWgFrXMTSRbsGUsu6MkWjIDVWb5BK6eD8vzDw5MvYbhI1JNl9IbLZxaMj5giaw7l4BWHURnL50SF2WldjQf2bGvonDjb0btY98HMh5DtMy7dcVcgu5kOl//56uJMmleDmD5r2zVB9PEeMw="
+
