@@ -12,6 +12,9 @@ script:
 before_deploy:
   - npm version patch
   - yarn build
+  - cd functions
+  - npm install
+  - cd ../
 deploy:
   skip_cleanup: true
   provider: firebase
