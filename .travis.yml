@@ -3,7 +3,7 @@ node_js:
   - 10
 cache: yarn
 script:
-  - yarn lint
+  - yarn lint --no-fix
   - yarn test:unit --coverage
   - yarn storybook:build
   - yarn build

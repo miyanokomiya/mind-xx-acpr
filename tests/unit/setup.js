@@ -7,7 +7,7 @@ import '@/utils/track'
 
 Vue.config.productionTip = false
 Vue.use(Vuetify)
-const vuetify =  new Vuetify({
+const vuetify = new Vuetify({
   icons: {
     iconfont: 'mdi',
   },
