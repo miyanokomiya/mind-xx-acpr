@@ -1,6 +1,7 @@
 import Vue from 'vue'
-const isMobile = require('ismobilejs')
+import ismobilejs from 'ismobilejs'
 
+export const isMobile = ismobilejs()
 const plugin = {
   install: function(Vue) {
     Vue.util.defineReactive(Vue.prototype, '$isMobile', isMobile)

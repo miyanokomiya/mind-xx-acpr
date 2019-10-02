@@ -8,7 +8,7 @@
     "storybook:build": "vue-cli-service storybook:build -c config/storybook -o dist_storybook",
     "storybook:serve": "vue-cli-service storybook:serve -p 6006 -c config/storybook",
     "test:pupp": "yarn test:unit -c tests/puppeteer/jest.conf.js",
-    "test:unit": "vue-cli-service test:unit"
+    "test:unit": "vue-cli-service test:unit -c tests/unit/jest.config.js"
   },
   "dependencies": {
     "core-js": "^3.2.1",
