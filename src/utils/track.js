@@ -4,7 +4,7 @@ console.log(`app version: ${process.env.VUE_APP_VERSION}`)
 
 let _rollbarConfig = {
   accessToken: 'e04b82a2f3814043855eba2262729877',
-  captureUncaught: process.env.VUE_APP_PRODUCTION,
+  captureUncaught: !!process.env.VUE_APP_PRODUCTION,
   payload: {
     environment: 'production',
   },
