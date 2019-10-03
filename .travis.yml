@@ -11,8 +11,7 @@ script:
 
 before_deploy:
   - npm version patch
-  - '[ "$TRAVIS_BRANCH" == "master" ] && yarn build'
-  - '[ "$TRAVIS_BRANCH" == "staging" ] && yarn build:staging'
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then yarn build; else yarn build:staging; fi
   - cd functions
   - npm install
   - cd ../
