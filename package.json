@@ -4,6 +4,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "build:staging": "vue-cli-service build --mode staging",
     "lint": "vue-cli-service lint",
     "storybook:build": "vue-cli-service storybook:build -c config/storybook -o dist_storybook",
     "storybook:serve": "vue-cli-service storybook:serve -p 6006 -c config/storybook",
