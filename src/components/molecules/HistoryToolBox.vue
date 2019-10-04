@@ -42,6 +42,9 @@ export default {}
       height: 32px;
       margin: 0 0;
     }
+    .undo-button {
+      margin-right: 0.5rem;
+    }
   }
 }
 .history-tool-wrapper.mobile {
