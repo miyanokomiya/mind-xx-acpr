@@ -1,33 +1,51 @@
-[![Build Status](https://travis-ci.org/miyanokomiya/mind-xx-acpr.svg?branch=master)](https://travis-ci.org/miyanokomiya/mind-xx-acpr)
-[![Coverage Status](https://coveralls.io/repos/github/miyanokomiya/mind-xx-acpr/badge.svg?branch=master)](https://coveralls.io/github/miyanokomiya/mind-xx-acpr?branch=master)
+[![Build Status](https://travis-ci.org/miyanokomiya/mind-xx-acpr.svg?branch=develop)](https://travis-ci.org/miyanokomiya/mind-xx-acpr)
+[![Coverage Status](https://coveralls.io/repos/github/miyanokomiya/mind-xx-acpr/badge.svg?branch=develop)](https://coveralls.io/github/miyanokomiya/mind-xx-acpr?branch=develop)
 
 # mind-xx-acpr
 
-> Mind XX ACPR project
+Mind XX ACPR project
 
+production  
 https://mind-xx-acpr.firebaseapp.com/
 
-## Build Setup
+staging  
+https://mind-xx-acpr-stg.firebaseapp.com/
 
+## Install dependencies
 ```bash
-# install dependencies
 yarn install
+```
 
-# serve
+## Run dev-server connecting to staging database
+```bash
 yarn serve
+```
 
-# build for production with minification
-yarn build
+## Run storybook server
+```bash
+yarn storybook:serve
+```
 
-# storybook
-yarn serve
-
-# lint
+## Lint and fix
+```bash
 yarn lint
+```
 
-# run jest
+## Run jest
+```bash
 yarn test:unit
+```
 
-# run puppeteer
+## Run puppeteer
+Run storybook server and
+```bash
 yarn test:pupp
 ```
+
+## Deploy staging
+```bash
+git push -f origin staging
+```
+
+## Deploy production
+Create PR targeting master branch and merge it.
