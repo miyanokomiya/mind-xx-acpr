@@ -90,7 +90,7 @@ const clearNodes = async ({ page }) => {
   await selectNode({ page, $node: $nodes[0], clear: true })
 }
 
-describe('Edit nodes', async () => {
+describe('Edit nodes', () => {
   let browser, page
   beforeEach(async () => {
     browser = await puppeteer.launch({ headless: process.env.CI, slowMo: 20 })
@@ -104,7 +104,7 @@ describe('Edit nodes', async () => {
     await browser.close()
   })
 
-  test('Edit text of the root node, then try to delete it.', async () => {
+  it('Edit text of the root node, then try to delete it.', async () => {
     let $nodes = await getNodes({ page })
     expect($nodes.length).toBe(1)
     await selectNode({ page, $node: $nodes[0] })
@@ -133,7 +133,7 @@ describe('Edit nodes', async () => {
     expect(textContent).toBe('-XXACPR-')
   })
 
-  test('Create child node, then edit text of it, then delete it.', async () => {
+  it('Create child node, then edit text of it, then delete it.', async () => {
     // show buttons
     let $nodes = await getNodes({ page })
     await selectNode({ page, $node: $nodes[0] })
@@ -165,7 +165,7 @@ describe('Edit nodes', async () => {
     expect($nodes.length).toBe(1)
   })
 
-  test('Create child node, then create a brother of it, then create child of it.', async () => {
+  it('Create child node, then create a brother of it, then create child of it.', async () => {
     // show buttons
     let $nodes = await getNodes({ page })
     await selectNode({ page, $node: $nodes[0] })
@@ -233,7 +233,7 @@ describe('Edit nodes', async () => {
     expect($nodes.length).toBe(4)
   })
 
-  test('Add a comment', async () => {
+  it('Add a comment', async () => {
     // select a node
     let $nodes = await getNodes({ page })
     await selectNode({ page, $node: $nodes[0] })

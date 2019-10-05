@@ -39,7 +39,7 @@
               </dl>
               <dl>
                 <dt>Updated:</dt>
-                <dd>{{ dateFormat(file.updated) }}</dd>
+                <dd>{{ dateTimeFormat(file.updated) }}</dd>
               </dl>
             </div>
             <div class="button-box">
@@ -97,6 +97,8 @@
 </template>
 
 <script>
+import { dateTimeFormat } from '@/utils/helper'
+
 export default {
   props: {
     files: {
@@ -213,15 +215,8 @@ export default {
         this.$emit('cloneFile', { fileKey: key })
       }
     },
-    dateFormat(ms) {
-      const date = new Date(ms)
-      const yyyy = date.getFullYear()
-      const mm = `0${date.getMonth() + 1}`.slice(-2)
-      const dd = `0${date.getDate()}`.slice(-2)
-      const hh = `0${date.getHours()}`.slice(-2)
-      const mi = `0${date.getMinutes()}`.slice(-2)
-      const se = `0${date.getSeconds()}`.slice(-2)
-      return `${yyyy}/${mm}/${dd} ${hh}:${mi}:${se}`
+    dateTimeFormat(ms) {
+      return dateTimeFormat(new Date(ms))
     },
   },
 }

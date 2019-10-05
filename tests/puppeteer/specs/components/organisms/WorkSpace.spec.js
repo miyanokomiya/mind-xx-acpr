@@ -34,7 +34,7 @@ describe('Map page', () => {
     await browser.close()
   })
 
-  test('Create new file, edit its name, then delete it', async () => {
+  it('Create new file, edit its name, then delete it', async () => {
     // create new file
     let $createButton = await getCreateButton({ page })
     let $files = await getFiles({ page })
@@ -75,7 +75,7 @@ describe('Map page', () => {
     expect($files.length).toBe(fileCount - 1)
   })
 
-  test('Clone a file', async () => {
+  it('Clone a file', async () => {
     // clone a file
     let $files = await getFiles({ page })
     let fileCount = $files.length

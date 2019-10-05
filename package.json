@@ -9,11 +9,12 @@
     "storybook:build": "vue-cli-service storybook:build -c config/storybook -o dist_storybook",
     "storybook:serve": "vue-cli-service storybook:serve -p 6006 -c config/storybook",
     "test:pupp": "yarn test:unit -c tests/puppeteer/jest.conf.js",
-    "test:unit": "vue-cli-service test:unit -c tests/unit/jest.config.js",
+    "test:unit": "TZ=Asia/Tokyo vue-cli-service test:unit -c tests/unit/jest.config.js",
     "test:unit:watch": "yarn test:unit --watch --coverage"
   },
   "dependencies": {
     "core-js": "^3.2.1",
+    "date-fns": "^2.4.1",
     "firebase": "^7.1.0",
     "ismobilejs": "^1.0.3",
     "register-service-worker": "^1.6.2",
