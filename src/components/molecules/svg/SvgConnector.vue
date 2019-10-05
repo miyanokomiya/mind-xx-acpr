@@ -1,9 +1,34 @@
-<template>
-  <path stroke="black" stroke-width="1" fill="none" :d="d" />
-</template>
-
 <script>
+function opposite({ sx, ex }) {
+  return sx > ex
+}
+
+function qx({ sx, ex }) {
+  if (opposite({ sx, ex })) {
+    return (sx * 3) / 10 + (ex * 7) / 10
+  } else {
+    return (sx * 7) / 10 + (ex * 3) / 10
+  }
+}
+
+function qy({ sy, ey }) {
+  return (sy * 1) / 10 + (ey * 9) / 10
+}
+
+function d({ sx, sy, ex, ey, curve }) {
+  if (curve) {
+    return `M ${sx} ${sy} Q ${qx({ sx, ex })} ${qy({ sy, ey })} ${ex} ${ey}`
+  } else {
+    if (opposite({ sx, ex })) {
+      return `M ${sx} ${sy} L ${sx - 20} ${sy} L ${sx - 20} ${ey} L ${ex} ${ey}`
+    } else {
+      return `M ${sx} ${sy} L ${sx + 20} ${sy} L ${sx + 20} ${ey} L ${ex} ${ey}`
+    }
+  }
+}
+
 export default {
+  functional: true,
   props: {
     sx: {
       type: Number,
@@ -26,40 +51,15 @@ export default {
       default: false,
     },
   },
-  computed: {
-    qx() {
-      if (this.opposite) {
-        return (this.sx * 3) / 10 + (this.ex * 7) / 10
-      } else {
-        return (this.sx * 7) / 10 + (this.ex * 3) / 10
-      }
-    },
-    qy() {
-      return (this.sy * 1) / 10 + (this.ey * 9) / 10
-    },
-    cx() {
-      return (this.sx + this.ex) / 2
-    },
-    cy() {
-      return (this.sy + this.ey) / 2
-    },
-    d() {
-      if (this.curve) {
-        return `M ${this.sx} ${this.sy} Q ${this.qx} ${this.qy} ${this.ex} ${this.ey}`
-      } else {
-        if (this.opposite) {
-          return `M ${this.sx} ${this.sy} L ${this.sx - 20} ${this.sy} L ${this.sx -
-            20} ${this.ey} L ${this.ex} ${this.ey}`
-        } else {
-          return `M ${this.sx} ${this.sy} L ${this.sx + 20} ${this.sy} L ${this.sx +
-            20} ${this.ey} L ${this.ex} ${this.ey}`
-        }
-      }
-    },
-    opposite() {
-      return this.sx > this.ex
-    },
+  render(h, { props }) {
+    return h('path', {
+      attrs: {
+        stroke: 'black',
+        'stroke-width': 1,
+        fill: 'none',
+        d: d(props),
+      },
+    })
   },
-  methods: {},
 }
 </script>
