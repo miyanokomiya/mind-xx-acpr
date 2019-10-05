@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "mind-xx-acpr"
+    "production": "mind-xx-acpr",
+    "staging": "mind-xx-acpr-stg"
   }
 }

@@ -152,6 +152,10 @@ export default {
   [actionTypes.LOAD_FILES](context) {
     context.commit(mutationTypes.CLEAR_FILES)
 
+    if (!firebase.auth().currentUser) {
+      return
+    }
+
     const uid = firebase.auth().currentUser.uid
     firebase
       .database()

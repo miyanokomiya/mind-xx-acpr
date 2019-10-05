@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/atoms/svg/SvgText.vue snapshot does not have link 1`] = `
+<text
+  fill="red"
+  font-size="10"
+  font-weight="20"
+  text-decoration="prop-textDecoration"
+  x="1"
+  y="2"
+>
+  
+    prop-text
+  
+</text>
+`;
+
+exports[`components/atoms/svg/SvgText.vue snapshot has link 1`] = `
+<text
+  fill="black"
+  font-size="10"
+  font-weight="500"
+  text-decoration=""
+  x="0"
+  y="0"
+>
+  <a
+    style="cursor: pointer; text-shadow: 1px 1px 0 blue;"
+    target="_blank"
+    xlink:href="http://example.com"
+  >
+    
+    http://example.com
+  
+  </a>
+</text>
+`;

@@ -12,7 +12,7 @@
           <div>{{ reauth ? 'and retry to continue' : '' }}</div>
           <br />
           <v-btn color="white" @click="authGoogle">
-            <img class="image" src="../..//assets/images/googlelogo_color_90x40dp.png" />
+            <img class="image" src="../../assets/images/googlelogo_color_90x40dp.png" />
           </v-btn>
         </v-card-text>
       </v-card>

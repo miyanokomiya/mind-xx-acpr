@@ -142,5 +142,6 @@ export default {
 <style lang="scss" scoped>
 .map-menu {
   display: inherit;
+  width: 100px;
 }
 </style>

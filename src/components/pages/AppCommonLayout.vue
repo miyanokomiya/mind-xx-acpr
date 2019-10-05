@@ -63,8 +63,7 @@
       />
     </div>
     <AuthDialog
-      v-if="!authorityLoading && (_needAuth && !authenticated)"
-      :value="true"
+      :value="!authorityLoading && (_needAuth && !authenticated)"
       :persistent="needAuth"
       @input="val => (needAuthLocal = val)"
     />

@@ -39,7 +39,7 @@
               </dl>
               <dl>
                 <dt>Updated:</dt>
-                <dd>{{ dateFormat(file.updated) }}</dd>
+                <dd>{{ dateTimeFormat(file.updated) }}</dd>
               </dl>
             </div>
             <div class="button-box">
@@ -49,44 +49,42 @@
               >
                 shared
               </v-chip>
-              <div class="buttons">
-                <v-edit-dialog lazy :class="{ hidden: !canWrite[file.key] }">
-                  <v-btn dark fab small color="blue" class="file-button edit-name">
-                    <v-icon>textsms</v-icon>
-                  </v-btn>
-                  <v-text-field
-                    single-line
-                    counter
-                    slot="input"
-                    label="Edit"
-                    :value="file.name"
-                    @change="val => changeName({ key: file.key, name: val })"
-                  ></v-text-field>
-                </v-edit-dialog>
-                <v-btn
-                  dark
-                  fab
-                  small
-                  outlined
-                  color="black"
-                  class="file-button"
-                  @click="cloneFile(file.key)"
-                >
-                  <v-icon>content_copy</v-icon>
+              <v-edit-dialog lazy :class="{ hidden: !canWrite[file.key] }">
+                <v-btn dark fab small color="blue" class="file-button edit-name">
+                  <v-icon>textsms</v-icon>
                 </v-btn>
-                <v-btn
-                  dark
-                  fab
-                  small
-                  outlined
-                  color="black"
-                  class="file-button"
-                  :class="{ hidden: sharedFileAuthorities[file.key] }"
-                  @click="deleteFile(file.key)"
-                >
-                  <v-icon>delete</v-icon>
-                </v-btn>
-              </div>
+                <v-text-field
+                  single-line
+                  counter
+                  slot="input"
+                  label="Edit"
+                  :value="file.name"
+                  @change="val => changeName({ key: file.key, name: val })"
+                ></v-text-field>
+              </v-edit-dialog>
+              <v-btn
+                dark
+                fab
+                small
+                outlined
+                color="black"
+                class="file-button"
+                @click="cloneFile(file.key)"
+              >
+                <v-icon>content_copy</v-icon>
+              </v-btn>
+              <v-btn
+                dark
+                fab
+                small
+                outlined
+                color="black"
+                class="file-button"
+                :class="{ hidden: sharedFileAuthorities[file.key] }"
+                @click="deleteFile(file.key)"
+              >
+                <v-icon>delete</v-icon>
+              </v-btn>
             </div>
           </v-card-title>
         </v-card>
@@ -99,15 +97,9 @@
 </template>
 
 <script>
+import { dateTimeFormat } from '@/utils/helper'
+
 export default {
-  data: () => ({
-    pagination: {
-      sortBy: 'updated',
-      descending: true,
-    },
-    snackbar: false,
-    dataKind: 'all',
-  }),
   props: {
     files: {
       type: Object,
@@ -130,21 +122,15 @@ export default {
       default: () => ({}),
     },
   },
-  computed: {
-    headers() {
-      return [
-        {
-          text: 'Name',
-          align: 'left',
-          value: 'name',
-        },
-        { text: 'Count', value: 'nodeCount' },
-        { text: 'Updated', value: 'updated' },
-        { text: 'Created', value: 'created' },
-        { text: '', value: '', sortable: false },
-        { text: '', value: '', sortable: false },
-      ]
+  data: () => ({
+    pagination: {
+      sortBy: 'updated',
+      descending: true,
     },
+    snackbar: false,
+    dataKind: 'all',
+  }),
+  computed: {
     currentFiles() {
       if (this.dataKind === 'shared') {
         return this.sharedFiles
@@ -178,22 +164,17 @@ export default {
       const uid = this.user.uid
       const ret = Object.keys(this.currentFileAuthorities).reduce((p, fileKey) => {
         const fileAuthority = this.currentFileAuthorities[fileKey]
-        if (fileAuthority) {
-          const authority = fileAuthority.users[uid]
-          if (authority) {
-            p[fileKey] = authority.write
-          } else {
-            if (fileAuthority.public) {
-              // this file is public
-              p[fileKey] = fileAuthority.public.write
-            } else {
-              // no authority
-              p[fileKey] = false
-            }
-          }
+        const authority = fileAuthority.users[uid]
+        if (authority) {
+          p[fileKey] = authority.write
         } else {
-          // no authority
-          p[fileKey] = false
+          if (fileAuthority.public) {
+            // this file is public
+            p[fileKey] = fileAuthority.public.write
+          } else {
+            // no authority
+            p[fileKey] = false
+          }
         }
         return p
       }, {})
@@ -234,15 +215,8 @@ export default {
         this.$emit('cloneFile', { fileKey: key })
       }
     },
-    dateFormat(ms) {
-      const date = new Date(ms)
-      const yyyy = date.getFullYear()
-      const mm = `0${date.getMonth() + 1}`.slice(-2)
-      const dd = `0${date.getDate()}`.slice(-2)
-      const hh = `0${date.getHours()}`.slice(-2)
-      const mi = `0${date.getMinutes()}`.slice(-2)
-      const se = `0${date.getSeconds()}`.slice(-2)
-      return `${yyyy}/${mm}/${dd} ${hh}:${mi}:${se}`
+    dateTimeFormat(ms) {
+      return dateTimeFormat(new Date(ms))
     },
   },
 }
@@ -272,7 +246,7 @@ export default {
 
     .file-name {
       word-wrap: break-word;
-      font-size: 1.3em;
+      font-size: 0.9em;
       font-weight: 500;
     }
     .content-box {
@@ -295,18 +269,20 @@ export default {
       padding-right: 6px;
       text-align: left;
     }
+    .button-box {
+      padding: 4px 14px 4px 0;
+      display: flex;
+      align-items: center;
+    }
     .shared-tag {
       height: 24px;
-    }
-    .buttons {
-      display: flex;
-      margin-bottom: 4px;
+      margin-right: 6px;
     }
     dl {
       display: flex;
       vertical-align: bottom;
       margin-left: 0.5em;
-      font-size: 0.9em;
+      font-size: 0.7em;
     }
     dt {
       margin-left: 1em;

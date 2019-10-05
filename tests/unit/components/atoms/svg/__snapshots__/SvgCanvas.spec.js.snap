@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/atoms/svg/SvgCanvas.vue snapshot default 1`] = `
+<div
+  class="svg-canvas-wrapper"
+  style="width: 10px; height: 20px;"
+>
+  <svg
+    font-family="sans-serif"
+    viewBox="1 2 0.1 0.2"
+  >
+     
+    <!---->
+  </svg>
+</div>
+`;
+
+exports[`components/atoms/svg/SvgCanvas.vue snapshot with selecting rectangle 1`] = `
+<div
+  class="svg-canvas-wrapper"
+  style="width: 10px; height: 20px;"
+>
+  <svg
+    font-family="sans-serif"
+    viewBox="1 2 0.1 0.2"
+  >
+     
+    <rect
+      fill="none"
+      fill-opacity="1"
+      height="0.3599999999999999"
+      rx="3"
+      ry="3"
+      stroke="blue"
+      stroke-dasharray="5"
+      stroke-dashoffset="5"
+      stroke-width="1"
+      width="0.27"
+      x="1.03"
+      y="2.04"
+    />
+  </svg>
+</div>
+`;

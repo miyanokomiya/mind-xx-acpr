@@ -7,9 +7,8 @@
     :font-weight="fontWeight"
     :fill="fill"
     :text-decoration="textDecoration"
-    @click="isLink ? moveLink : ''"
+    @click="moveLink"
   >
-    {{ isLink ? '' : text }}
     <a
       v-if="isLink"
       :xlink:href="text"
@@ -18,10 +17,15 @@
     >
       {{ text }}
     </a>
+    <template v-else>
+      {{ text }}
+    </template>
   </text>
 </template>
 
 <script>
+const hpptReg = new RegExp('^https?://')
+
 export default {
   props: {
     text: {
@@ -55,7 +59,7 @@ export default {
   },
   computed: {
     isLink() {
-      return this.text.indexOf('https://') === 0 || this.text.indexOf('http://') === 0
+      return hpptReg.test(this.text)
     },
   },
   methods: {
@@ -63,6 +67,7 @@ export default {
       return this.$refs.text.getBBox()
     },
     moveLink() {
+      if (!this.isLink) return
       window.open(this.text)
     },
   },

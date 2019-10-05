@@ -1,0 +1,925 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/organisms/WorkSpace.vue snapshot default 1`] = `
+<div
+  class="work-space-component"
+>
+  <div
+    class="v-card v-sheet theme--light"
+  >
+    <div
+      class="v-card__title"
+    >
+      <div
+        class="flex xs6"
+      >
+        <div
+          class="v-input data-kind-select v-input--hide-details v-input--is-label-active v-input--is-dirty theme--light v-text-field v-text-field--single-line v-select"
+        >
+          <div
+            class="v-input__control"
+          >
+            <div
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              aria-owns="list-4"
+              class="v-input__slot"
+              role="button"
+            >
+              <div
+                class="v-select__slot"
+              >
+                <div
+                  class="v-select__selections"
+                >
+                  <div
+                    class="v-select__selection v-select__selection--comma"
+                  >
+                    All files
+                  </div>
+                  <input
+                    aria-readonly="true"
+                    bottom=""
+                    id="input-4"
+                    readonly="readonly"
+                    type="text"
+                  />
+                </div>
+                <div
+                  class="v-input__append-inner"
+                >
+                  <div
+                    class="v-input__icon v-input__icon--append"
+                  >
+                    <i
+                      aria-hidden="true"
+                      class="v-icon notranslate mdi mdi-menu-down theme--light"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="v-menu"
+              >
+                <div
+                  class="v-menu__content theme--light "
+                  style="max-height: 304px; min-width: 0px; max-width: auto; top: 12px; left: 0px; transform-origin: top left; z-index: 0; display: none;"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+       
+      <div
+        class="header-buttons"
+      >
+        <button
+          class="v-btn v-btn--contained v-btn--fab v-btn--round theme--dark v-size--small green"
+          type="button"
+        >
+          <span
+            class="v-btn__content"
+          >
+            <i
+              aria-hidden="true"
+              class="v-icon notranslate material-icons theme--dark"
+            >
+              add
+            </i>
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+   
+  <div
+    class="v-card v-sheet theme--light"
+  >
+    <div
+      class="header-tools"
+    />
+     
+    <div
+      class="flex xs-12"
+    >
+      <div
+        class="file-card v-card v-sheet theme--light"
+      >
+        <div
+          class="v-card__title card-title"
+        >
+          <div
+            class="content-box"
+          >
+            <p
+              class="file-name mb-0"
+            >
+              file_b
+            </p>
+             
+            <dl>
+              <dt>
+                Nodes:
+              </dt>
+               
+              <dd>
+                2
+              </dd>
+            </dl>
+             
+            <dl>
+              <dt>
+                Updated:
+              </dt>
+               
+              <dd>
+                1970/01/01 09:00:00
+              </dd>
+            </dl>
+          </div>
+           
+          <div
+            class="button-box"
+          >
+            <span
+              class="shared-tag v-chip v-chip--no-color theme--light v-size--default"
+            >
+              <span
+                class="v-chip__content"
+              >
+                
+              shared
+            
+              </span>
+            </span>
+             
+            <div
+              class="v-menu v-small-dialog theme--light hidden"
+              lazy=""
+            >
+              <div
+                class="v-small-dialog__activator"
+              >
+                <span
+                  class="v-small-dialog__activator__content"
+                >
+                  <button
+                    class="file-button edit-name v-btn v-btn--contained v-btn--fab v-btn--round theme--dark v-size--small blue"
+                    type="button"
+                  >
+                    <span
+                      class="v-btn__content"
+                    >
+                      <i
+                        aria-hidden="true"
+                        class="v-icon notranslate material-icons theme--dark"
+                      >
+                        textsms
+                      </i>
+                    </span>
+                  </button>
+                   
+                </span>
+              </div>
+              <div
+                class="v-menu__content theme--light v-small-dialog__menu-content"
+                role="menu"
+                style="max-height: auto; min-width: 0px; max-width: auto; top: 12px; left: 0px; transform-origin: top right; z-index: 0; display: none;"
+              />
+            </div>
+             
+            <button
+              class="file-button v-btn v-btn--depressed v-btn--fab v-btn--flat v-btn--outlined v-btn--round theme--dark v-size--small black--text"
+              type="button"
+            >
+              <span
+                class="v-btn__content"
+              >
+                <i
+                  aria-hidden="true"
+                  class="v-icon notranslate material-icons theme--dark"
+                >
+                  content_copy
+                </i>
+              </span>
+            </button>
+             
+            <button
+              class="file-button v-btn v-btn--depressed v-btn--fab v-btn--flat v-btn--outlined v-btn--round theme--dark v-size--small black--text hidden"
+              type="button"
+            >
+              <span
+                class="v-btn__content"
+              >
+                <i
+                  aria-hidden="true"
+                  class="v-icon notranslate material-icons theme--dark"
+                >
+                  delete
+                </i>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="flex xs-12"
+    >
+      <div
+        class="file-card v-card v-sheet theme--light"
+      >
+        <div
+          class="v-card__title card-title"
+        >
+          <div
+            class="content-box"
+          >
+            <p
+              class="file-name mb-0"
+            >
+              file_a
+            </p>
+             
+            <dl>
+              <dt>
+                Nodes:
+              </dt>
+               
+              <dd>
+                1
+              </dd>
+            </dl>
+             
+            <dl>
+              <dt>
+                Updated:
+              </dt>
+               
+              <dd>
+                1970/01/01 09:00:00
+              </dd>
+            </dl>
+          </div>
+           
+          <div
+            class="button-box"
+          >
+            <span
+              class="shared-tag v-chip v-chip--no-color theme--light v-size--default hidden"
+            >
+              <span
+                class="v-chip__content"
+              >
+                
+              shared
+            
+              </span>
+            </span>
+             
+            <div
+              class="v-menu v-small-dialog theme--light"
+              lazy=""
+            >
+              <div
+                class="v-small-dialog__activator"
+              >
+                <span
+                  class="v-small-dialog__activator__content"
+                >
+                  <button
+                    class="file-button edit-name v-btn v-btn--contained v-btn--fab v-btn--round theme--dark v-size--small blue"
+                    type="button"
+                  >
+                    <span
+                      class="v-btn__content"
+                    >
+                      <i
+                        aria-hidden="true"
+                        class="v-icon notranslate material-icons theme--dark"
+                      >
+                        textsms
+                      </i>
+                    </span>
+                  </button>
+                   
+                </span>
+              </div>
+              <div
+                class="v-menu__content theme--light v-small-dialog__menu-content"
+                role="menu"
+                style="max-height: auto; min-width: 0px; max-width: auto; top: 12px; left: 0px; transform-origin: top right; z-index: 0; display: none;"
+              />
+            </div>
+             
+            <button
+              class="file-button v-btn v-btn--depressed v-btn--fab v-btn--flat v-btn--outlined v-btn--round theme--dark v-size--small black--text"
+              type="button"
+            >
+              <span
+                class="v-btn__content"
+              >
+                <i
+                  aria-hidden="true"
+                  class="v-icon notranslate material-icons theme--dark"
+                >
+                  content_copy
+                </i>
+              </span>
+            </button>
+             
+            <button
+              class="file-button v-btn v-btn--depressed v-btn--fab v-btn--flat v-btn--outlined v-btn--round theme--dark v-size--small black--text"
+              type="button"
+            >
+              <span
+                class="v-btn__content"
+              >
+                <i
+                  aria-hidden="true"
+                  class="v-icon notranslate material-icons theme--dark"
+                >
+                  delete
+                </i>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="flex xs-12"
+    >
+      <div
+        class="file-card v-card v-sheet theme--light"
+      >
+        <div
+          class="v-card__title card-title"
+        >
+          <div
+            class="content-box"
+          >
+            <p
+              class="file-name mb-0"
+            >
+              file_c
+            </p>
+             
+            <dl>
+              <dt>
+                Nodes:
+              </dt>
+               
+              <dd>
+                2
+              </dd>
+            </dl>
+             
+            <dl>
+              <dt>
+                Updated:
+              </dt>
+               
+              <dd>
+                1970/01/01 09:00:00
+              </dd>
+            </dl>
+          </div>
+           
+          <div
+            class="button-box"
+          >
+            <span
+              class="shared-tag v-chip v-chip--no-color theme--light v-size--default hidden"
+            >
+              <span
+                class="v-chip__content"
+              >
+                
+              shared
+            
+              </span>
+            </span>
+             
+            <div
+              class="v-menu v-small-dialog theme--light hidden"
+              lazy=""
+            >
+              <div
+                class="v-small-dialog__activator"
+              >
+                <span
+                  class="v-small-dialog__activator__content"
+                >
+                  <button
+                    class="file-button edit-name v-btn v-btn--contained v-btn--fab v-btn--round theme--dark v-size--small blue"
+                    type="button"
+                  >
+                    <span
+                      class="v-btn__content"
+                    >
+                      <i
+                        aria-hidden="true"
+                        class="v-icon notranslate material-icons theme--dark"
+                      >
+                        textsms
+                      </i>
+                    </span>
+                  </button>
+                   
+                </span>
+              </div>
+              <div
+                class="v-menu__content theme--light v-small-dialog__menu-content"
+                role="menu"
+                style="max-height: auto; min-width: 0px; max-width: auto; top: 12px; left: 0px; transform-origin: top right; z-index: 0; display: none;"
+              />
+            </div>
+             
+            <button
+              class="file-button v-btn v-btn--depressed v-btn--fab v-btn--flat v-btn--outlined v-btn--round theme--dark v-size--small black--text"
+              type="button"
+            >
+              <span
+                class="v-btn__content"
+              >
+                <i
+                  aria-hidden="true"
+                  class="v-icon notranslate material-icons theme--dark"
+                >
+                  content_copy
+                </i>
+              </span>
+            </button>
+             
+            <button
+              class="file-button v-btn v-btn--depressed v-btn--fab v-btn--flat v-btn--outlined v-btn--round theme--dark v-size--small black--text"
+              type="button"
+            >
+              <span
+                class="v-btn__content"
+              >
+                <i
+                  aria-hidden="true"
+                  class="v-icon notranslate material-icons theme--dark"
+                >
+                  delete
+                </i>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+   
+  <!---->
+</div>
+`;
+
+exports[`components/organisms/WorkSpace.vue snapshot shared 1`] = `
+<div
+  class="work-space-component"
+>
+  <div
+    class="v-card v-sheet theme--light"
+  >
+    <div
+      class="v-card__title"
+    >
+      <div
+        class="flex xs6"
+      >
+        <div
+          class="v-input data-kind-select v-input--hide-details v-input--is-label-active v-input--is-dirty theme--light v-text-field v-text-field--single-line v-select"
+        >
+          <div
+            class="v-input__control"
+          >
+            <div
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              aria-owns="list-54"
+              class="v-input__slot"
+              role="button"
+            >
+              <div
+                class="v-select__slot"
+              >
+                <div
+                  class="v-select__selections"
+                >
+                  <div
+                    class="v-select__selection v-select__selection--comma"
+                  >
+                    Shared files
+                  </div>
+                  <input
+                    aria-readonly="true"
+                    bottom=""
+                    id="input-54"
+                    readonly="readonly"
+                    type="text"
+                  />
+                </div>
+                <div
+                  class="v-input__append-inner"
+                >
+                  <div
+                    class="v-input__icon v-input__icon--append"
+                  >
+                    <i
+                      aria-hidden="true"
+                      class="v-icon notranslate mdi mdi-menu-down theme--light"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="v-menu"
+              >
+                <div
+                  class="v-menu__content theme--light "
+                  style="max-height: 304px; min-width: 0px; max-width: auto; top: 12px; left: 0px; transform-origin: top left; z-index: 0; display: none;"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+       
+      <div
+        class="header-buttons"
+      >
+        <!---->
+      </div>
+    </div>
+  </div>
+   
+  <div
+    class="v-card v-sheet theme--light"
+  >
+    <div
+      class="header-tools"
+    />
+     
+    <div
+      class="flex xs-12"
+    >
+      <div
+        class="file-card v-card v-sheet theme--light"
+      >
+        <div
+          class="v-card__title card-title"
+        >
+          <div
+            class="content-box"
+          >
+            <p
+              class="file-name mb-0"
+            >
+              file_b
+            </p>
+             
+            <dl>
+              <dt>
+                Nodes:
+              </dt>
+               
+              <dd>
+                2
+              </dd>
+            </dl>
+             
+            <dl>
+              <dt>
+                Updated:
+              </dt>
+               
+              <dd>
+                1970/01/01 09:00:00
+              </dd>
+            </dl>
+          </div>
+           
+          <div
+            class="button-box"
+          >
+            <span
+              class="shared-tag v-chip v-chip--no-color theme--light v-size--default"
+            >
+              <span
+                class="v-chip__content"
+              >
+                
+              shared
+            
+              </span>
+            </span>
+             
+            <div
+              class="v-menu v-small-dialog theme--light"
+              lazy=""
+            >
+              <div
+                class="v-small-dialog__activator"
+              >
+                <span
+                  class="v-small-dialog__activator__content"
+                >
+                  <button
+                    class="file-button edit-name v-btn v-btn--contained v-btn--fab v-btn--round theme--dark v-size--small blue"
+                    type="button"
+                  >
+                    <span
+                      class="v-btn__content"
+                    >
+                      <i
+                        aria-hidden="true"
+                        class="v-icon notranslate material-icons theme--dark"
+                      >
+                        textsms
+                      </i>
+                    </span>
+                  </button>
+                   
+                </span>
+              </div>
+              <div
+                class="v-menu__content theme--light v-small-dialog__menu-content"
+                role="menu"
+                style="max-height: auto; min-width: 0px; max-width: auto; top: 12px; left: 0px; transform-origin: top right; z-index: 0; display: none;"
+              />
+            </div>
+             
+            <button
+              class="file-button v-btn v-btn--depressed v-btn--fab v-btn--flat v-btn--outlined v-btn--round theme--dark v-size--small black--text"
+              type="button"
+            >
+              <span
+                class="v-btn__content"
+              >
+                <i
+                  aria-hidden="true"
+                  class="v-icon notranslate material-icons theme--dark"
+                >
+                  content_copy
+                </i>
+              </span>
+            </button>
+             
+            <button
+              class="file-button v-btn v-btn--depressed v-btn--fab v-btn--flat v-btn--outlined v-btn--round theme--dark v-size--small black--text hidden"
+              type="button"
+            >
+              <span
+                class="v-btn__content"
+              >
+                <i
+                  aria-hidden="true"
+                  class="v-icon notranslate material-icons theme--dark"
+                >
+                  delete
+                </i>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+   
+  <!---->
+</div>
+`;
+
+exports[`components/organisms/WorkSpace.vue snapshot workSpace 1`] = `
+<div
+  class="work-space-component"
+>
+  <div
+    class="v-card v-sheet theme--light"
+  >
+    <div
+      class="v-card__title"
+    >
+      <div
+        class="flex xs6"
+      >
+        <div
+          class="v-input data-kind-select v-input--hide-details v-input--is-label-active v-input--is-dirty theme--light v-text-field v-text-field--single-line v-select"
+        >
+          <div
+            class="v-input__control"
+          >
+            <div
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              aria-owns="list-92"
+              class="v-input__slot"
+              role="button"
+            >
+              <div
+                class="v-select__slot"
+              >
+                <div
+                  class="v-select__selections"
+                >
+                  <div
+                    class="v-select__selection v-select__selection--comma"
+                  >
+                    My files
+                  </div>
+                  <input
+                    aria-readonly="true"
+                    bottom=""
+                    id="input-92"
+                    readonly="readonly"
+                    type="text"
+                  />
+                </div>
+                <div
+                  class="v-input__append-inner"
+                >
+                  <div
+                    class="v-input__icon v-input__icon--append"
+                  >
+                    <i
+                      aria-hidden="true"
+                      class="v-icon notranslate mdi mdi-menu-down theme--light"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="v-menu"
+              >
+                <div
+                  class="v-menu__content theme--light "
+                  style="max-height: 304px; min-width: 0px; max-width: auto; top: 12px; left: 0px; transform-origin: top left; z-index: 0; display: none;"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+       
+      <div
+        class="header-buttons"
+      >
+        <button
+          class="v-btn v-btn--contained v-btn--fab v-btn--round theme--dark v-size--small green"
+          type="button"
+        >
+          <span
+            class="v-btn__content"
+          >
+            <i
+              aria-hidden="true"
+              class="v-icon notranslate material-icons theme--dark"
+            >
+              add
+            </i>
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+   
+  <div
+    class="v-card v-sheet theme--light"
+  >
+    <div
+      class="header-tools"
+    />
+     
+    <div
+      class="flex xs-12"
+    >
+      <div
+        class="file-card v-card v-sheet theme--light"
+      >
+        <div
+          class="v-card__title card-title"
+        >
+          <div
+            class="content-box"
+          >
+            <p
+              class="file-name mb-0"
+            >
+              file_a
+            </p>
+             
+            <dl>
+              <dt>
+                Nodes:
+              </dt>
+               
+              <dd>
+                1
+              </dd>
+            </dl>
+             
+            <dl>
+              <dt>
+                Updated:
+              </dt>
+               
+              <dd>
+                1970/01/01 09:00:00
+              </dd>
+            </dl>
+          </div>
+           
+          <div
+            class="button-box"
+          >
+            <span
+              class="shared-tag v-chip v-chip--no-color theme--light v-size--default hidden"
+            >
+              <span
+                class="v-chip__content"
+              >
+                
+              shared
+            
+              </span>
+            </span>
+             
+            <div
+              class="v-menu v-small-dialog theme--light hidden"
+              lazy=""
+            >
+              <div
+                class="v-small-dialog__activator"
+              >
+                <span
+                  class="v-small-dialog__activator__content"
+                >
+                  <button
+                    class="file-button edit-name v-btn v-btn--contained v-btn--fab v-btn--round theme--dark v-size--small blue"
+                    type="button"
+                  >
+                    <span
+                      class="v-btn__content"
+                    >
+                      <i
+                        aria-hidden="true"
+                        class="v-icon notranslate material-icons theme--dark"
+                      >
+                        textsms
+                      </i>
+                    </span>
+                  </button>
+                   
+                </span>
+              </div>
+              <div
+                class="v-menu__content theme--light v-small-dialog__menu-content"
+                role="menu"
+                style="max-height: auto; min-width: 0px; max-width: auto; top: 12px; left: 0px; transform-origin: top right; z-index: 0; display: none;"
+              />
+            </div>
+             
+            <button
+              class="file-button v-btn v-btn--depressed v-btn--fab v-btn--flat v-btn--outlined v-btn--round theme--dark v-size--small black--text"
+              type="button"
+            >
+              <span
+                class="v-btn__content"
+              >
+                <i
+                  aria-hidden="true"
+                  class="v-icon notranslate material-icons theme--dark"
+                >
+                  content_copy
+                </i>
+              </span>
+            </button>
+             
+            <button
+              class="file-button v-btn v-btn--depressed v-btn--fab v-btn--flat v-btn--outlined v-btn--round theme--dark v-size--small black--text"
+              type="button"
+            >
+              <span
+                class="v-btn__content"
+              >
+                <i
+                  aria-hidden="true"
+                  class="v-icon notranslate material-icons theme--dark"
+                >
+                  delete
+                </i>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+   
+  <!---->
+</div>
+`;
