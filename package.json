@@ -1,6 +1,6 @@
 {
   "name": "mind-xx-acpr",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -8,7 +8,7 @@
     "lint": "vue-cli-service lint",
     "storybook:build": "vue-cli-service storybook:build -c config/storybook -o dist_storybook",
     "storybook:serve": "vue-cli-service storybook:serve -p 6006 -c config/storybook",
-    "test:pupp": "yarn test:unit -c tests/puppeteer/jest.conf.js",
+    "test:pupp": "vue-cli-service test:unit -c tests/puppeteer/jest.conf.js",
     "test:unit": "TZ=Asia/Tokyo vue-cli-service test:unit -c tests/unit/jest.config.js",
     "test:unit:watch": "yarn test:unit --watch --coverage"
   },

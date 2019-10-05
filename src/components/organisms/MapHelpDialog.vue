@@ -100,7 +100,7 @@
                 Complete editing text
               </v-list-item-title>
               <v-list-item-subtitle>
-                <code>Escape</code>
+                <code>Escape</code> , <code>Shift</code> + <code>Enter</code>
               </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>

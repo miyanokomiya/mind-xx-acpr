@@ -51,17 +51,17 @@ const getComments = async ({ page }) => {
 }
 
 const inputAndSubmit = async ({ page, text }) => {
-  await inputForm({ page, text, query: '.float-text-input-wrapper input' })
+  await inputForm({ page, text, query: '.float-text-input-wrapper textarea' })
   await page.click('.float-text-input-wrapper .submit')
 }
 
 const inputAndSubmitComment = async ({ page, text }) => {
-  await inputForm({ page, text, query: '.comment-list form input' })
+  await inputForm({ page, text, query: '.comment-list form textarea' })
   await page.click('.comment-list form button')
 }
 
 const inputComment = async ({ page, text }) => {
-  await inputForm({ page, text, query: '.comment-list form input' })
+  await inputForm({ page, text, query: '.comment-list form textarea' })
 }
 
 const editComment = async ({ page }) => {
@@ -93,7 +93,7 @@ const clearNodes = async ({ page }) => {
 describe('Edit nodes', () => {
   let browser, page
   beforeEach(async () => {
-    browser = await puppeteer.launch({ headless: process.env.CI, slowMo: 20 })
+    browser = await puppeteer.launch({ headless: !!process.env.CI, slowMo: 20 })
     page = await browser.newPage()
     await page.setViewport({ width: 800, height: 800 })
     await page.goto(url, { waitUntil: 'networkidle2' })

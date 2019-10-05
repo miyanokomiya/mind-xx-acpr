@@ -18,7 +18,7 @@
       @keydown.self.right.exact="moveSelect('right')"
       @keydown.self.up.shift.exact="changeOrder(true)"
       @keydown.self.down.shift.exact="changeOrder()"
-      @keydown.self.space.self.exact="keydownSpace"
+      @keydown.self.space.self.exact.prevent="keydownSpace"
       @keydown.self.delete.shift.exact="keydownDelete"
       @keydown.self.90.ctrl.exact="$emit('undo')"
       @keydown.self.90.meta.exact="$emit('undo')"

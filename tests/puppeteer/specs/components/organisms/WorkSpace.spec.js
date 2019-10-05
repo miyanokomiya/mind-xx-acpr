@@ -25,7 +25,7 @@ describe('Map page', () => {
 
   let browser, page
   beforeEach(async () => {
-    browser = await puppeteer.launch({ headless: process.env.CI, slowMo: 20 })
+    browser = await puppeteer.launch({ headless: !!process.env.CI, slowMo: 20 })
     page = await browser.newPage()
     await page.setViewport({ width: 800, height: 800 })
     await page.goto(url, { waitUntil: 'networkidle2' })

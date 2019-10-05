@@ -11,8 +11,20 @@
     </div>
     <v-list three-line v-if="open">
       <template v-for="comment in commentList">
-        <form v-if="editKey === comment.key" class="form" :key="comment.key">
-          <v-text-field multi-line hide-details :rows="3" v-model="editText" />
+        <form
+          v-if="editKey === comment.key"
+          class="form"
+          :key="comment.key"
+          @submit.prevent
+        >
+          <v-textarea
+            solo
+            autofocus
+            hide-details
+            :rows="3"
+            v-model="editText"
+            @keydown.enter.shift.exact.prevent="updateComment"
+          />
           <v-btn text icon small color="black" @click="deleteComment">
             <v-icon dark>delete</v-icon>
           </v-btn>
@@ -24,7 +36,7 @@
             icon
             small
             color="primary"
-            :disabled="!editText.trim()"
+            :disabled="!canSubmitUpdate"
             @click="updateComment"
           >
             <v-icon dark>done</v-icon>
@@ -54,9 +66,17 @@
         <v-divider :key="`line_${comment.key}`" />
       </template>
     </v-list>
-    <form v-if="!editKey && open && user" class="form">
-      <v-text-field label="Comment" multi-line hide-details :rows="3" v-model="text" />
-      <v-btn text icon small color="primary" :disabled="!text.trim()" @click="submit">
+    <form v-if="!editKey && open && user" class="form" @submit.prevent>
+      <v-textarea
+        solo
+        autofocus
+        hide-details
+        :rows="3"
+        v-model="text"
+        label="Comment"
+        @keydown.enter.shift.exact.prevent="submit"
+      />
+      <v-btn text icon small color="primary" :disabled="!canSubmitCreate" @click="submit">
         <v-icon dark>done</v-icon>
       </v-btn>
     </form>
@@ -99,6 +119,12 @@ export default {
           return a.created - b.created
         })
     },
+    canSubmitUpdate() {
+      return !!this.editText.trim()
+    },
+    canSubmitCreate() {
+      return !!this.text.trim()
+    },
   },
   watch: {
     comments() {
@@ -119,6 +145,8 @@ export default {
       }
     },
     submit() {
+      if (!this.canSubmitCreate) return
+
       this.$emit('postComment', {
         comment: {
           text: this.text,
@@ -127,6 +155,8 @@ export default {
       this.clear()
     },
     updateComment() {
+      if (!this.canSubmitUpdate) return
+
       this.$emit('postComment', {
         comment: {
           ...this.comments[this.editKey],
