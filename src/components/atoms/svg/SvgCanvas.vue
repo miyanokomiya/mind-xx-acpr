@@ -17,7 +17,7 @@
     >
       <slot />
       <SvgRectangle
-        v-if="rectangleSelecting"
+        v-if="selectRectangle"
         :x="selectRectangle.x"
         :y="selectRectangle.y"
         :rx="3"
@@ -43,18 +43,6 @@ export default {
   components: {
     SvgRectangle,
   },
-  data: () => ({
-    beforeMoveP: null,
-    downStart: 0,
-    clickLast: 0,
-    rectangleSelecting: false,
-    downP: null,
-    movingTimer: 0,
-    progressiveMove: { x: 0, y: 0 },
-    pinchDistance: null,
-    lastSetupProgressiveMove: 0,
-    movinguInvalidateTimer: -1,
-  }),
   props: {
     x: {
       type: Number,
@@ -67,7 +55,7 @@ export default {
     width: {
       type: Number,
       default: 400,
-      validator: function(value) {
+      validator: value => {
         return value > 0
       },
     },
@@ -86,6 +74,18 @@ export default {
       },
     },
   },
+  data: () => ({
+    beforeMoveP: null,
+    downStart: 0,
+    clickLast: 0,
+    rectangleSelecting: false,
+    downP: null,
+    movingTimer: 0,
+    progressiveMove: { x: 0, y: 0 },
+    pinchDistance: null,
+    lastSetupProgressiveMove: 0,
+    movinguInvalidateTimer: -1,
+  }),
   computed: {
     canvasWidth() {
       return this.width / this.scale

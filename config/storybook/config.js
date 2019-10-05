@@ -6,7 +6,6 @@ import StoryRouter from 'storybook-router'
 
 import '@/utils/windowState'
 import '@/utils/isMobile'
-import '@/utils/track'
 
 import 'ress'
 import '@/assets/styles/icons.css'

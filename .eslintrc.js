@@ -1,23 +1,19 @@
 module.exports = {
   root: true,
   env: {
-    node: true
+    node: true,
+    jest: true
   },
   'extends': [
     'plugin:vue/essential',
-    '@vue/prettier'
+    '@vue/prettier',
+    'plugin:jest/recommended'
   ],
   parserOptions: {
     parser: 'babel-eslint'
   },
-  overrides: [
-    {
-      files: [
-        '**/__tests__/*.{j,t}s?(x)'
-      ],
-      env: {
-        jest: true
-      }
-    }
-  ]
+  plugins: ['jest'],
+  rules: {
+    'jest/consistent-test-it': ["error", {"fn": "it"}]
+  }
 }

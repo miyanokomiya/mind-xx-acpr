@@ -98,14 +98,6 @@
 
 <script>
 export default {
-  data: () => ({
-    pagination: {
-      sortBy: 'updated',
-      descending: true,
-    },
-    snackbar: false,
-    dataKind: 'all',
-  }),
   props: {
     files: {
       type: Object,
@@ -128,21 +120,15 @@ export default {
       default: () => ({}),
     },
   },
-  computed: {
-    headers() {
-      return [
-        {
-          text: 'Name',
-          align: 'left',
-          value: 'name',
-        },
-        { text: 'Count', value: 'nodeCount' },
-        { text: 'Updated', value: 'updated' },
-        { text: 'Created', value: 'created' },
-        { text: '', value: '', sortable: false },
-        { text: '', value: '', sortable: false },
-      ]
+  data: () => ({
+    pagination: {
+      sortBy: 'updated',
+      descending: true,
     },
+    snackbar: false,
+    dataKind: 'all',
+  }),
+  computed: {
     currentFiles() {
       if (this.dataKind === 'shared') {
         return this.sharedFiles
@@ -176,22 +162,17 @@ export default {
       const uid = this.user.uid
       const ret = Object.keys(this.currentFileAuthorities).reduce((p, fileKey) => {
         const fileAuthority = this.currentFileAuthorities[fileKey]
-        if (fileAuthority) {
-          const authority = fileAuthority.users[uid]
-          if (authority) {
-            p[fileKey] = authority.write
-          } else {
-            if (fileAuthority.public) {
-              // this file is public
-              p[fileKey] = fileAuthority.public.write
-            } else {
-              // no authority
-              p[fileKey] = false
-            }
-          }
+        const authority = fileAuthority.users[uid]
+        if (authority) {
+          p[fileKey] = authority.write
         } else {
-          // no authority
-          p[fileKey] = false
+          if (fileAuthority.public) {
+            // this file is public
+            p[fileKey] = fileAuthority.public.write
+          } else {
+            // no authority
+            p[fileKey] = false
+          }
         }
         return p
       }, {})

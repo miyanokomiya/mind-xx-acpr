@@ -3,13 +3,13 @@ import Vuetify from 'vuetify'
 
 import '@/utils/windowState'
 import '@/utils/isMobile'
-import '@/utils/track'
 
 Vue.config.productionTip = false
 Vue.use(Vuetify)
-const vuetify = new Vuetify({
-  icons: {
-    iconfont: 'mdi',
-  },
+
+window.SVGElement.prototype.getBBox = () => ({
+  x: 10,
+  y: 20,
+  width: 100,
+  height: 200,
 })
-Vue.prototype.vuetify = vuetify

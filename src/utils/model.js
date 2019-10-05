@@ -96,6 +96,16 @@ export const createFile = obj =>
     obj,
   )
 
+export const createFileAuthority = obj =>
+  Object.assign(
+    {},
+    {
+      users: {},
+      public: null,
+    },
+    obj,
+  )
+
 export const createUser = obj =>
   Object.assign(
     {},

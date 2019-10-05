@@ -1,5 +1,6 @@
 module.exports = {
   rootDir: '../../',
+  setupFiles: ['<rootDir>/tests/unit/setup.js'],
   moduleFileExtensions: ['js', 'jsx', 'json', 'vue'],
   transform: {
     '^.+\\.vue$': 'vue-jest',
@@ -11,18 +12,19 @@ module.exports = {
     '<rootDir>/tests/puppeteer/',
     '<rootDir>/tests/storybook/',
   ],
-  watchPathIgnorePatterns: ['<rootDir>/tests/puppeteer/', '<rootDir>/tests/storybook/'],
+  modulePathIgnorePatterns: ['<rootDir>/tests/puppeteer/', '<rootDir>/tests/storybook/'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
   snapshotSerializers: ['jest-serializer-vue'],
-  testMatch: ['**/tests/unit/**/*.spec.(js|jsx|ts|tsx)|**/__tests__/*.(js|jsx|ts|tsx)'],
+  testMatch: ['**/tests/unit/**/*.spec.(js|jsx|ts|tsx)'],
   testURL: 'http://localhost/',
   watchPlugins: ['jest-watch-typeahead/filename', 'jest-watch-typeahead/testname'],
   coverageDirectory: '<rootDir>/coverage',
   collectCoverageFrom: [
     'src/**/*.{js,vue}',
     '!src/registerServiceWorker.js',
+    '!src/utils/track.js',
     '!**/node_modules/**',
   ],
 }
