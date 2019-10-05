@@ -7,15 +7,16 @@
       top: $isMobile.any ? 0 : `${y}px`,
     }"
   >
-    <v-text-field
+    <v-textarea
       class="text-field"
-      multi-line
+      solo
       hide-details
       autofocus
       no-resize
       :rows="rows"
       v-model="localValue"
-      @keyup.esc="done"
+      @keydown.esc.prevent="done"
+      @keydown.enter.shift.exact.prevent="done"
       @blur="done"
     />
     <v-btn fab dark small color="primary" class="submit">
@@ -88,6 +89,9 @@ export default {
     padding: 0;
     width: calc(100% - 42px);
     display: inline-flex;
+    ::v-deep textarea {
+      margin-top: 0;
+    }
   }
   .submit {
     width: 32px;

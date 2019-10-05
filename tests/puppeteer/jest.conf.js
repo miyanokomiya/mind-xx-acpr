@@ -6,7 +6,7 @@ module.exports = {
     '^@/(.*)$': '<rootDir>/$1',
   },
   transform: {
-    '^.+\\.js$': '<rootDir>/../../node_modules/babel-jest',
+    '^.+\\.js$': 'babel-jest',
   },
   collectCoverage: false,
 }
