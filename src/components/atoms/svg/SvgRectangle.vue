@@ -1,6 +1,22 @@
+<template>
+  <rect
+    :x="x"
+    :y="y"
+    :rx="rx"
+    :ry="ry"
+    :width="width"
+    :height="height"
+    :stroke="stroke"
+    :stroke-width="strokeWidth"
+    :fill="fill"
+    :fill-opacity="fillOpacity"
+    :stroke-dasharray="strokeDasharray"
+    :stroke-dashoffset="strokeDashoffset"
+  />
+</template>
+
 <script>
 export default {
-  functional: true,
   props: {
     x: {
       type: Number,
@@ -50,24 +66,6 @@ export default {
       type: Number,
       default: 0,
     },
-  },
-  render(h, { props }) {
-    return h('rect', {
-      attrs: {
-        x: props.x,
-        y: props.y,
-        rx: props.rx,
-        ry: props.ry,
-        width: props.width,
-        height: props.height,
-        stroke: props.stroke,
-        'stroke-width': props.strokeWidth,
-        fill: props.fill,
-        'fill-opacity': props.fillOpacity,
-        'stroke-dasharray': props.strokeDasharray,
-        'stroke-dashoffset': props.strokeDashoffset,
-      },
-    })
   },
 }
 </script>
