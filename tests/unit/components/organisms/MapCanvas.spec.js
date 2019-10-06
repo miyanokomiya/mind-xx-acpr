@@ -43,23 +43,6 @@ const getUsers = () => {
   }
 }
 
-const template = `
-  <v-app>
-    <div style="width: 620px; height: 600px;">
-      <Target
-        :width="600"
-        :height="600"
-        :nodes="nodes"
-        :selectedNodes="selectedNodes"
-        :canWrite="true"
-        :user="user"
-        :comments="comments"
-        :users="users"
-      />
-    </div>
-  </v-app>
-`
-
 describe('components/organisms/MapCanvas.vue', () => {
   describe('snapshot', () => {
     it('no data', () => {
