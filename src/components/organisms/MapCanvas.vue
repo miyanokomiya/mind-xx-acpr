@@ -34,6 +34,7 @@
         :width="width"
         :height="height"
         :scale="scale"
+        :disabledProgressiveMove="disabledProgressiveMove"
         @move="move"
         @zoom="zoom"
         @selectRectangle="selectRectangle"
@@ -69,7 +70,7 @@
         />
         <!-- connectors of family -->
         <SvgConnector
-          v-for="(connector, key) in visibleConnectors"
+          v-for="(connector, key) in connectors"
           :key="key"
           :sx="connector.sx"
           :sy="connector.sy"
@@ -347,6 +348,7 @@ export default {
     x: 0,
     y: 0,
     scaleRate: 0,
+    disabledProgressiveMove: false,
     nodeCursorDownStart: 0,
     nodeCursorClickLast: 0,
     nodeSizes: {},
@@ -548,7 +550,9 @@ export default {
     },
     visibleNodes() {
       return Object.keys(this.nodes).reduce((map, key) => {
+        if (this.isShowNodes[key]) {
           map[key] = this.nodes[key]
+        }
         return map
       }, {})
     },
@@ -558,12 +562,6 @@ export default {
         positions: this.nodePositions,
         sizes: this.nodeSizes,
       })
-    },
-    visibleConnectors() {
-      return Object.keys(this.connectors).reduce((map, key) => {
-          map[key] = this.connectors[key]
-        return map
-      }, {})
     },
     dependencyConnectors() {
       return getDependencyConnectors({
@@ -633,6 +631,21 @@ export default {
     isMultiSelect() {
       return Object.keys(this.selectedNodes).length > 1
     },
+    isShowNodes() {
+      return Object.keys(this.nodes).reduce((p, key) => {
+        const position = this.nodePositions[key]
+        const size = this.nodeSizes[key]
+        if (!size || !position) {
+          // The node that has not been calculated its size and position should be rendered and calc them.
+          p[key] = true
+        } else {
+          if (!this.hiddenNodes[key]) {
+            p[key] = true
+          }
+        }
+        return p
+      }, {})
+    },
     hiddenNodes() {
       return getHiddenNodes({ nodes: this.nodes })
     },
@@ -680,12 +693,15 @@ export default {
       return Object.keys(this.nodes).reduce((p, c) => {
         const node = this.nodes[c]
         if (!node.grouping) return p
+        if (!this.isShowNodes[c]) return p
 
         const familyKeys = [c, ...getFamilyKeys({ nodes: this.nodes, parentKey: c })]
         const { positions, sizes } = familyKeys.reduce(
           ({ positions, sizes }, key) => {
+            if (this.isShowNodes[key]) {
               positions[key] = this.nodePositions[key]
               sizes[key] = this.nodeSizes[key]
+            }
             return { positions, sizes }
           },
           { positions: {}, sizes: {} },
@@ -737,6 +753,19 @@ export default {
     },
   },
   methods: {
+    isInViewBox({ left, right, top, bottom }) {
+      const viewRectangle = this.viewRectangle
+      if (
+        left <= viewRectangle.x + viewRectangle.width &&
+        right >= viewRectangle.x &&
+        top <= viewRectangle.y + viewRectangle.height &&
+        bottom >= viewRectangle.y
+      ) {
+        return true
+      } else {
+        return false
+      }
+    },
     getStrokeWidth(key) {
       if (this.selectedNodes[key]) {
         return 2
@@ -780,15 +809,15 @@ export default {
       this.y = position.y
     },
     clearZoom() {
-      if (this.$refs.svgCanvas) {
-        this.$refs.svgCanvas.stopProgressiveMove()
-      }
+      this.disabledProgressiveMove = true
+
       return new Promise(resolve => {
         const coveredRec = this.rectangleCoveringAllNode
         const widthRate = this.width / coveredRec.width
         const heightRate = this.height / coveredRec.height
         this.scale = Math.min(widthRate, heightRate)
         this.$nextTick().then(() => {
+          this.disabledProgressiveMove = false
           this.x = coveredRec.x
           this.y = coveredRec.y
           if (widthRate < heightRate) {

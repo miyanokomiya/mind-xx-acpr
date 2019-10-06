@@ -25,6 +25,7 @@ module.exports = {
     'src/**/*.{js,vue}',
     '!src/registerServiceWorker.js',
     '!src/utils/track.js',
+    '!src/store/_template/**',
     '!**/node_modules/**',
   ],
 }
