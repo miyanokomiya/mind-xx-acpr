@@ -638,6 +638,10 @@ export default {
         if (!size || !position) {
           // The node that has not been calculated its size and position should be rendered and calc them.
           p[key] = true
+        } else {
+          if (!this.hiddenNodes[key]) {
+            p[key] = true
+          }
         }
         return p
       }, {})
