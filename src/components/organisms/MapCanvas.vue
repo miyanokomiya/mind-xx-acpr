@@ -548,7 +548,9 @@ export default {
     },
     visibleNodes() {
       return Object.keys(this.nodes).reduce((map, key) => {
+        if (this.isShowNodes[key]) {
           map[key] = this.nodes[key]
+        }
         return map
       }, {})
     },
@@ -561,7 +563,9 @@ export default {
     },
     visibleConnectors() {
       return Object.keys(this.connectors).reduce((map, key) => {
+        if (this.isShowConnectors[key]) {
           map[key] = this.connectors[key]
+        }
         return map
       }, {})
     },
@@ -633,6 +637,41 @@ export default {
     isMultiSelect() {
       return Object.keys(this.selectedNodes).length > 1
     },
+    isShowNodes() {
+      return Object.keys(this.nodes).reduce((p, key) => {
+        const position = this.nodePositions[key]
+        const size = this.nodeSizes[key]
+        if (!size || !position) {
+          // The node that has not been calculated its size and position should be rendered and calc them.
+          p[key] = true
+        } else {
+          if (!this.hiddenNodes[key]) {
+            // If the sizes of nodes that are not rendered are changed they do not reflect until they are rendered.
+            const left = position.x
+            const right = left + size.width
+            const top = position.y
+            const bottom = top + size.height
+            if (this.isInViewBox({ left, right, top, bottom })) {
+              p[key] = true
+            }
+          }
+        }
+        return p
+      }, {})
+    },
+    isShowConnectors() {
+      return Object.keys(this.connectors).reduce((p, key) => {
+        const connector = this.connectors[key]
+        const left = Math.min(connector.sx, connector.ex)
+        const right = Math.max(connector.sx, connector.ex)
+        const top = Math.min(connector.sy, connector.ey)
+        const bottom = Math.max(connector.sy, connector.ey)
+        if (this.isInViewBox({ left, right, top, bottom })) {
+          p[key] = true
+        }
+        return p
+      }, {})
+    },
     hiddenNodes() {
       return getHiddenNodes({ nodes: this.nodes })
     },
@@ -680,12 +719,15 @@ export default {
       return Object.keys(this.nodes).reduce((p, c) => {
         const node = this.nodes[c]
         if (!node.grouping) return p
+        if (!this.isShowNodes[c]) return p
 
         const familyKeys = [c, ...getFamilyKeys({ nodes: this.nodes, parentKey: c })]
         const { positions, sizes } = familyKeys.reduce(
           ({ positions, sizes }, key) => {
+            if (this.isShowNodes[key]) {
               positions[key] = this.nodePositions[key]
               sizes[key] = this.nodeSizes[key]
+            }
             return { positions, sizes }
           },
           { positions: {}, sizes: {} },
@@ -737,6 +779,19 @@ export default {
     },
   },
   methods: {
+    isInViewBox({ left, right, top, bottom }) {
+      const viewRectangle = this.viewRectangle
+      if (
+        left <= viewRectangle.x + viewRectangle.width &&
+        right >= viewRectangle.x &&
+        top <= viewRectangle.y + viewRectangle.height &&
+        bottom >= viewRectangle.y
+      ) {
+        return true
+      } else {
+        return false
+      }
+    },
     getStrokeWidth(key) {
       if (this.selectedNodes[key]) {
         return 2
