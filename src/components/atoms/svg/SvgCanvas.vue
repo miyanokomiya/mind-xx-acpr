@@ -73,6 +73,10 @@ export default {
         return value > 0
       },
     },
+    disabledProgressiveMove: {
+      type: Boolean,
+      default: false,
+    },
   },
   data: () => ({
     beforeMoveP: null,
@@ -104,6 +108,13 @@ export default {
         y: Math.min(p1.y, p2.y),
         width: Math.abs(p1.x - p2.x),
         height: Math.abs(p1.y - p2.y),
+      }
+    },
+  },
+  watch: {
+    disabledProgressiveMove(to) {
+      if (!to) {
+        this.stopProgressiveMove()
       }
     },
   },
@@ -246,6 +257,11 @@ export default {
       this.rectangleSelecting = false
     },
     movingLoop() {
+      if (this.disabledProgressiveMove) {
+        this.stopProgressiveMove()
+        return
+      }
+
       if (this.movingTimer > 0) {
         const dif = this.progressiveMove
         this.$emit('move', {
@@ -259,11 +275,7 @@ export default {
             this.movingLoop()
           }, 10)
         } else {
-          this.movingTimer = 0
-          this.progressiveMove = {
-            x: 0,
-            y: 0,
-          }
+          this.stopProgressiveMove()
         }
       }
     },

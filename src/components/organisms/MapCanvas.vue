@@ -34,6 +34,7 @@
         :width="width"
         :height="height"
         :scale="scale"
+        :disabledProgressiveMove="disabledProgressiveMove"
         @move="move"
         @zoom="zoom"
         @selectRectangle="selectRectangle"
@@ -69,7 +70,7 @@
         />
         <!-- connectors of family -->
         <SvgConnector
-          v-for="(connector, key) in visibleConnectors"
+          v-for="(connector, key) in connectors"
           :key="key"
           :sx="connector.sx"
           :sy="connector.sy"
@@ -347,6 +348,7 @@ export default {
     x: 0,
     y: 0,
     scaleRate: 0,
+    disabledProgressiveMove: false,
     nodeCursorDownStart: 0,
     nodeCursorClickLast: 0,
     nodeSizes: {},
@@ -561,14 +563,6 @@ export default {
         sizes: this.nodeSizes,
       })
     },
-    visibleConnectors() {
-      return Object.keys(this.connectors).reduce((map, key) => {
-        if (this.isShowConnectors[key]) {
-          map[key] = this.connectors[key]
-        }
-        return map
-      }, {})
-    },
     dependencyConnectors() {
       return getDependencyConnectors({
         nodes: this.nodes,
@@ -643,30 +637,6 @@ export default {
         const size = this.nodeSizes[key]
         if (!size || !position) {
           // The node that has not been calculated its size and position should be rendered and calc them.
-          p[key] = true
-        } else {
-          if (!this.hiddenNodes[key]) {
-            // If the sizes of nodes that are not rendered are changed they do not reflect until they are rendered.
-            const left = position.x
-            const right = left + size.width
-            const top = position.y
-            const bottom = top + size.height
-            if (this.isInViewBox({ left, right, top, bottom })) {
-              p[key] = true
-            }
-          }
-        }
-        return p
-      }, {})
-    },
-    isShowConnectors() {
-      return Object.keys(this.connectors).reduce((p, key) => {
-        const connector = this.connectors[key]
-        const left = Math.min(connector.sx, connector.ex)
-        const right = Math.max(connector.sx, connector.ex)
-        const top = Math.min(connector.sy, connector.ey)
-        const bottom = Math.max(connector.sy, connector.ey)
-        if (this.isInViewBox({ left, right, top, bottom })) {
           p[key] = true
         }
         return p
@@ -835,15 +805,15 @@ export default {
       this.y = position.y
     },
     clearZoom() {
-      if (this.$refs.svgCanvas) {
-        this.$refs.svgCanvas.stopProgressiveMove()
-      }
+      this.disabledProgressiveMove = true
+
       return new Promise(resolve => {
         const coveredRec = this.rectangleCoveringAllNode
         const widthRate = this.width / coveredRec.width
         const heightRate = this.height / coveredRec.height
         this.scale = Math.min(widthRate, heightRate)
         this.$nextTick().then(() => {
+          this.disabledProgressiveMove = false
           this.x = coveredRec.x
           this.y = coveredRec.y
           if (widthRate < heightRate) {
