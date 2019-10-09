@@ -13657,10 +13657,12 @@ vue-cli-plugin-storybook@^0.6.1:
     "@storybook/vue" "^4.1.0 || ^5.0.0"
     commander "^2.19.0"
 
-vue-cli-plugin-vuetify@^0.6.3:
-  version "0.6.3"
-  resolved "https://registry.npm.taobao.org/vue-cli-plugin-vuetify/download/vue-cli-plugin-vuetify-0.6.3.tgz#71d956cdec419f5628d2b44c43bdc1e6ec3356bf"
-  integrity sha1-cdlWzexBn1Yo0rRMQ73B5uwzVr8=
+vue-cli-plugin-vuetify@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/vue-cli-plugin-vuetify/-/vue-cli-plugin-vuetify-1.0.1.tgz#bef77be1d04d2c0f03f1771ebdcbb99f172dfe8a"
+  integrity sha512-Due6vvETiNY0MaRxa8aZnxLIQmPBU+l1hKmed3i/Ly6+kiUcSnNO3OdWt7LVL6nZ/SY71SxVk3at95ipnDe++Q==
+  dependencies:
+    shelljs "^0.8.3"
 
 vue-color@^2.7.0:
   version "2.7.0"
