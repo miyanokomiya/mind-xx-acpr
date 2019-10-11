@@ -2051,10 +2051,10 @@
     lodash.kebabcase "^4.1.1"
     svg-tags "^1.0.0"
 
-"@vue/babel-preset-app@^3.11.0":
-  version "3.11.0"
-  resolved "https://registry.npm.taobao.org/@vue/babel-preset-app/download/@vue/babel-preset-app-3.11.0.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40vue%2Fbabel-preset-app%2Fdownload%2F%40vue%2Fbabel-preset-app-3.11.0.tgz#52bf79c15560a304a13f4770e3e5530e01dd6173"
-  integrity sha1-Ur95wVVgowShP0dw4+VTDgHdYXM=
+"@vue/babel-preset-app@^3.12.0":
+  version "3.12.0"
+  resolved "https://registry.yarnpkg.com/@vue/babel-preset-app/-/babel-preset-app-3.12.0.tgz#76cc9ee2c35725ce673c78321b91bb60210c1c75"
+  integrity sha512-zUeHItaHrmTAH//kjdvKp0PAzIeveCejYEpYjqstJ07FTc8uT2UYnSITB1pvv1LZocUMAFlJ3soTcHH6pZU68Q==
   dependencies:
     "@babel/helper-module-imports" "^7.0.0"
     "@babel/plugin-proposal-class-properties" "^7.0.0"
@@ -2122,14 +2122,14 @@
   resolved "https://registry.yarnpkg.com/@vue/cli-overlay/-/cli-overlay-3.12.0.tgz#eb6afe93bcc42488ab99dd80692ef3afbb09ef77"
   integrity sha512-WF1dc4wH6MtUU9NDJVA89peqXiP8kZGz41CPdy6d9fyFf3mP05m4pECyFrr+uvMvO7SmwpDm6E7uliHEAvs/+Q==
 
-"@vue/cli-plugin-babel@^3.11.0":
-  version "3.11.0"
-  resolved "https://registry.npm.taobao.org/@vue/cli-plugin-babel/download/@vue/cli-plugin-babel-3.11.0.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40vue%2Fcli-plugin-babel%2Fdownload%2F%40vue%2Fcli-plugin-babel-3.11.0.tgz#247a7233100a33ea0fd9f7d30bdf2b9b554e9e88"
-  integrity sha1-JHpyMxAKM+oP2ffTC98rm1VOnog=
+"@vue/cli-plugin-babel@^3.12.0":
+  version "3.12.0"
+  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-babel/-/cli-plugin-babel-3.12.0.tgz#2a8ce3d5a030bc5256c3fb212b0cf32ff1de8ea5"
+  integrity sha512-8ZzNeSM9gV+w0F8+ex3MZ7+NsdmXfdsAiZkd2TKNTWv2Mu8ZQ/iv3Lcn/vzB9oCGzVdWhdmHBcVwsKknPckLxw==
   dependencies:
     "@babel/core" "^7.0.0"
-    "@vue/babel-preset-app" "^3.11.0"
-    "@vue/cli-shared-utils" "^3.11.0"
+    "@vue/babel-preset-app" "^3.12.0"
+    "@vue/cli-shared-utils" "^3.12.0"
     babel-loader "^8.0.5"
     webpack "^4.0.0"
 
