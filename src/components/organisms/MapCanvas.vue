@@ -69,39 +69,25 @@
           :selected="selectedDependencyConnector[i]"
         />
         <!-- connectors of family -->
-        <SvgConnector
-          v-for="(connector, key) in connectors"
-          :key="key"
-          :sx="connector.sx"
-          :sy="connector.sy"
-          :ex="connector.ex"
-          :ey="connector.ey"
-        />
+        <SvgConnectorContainer :connectors="connectors" />
         <!-- standard nodes -->
-        <SvgTextRectangle
-          class="mind-node"
-          :class="{ 'moving-origin': movingNodeFamilyKeyList.includes(key) }"
-          v-for="(node, key) in visibleNodes"
-          :key="key"
-          :x="nodePositions[key].x"
-          :y="nodePositions[key].y"
-          :text="key === editTextTarget ? editingText : node.text"
-          :strokeWidth="getStrokeWidth(key)"
-          :stroke="getStrokeColor(key)"
-          :fill="node.backgroundColor"
-          :textFill="node.color"
-          :hiddenFamilyCount="closedNodeFamilyCounts[key]"
-          :commentCount="commentCounts[key]"
-          :childrenCount="node.children.length"
-          :root="key === ROOT_NODE"
-          :checked="node.checked"
-          @calcSize="size => calcSize({ key, size })"
-          @down="e => (canWrite ? nodeCursorDown(e, key) : '')"
-          @up="e => (canWrite ? nodeCursorUp(key, { shift: e.shiftKey }) : '')"
-          @open="openNode(key)"
-          @close="closeNode(key)"
-          @clickComment="showComments(key)"
-          @toggleChecked="val => updateChecked({ key, val })"
+        <SvgNodeContainer
+          :nodes="visibleNodes"
+          :nodePositions="nodePositions"
+          :selectedNodes="selectedNodes"
+          :closedNodeFamilyCounts="closedNodeFamilyCounts"
+          :commentCounts="commentCounts"
+          :movingNodeFamilyKeyList="movingNodeFamilyKeyList"
+          :editTextTarget="editTextTarget"
+          :editingText="editingText"
+          :canWrite="canWrite"
+          @calcSize="calcSize"
+          @down="nodeCursorDown"
+          @up="nodeCursorUp"
+          @open="openNode"
+          @close="closeNode"
+          @clickComment="showComments"
+          @updateChecked="updateChecked"
         />
         <!-- a marker of switching a parent -->
         <g v-if="connectorOfMovingNodes" class="inserting-marker">
@@ -124,19 +110,14 @@
         </g>
         <!-- moving shadow of switching a parent -->
         <SvgTextRectangle
-          class="mind-node moving-copy"
+          class="moving-copy"
           v-for="(positions, key) in movingNodePositions"
           :key="`moving_${key}`"
           :x="positions.x"
           :y="positions.y"
           :text="nodes[key].text"
-          :strokeWidth="selectedNodes[key] ? 2 : 1"
-          :stroke="selectedNodes[key] ? 'blue' : 'black'"
           :fill="nodes[key].backgroundColor"
           :textFill="nodes[key].color"
-          :hiddenFamilyCount="closedNodeFamilyCounts[key]"
-          :commentCount="commentCounts[key]"
-          :childrenCount="nodes[key].children.length"
           :checked="nodes[key].checked"
         />
       </SvgCanvas>
@@ -318,7 +299,9 @@ import * as canvasUtils from '@/utils/canvas'
 import SvgCanvas from '@/components/atoms/svg/SvgCanvas'
 import SvgRectangle from '@/components/atoms/svg/SvgRectangle'
 import SvgTextRectangle from '@/components/molecules/svg/SvgTextRectangle'
+import SvgNodeContainer from '@/components/molecules/svg/SvgNodeContainer'
 import SvgConnector from '@/components/molecules/svg/SvgConnector'
+import SvgConnectorContainer from '@/components/molecules/svg/SvgConnectorContainer'
 import SvgBridgeConnector from '@/components/molecules/svg/SvgBridgeConnector'
 import FloatTextInput from '@/components/molecules/FloatTextInput'
 import FloatEditMenu from '@/components/molecules/FloatEditMenu'
@@ -334,7 +317,9 @@ export default {
     SvgCanvas,
     SvgRectangle,
     SvgTextRectangle,
+    SvgNodeContainer,
     SvgConnector,
+    SvgConnectorContainer,
     SvgBridgeConnector,
     FloatTextInput,
     FloatEditMenu,
@@ -765,24 +750,6 @@ export default {
       } else {
         return false
       }
-    },
-    getStrokeWidth(key) {
-      if (this.selectedNodes[key]) {
-        return 2
-      }
-      if (this.editDependencyTarget === key) {
-        return 2
-      }
-      return 1
-    },
-    getStrokeColor(key) {
-      if (this.editDependencyTarget === key) {
-        return 'tomato'
-      }
-      if (this.selectedNodes[key]) {
-        return 'blue'
-      }
-      return 'black'
     },
     setScaleRateBaseCenter(val) {
       this.scaleRate = val
@@ -1297,21 +1264,15 @@ export default {
       pointer-events: none;
     }
   }
+  .moving-copy {
+    cursor: pointer;
+    opacity: 0.5;
+    pointer-events: none;
+  }
   .lock-button {
     position: absolute;
     top: 10px;
     right: 0;
-  }
-  .mind-node {
-    cursor: pointer;
-
-    &.moving-origin {
-      opacity: 0.2;
-    }
-    &.moving-copy {
-      opacity: 0.5;
-      pointer-events: none;
-    }
   }
   .inserting-marker {
     opacity: 0.5;

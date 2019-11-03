@@ -162,3 +162,44 @@ storiesOf('organisms/MapCanvas', module)
       methods,
     }
   })
+  .add('too many nodes', () => {
+    const root = createNode({
+      text: 'root',
+      children: [...Array(200)].map((_, i) => `${i}`),
+    })
+    return {
+      components: { MapCanvas },
+      template: `
+      <v-app>
+        <div style="width: 620px; height: 600px;">
+          <MapCanvas
+            :width="600"
+            :height="600"
+            :nodes="nodes"
+            :selectedNodes="selectedNodes"
+            :canWrite="true"
+            :user="user"
+            @updateNodes="updateNodes"
+            @createNode="createNode"
+            @setSelectedNodes="setSelectedNodes"
+            @clearSelect="clearSelect"
+            @selectProp="selectProp"
+            @postComment="postComment"
+          />
+        </div>
+      </v-app>
+      `,
+      data: () => ({
+        nodes: {
+          root,
+          ...[...Array(200)].reduce((ret, _, i) => {
+            ret[`${i}`] = createNode({ text: `node_${i}` })
+            return ret
+          }, {}),
+        },
+        selectedNodes: {},
+        user,
+      }),
+      methods,
+    }
+  })
