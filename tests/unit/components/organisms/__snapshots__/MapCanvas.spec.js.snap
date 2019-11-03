@@ -18,145 +18,21 @@ exports[`components/organisms/MapCanvas.vue snapshot can write and select nodes 
       x="0"
       y="0"
     >
-         
-      <svgtextrectangle-stub
-        checked="-1"
-        childrencount="3"
-        class="mind-node"
-        commentcount="0"
-        fill="#B3E5FC"
-        fontsize="10"
-        hiddenfamilycount="0"
-        root="true"
-        stroke="black"
-        strokewidth="1"
-        text="root"
-        textfill="#000000"
-        x="-25"
-        y="0"
+        
+      <svgconnectorcontainer-stub
+        connectors="[object Object]"
       />
-      <svgtextrectangle-stub
-        checked="-1"
-        childrencount="1"
-        class="mind-node"
-        commentcount="0"
-        fill="#B3E5FC"
-        fontsize="10"
-        hiddenfamilycount="0"
-        stroke="blue"
-        strokewidth="2"
-        text="aaaa"
-        textfill="#000000"
-        x="65"
-        y="-40"
-      />
-      <svgtextrectangle-stub
-        checked="-1"
-        childrencount="0"
-        class="mind-node"
-        commentcount="3"
-        fill="#B3E5FC"
-        fontsize="10"
-        hiddenfamilycount="0"
-        stroke="blue"
-        strokewidth="2"
-        text="bbbbbbb
-bbbbb"
-        textfill="#000000"
-        x="65"
-        y="0"
-      />
-      <svgtextrectangle-stub
-        checked="-1"
-        childrencount="0"
-        class="mind-node"
-        commentcount="2"
-        fill="#B3E5FC"
-        fontsize="10"
-        hiddenfamilycount="0"
-        stroke="black"
-        strokewidth="1"
-        text="cc
-cc
-ccc"
-        textfill="#000000"
-        x="65"
-        y="40"
-      />
-      <svgtextrectangle-stub
-        checked="-1"
-        childrencount="0"
-        class="mind-node"
-        commentcount="0"
-        fill="#B3E5FC"
-        fontsize="10"
-        hiddenfamilycount="0"
-        stroke="black"
-        strokewidth="1"
-        text="dddd"
-        textfill="#000000"
-        x="155"
-        y="-40"
-      />
-      <svgtextrectangle-stub
-        checked="-1"
-        childrencount="0"
-        class="mind-node"
-        commentcount="0"
-        fill="#B3E5FC"
-        fontsize="10"
-        hiddenfamilycount="0"
-        stroke="black"
-        strokewidth="1"
-        text="xxxx"
-        textfill="#000000"
-        x="-115"
-        y="40"
-      />
-      <svgtextrectangle-stub
-        checked="-1"
-        childrencount="2"
-        class="mind-node"
-        commentcount="0"
-        fill="#B3E5FC"
-        fontsize="10"
-        hiddenfamilycount="0"
-        stroke="black"
-        strokewidth="1"
-        text="zzzz"
-        textfill="#000000"
-        x="-115"
-        y="-20"
-      />
-      <svgtextrectangle-stub
-        checked="-1"
-        childrencount="0"
-        class="mind-node"
-        commentcount="0"
-        fill="#B3E5FC"
-        fontsize="10"
-        hiddenfamilycount="0"
-        stroke="black"
-        strokewidth="1"
-        text="yyyy"
-        textfill="#000000"
-        x="-205"
-        y="-40"
-      />
-      <svgtextrectangle-stub
-        checked="-1"
-        childrencount="0"
-        class="mind-node"
-        commentcount="0"
-        fill="#B3E5FC"
-        fontsize="10"
-        hiddenfamilycount="0"
-        stroke="black"
-        strokewidth="1"
-        text="uuuu"
-        textfill="#000000"
-        x="-205"
-        y="0"
+       
+      <svgnodecontainer-stub
+        canwrite="true"
+        closednodefamilycounts="[object Object]"
+        commentcounts="[object Object]"
+        editdependencytarget=""
+        editingtext=""
+        movingnodefamilykeylist=""
+        nodepositions="[object Object]"
+        nodes="[object Object]"
+        selectednodes="[object Object]"
       />
        
       <!---->
@@ -245,145 +121,20 @@ exports[`components/organisms/MapCanvas.vue snapshot full data 1`] = `
       x="0"
       y="0"
     >
-         
-      <svgtextrectangle-stub
-        checked="-1"
-        childrencount="3"
-        class="mind-node"
-        commentcount="0"
-        fill="#B3E5FC"
-        fontsize="10"
-        hiddenfamilycount="0"
-        root="true"
-        stroke="black"
-        strokewidth="1"
-        text="root"
-        textfill="#000000"
-        x="-25"
-        y="0"
+        
+      <svgconnectorcontainer-stub
+        connectors="[object Object]"
       />
-      <svgtextrectangle-stub
-        checked="-1"
-        childrencount="1"
-        class="mind-node"
-        commentcount="0"
-        fill="#B3E5FC"
-        fontsize="10"
-        hiddenfamilycount="0"
-        stroke="black"
-        strokewidth="1"
-        text="aaaa"
-        textfill="#000000"
-        x="65"
-        y="-40"
-      />
-      <svgtextrectangle-stub
-        checked="-1"
-        childrencount="0"
-        class="mind-node"
-        commentcount="3"
-        fill="#B3E5FC"
-        fontsize="10"
-        hiddenfamilycount="0"
-        stroke="black"
-        strokewidth="1"
-        text="bbbbbbb
-bbbbb"
-        textfill="#000000"
-        x="65"
-        y="0"
-      />
-      <svgtextrectangle-stub
-        checked="-1"
-        childrencount="0"
-        class="mind-node"
-        commentcount="2"
-        fill="#B3E5FC"
-        fontsize="10"
-        hiddenfamilycount="0"
-        stroke="black"
-        strokewidth="1"
-        text="cc
-cc
-ccc"
-        textfill="#000000"
-        x="65"
-        y="40"
-      />
-      <svgtextrectangle-stub
-        checked="-1"
-        childrencount="0"
-        class="mind-node"
-        commentcount="0"
-        fill="#B3E5FC"
-        fontsize="10"
-        hiddenfamilycount="0"
-        stroke="black"
-        strokewidth="1"
-        text="dddd"
-        textfill="#000000"
-        x="155"
-        y="-40"
-      />
-      <svgtextrectangle-stub
-        checked="-1"
-        childrencount="0"
-        class="mind-node"
-        commentcount="0"
-        fill="#B3E5FC"
-        fontsize="10"
-        hiddenfamilycount="0"
-        stroke="black"
-        strokewidth="1"
-        text="xxxx"
-        textfill="#000000"
-        x="-115"
-        y="40"
-      />
-      <svgtextrectangle-stub
-        checked="-1"
-        childrencount="2"
-        class="mind-node"
-        commentcount="0"
-        fill="#B3E5FC"
-        fontsize="10"
-        hiddenfamilycount="0"
-        stroke="black"
-        strokewidth="1"
-        text="zzzz"
-        textfill="#000000"
-        x="-115"
-        y="-20"
-      />
-      <svgtextrectangle-stub
-        checked="-1"
-        childrencount="0"
-        class="mind-node"
-        commentcount="0"
-        fill="#B3E5FC"
-        fontsize="10"
-        hiddenfamilycount="0"
-        stroke="black"
-        strokewidth="1"
-        text="yyyy"
-        textfill="#000000"
-        x="-205"
-        y="-40"
-      />
-      <svgtextrectangle-stub
-        checked="-1"
-        childrencount="0"
-        class="mind-node"
-        commentcount="0"
-        fill="#B3E5FC"
-        fontsize="10"
-        hiddenfamilycount="0"
-        stroke="black"
-        strokewidth="1"
-        text="uuuu"
-        textfill="#000000"
-        x="-205"
-        y="0"
+       
+      <svgnodecontainer-stub
+        closednodefamilycounts="[object Object]"
+        commentcounts="[object Object]"
+        editdependencytarget=""
+        editingtext=""
+        movingnodefamilykeylist=""
+        nodepositions="[object Object]"
+        nodes="[object Object]"
+        selectednodes="[object Object]"
       />
        
       <!---->
@@ -468,22 +219,20 @@ exports[`components/organisms/MapCanvas.vue snapshot no data 1`] = `
       x="0"
       y="0"
     >
-         
-      <svgtextrectangle-stub
-        checked="-1"
-        childrencount="0"
-        class="mind-node"
-        commentcount="0"
-        fill="#B3E5FC"
-        fontsize="10"
-        hiddenfamilycount="0"
-        root="true"
-        stroke="black"
-        strokewidth="1"
-        text=""
-        textfill="#000000"
-        x="-25"
-        y="0"
+        
+      <svgconnectorcontainer-stub
+        connectors="[object Object]"
+      />
+       
+      <svgnodecontainer-stub
+        closednodefamilycounts="[object Object]"
+        commentcounts="[object Object]"
+        editdependencytarget=""
+        editingtext=""
+        movingnodefamilykeylist=""
+        nodepositions="[object Object]"
+        nodes="[object Object]"
+        selectednodes="[object Object]"
       />
        
       <!---->
