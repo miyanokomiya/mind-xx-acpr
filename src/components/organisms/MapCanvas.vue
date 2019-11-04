@@ -135,110 +135,31 @@
     <div class="history-tool" v-if="canWrite">
       <HistoryToolBox @undo="$emit('undo')" @redo="$emit('redo')" />
     </div>
-    <ToggleCloseButton
-      v-if="
-        showEditMenu &&
-          editMenuTargetNode.children.length > 0 &&
-          editMenuTarget !== ROOT_NODE
-      "
-      :x="fixTopBoxPosition.x"
-      :y="fixTopBoxPosition.y"
-      :closed="editMenuTargetNode.closed"
+    <FloatMenu
+      v-if="showEditMenu"
+      :targetNode="editMenuTargetNode"
+      :targetNodeViewSize="editTargetViewSize"
+      :targetNodeViewPosition="editTargetViewPosition"
+      :mode="mode"
+      :root="editMenuTarget === ROOT_NODE"
+      :oppositeEditTarget="oppositeEditTarget"
       @open="openNode(editMenuTarget)"
       @close="closeNode(editMenuTarget)"
+      @deleteNode="deleteNode"
+      @readyEditText="readyEditText(editMenuTarget)"
+      @editDependency="editDependency"
+      @createNode="createNode"
       @wheel.native.prevent="e => ($isMobile.any ? '' : wheel(e))"
     />
-    <FloatButton
-      v-if="showEditMenu"
-      :x="fixTopBoxPosition.x - fixButtonMargin"
-      :y="fixTopBoxPosition.y"
-      @click="deleteNode"
-      @wheel.native.prevent="e => ($isMobile.any ? '' : wheel(e))"
-    >
-      <v-icon>delete</v-icon>
-    </FloatButton>
-    <FloatButton
-      v-if="showEditMenu"
-      :x="fixTopBoxPosition.x + fixButtonMargin"
-      :y="fixTopBoxPosition.y"
-      color="indigo"
-      @click="readyEditText(editMenuTarget)"
-      @wheel.native.prevent="e => ($isMobile.any ? '' : wheel(e))"
-    >
-      <v-icon>edit</v-icon>
-    </FloatButton>
-    <FloatButton
-      v-if="showEditMenu && !isOppositeEditTarget && editMenuTarget !== ROOT_NODE"
-      :x="fixBottomBoxPosition.x - fixButtonMargin"
-      :y="fixBottomBoxPosition.y"
-      :color="mode === CANVAS_MODE.DEPENDENCY ? 'deep-orange' : 'indigo'"
-      @click="editDependency"
-      @wheel.native.prevent="e => ($isMobile.any ? '' : wheel(e))"
-    >
-      <v-icon>call_missed</v-icon>
-    </FloatButton>
-    <FloatButton
-      v-if="showEditMenu && isOppositeEditTarget && editMenuTarget !== ROOT_NODE"
-      :x="fixBottomBoxPosition.x + fixButtonMargin"
-      :y="fixBottomBoxPosition.y"
-      :color="mode === CANVAS_MODE.DEPENDENCY ? 'deep-orange' : 'indigo'"
-      @click="editDependency"
-      @wheel.native.prevent="e => ($isMobile.any ? '' : wheel(e))"
-    >
-      <v-icon>call_missed_outgoing</v-icon>
-    </FloatButton>
-    <FloatButton
-      v-if="showEditMenu && editMenuTarget === ROOT_NODE"
-      :x="fixBottomBoxPosition.x - fixButtonMargin"
-      :y="fixBottomBoxPosition.y"
-      color="indigo"
-      @click="createNode(false, true)"
-      @wheel.native.prevent="e => ($isMobile.any ? '' : wheel(e))"
-    >
-      <v-icon>subdirectory_arrow_left</v-icon>
-    </FloatButton>
-    <FloatButton
-      v-if="showEditMenu && editMenuTarget !== ROOT_NODE"
-      :x="fixBottomBoxPosition.x"
-      :y="fixBottomBoxPosition.y"
-      color="indigo"
-      @click="createNode(true)"
-      @wheel.native.prevent="e => ($isMobile.any ? '' : wheel(e))"
-    >
-      <v-icon>add</v-icon>
-    </FloatButton>
-    <FloatButton
-      v-if="showEditMenu && !isOppositeEditTarget"
-      :x="fixBottomBoxPosition.x + fixButtonMargin"
-      :y="fixBottomBoxPosition.y"
-      color="indigo"
-      @click="createNode(false)"
-      @wheel.native.prevent="e => ($isMobile.any ? '' : wheel(e))"
-    >
-      <v-icon>subdirectory_arrow_right</v-icon>
-    </FloatButton>
-    <FloatButton
-      v-if="showEditMenu && isOppositeEditTarget && editMenuTarget !== ROOT_NODE"
-      :x="fixBottomBoxPosition.x - fixButtonMargin"
-      :y="fixBottomBoxPosition.y"
-      color="indigo"
-      @click="createNode(false)"
-      @wheel.native.prevent="e => ($isMobile.any ? '' : wheel(e))"
-    >
-      <v-icon>subdirectory_arrow_left</v-icon>
-    </FloatButton>
     <FloatTextInput
-      ref="floatTextInput"
       v-if="showTextInput"
       v-model="editingText"
       :targetKey="editTextTarget"
-      :x="editTextTargetPosition.x"
-      :y="editTextTargetPosition.y"
+      :x="editTextTargetViewPosition.x"
+      :y="editTextTargetViewPosition.y"
       @done="doneEditText"
-      @wheel.native.prevent="e => ($isMobile.any ? '' : wheel(e))"
     />
     <FloatEditMenu
-      ref="floatEditMenu"
       v-if="showEditMenu"
       :check="editMenuTargetNode.checked !== -1"
       :grouping="editMenuTargetNode.grouping"
@@ -303,12 +224,11 @@ import SvgNodeContainer from '@/components/molecules/svg/SvgNodeContainer'
 import SvgConnector from '@/components/molecules/svg/SvgConnector'
 import SvgConnectorContainer from '@/components/molecules/svg/SvgConnectorContainer'
 import SvgBridgeConnector from '@/components/molecules/svg/SvgBridgeConnector'
-import FloatTextInput from '@/components/molecules/FloatTextInput'
 import FloatEditMenu from '@/components/molecules/FloatEditMenu'
+import FloatTextInput from '@/components/molecules/FloatTextInput'
+import FloatMenu from '@/components/molecules/FloatMenu'
 import ScaleToolBox from '@/components/molecules/ScaleToolBox'
 import HistoryToolBox from '@/components/molecules/HistoryToolBox'
-import ToggleCloseButton from '@/components/molecules/ToggleCloseButton'
-import FloatButton from '@/components/molecules/FloatButton'
 import CommentList from './CommentList'
 
 export default {
@@ -321,12 +241,11 @@ export default {
     SvgConnector,
     SvgConnectorContainer,
     SvgBridgeConnector,
-    FloatTextInput,
     FloatEditMenu,
+    FloatTextInput,
+    FloatMenu,
     ScaleToolBox,
     HistoryToolBox,
-    ToggleCloseButton,
-    FloatButton,
     CommentList,
   },
   data: () => ({
@@ -343,8 +262,6 @@ export default {
     editTextTarget: null,
     editingText: '',
     editMenuTarget: null,
-    floatEditMenuWidth: 0,
-    floatTextInputWidth: 0,
     mode: CANVAS_MODE.NORMAL,
 
     adjustParentWithMovingTimer: null,
@@ -468,62 +385,20 @@ export default {
     editDependencyTarget() {
       return this.mode === CANVAS_MODE.DEPENDENCY ? this.editMenuTarget : null
     },
-    editTargetPosition() {
+    editTargetViewPosition() {
       return this.getNodeViewPosition(this.editMenuTarget)
     },
-    editTextTargetPosition() {
-      return this.getNodeViewPosition(this.editTextTarget)
+    editTargetViewSize() {
+      return this.getNodeViewSize(this.editMenuTarget)
     },
-    isOppositeEditTarget() {
-      if (!this.editMenuTarget) {
-        return false
-      }
+    oppositeEditTarget() {
       return isOpposite({
         size: this.nodeSizes[this.editMenuTarget],
         position: this.nodePositions[this.editMenuTarget],
       })
     },
-    fixLeftBoxPosition() {
-      const key = this.editMenuTarget
-      if (key) {
-        const size = this.nodeSizes[key]
-        const position = this.editTargetPosition
-        return {
-          x: position.x - 19,
-          y: position.y - 28 / 2 + (size.height / 2) * this.scale,
-        }
-      } else {
-        return null
-      }
-    },
-    fixTopBoxPosition() {
-      const key = this.editMenuTarget
-      if (key) {
-        const size = this.nodeSizes[key]
-        const position = this.editTargetPosition
-        return {
-          x: position.x - 2 + (size.width / 2) * this.scale,
-          y: position.y - 29,
-        }
-      } else {
-        return null
-      }
-    },
-    fixBottomBoxPosition() {
-      const key = this.editMenuTarget
-      if (key) {
-        const size = this.nodeSizes[key]
-        const position = this.editTargetPosition
-        return {
-          x: position.x - 2 + (size.width / 2) * this.scale,
-          y: position.y + 1 + size.height * this.scale,
-        }
-      } else {
-        return null
-      }
-    },
-    fixButtonMargin() {
-      return 36
+    editTextTargetViewPosition() {
+      return this.getNodeViewPosition(this.editTextTarget)
     },
     nodePositions() {
       const size = { width: 50, height: 20 }
@@ -718,22 +593,6 @@ export default {
       }
       if (keys.indexOf(this.editTextTarget) === -1) {
         this.editTextTarget = null
-      }
-    },
-    showTextInput(to) {
-      if (to) {
-        this.$nextTick().then(() => {
-          const menu = this.$refs.floatTextInput
-          this.floatTextInputWidth = menu.$el.clientWidth
-        })
-      }
-    },
-    showEditMenu(to) {
-      if (to) {
-        this.$nextTick().then(() => {
-          const menu = this.$refs.floatEditMenu
-          this.floatEditMenuWidth = menu.$el.clientWidth
-        })
       }
     },
   },
@@ -993,7 +852,7 @@ export default {
         this.$refs.svgCanvasWrapper.focus()
       }
     },
-    createNode(brother = false, opposite = false) {
+    createNode({ brother = false, opposite = false } = {}) {
       if (this.editMenuTarget === ROOT_NODE) {
         brother = false
       }
@@ -1061,13 +920,13 @@ export default {
     },
     keydownEnter() {
       if (this.editMenuTarget && !this.editTextTarget) {
-        this.createNode(true)
+        this.createNode({ brother: true })
       }
     },
     keydownShiftEnter() {
       if (this.editMenuTarget && !this.editTextTarget) {
         if (this.editMenuTarget === ROOT_NODE) {
-          this.createNode(false, true)
+          this.createNode({ opposite: true })
         } else {
           this.createNode()
         }
@@ -1244,6 +1103,16 @@ export default {
         return { x, y }
       } else {
         return null
+      }
+    },
+    getNodeViewSize(key) {
+      const size = this.nodeSizes[key]
+      if (size) {
+        const width = size.width * this.scale
+        const height = size.height * this.scale
+        return { width, height }
+      } else {
+        return { width: 0, height: 0 }
       }
     },
   },

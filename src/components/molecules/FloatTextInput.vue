@@ -3,8 +3,10 @@
     class="float-text-input-wrapper"
     :class="{ mobile: $isMobile.any }"
     :style="{
-      left: $isMobile.any ? 0 : `${x}px`,
-      top: $isMobile.any ? 0 : `${y}px`,
+      position: 'absolute',
+      left: 0,
+      top: 0,
+      transform: $isMobile.any ? '' : `translate(${x}px, ${y}px)`,
     }"
   >
     <v-textarea
@@ -76,9 +78,6 @@ export default {
 .float-text-input-wrapper {
   display: flex;
   align-items: center;
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 40%;
   border: 1px solid black;
   border-radius: 4px;
