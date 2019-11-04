@@ -226,7 +226,6 @@ import SvgNodeContainer from '@/components/molecules/svg/SvgNodeContainer'
 import SvgConnector from '@/components/molecules/svg/SvgConnector'
 import SvgConnectorContainer from '@/components/molecules/svg/SvgConnectorContainer'
 import SvgBridgeConnectorContainer from '@/components/molecules/svg/SvgBridgeConnectorContainer'
-import SvgBridgeConnector from '@/components/molecules/svg/SvgBridgeConnector'
 import FloatEditMenu from '@/components/molecules/FloatEditMenu'
 import FloatTextInput from '@/components/molecules/FloatTextInput'
 import EditButtons from '@/components/molecules/EditButtons'
@@ -245,7 +244,6 @@ export default {
     SvgConnector,
     SvgConnectorContainer,
     SvgBridgeConnectorContainer,
-    SvgBridgeConnector,
     FloatEditMenu,
     FloatTextInput,
     EditButtons,
