@@ -2,8 +2,10 @@
   <div
     class="float-button-wrapper"
     :style="{
-      left: `${x}px`,
-      top: `${y}px`,
+      position: 'absolute',
+      left: 0,
+      top: 0,
+      transform: `translate(${x}px, ${y}px)`,
     }"
   >
     <v-btn icon small outlined :color="color" class="button" @click="$emit('click')">
@@ -33,7 +35,6 @@ export default {
 
 <style lang="scss" scoped>
 .float-button-wrapper {
-  position: absolute;
   width: 28px;
   height: 28px;
   border-radius: 50%;

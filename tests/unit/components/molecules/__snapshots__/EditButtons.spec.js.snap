@@ -1,0 +1,515 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/molecules/EditButtons.vue snapshot CANVAS_MODE.DEPENDENCY 1`] = `
+<div
+  targetnodeviewposition="[object Object]"
+>
+  <div
+    class="toggle-close-button-wrapper"
+    style="left: 3px; top: -29px;"
+  >
+    <button
+      class="button v-btn v-btn--depressed v-btn--flat v-btn--icon v-btn--outlined v-btn--round theme--light v-size--small indigo--text"
+      type="button"
+    >
+      <span
+        class="v-btn__content"
+      >
+        <i
+          aria-hidden="true"
+          class="v-icon notranslate material-icons theme--light"
+        >
+          arrow_drop_up
+        </i>
+      </span>
+    </button>
+  </div>
+   
+  <div
+    class="float-button-wrapper"
+    style="position: absolute; left: 0px; top: 0px; transform: translate(-33px, -29px);"
+  >
+    <button
+      class="button v-btn v-btn--depressed v-btn--flat v-btn--icon v-btn--outlined v-btn--round theme--light v-size--small black--text"
+      type="button"
+    >
+      <span
+        class="v-btn__content"
+      >
+        <i
+          aria-hidden="true"
+          class="v-icon notranslate material-icons theme--light"
+        >
+          delete
+        </i>
+      </span>
+    </button>
+  </div>
+   
+  <div
+    class="float-button-wrapper"
+    style="position: absolute; left: 0px; top: 0px; transform: translate(39px, -29px);"
+  >
+    <button
+      class="button v-btn v-btn--depressed v-btn--flat v-btn--icon v-btn--outlined v-btn--round theme--light v-size--small indigo--text"
+      type="button"
+    >
+      <span
+        class="v-btn__content"
+      >
+        <i
+          aria-hidden="true"
+          class="v-icon notranslate material-icons theme--light"
+        >
+          edit
+        </i>
+      </span>
+    </button>
+  </div>
+   
+  <div
+    class="float-button-wrapper"
+    style="position: absolute; left: 0px; top: 0px; transform: translate(-33px, 21px);"
+  >
+    <button
+      class="button v-btn v-btn--depressed v-btn--flat v-btn--icon v-btn--outlined v-btn--round theme--light v-size--small deep-orange--text"
+      type="button"
+    >
+      <span
+        class="v-btn__content"
+      >
+        <i
+          aria-hidden="true"
+          class="v-icon notranslate material-icons theme--light"
+        >
+          call_missed
+        </i>
+      </span>
+    </button>
+  </div>
+   
+  <!---->
+   
+  <!---->
+   
+  <div
+    class="float-button-wrapper"
+    style="position: absolute; left: 0px; top: 0px; transform: translate(3px, 21px);"
+  >
+    <button
+      class="button v-btn v-btn--depressed v-btn--flat v-btn--icon v-btn--outlined v-btn--round theme--light v-size--small indigo--text"
+      type="button"
+    >
+      <span
+        class="v-btn__content"
+      >
+        <i
+          aria-hidden="true"
+          class="v-icon notranslate material-icons theme--light"
+        >
+          add
+        </i>
+      </span>
+    </button>
+  </div>
+   
+  <div
+    class="float-button-wrapper"
+    style="position: absolute; left: 0px; top: 0px; transform: translate(39px, 21px);"
+  >
+    <button
+      class="button v-btn v-btn--depressed v-btn--flat v-btn--icon v-btn--outlined v-btn--round theme--light v-size--small indigo--text"
+      type="button"
+    >
+      <span
+        class="v-btn__content"
+      >
+        <i
+          aria-hidden="true"
+          class="v-icon notranslate material-icons theme--light"
+        >
+          subdirectory_arrow_right
+        </i>
+      </span>
+    </button>
+  </div>
+   
+  <!---->
+</div>
+`;
+
+exports[`components/molecules/EditButtons.vue snapshot default 1`] = `
+<div
+  targetnodeviewposition="[object Object]"
+>
+  <div
+    class="toggle-close-button-wrapper"
+    style="left: 3px; top: -29px;"
+  >
+    <button
+      class="button v-btn v-btn--depressed v-btn--flat v-btn--icon v-btn--outlined v-btn--round theme--light v-size--small indigo--text"
+      type="button"
+    >
+      <span
+        class="v-btn__content"
+      >
+        <i
+          aria-hidden="true"
+          class="v-icon notranslate material-icons theme--light"
+        >
+          arrow_drop_up
+        </i>
+      </span>
+    </button>
+  </div>
+   
+  <div
+    class="float-button-wrapper"
+    style="position: absolute; left: 0px; top: 0px; transform: translate(-33px, -29px);"
+  >
+    <button
+      class="button v-btn v-btn--depressed v-btn--flat v-btn--icon v-btn--outlined v-btn--round theme--light v-size--small black--text"
+      type="button"
+    >
+      <span
+        class="v-btn__content"
+      >
+        <i
+          aria-hidden="true"
+          class="v-icon notranslate material-icons theme--light"
+        >
+          delete
+        </i>
+      </span>
+    </button>
+  </div>
+   
+  <div
+    class="float-button-wrapper"
+    style="position: absolute; left: 0px; top: 0px; transform: translate(39px, -29px);"
+  >
+    <button
+      class="button v-btn v-btn--depressed v-btn--flat v-btn--icon v-btn--outlined v-btn--round theme--light v-size--small indigo--text"
+      type="button"
+    >
+      <span
+        class="v-btn__content"
+      >
+        <i
+          aria-hidden="true"
+          class="v-icon notranslate material-icons theme--light"
+        >
+          edit
+        </i>
+      </span>
+    </button>
+  </div>
+   
+  <div
+    class="float-button-wrapper"
+    style="position: absolute; left: 0px; top: 0px; transform: translate(-33px, 21px);"
+  >
+    <button
+      class="button v-btn v-btn--depressed v-btn--flat v-btn--icon v-btn--outlined v-btn--round theme--light v-size--small indigo--text"
+      type="button"
+    >
+      <span
+        class="v-btn__content"
+      >
+        <i
+          aria-hidden="true"
+          class="v-icon notranslate material-icons theme--light"
+        >
+          call_missed
+        </i>
+      </span>
+    </button>
+  </div>
+   
+  <!---->
+   
+  <!---->
+   
+  <div
+    class="float-button-wrapper"
+    style="position: absolute; left: 0px; top: 0px; transform: translate(3px, 21px);"
+  >
+    <button
+      class="button v-btn v-btn--depressed v-btn--flat v-btn--icon v-btn--outlined v-btn--round theme--light v-size--small indigo--text"
+      type="button"
+    >
+      <span
+        class="v-btn__content"
+      >
+        <i
+          aria-hidden="true"
+          class="v-icon notranslate material-icons theme--light"
+        >
+          add
+        </i>
+      </span>
+    </button>
+  </div>
+   
+  <div
+    class="float-button-wrapper"
+    style="position: absolute; left: 0px; top: 0px; transform: translate(39px, 21px);"
+  >
+    <button
+      class="button v-btn v-btn--depressed v-btn--flat v-btn--icon v-btn--outlined v-btn--round theme--light v-size--small indigo--text"
+      type="button"
+    >
+      <span
+        class="v-btn__content"
+      >
+        <i
+          aria-hidden="true"
+          class="v-icon notranslate material-icons theme--light"
+        >
+          subdirectory_arrow_right
+        </i>
+      </span>
+    </button>
+  </div>
+   
+  <!---->
+</div>
+`;
+
+exports[`components/molecules/EditButtons.vue snapshot opposite 1`] = `
+<div
+  targetnodeviewposition="[object Object]"
+>
+  <div
+    class="toggle-close-button-wrapper"
+    style="left: 3px; top: -29px;"
+  >
+    <button
+      class="button v-btn v-btn--depressed v-btn--flat v-btn--icon v-btn--outlined v-btn--round theme--light v-size--small indigo--text"
+      type="button"
+    >
+      <span
+        class="v-btn__content"
+      >
+        <i
+          aria-hidden="true"
+          class="v-icon notranslate material-icons theme--light"
+        >
+          arrow_drop_up
+        </i>
+      </span>
+    </button>
+  </div>
+   
+  <div
+    class="float-button-wrapper"
+    style="position: absolute; left: 0px; top: 0px; transform: translate(-33px, -29px);"
+  >
+    <button
+      class="button v-btn v-btn--depressed v-btn--flat v-btn--icon v-btn--outlined v-btn--round theme--light v-size--small black--text"
+      type="button"
+    >
+      <span
+        class="v-btn__content"
+      >
+        <i
+          aria-hidden="true"
+          class="v-icon notranslate material-icons theme--light"
+        >
+          delete
+        </i>
+      </span>
+    </button>
+  </div>
+   
+  <div
+    class="float-button-wrapper"
+    style="position: absolute; left: 0px; top: 0px; transform: translate(39px, -29px);"
+  >
+    <button
+      class="button v-btn v-btn--depressed v-btn--flat v-btn--icon v-btn--outlined v-btn--round theme--light v-size--small indigo--text"
+      type="button"
+    >
+      <span
+        class="v-btn__content"
+      >
+        <i
+          aria-hidden="true"
+          class="v-icon notranslate material-icons theme--light"
+        >
+          edit
+        </i>
+      </span>
+    </button>
+  </div>
+   
+  <!---->
+   
+  <div
+    class="float-button-wrapper"
+    style="position: absolute; left: 0px; top: 0px; transform: translate(39px, 21px);"
+  >
+    <button
+      class="button v-btn v-btn--depressed v-btn--flat v-btn--icon v-btn--outlined v-btn--round theme--light v-size--small indigo--text"
+      type="button"
+    >
+      <span
+        class="v-btn__content"
+      >
+        <i
+          aria-hidden="true"
+          class="v-icon notranslate material-icons theme--light"
+        >
+          call_missed_outgoing
+        </i>
+      </span>
+    </button>
+  </div>
+   
+  <!---->
+   
+  <div
+    class="float-button-wrapper"
+    style="position: absolute; left: 0px; top: 0px; transform: translate(3px, 21px);"
+  >
+    <button
+      class="button v-btn v-btn--depressed v-btn--flat v-btn--icon v-btn--outlined v-btn--round theme--light v-size--small indigo--text"
+      type="button"
+    >
+      <span
+        class="v-btn__content"
+      >
+        <i
+          aria-hidden="true"
+          class="v-icon notranslate material-icons theme--light"
+        >
+          add
+        </i>
+      </span>
+    </button>
+  </div>
+   
+  <!---->
+   
+  <div
+    class="float-button-wrapper"
+    style="position: absolute; left: 0px; top: 0px; transform: translate(-33px, 21px);"
+  >
+    <button
+      class="button v-btn v-btn--depressed v-btn--flat v-btn--icon v-btn--outlined v-btn--round theme--light v-size--small indigo--text"
+      type="button"
+    >
+      <span
+        class="v-btn__content"
+      >
+        <i
+          aria-hidden="true"
+          class="v-icon notranslate material-icons theme--light"
+        >
+          subdirectory_arrow_left
+        </i>
+      </span>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`components/molecules/EditButtons.vue snapshot root 1`] = `
+<div
+  targetnodeviewposition="[object Object]"
+>
+  <!---->
+   
+  <div
+    class="float-button-wrapper"
+    style="position: absolute; left: 0px; top: 0px; transform: translate(-33px, -29px);"
+  >
+    <button
+      class="button v-btn v-btn--depressed v-btn--flat v-btn--icon v-btn--outlined v-btn--round theme--light v-size--small black--text"
+      type="button"
+    >
+      <span
+        class="v-btn__content"
+      >
+        <i
+          aria-hidden="true"
+          class="v-icon notranslate material-icons theme--light"
+        >
+          delete
+        </i>
+      </span>
+    </button>
+  </div>
+   
+  <div
+    class="float-button-wrapper"
+    style="position: absolute; left: 0px; top: 0px; transform: translate(39px, -29px);"
+  >
+    <button
+      class="button v-btn v-btn--depressed v-btn--flat v-btn--icon v-btn--outlined v-btn--round theme--light v-size--small indigo--text"
+      type="button"
+    >
+      <span
+        class="v-btn__content"
+      >
+        <i
+          aria-hidden="true"
+          class="v-icon notranslate material-icons theme--light"
+        >
+          edit
+        </i>
+      </span>
+    </button>
+  </div>
+   
+  <!---->
+   
+  <!---->
+   
+  <div
+    class="float-button-wrapper"
+    style="position: absolute; left: 0px; top: 0px; transform: translate(-33px, 21px);"
+  >
+    <button
+      class="button v-btn v-btn--depressed v-btn--flat v-btn--icon v-btn--outlined v-btn--round theme--light v-size--small indigo--text"
+      type="button"
+    >
+      <span
+        class="v-btn__content"
+      >
+        <i
+          aria-hidden="true"
+          class="v-icon notranslate material-icons theme--light"
+        >
+          subdirectory_arrow_left
+        </i>
+      </span>
+    </button>
+  </div>
+   
+  <!---->
+   
+  <div
+    class="float-button-wrapper"
+    style="position: absolute; left: 0px; top: 0px; transform: translate(39px, 21px);"
+  >
+    <button
+      class="button v-btn v-btn--depressed v-btn--flat v-btn--icon v-btn--outlined v-btn--round theme--light v-size--small indigo--text"
+      type="button"
+    >
+      <span
+        class="v-btn__content"
+      >
+        <i
+          aria-hidden="true"
+          class="v-icon notranslate material-icons theme--light"
+        >
+          subdirectory_arrow_right
+        </i>
+      </span>
+    </button>
+  </div>
+   
+  <!---->
+</div>
+`;

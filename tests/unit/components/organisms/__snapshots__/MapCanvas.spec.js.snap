@@ -18,7 +18,12 @@ exports[`components/organisms/MapCanvas.vue snapshot can write and select nodes 
       x="0"
       y="0"
     >
-        
+       
+      <svgbridgeconnectorcontainer-stub
+        dependencyconnectors="[object Object]"
+        selecteddependencyconnector="[object Object]"
+      />
+       
       <svgconnectorcontainer-stub
         connectors="[object Object]"
       />
@@ -56,22 +61,6 @@ exports[`components/organisms/MapCanvas.vue snapshot can write and select nodes 
   >
     <historytoolbox-stub />
   </div>
-   
-  <!---->
-   
-  <!---->
-   
-  <!---->
-   
-  <!---->
-   
-  <!---->
-   
-  <!---->
-   
-  <!---->
-   
-  <!---->
    
   <!---->
    
@@ -121,7 +110,12 @@ exports[`components/organisms/MapCanvas.vue snapshot full data 1`] = `
       x="0"
       y="0"
     >
-        
+       
+      <svgbridgeconnectorcontainer-stub
+        dependencyconnectors="[object Object]"
+        selecteddependencyconnector="[object Object]"
+      />
+       
       <svgconnectorcontainer-stub
         connectors="[object Object]"
       />
@@ -152,22 +146,6 @@ exports[`components/organisms/MapCanvas.vue snapshot full data 1`] = `
       step="0.1"
     />
   </div>
-   
-  <!---->
-   
-  <!---->
-   
-  <!---->
-   
-  <!---->
-   
-  <!---->
-   
-  <!---->
-   
-  <!---->
-   
-  <!---->
    
   <!---->
    
@@ -219,7 +197,12 @@ exports[`components/organisms/MapCanvas.vue snapshot no data 1`] = `
       x="0"
       y="0"
     >
-        
+       
+      <svgbridgeconnectorcontainer-stub
+        dependencyconnectors="[object Object]"
+        selecteddependencyconnector="[object Object]"
+      />
+       
       <svgconnectorcontainer-stub
         connectors="[object Object]"
       />
@@ -250,22 +233,6 @@ exports[`components/organisms/MapCanvas.vue snapshot no data 1`] = `
       step="0.1"
     />
   </div>
-   
-  <!---->
-   
-  <!---->
-   
-  <!---->
-   
-  <!---->
-   
-  <!---->
-   
-  <!---->
-   
-  <!---->
-   
-  <!---->
    
   <!---->
    
