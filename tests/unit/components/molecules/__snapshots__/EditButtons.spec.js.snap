@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`components/molecules/FloatMenu.vue snapshot CANVAS_MODE.DEPENDENCY 1`] = `
+exports[`components/molecules/EditButtons.vue snapshot CANVAS_MODE.DEPENDENCY 1`] = `
 <div
-  style="position: absolute; left: 0px; top: 0px; transform: translate(100px, 200px);"
+  targetnodeviewposition="[object Object]"
 >
   <div
     class="toggle-close-button-wrapper"
@@ -138,9 +138,9 @@ exports[`components/molecules/FloatMenu.vue snapshot CANVAS_MODE.DEPENDENCY 1`] 
 </div>
 `;
 
-exports[`components/molecules/FloatMenu.vue snapshot default 1`] = `
+exports[`components/molecules/EditButtons.vue snapshot default 1`] = `
 <div
-  style="position: absolute; left: 0px; top: 0px; transform: translate(100px, 200px);"
+  targetnodeviewposition="[object Object]"
 >
   <div
     class="toggle-close-button-wrapper"
@@ -276,9 +276,9 @@ exports[`components/molecules/FloatMenu.vue snapshot default 1`] = `
 </div>
 `;
 
-exports[`components/molecules/FloatMenu.vue snapshot opposite 1`] = `
+exports[`components/molecules/EditButtons.vue snapshot opposite 1`] = `
 <div
-  style="position: absolute; left: 0px; top: 0px; transform: translate(100px, 200px);"
+  targetnodeviewposition="[object Object]"
 >
   <div
     class="toggle-close-button-wrapper"
@@ -414,9 +414,9 @@ exports[`components/molecules/FloatMenu.vue snapshot opposite 1`] = `
 </div>
 `;
 
-exports[`components/molecules/FloatMenu.vue snapshot root 1`] = `
+exports[`components/molecules/EditButtons.vue snapshot root 1`] = `
 <div
-  style="position: absolute; left: 0px; top: 0px; transform: translate(100px, 200px);"
+  targetnodeviewposition="[object Object]"
 >
   <!---->
    

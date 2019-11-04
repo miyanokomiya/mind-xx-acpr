@@ -1,9 +1,9 @@
 import { mount } from '@vue/test-utils'
 import { createNode } from '@/utils/model'
 import { CANVAS_MODE } from '@/constants'
-import Target from '@/components/molecules/FloatMenu.vue'
+import Target from '@/components/molecules/EditButtons.vue'
 
-describe('components/molecules/FloatMenu.vue', () => {
+describe('components/molecules/EditButtons.vue', () => {
   describe('snapshot', () => {
     const targetNode = createNode({ children: ['a', 'b'] })
 

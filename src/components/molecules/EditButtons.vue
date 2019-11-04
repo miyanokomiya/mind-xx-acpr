@@ -1,12 +1,5 @@
 <template>
-  <div
-    :style="{
-      position: 'absolute',
-      left: 0,
-      top: 0,
-      transform: `translate(${targetNodeViewPosition.x}px, ${targetNodeViewPosition.y}px)`,
-    }"
-  >
+  <div>
     <ToggleCloseButton
       v-if="targetNode.children.length > 0 && !root"
       :x="fixTopBoxPosition.x"
@@ -101,7 +94,6 @@ export default Vue.extend({
   props: {
     targetNode: { type: Object, required: true },
     targetNodeViewSize: { type: Object, required: true },
-    targetNodeViewPosition: { type: Object, required: true },
     mode: { type: String, required: true },
     root: { type: Boolean, default: true },
     oppositeEditTarget: { type: Boolean, default: true },
@@ -124,7 +116,7 @@ export default Vue.extend({
     },
     editDependencyButtonColor() {
       return this.mode === CANVAS_MODE.DEPENDENCY ? 'deep-orange' : 'indigo'
-    }
+    },
   },
 })
 </script>

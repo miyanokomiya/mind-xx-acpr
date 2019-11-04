@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`@/components/molecules/FloatContainer.vue snapshot default 1`] = `
+<div
+  style="position: absolute; left: 0px; top: 0px; transform: translate(10px, 20px);"
+>
+  <div>
+    slot
+  </div>
+</div>
+`;

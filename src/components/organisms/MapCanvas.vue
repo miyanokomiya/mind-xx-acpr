@@ -10,20 +10,20 @@
       :tabindex="canWrite ? '1' : ''"
       ref="svgCanvasWrapper"
       @click="getFocus"
-      @keydown.self.enter.exact="keydownEnter"
-      @keydown.self.enter.shift.exact="keydownShiftEnter"
-      @keydown.self.up.exact="moveSelect('up')"
-      @keydown.self.down.exact="moveSelect('down')"
-      @keydown.self.left.exact="moveSelect('left')"
-      @keydown.self.right.exact="moveSelect('right')"
-      @keydown.self.up.shift.exact="changeOrder(true)"
-      @keydown.self.down.shift.exact="changeOrder()"
+      @keydown.self.enter.exact.prevent="keydownEnter"
+      @keydown.self.enter.shift.exact.prevent="keydownShiftEnter"
+      @keydown.self.up.exact.prevent="moveSelect('up')"
+      @keydown.self.down.exact.prevent="moveSelect('down')"
+      @keydown.self.left.exact.prevent="moveSelect('left')"
+      @keydown.self.right.exact.prevent="moveSelect('right')"
+      @keydown.self.up.shift.exact.prevent="changeOrder(true)"
+      @keydown.self.down.shift.exact.prevent="changeOrder()"
       @keydown.self.space.self.exact.prevent="keydownSpace"
-      @keydown.self.delete.shift.exact="keydownDelete"
-      @keydown.self.90.ctrl.exact="$emit('undo')"
-      @keydown.self.90.meta.exact="$emit('undo')"
-      @keydown.self.90.ctrl.shift.exact="$emit('redo')"
-      @keydown.self.90.meta.shift.exact="$emit('redo')"
+      @keydown.self.delete.shift.exact.prevent="keydownDelete"
+      @keydown.self.90.ctrl.exact.prevent="$emit('undo')"
+      @keydown.self.90.meta.exact.prevent="$emit('undo')"
+      @keydown.self.90.ctrl.shift.exact.prevent="$emit('redo')"
+      @keydown.self.90.meta.shift.exact.prevent="$emit('redo')"
       @wheel.prevent
     >
       <v-icon v-if="!canWrite" class="lock-button">lock</v-icon>
@@ -59,14 +59,9 @@
           class="family-rectangle"
         />
         <!-- connectors of dependencies -->
-        <SvgBridgeConnector
-          v-for="(connector, i) in dependencyConnectors"
-          :key="i"
-          :sx="connector.sx"
-          :sy="connector.sy"
-          :ex="connector.ex"
-          :ey="connector.ey"
-          :selected="selectedDependencyConnector[i]"
+        <SvgBridgeConnectorContainer
+          :dependencyConnectors="dependencyConnectors"
+          :selectedDependencyConnector="selectedDependencyConnector"
         />
         <!-- connectors of family -->
         <SvgConnectorContainer :connectors="connectors" />
@@ -135,30 +130,37 @@
     <div class="history-tool" v-if="canWrite">
       <HistoryToolBox @undo="$emit('undo')" @redo="$emit('redo')" />
     </div>
-    <FloatMenu
+    <FloatContainer
       v-if="showEditMenu"
-      :targetNode="editMenuTargetNode"
-      :targetNodeViewSize="editTargetViewSize"
-      :targetNodeViewPosition="editTargetViewPosition"
-      :mode="mode"
-      :root="editMenuTarget === ROOT_NODE"
-      :oppositeEditTarget="oppositeEditTarget"
-      @open="openNode(editMenuTarget)"
-      @close="closeNode(editMenuTarget)"
-      @deleteNode="deleteNode"
-      @readyEditText="readyEditText(editMenuTarget)"
-      @editDependency="editDependency"
-      @createNode="createNode"
-      @wheel.native.prevent="e => ($isMobile.any ? '' : wheel(e))"
-    />
-    <FloatTextInput
+      :x="editTargetViewPosition.x"
+      :y="editTargetViewPosition.y"
+    >
+      <EditButtons
+        :targetNode="editMenuTargetNode"
+        :targetNodeViewSize="editTargetViewSize"
+        :mode="mode"
+        :root="editMenuTarget === ROOT_NODE"
+        :oppositeEditTarget="oppositeEditTarget"
+        @open="openNode(editMenuTarget)"
+        @close="closeNode(editMenuTarget)"
+        @deleteNode="deleteNode"
+        @readyEditText="readyEditText(editMenuTarget)"
+        @editDependency="editDependency"
+        @createNode="createNode"
+        @wheel.native.prevent="e => ($isMobile.any ? '' : wheel(e))"
+      />
+    </FloatContainer>
+    <FloatContainer
       v-if="showTextInput"
-      v-model="editingText"
-      :targetKey="editTextTarget"
-      :x="editTextTargetViewPosition.x"
-      :y="editTextTargetViewPosition.y"
-      @done="doneEditText"
-    />
+      :x="$isMobile.any ? 0 : editTextTargetViewPosition.x"
+      :y="$isMobile.any ? 0 : editTextTargetViewPosition.y"
+    >
+      <FloatTextInput
+        v-model="editingText"
+        :targetKey="editTextTarget"
+        @done="doneEditText"
+      />
+    </FloatContainer>
     <FloatEditMenu
       v-if="showEditMenu"
       :check="editMenuTargetNode.checked !== -1"
@@ -169,9 +171,9 @@
       @wheel.native.prevent="e => ($isMobile.any ? '' : wheel(e))"
     />
     <CommentList
+      ref="commentList"
       class="comment-list"
       v-show="showEditMenu"
-      ref="commentList"
       :comments="targetNodeComments"
       :users="users"
       :user="user"
@@ -223,10 +225,12 @@ import SvgTextRectangle from '@/components/molecules/svg/SvgTextRectangle'
 import SvgNodeContainer from '@/components/molecules/svg/SvgNodeContainer'
 import SvgConnector from '@/components/molecules/svg/SvgConnector'
 import SvgConnectorContainer from '@/components/molecules/svg/SvgConnectorContainer'
+import SvgBridgeConnectorContainer from '@/components/molecules/svg/SvgBridgeConnectorContainer'
 import SvgBridgeConnector from '@/components/molecules/svg/SvgBridgeConnector'
 import FloatEditMenu from '@/components/molecules/FloatEditMenu'
 import FloatTextInput from '@/components/molecules/FloatTextInput'
-import FloatMenu from '@/components/molecules/FloatMenu'
+import EditButtons from '@/components/molecules/EditButtons'
+import FloatContainer from '@/components/molecules/FloatContainer'
 import ScaleToolBox from '@/components/molecules/ScaleToolBox'
 import HistoryToolBox from '@/components/molecules/HistoryToolBox'
 import CommentList from './CommentList'
@@ -240,10 +244,12 @@ export default {
     SvgNodeContainer,
     SvgConnector,
     SvgConnectorContainer,
+    SvgBridgeConnectorContainer,
     SvgBridgeConnector,
     FloatEditMenu,
     FloatTextInput,
-    FloatMenu,
+    EditButtons,
+    FloatContainer,
     ScaleToolBox,
     HistoryToolBox,
     CommentList,

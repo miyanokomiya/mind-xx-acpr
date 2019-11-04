@@ -1,14 +1,5 @@
 <template>
-  <div
-    class="float-text-input-wrapper"
-    :class="{ mobile: $isMobile.any }"
-    :style="{
-      position: 'absolute',
-      left: 0,
-      top: 0,
-      transform: $isMobile.any ? '' : `translate(${x}px, ${y}px)`,
-    }"
-  >
+  <div class="float-text-input-wrapper" :class="{ mobile: $isMobile.any }">
     <v-textarea
       class="text-field"
       solo
@@ -78,7 +69,7 @@ export default {
 .float-text-input-wrapper {
   display: flex;
   align-items: center;
-  width: 40%;
+  width: 40vw;
   border: 1px solid black;
   border-radius: 4px;
   background-color: #fff;
@@ -105,6 +96,6 @@ export default {
   }
 }
 .float-text-input-wrapper.mobile {
-  width: 100%;
+  width: 100vw;
 }
 </style>
