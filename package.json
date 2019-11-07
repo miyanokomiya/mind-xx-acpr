@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "core-js": "^3.3.6",
-    "date-fns": "^2.6.0",
+    "date-fns": "^2.7.0",
     "firebase": "7.1",
     "ismobilejs": "^1.0.3",
     "register-service-worker": "^1.6.2",
