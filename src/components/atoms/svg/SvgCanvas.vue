@@ -16,19 +16,21 @@
       @touchend="e => ($isMobile.any ? canvasCursorUp() : '')"
     >
       <slot />
-      <SvgRectangle
-        v-if="selectRectangle"
-        :x="selectRectangle.x"
-        :y="selectRectangle.y"
-        :rx="3"
-        :ry="3"
-        :width="selectRectangle.width"
-        :height="selectRectangle.height"
-        fill="none"
-        stroke="blue"
-        :strokeDasharray="5"
-        :strokeDashoffset="5"
-      />
+      <template v-if="selectRectangle">
+        <path fill="gray" fill-opacity="0.4" stroke="none" :d="selectRectangleD" />
+        <SvgRectangle
+          :x="selectRectangle.x"
+          :y="selectRectangle.y"
+          :rx="3"
+          :ry="3"
+          :width="selectRectangle.width"
+          :height="selectRectangle.height"
+          fill="none"
+          stroke="blue"
+          :strokeDasharray="5"
+          :strokeDashoffset="5"
+        />
+      </template>
     </svg>
   </div>
 </template>
@@ -83,6 +85,7 @@ export default {
     downStart: 0,
     clickLast: 0,
     rectangleSelecting: false,
+    longPressTimer: 0,
     downP: null,
     movingTimer: 0,
     progressiveMove: { x: 0, y: 0 },
@@ -109,6 +112,21 @@ export default {
         width: Math.abs(p1.x - p2.x),
         height: Math.abs(p1.y - p2.y),
       }
+    },
+    selectRectangleD() {
+      if (!this.selectRectangle) return ''
+
+      const canvasD = `M ${this.x},${this.y} L ${this.x + this.canvasWidth},${
+        this.y
+      } L ${this.x + this.canvasWidth},${this.y + this.canvasHeight} L ${this.x},${this
+        .y + this.canvasHeight} L ${this.x},${this.y}`
+      const rectD = `M ${this.selectRectangle.x},${this.selectRectangle.y} L ${
+        this.selectRectangle.x
+      },${this.selectRectangle.y + this.selectRectangle.height} L ${this.selectRectangle
+        .x + this.selectRectangle.width},${this.selectRectangle.y +
+        this.selectRectangle.height} L ${this.selectRectangle.x +
+        this.selectRectangle.width},${this.selectRectangle.y}`
+      return `${canvasD} ${rectD}`
     },
   },
   watch: {
@@ -162,8 +180,10 @@ export default {
       }
     },
     _canvasCursorMove(e) {
+      this.clearLongPress()
+
       if (this.beforeMoveP) {
-        if (canvasUtils.isMulitTouch(e)) {
+        if (canvasUtils.isMultiTouch(e)) {
           this.pinch(e)
         } else {
           if (!this.pinchDistance) {
@@ -227,7 +247,11 @@ export default {
       this.downStart = Date.now()
       const p = canvasUtils.getPoint(e)
       this.beforeMoveP = Object.assign({}, p)
-      this.rectangleSelecting = e.shiftKey
+      if (e.shiftKey) {
+        this.rectangleSelecting = true
+      } else {
+        this.longPressTimer = setTimeout(this.execLongPress, 500)
+      }
       this.downP = p
     },
     canvasCursorUpSelf(e) {
@@ -255,6 +279,17 @@ export default {
       }
       this.beforeMoveP = null
       this.rectangleSelecting = false
+      this.clearLongPress()
+    },
+    execLongPress() {
+      this.rectangleSelecting = true
+      this.longPressTimer = 0
+    },
+    clearLongPress() {
+      if (this.longPressTimer) {
+        clearTimeout(this.longPressTimer)
+        this.longPressTimer = 0
+      }
     },
     movingLoop() {
       if (this.disabledProgressiveMove) {

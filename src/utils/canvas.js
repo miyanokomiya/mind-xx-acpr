@@ -22,7 +22,7 @@ export const isTouch = e => {
   return e.touches
 }
 
-export const isMulitTouch = e => {
+export const isMultiTouch = e => {
   return isTouch(e) && e.touches.length > 1
 }
 
