@@ -33,6 +33,9 @@
               <v-list-item-subtitle>
                 <code>Shift</code> + <code>Click</code>
               </v-list-item-subtitle>
+              <v-list-item-subtitle>
+                <code>Press 0.5sec</code> then <code>Drag</code>
+              </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
 
