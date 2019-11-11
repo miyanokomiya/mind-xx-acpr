@@ -17,7 +17,13 @@
     >
       <slot />
       <template v-if="selectRectangle">
-        <path fill="gray" fill-opacity="0.4" stroke="none" :d="selectRectangleD" />
+        <path
+          style="pointer-events: none;"
+          fill="gray"
+          fill-opacity="0.4"
+          stroke="none"
+          :d="selectRectangleD"
+        />
         <SvgRectangle
           :x="selectRectangle.x"
           :y="selectRectangle.y"
@@ -244,13 +250,18 @@ export default {
       this.pinchDistance = null
     },
     canvasCursorDownSelf(e) {
+      this.rectangleSelecting = false
+      this.clearLongPress()
+
       this.downStart = Date.now()
       const p = canvasUtils.getPoint(e)
       this.beforeMoveP = Object.assign({}, p)
       if (e.shiftKey) {
         this.rectangleSelecting = true
       } else {
-        this.longPressTimer = setTimeout(this.execLongPress, 500)
+        if (!canvasUtils.isMultiTouch(e)) {
+          this.longPressTimer = setTimeout(this.execLongPress, 500)
+        }
       }
       this.downP = p
     },
