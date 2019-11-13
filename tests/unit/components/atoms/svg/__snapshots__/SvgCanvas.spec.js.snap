@@ -30,6 +30,7 @@ exports[`components/atoms/svg/SvgCanvas.vue snapshot with selecting rectangle 1`
       fill="gray"
       fill-opacity="0.4"
       stroke="none"
+      style="pointer-events: none;"
     />
      
     <rect
