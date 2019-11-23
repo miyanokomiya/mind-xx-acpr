@@ -13,7 +13,7 @@
     "test:unit:watch": "yarn test:unit --watch --coverage"
   },
   "dependencies": {
-    "core-js": "^3.4.1",
+    "core-js": "^3.4.2",
     "date-fns": "^2.8.0",
     "firebase": "7.1",
     "ismobilejs": "^1.0.3",
