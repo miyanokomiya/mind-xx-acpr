@@ -50,9 +50,16 @@ export default {
       type: Number,
       default: 0,
     },
+    untouchable: {
+      type: Boolean,
+      default: false,
+    },
   },
   render(h, { props }) {
     return h('rect', {
+      style: {
+        'pointer-events': props.untouchable ? 'none' : '',
+      },
       attrs: {
         x: props.x,
         y: props.y,
