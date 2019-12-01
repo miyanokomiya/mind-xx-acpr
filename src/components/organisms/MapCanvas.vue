@@ -56,7 +56,7 @@
           :stroke-width="2"
           :fill="rect.stroke"
           :fillOpacity="0.2"
-          class="family-rectangle"
+          untouchable
         />
         <!-- connectors of dependencies -->
         <SvgBridgeConnectorContainer
@@ -1133,9 +1133,6 @@ export default {
   .canvas-wrapper {
     outline: none;
     user-select: none;
-    .family-rectangle {
-      pointer-events: none;
-    }
   }
   .moving-copy {
     cursor: pointer;

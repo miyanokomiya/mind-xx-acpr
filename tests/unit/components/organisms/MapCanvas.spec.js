@@ -1,4 +1,4 @@
-import { shallowMount } from '@vue/test-utils'
+import { mount, shallowMount } from '@vue/test-utils'
 import Vuetify from 'vuetify'
 import Target from '@/components/organisms/MapCanvas.vue'
 import { createNode, createUser, createComment } from '@/utils/model'
@@ -16,13 +16,14 @@ const getNodes = () => {
     a: createNode({
       text: 'aaaa',
       children: ['d'],
+      grouping: true,
     }),
     b: createNode({ text: 'bbbbbbb\nbbbbb' }),
     c: createNode({ text: 'cc\ncc\nccc' }),
-    d: createNode({ text: 'dddd' }),
-    xx: createNode({ text: 'xxxx' }),
-    zz: createNode({ text: 'zzzz', children: ['yy', 'uu'] }),
-    yy: createNode({ text: 'yyyy' }),
+    d: createNode({ text: 'dddd', checked: 0 }),
+    xx: createNode({ text: 'xxxx', checked: 1 }),
+    zz: createNode({ text: 'zzzz', children: ['yy', 'uu'], closed: true }),
+    yy: createNode({ text: 'yyyy', dependencies: ['a'] }),
     uu: createNode({ text: 'uuuu' }),
   }
 }
@@ -45,9 +46,12 @@ const getUsers = () => {
 
 describe('components/organisms/MapCanvas.vue', () => {
   describe('snapshot', () => {
+    const stubs = { ScaleToolBox: true }
+
     it('no data', () => {
-      const wrapper = shallowMount(Target, {
+      const wrapper = mount(Target, {
         vuetify,
+        stubs,
         propsData: {
           width: 100,
           hegith: 200,
@@ -61,8 +65,9 @@ describe('components/organisms/MapCanvas.vue', () => {
       expect(wrapper.element).toMatchSnapshot()
     })
     it('full data', () => {
-      const wrapper = shallowMount(Target, {
+      const wrapper = mount(Target, {
         vuetify,
+        stubs,
         propsData: {
           width: 100,
           hegith: 200,
@@ -76,8 +81,9 @@ describe('components/organisms/MapCanvas.vue', () => {
       expect(wrapper.element).toMatchSnapshot()
     })
     it('can write and select nodes', () => {
-      const wrapper = shallowMount(Target, {
+      const wrapper = mount(Target, {
         vuetify,
+        stubs,
         propsData: {
           width: 100,
           hegith: 200,
