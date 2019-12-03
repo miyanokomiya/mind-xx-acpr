@@ -82,9 +82,5 @@ export default Vue.extend({
   &.moving-origin {
     opacity: 0.2;
   }
-  &.moving-copy {
-    opacity: 0.5;
-    pointer-events: none;
-  }
 }
 </style>

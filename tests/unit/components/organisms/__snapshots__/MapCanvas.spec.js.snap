@@ -11,38 +11,523 @@ exports[`components/organisms/MapCanvas.vue snapshot can write and select nodes 
   >
     <!---->
      
-    <svgcanvas-stub
-      height="400"
-      scale="1"
-      width="100"
-      x="0"
-      y="0"
+    <div
+      class="svg-canvas-wrapper"
+      style="width: 100px; height: 400px;"
     >
-       
-      <svgbridgeconnectorcontainer-stub
-        dependencyconnectors="[object Object]"
-        selecteddependencyconnector="[object Object]"
-      />
-       
-      <svgconnectorcontainer-stub
-        connectors="[object Object]"
-      />
-       
-      <svgnodecontainer-stub
-        canwrite="true"
-        closednodefamilycounts="[object Object]"
-        commentcounts="[object Object]"
-        editdependencytarget=""
-        editingtext=""
-        movingnodefamilykeylist=""
-        nodepositions="[object Object]"
-        nodes="[object Object]"
-        selectednodes="[object Object]"
-      />
-       
-      <!---->
-       
-    </svgcanvas-stub>
+      <svg
+        font-family="sans-serif"
+        viewBox="0 0 100 400"
+      >
+        <rect
+          fill="#B3E5FC"
+          fill-opacity="0.2"
+          height="36.333333333333336"
+          rx="3"
+          ry="3"
+          stroke="#B3E5FC"
+          stroke-dasharray="0"
+          stroke-dashoffset="0"
+          stroke-width="2"
+          style="pointer-events: none;"
+          width="310.6666666666667"
+          x="81.66666666666667"
+          y="-69.66666666666667"
+        />
+         
+        <g />
+         
+        <g>
+          <path
+            d="M 55 14 L 75 14 L 75 -51.5 L 95 -51.5"
+            fill="none"
+            stroke="black"
+            stroke-width="1"
+          />
+          <path
+            d="M 55 14 L 75 14 L 75 -1 L 95 -1"
+            fill="none"
+            stroke="black"
+            stroke-width="1"
+          />
+          <path
+            d="M 55 14 L 75 14 L 75 64.5 L 95 64.5"
+            fill="none"
+            stroke="black"
+            stroke-width="1"
+          />
+          <path
+            d="M -55 14 L -75 14 L -75 -7.5 L -95 -7.5"
+            fill="none"
+            stroke="black"
+            stroke-width="1"
+          />
+          <path
+            d="M -55 14 L -75 14 L -75 35.5 L -95 35.5"
+            fill="none"
+            stroke="black"
+            stroke-width="1"
+          />
+          <path
+            d="M 205 -51.5 L 225 -51.5 L 225 -51.5 L 245 -51.5"
+            fill="none"
+            stroke="black"
+            stroke-width="1"
+          />
+        </g>
+         
+        <g>
+          <g
+            class="mind-node"
+          >
+            <!---->
+             
+            <!---->
+             
+            <g>
+              <rect
+                fill="#B3E5FC"
+                fill-opacity="1"
+                height="28"
+                rx="3"
+                ry="3"
+                stroke="black"
+                stroke-dasharray="0"
+                stroke-dashoffset="0"
+                stroke-width="1"
+                width="110"
+                x="-55"
+                y="0"
+              />
+               
+              <text
+                fill="#000000"
+                font-size="15"
+                font-weight="500"
+                text-decoration=""
+                x="-50"
+                y="20"
+              >
+                
+    root
+  
+              </text>
+               
+              <!---->
+            </g>
+             
+            <!---->
+          </g>
+          <g
+            class="mind-node"
+          >
+            <!---->
+             
+            <g>
+              <g>
+                <ellipse
+                  cx="210.5"
+                  cy="-51.5"
+                  fill="#aaa"
+                  rx="10"
+                  ry="10"
+                />
+                 
+                <text
+                  fill="white"
+                  font-size="10"
+                  font-weight="500"
+                  text-decoration=""
+                  x="209"
+                  y="-48"
+                >
+                  
+    -
+  
+                </text>
+              </g>
+            </g>
+             
+            <g>
+              <rect
+                fill="#B3E5FC"
+                fill-opacity="1"
+                height="23"
+                rx="3"
+                ry="3"
+                stroke="blue"
+                stroke-dasharray="0"
+                stroke-dashoffset="0"
+                stroke-width="2"
+                width="110"
+                x="95"
+                y="-63"
+              />
+               
+              <text
+                fill="#000000"
+                font-size="10"
+                font-weight="500"
+                text-decoration=""
+                x="100"
+                y="-48"
+              >
+                
+    aaaa
+  
+              </text>
+               
+              <!---->
+            </g>
+             
+            <!---->
+          </g>
+          <g
+            class="mind-node"
+          >
+            <g>
+              <ellipse
+                cx="150"
+                cy="16"
+                fill="#ddd"
+                rx="55"
+                ry="17"
+              />
+               
+              <text
+                fill="black"
+                font-size="10"
+                font-weight="500"
+                text-decoration=""
+                x="146"
+                y="29"
+              >
+                
+    3
+  
+              </text>
+            </g>
+             
+            <!---->
+             
+            <g>
+              <rect
+                fill="#B3E5FC"
+                fill-opacity="1"
+                height="38"
+                rx="3"
+                ry="3"
+                stroke="blue"
+                stroke-dasharray="0"
+                stroke-dashoffset="0"
+                stroke-width="2"
+                width="110"
+                x="95"
+                y="-20"
+              />
+               
+              <text
+                fill="#000000"
+                font-size="10"
+                font-weight="500"
+                text-decoration=""
+                x="100"
+                y="-5"
+              >
+                
+    bbbbbbb
+  
+              </text>
+              <text
+                fill="#000000"
+                font-size="10"
+                font-weight="500"
+                text-decoration=""
+                x="100"
+                y="10"
+              >
+                
+    bbbbb
+  
+              </text>
+               
+              <!---->
+            </g>
+             
+            <!---->
+          </g>
+          <g
+            class="mind-node"
+          >
+            <g>
+              <ellipse
+                cx="150"
+                cy="89"
+                fill="#ddd"
+                rx="55"
+                ry="17"
+              />
+               
+              <text
+                fill="black"
+                font-size="10"
+                font-weight="500"
+                text-decoration=""
+                x="146"
+                y="102"
+              >
+                
+    2
+  
+              </text>
+            </g>
+             
+            <!---->
+             
+            <g>
+              <rect
+                fill="#B3E5FC"
+                fill-opacity="1"
+                height="53"
+                rx="3"
+                ry="3"
+                stroke="black"
+                stroke-dasharray="0"
+                stroke-dashoffset="0"
+                stroke-width="1"
+                width="110"
+                x="95"
+                y="38"
+              />
+               
+              <text
+                fill="#000000"
+                font-size="10"
+                font-weight="500"
+                text-decoration=""
+                x="100"
+                y="53"
+              >
+                
+    cc
+  
+              </text>
+              <text
+                fill="#000000"
+                font-size="10"
+                font-weight="500"
+                text-decoration=""
+                x="100"
+                y="68"
+              >
+                
+    cc
+  
+              </text>
+              <text
+                fill="#000000"
+                font-size="10"
+                font-weight="500"
+                text-decoration=""
+                x="100"
+                y="83"
+              >
+                
+    ccc
+  
+              </text>
+               
+              <!---->
+            </g>
+             
+            <!---->
+          </g>
+          <g
+            class="mind-node"
+          >
+            <!---->
+             
+            <!---->
+             
+            <g>
+              <rect
+                fill="#B3E5FC"
+                fill-opacity="1"
+                height="23"
+                rx="3"
+                ry="3"
+                stroke="black"
+                stroke-dasharray="0"
+                stroke-dashoffset="0"
+                stroke-width="1"
+                width="134"
+                x="245"
+                y="-63"
+              />
+               
+              <text
+                fill="#000000"
+                font-size="10"
+                font-weight="500"
+                text-decoration=""
+                x="271"
+                y="-48"
+              >
+                
+    dddd
+  
+              </text>
+               
+              <!---->
+            </g>
+             
+            <g>
+              <rect
+                fill="white"
+                height="18"
+                rx="2"
+                ry="2"
+                stroke="black"
+                stroke-width="1.5"
+                width="18"
+                x="248"
+                y="-60.5"
+              />
+               
+              <!---->
+            </g>
+          </g>
+          <g
+            class="mind-node"
+          >
+            <!---->
+             
+            <!---->
+             
+            <g>
+              <rect
+                fill="#B3E5FC"
+                fill-opacity="1"
+                height="23"
+                rx="3"
+                ry="3"
+                stroke="black"
+                stroke-dasharray="0"
+                stroke-dashoffset="0"
+                stroke-width="1"
+                width="134"
+                x="-229"
+                y="24"
+              />
+               
+              <text
+                fill="#000000"
+                font-size="10"
+                font-weight="500"
+                text-decoration="line-through"
+                x="-203"
+                y="39"
+              >
+                
+    xxxx
+  
+              </text>
+               
+              <!---->
+            </g>
+             
+            <g>
+              <rect
+                fill="white"
+                height="18"
+                rx="2"
+                ry="2"
+                stroke="black"
+                stroke-width="1.5"
+                width="18"
+                x="-226"
+                y="26.5"
+              />
+               
+              <path
+                d="M -223.75 33.25 -217 41.125 -205.75 28.75 -208 28.75 -217 37.75 -221.5 33.25 z"
+                fill="blue"
+                stroke="blue"
+                stroke-width="1"
+              />
+            </g>
+          </g>
+          <g
+            class="mind-node"
+          >
+            <!---->
+             
+            <g>
+              <g>
+                <ellipse
+                  cx="-211.5"
+                  cy="-7.5"
+                  fill="#444"
+                  rx="10"
+                  ry="10"
+                />
+                 
+                <text
+                  fill="white"
+                  font-size="10"
+                  font-weight="500"
+                  text-decoration=""
+                  x="-215"
+                  y="-4"
+                >
+                  
+    2
+  
+                </text>
+              </g>
+            </g>
+             
+            <g>
+              <rect
+                fill="#B3E5FC"
+                fill-opacity="1"
+                height="23"
+                rx="3"
+                ry="3"
+                stroke="black"
+                stroke-dasharray="0"
+                stroke-dashoffset="0"
+                stroke-width="1"
+                width="110"
+                x="-205"
+                y="-19"
+              />
+               
+              <text
+                fill="#000000"
+                font-size="10"
+                font-weight="500"
+                text-decoration=""
+                x="-200"
+                y="-4"
+              >
+                
+    zzzz
+  
+              </text>
+               
+              <!---->
+            </g>
+             
+            <!---->
+          </g>
+        </g>
+         
+        <!---->
+          
+        <!---->
+      </svg>
+    </div>
   </div>
    
   <div
@@ -50,7 +535,7 @@ exports[`components/organisms/MapCanvas.vue snapshot can write and select nodes 
   >
     <scaletoolbox-stub
       max="15"
-      min="-17.545081794683426"
+      min="-22.60672526482198"
       scalerate="0"
       step="0.1"
     />
@@ -59,7 +544,45 @@ exports[`components/organisms/MapCanvas.vue snapshot can write and select nodes 
   <div
     class="history-tool"
   >
-    <historytoolbox-stub />
+    <div
+      class="history-tool-wrapper"
+    >
+      <div
+        class="history-box"
+      >
+        <button
+          class="undo-button v-btn v-btn--depressed v-btn--flat v-btn--icon v-btn--outlined v-btn--round theme--light v-size--small indigo--text"
+          type="button"
+        >
+          <span
+            class="v-btn__content"
+          >
+            <i
+              aria-hidden="true"
+              class="v-icon notranslate material-icons theme--light"
+            >
+              undo
+            </i>
+          </span>
+        </button>
+         
+        <button
+          class="redo-button v-btn v-btn--depressed v-btn--flat v-btn--icon v-btn--outlined v-btn--round theme--light v-size--small indigo--text"
+          type="button"
+        >
+          <span
+            class="v-btn__content"
+          >
+            <i
+              aria-hidden="true"
+              class="v-icon notranslate material-icons theme--light"
+            >
+              redo
+            </i>
+          </span>
+        </button>
+      </div>
+    </div>
   </div>
    
   <!---->
@@ -68,23 +591,42 @@ exports[`components/organisms/MapCanvas.vue snapshot can write and select nodes 
    
   <!---->
    
-  <commentlist-stub
-    class="comment-list"
-    comments="[object Object]"
+  <div
+    class="comment-list comment-list v-card v-sheet theme--light"
     style="display: none;"
-    user="[object Object]"
-    users="[object Object]"
-  />
-   
-  <v-snackbar-stub
-    bottom="true"
-    right="true"
-    timeout="2000"
   >
-    
-    One more click to delete.
-  
-  </v-snackbar-stub>
+    <div
+      class="switch-buttons"
+    >
+      <button
+        class="v-btn v-btn--flat v-btn--text theme--light v-size--small black--text"
+        type="button"
+      >
+        <span
+          class="v-btn__content"
+        >
+          <i
+            aria-hidden="true"
+            class="v-icon notranslate material-icons theme--dark"
+          >
+            comment
+          </i>
+           
+          <span>
+            0
+          </span>
+        </span>
+      </button>
+    </div>
+     
+    <!---->
+     
+    <!---->
+     
+    <!---->
+  </div>
+   
+  <!---->
 </div>
 `;
 
@@ -97,43 +639,530 @@ exports[`components/organisms/MapCanvas.vue snapshot full data 1`] = `
     class="canvas-wrapper"
     tabindex=""
   >
-    <v-icon-stub
-      class="lock-button"
+    <i
+      aria-hidden="true"
+      class="v-icon notranslate lock-button material-icons theme--light"
     >
       lock
-    </v-icon-stub>
+    </i>
      
-    <svgcanvas-stub
-      height="400"
-      scale="1"
-      width="100"
-      x="0"
-      y="0"
+    <div
+      class="svg-canvas-wrapper"
+      style="width: 100px; height: 400px;"
     >
-       
-      <svgbridgeconnectorcontainer-stub
-        dependencyconnectors="[object Object]"
-        selecteddependencyconnector="[object Object]"
-      />
-       
-      <svgconnectorcontainer-stub
-        connectors="[object Object]"
-      />
-       
-      <svgnodecontainer-stub
-        closednodefamilycounts="[object Object]"
-        commentcounts="[object Object]"
-        editdependencytarget=""
-        editingtext=""
-        movingnodefamilykeylist=""
-        nodepositions="[object Object]"
-        nodes="[object Object]"
-        selectednodes="[object Object]"
-      />
-       
-      <!---->
-       
-    </svgcanvas-stub>
+      <svg
+        font-family="sans-serif"
+        viewBox="0 0 100 400"
+      >
+        <rect
+          fill="#B3E5FC"
+          fill-opacity="0.2"
+          height="36.333333333333336"
+          rx="3"
+          ry="3"
+          stroke="#B3E5FC"
+          stroke-dasharray="0"
+          stroke-dashoffset="0"
+          stroke-width="2"
+          style="pointer-events: none;"
+          width="310.6666666666667"
+          x="81.66666666666667"
+          y="-69.66666666666667"
+        />
+         
+        <g />
+         
+        <g>
+          <path
+            d="M 55 14 L 75 14 L 75 -51.5 L 95 -51.5"
+            fill="none"
+            stroke="black"
+            stroke-width="1"
+          />
+          <path
+            d="M 55 14 L 75 14 L 75 -1 L 95 -1"
+            fill="none"
+            stroke="black"
+            stroke-width="1"
+          />
+          <path
+            d="M 55 14 L 75 14 L 75 64.5 L 95 64.5"
+            fill="none"
+            stroke="black"
+            stroke-width="1"
+          />
+          <path
+            d="M -55 14 L -75 14 L -75 -7.5 L -95 -7.5"
+            fill="none"
+            stroke="black"
+            stroke-width="1"
+          />
+          <path
+            d="M -55 14 L -75 14 L -75 35.5 L -95 35.5"
+            fill="none"
+            stroke="black"
+            stroke-width="1"
+          />
+          <path
+            d="M 205 -51.5 L 225 -51.5 L 225 -51.5 L 245 -51.5"
+            fill="none"
+            stroke="black"
+            stroke-width="1"
+          />
+        </g>
+         
+        <g>
+          <g
+            class="mind-node"
+          >
+            <!---->
+             
+            <!---->
+             
+            <g>
+              <rect
+                fill="#B3E5FC"
+                fill-opacity="1"
+                height="28"
+                rx="3"
+                ry="3"
+                stroke="black"
+                stroke-dasharray="0"
+                stroke-dashoffset="0"
+                stroke-width="1"
+                width="110"
+                x="-55"
+                y="0"
+              />
+               
+              <text
+                fill="#000000"
+                font-size="15"
+                font-weight="500"
+                text-decoration=""
+                x="-50"
+                y="20"
+              >
+                
+    root
+  
+              </text>
+               
+              <!---->
+            </g>
+             
+            <!---->
+          </g>
+          <g
+            class="mind-node"
+          >
+            <!---->
+             
+            <g>
+              <g>
+                <ellipse
+                  cx="210.5"
+                  cy="-51.5"
+                  fill="#aaa"
+                  rx="10"
+                  ry="10"
+                />
+                 
+                <text
+                  fill="white"
+                  font-size="10"
+                  font-weight="500"
+                  text-decoration=""
+                  x="209"
+                  y="-48"
+                >
+                  
+    -
+  
+                </text>
+              </g>
+            </g>
+             
+            <g>
+              <rect
+                fill="#B3E5FC"
+                fill-opacity="1"
+                height="23"
+                rx="3"
+                ry="3"
+                stroke="black"
+                stroke-dasharray="0"
+                stroke-dashoffset="0"
+                stroke-width="1"
+                width="110"
+                x="95"
+                y="-63"
+              />
+               
+              <text
+                fill="#000000"
+                font-size="10"
+                font-weight="500"
+                text-decoration=""
+                x="100"
+                y="-48"
+              >
+                
+    aaaa
+  
+              </text>
+               
+              <!---->
+            </g>
+             
+            <!---->
+          </g>
+          <g
+            class="mind-node"
+          >
+            <g>
+              <ellipse
+                cx="150"
+                cy="16"
+                fill="#ddd"
+                rx="55"
+                ry="17"
+              />
+               
+              <text
+                fill="black"
+                font-size="10"
+                font-weight="500"
+                text-decoration=""
+                x="146"
+                y="29"
+              >
+                
+    3
+  
+              </text>
+            </g>
+             
+            <!---->
+             
+            <g>
+              <rect
+                fill="#B3E5FC"
+                fill-opacity="1"
+                height="38"
+                rx="3"
+                ry="3"
+                stroke="black"
+                stroke-dasharray="0"
+                stroke-dashoffset="0"
+                stroke-width="1"
+                width="110"
+                x="95"
+                y="-20"
+              />
+               
+              <text
+                fill="#000000"
+                font-size="10"
+                font-weight="500"
+                text-decoration=""
+                x="100"
+                y="-5"
+              >
+                
+    bbbbbbb
+  
+              </text>
+              <text
+                fill="#000000"
+                font-size="10"
+                font-weight="500"
+                text-decoration=""
+                x="100"
+                y="10"
+              >
+                
+    bbbbb
+  
+              </text>
+               
+              <!---->
+            </g>
+             
+            <!---->
+          </g>
+          <g
+            class="mind-node"
+          >
+            <g>
+              <ellipse
+                cx="150"
+                cy="89"
+                fill="#ddd"
+                rx="55"
+                ry="17"
+              />
+               
+              <text
+                fill="black"
+                font-size="10"
+                font-weight="500"
+                text-decoration=""
+                x="146"
+                y="102"
+              >
+                
+    2
+  
+              </text>
+            </g>
+             
+            <!---->
+             
+            <g>
+              <rect
+                fill="#B3E5FC"
+                fill-opacity="1"
+                height="53"
+                rx="3"
+                ry="3"
+                stroke="black"
+                stroke-dasharray="0"
+                stroke-dashoffset="0"
+                stroke-width="1"
+                width="110"
+                x="95"
+                y="38"
+              />
+               
+              <text
+                fill="#000000"
+                font-size="10"
+                font-weight="500"
+                text-decoration=""
+                x="100"
+                y="53"
+              >
+                
+    cc
+  
+              </text>
+              <text
+                fill="#000000"
+                font-size="10"
+                font-weight="500"
+                text-decoration=""
+                x="100"
+                y="68"
+              >
+                
+    cc
+  
+              </text>
+              <text
+                fill="#000000"
+                font-size="10"
+                font-weight="500"
+                text-decoration=""
+                x="100"
+                y="83"
+              >
+                
+    ccc
+  
+              </text>
+               
+              <!---->
+            </g>
+             
+            <!---->
+          </g>
+          <g
+            class="mind-node"
+          >
+            <!---->
+             
+            <!---->
+             
+            <g>
+              <rect
+                fill="#B3E5FC"
+                fill-opacity="1"
+                height="23"
+                rx="3"
+                ry="3"
+                stroke="black"
+                stroke-dasharray="0"
+                stroke-dashoffset="0"
+                stroke-width="1"
+                width="134"
+                x="245"
+                y="-63"
+              />
+               
+              <text
+                fill="#000000"
+                font-size="10"
+                font-weight="500"
+                text-decoration=""
+                x="271"
+                y="-48"
+              >
+                
+    dddd
+  
+              </text>
+               
+              <!---->
+            </g>
+             
+            <g>
+              <rect
+                fill="white"
+                height="18"
+                rx="2"
+                ry="2"
+                stroke="black"
+                stroke-width="1.5"
+                width="18"
+                x="248"
+                y="-60.5"
+              />
+               
+              <!---->
+            </g>
+          </g>
+          <g
+            class="mind-node"
+          >
+            <!---->
+             
+            <!---->
+             
+            <g>
+              <rect
+                fill="#B3E5FC"
+                fill-opacity="1"
+                height="23"
+                rx="3"
+                ry="3"
+                stroke="black"
+                stroke-dasharray="0"
+                stroke-dashoffset="0"
+                stroke-width="1"
+                width="134"
+                x="-229"
+                y="24"
+              />
+               
+              <text
+                fill="#000000"
+                font-size="10"
+                font-weight="500"
+                text-decoration="line-through"
+                x="-203"
+                y="39"
+              >
+                
+    xxxx
+  
+              </text>
+               
+              <!---->
+            </g>
+             
+            <g>
+              <rect
+                fill="white"
+                height="18"
+                rx="2"
+                ry="2"
+                stroke="black"
+                stroke-width="1.5"
+                width="18"
+                x="-226"
+                y="26.5"
+              />
+               
+              <path
+                d="M -223.75 33.25 -217 41.125 -205.75 28.75 -208 28.75 -217 37.75 -221.5 33.25 z"
+                fill="blue"
+                stroke="blue"
+                stroke-width="1"
+              />
+            </g>
+          </g>
+          <g
+            class="mind-node"
+          >
+            <!---->
+             
+            <g>
+              <g>
+                <ellipse
+                  cx="-211.5"
+                  cy="-7.5"
+                  fill="#444"
+                  rx="10"
+                  ry="10"
+                />
+                 
+                <text
+                  fill="white"
+                  font-size="10"
+                  font-weight="500"
+                  text-decoration=""
+                  x="-215"
+                  y="-4"
+                >
+                  
+    2
+  
+                </text>
+              </g>
+            </g>
+             
+            <g>
+              <rect
+                fill="#B3E5FC"
+                fill-opacity="1"
+                height="23"
+                rx="3"
+                ry="3"
+                stroke="black"
+                stroke-dasharray="0"
+                stroke-dashoffset="0"
+                stroke-width="1"
+                width="110"
+                x="-205"
+                y="-19"
+              />
+               
+              <text
+                fill="#000000"
+                font-size="10"
+                font-weight="500"
+                text-decoration=""
+                x="-200"
+                y="-4"
+              >
+                
+    zzzz
+  
+              </text>
+               
+              <!---->
+            </g>
+             
+            <!---->
+          </g>
+        </g>
+         
+        <!---->
+          
+        <!---->
+      </svg>
+    </div>
   </div>
    
   <div
@@ -141,7 +1170,7 @@ exports[`components/organisms/MapCanvas.vue snapshot full data 1`] = `
   >
     <scaletoolbox-stub
       max="15"
-      min="-17.545081794683426"
+      min="-22.60672526482198"
       scalerate="0"
       step="0.1"
     />
@@ -155,23 +1184,42 @@ exports[`components/organisms/MapCanvas.vue snapshot full data 1`] = `
    
   <!---->
    
-  <commentlist-stub
-    class="comment-list"
-    comments="[object Object]"
+  <div
+    class="comment-list comment-list v-card v-sheet theme--light"
     style="display: none;"
-    user="[object Object]"
-    users="[object Object]"
-  />
-   
-  <v-snackbar-stub
-    bottom="true"
-    right="true"
-    timeout="2000"
   >
-    
-    One more click to delete.
-  
-  </v-snackbar-stub>
+    <div
+      class="switch-buttons"
+    >
+      <button
+        class="v-btn v-btn--flat v-btn--text theme--light v-size--small black--text"
+        type="button"
+      >
+        <span
+          class="v-btn__content"
+        >
+          <i
+            aria-hidden="true"
+            class="v-icon notranslate material-icons theme--dark"
+          >
+            comment
+          </i>
+           
+          <span>
+            0
+          </span>
+        </span>
+      </button>
+    </div>
+     
+    <!---->
+     
+    <!---->
+     
+    <!---->
+  </div>
+   
+  <!---->
 </div>
 `;
 
@@ -184,43 +1232,73 @@ exports[`components/organisms/MapCanvas.vue snapshot no data 1`] = `
     class="canvas-wrapper"
     tabindex=""
   >
-    <v-icon-stub
-      class="lock-button"
+    <i
+      aria-hidden="true"
+      class="v-icon notranslate lock-button material-icons theme--light"
     >
       lock
-    </v-icon-stub>
+    </i>
      
-    <svgcanvas-stub
-      height="400"
-      scale="1"
-      width="100"
-      x="0"
-      y="0"
+    <div
+      class="svg-canvas-wrapper"
+      style="width: 100px; height: 400px;"
     >
-       
-      <svgbridgeconnectorcontainer-stub
-        dependencyconnectors="[object Object]"
-        selecteddependencyconnector="[object Object]"
-      />
-       
-      <svgconnectorcontainer-stub
-        connectors="[object Object]"
-      />
-       
-      <svgnodecontainer-stub
-        closednodefamilycounts="[object Object]"
-        commentcounts="[object Object]"
-        editdependencytarget=""
-        editingtext=""
-        movingnodefamilykeylist=""
-        nodepositions="[object Object]"
-        nodes="[object Object]"
-        selectednodes="[object Object]"
-      />
-       
-      <!---->
-       
-    </svgcanvas-stub>
+      <svg
+        font-family="sans-serif"
+        viewBox="0 0 100 400"
+      >
+         
+        <g />
+         
+        <g />
+         
+        <g>
+          <g
+            class="mind-node"
+          >
+            <!---->
+             
+            <!---->
+             
+            <g>
+              <rect
+                fill="#B3E5FC"
+                fill-opacity="1"
+                height="28"
+                rx="3"
+                ry="3"
+                stroke="black"
+                stroke-dasharray="0"
+                stroke-dashoffset="0"
+                stroke-width="1"
+                width="50"
+                x="-25"
+                y="0"
+              />
+                
+              <text
+                fill="#000000"
+                font-size="15"
+                font-weight="500"
+                text-decoration=""
+                x="-20"
+                y="20"
+              >
+                
+    -XXACPR-
+  
+              </text>
+            </g>
+             
+            <!---->
+          </g>
+        </g>
+         
+        <!---->
+          
+        <!---->
+      </svg>
+    </div>
   </div>
    
   <div
@@ -242,22 +1320,41 @@ exports[`components/organisms/MapCanvas.vue snapshot no data 1`] = `
    
   <!---->
    
-  <commentlist-stub
-    class="comment-list"
-    comments="[object Object]"
+  <div
+    class="comment-list comment-list v-card v-sheet theme--light"
     style="display: none;"
-    user="[object Object]"
-    users="[object Object]"
-  />
-   
-  <v-snackbar-stub
-    bottom="true"
-    right="true"
-    timeout="2000"
   >
-    
-    One more click to delete.
-  
-  </v-snackbar-stub>
+    <div
+      class="switch-buttons"
+    >
+      <button
+        class="v-btn v-btn--flat v-btn--text theme--light v-size--small black--text"
+        type="button"
+      >
+        <span
+          class="v-btn__content"
+        >
+          <i
+            aria-hidden="true"
+            class="v-icon notranslate material-icons theme--dark"
+          >
+            comment
+          </i>
+           
+          <span>
+            0
+          </span>
+        </span>
+      </button>
+    </div>
+     
+    <!---->
+     
+    <!---->
+     
+    <!---->
+  </div>
+   
+  <!---->
 </div>
 `;
