@@ -49,7 +49,7 @@
     "postcss-import": "^12.0.1",
     "prettier": "^1.19.1",
     "puppeteer": "^2.0.0",
-    "sass": "^1.23.7",
+    "sass": "^1.26.2",
     "sass-loader": "^7.1.0",
     "storybook-router": "^0.3.4",
     "vue-cli-plugin-storybook": "^0.6.1",
