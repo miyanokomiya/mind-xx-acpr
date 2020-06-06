@@ -4,7 +4,7 @@ admin.initializeApp()
 
 exports.deleteUser = functions.auth.user().onDelete((data, context) => {
   const uid = context.auth.uid
-    return admin
+  return admin
     .database()
     .ref(`/work_spaces/${uid}/files`)
     .once('value')
@@ -14,7 +14,7 @@ exports.deleteUser = functions.auth.user().onDelete((data, context) => {
         return Promise.all(
           Object.keys(files).map(fileId => {
             return deleteFile(fileId)
-          })
+          }),
         )
       } else {
         return Promise.resolve()
@@ -23,7 +23,7 @@ exports.deleteUser = functions.auth.user().onDelete((data, context) => {
     .then(() => {
       const updates = {
         [`/work_spaces/${uid}`]: null,
-        [`/users/${uid}`]: null
+        [`/users/${uid}`]: null,
       }
       return admin
         .database()
@@ -32,7 +32,7 @@ exports.deleteUser = functions.auth.user().onDelete((data, context) => {
     })
 })
 
-function deleteFile (fileId) {
+function deleteFile(fileId) {
   return admin
     .database()
     .ref(`/file_authorities/${fileId}/users`)
@@ -92,17 +92,15 @@ exports.inviteUserToFile = functions.database
               const current = snapshot.val()
               if (current && current.owner) {
                 console.error(
-                  `The authority of the owner cannot change. file=${fileId}, owner=${
-                    user.uid
-                  }`
+                  `The authority of the owner cannot change. file=${fileId}, owner=${user.uid}`,
                 )
                 return change.after.ref.remove()
               } else {
                 const updates = {
                   [`/file_authorities/${fileId}/users/${user.uid}`]: {
-                    write: original.write
+                    write: original.write,
                   },
-                  [`/work_spaces/${user.uid}/invited_files/${fileId}`]: true
+                  [`/work_spaces/${user.uid}/invited_files/${fileId}`]: true,
                 }
                 return admin
                   .database()
