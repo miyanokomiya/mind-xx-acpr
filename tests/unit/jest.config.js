@@ -19,13 +19,11 @@ module.exports = {
   snapshotSerializers: ['jest-serializer-vue'],
   testMatch: ['**/tests/unit/**/*.spec.(js|jsx|ts|tsx)'],
   testURL: 'http://localhost/',
-  watchPlugins: ['jest-watch-typeahead/filename', 'jest-watch-typeahead/testname'],
   coverageDirectory: '<rootDir>/coverage',
   collectCoverageFrom: [
     'src/**/*.{js,vue}',
     '!src/registerServiceWorker.js',
     '!src/utils/track.js',
     '!src/store/_template/**',
-    '!**/node_modules/**',
   ],
 }

@@ -6,7 +6,7 @@
         :cy="y + height - 2"
         :rx="width / 2"
         :ry="adjustedFontSize * 1.7"
-        fill="#ddd"
+        fill="#bbb"
       />
       <SvgText
         :text="`${commentCount}`"
@@ -39,7 +39,7 @@
           :cy="y + height / 2"
           :rx="rightRx"
           :ry="adjustedFontSize"
-          fill="#aaa"
+          fill="#bbb"
         />
         <SvgText
           text="-"
