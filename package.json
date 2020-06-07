@@ -1,6 +1,7 @@
 {
   "name": "mind-xx-acpr",
   "version": "0.1.11",
+  "license": "UNLICENSED",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -9,6 +10,7 @@
     "storybook:build": "vue-cli-service storybook:build -c config/storybook -o dist_storybook",
     "storybook:serve": "vue-cli-service storybook:serve -p 6006 -c config/storybook",
     "test:pupp": "vue-cli-service test:unit -c tests/puppeteer/jest.conf.js",
+    "test:pupp:ex": "node tests/puppeteer/runner.js",
     "test:unit": "TZ=Asia/Tokyo vue-cli-service test:unit -c tests/unit/jest.config.js"
   },
   "dependencies": {
@@ -44,6 +46,7 @@
     "eslint-plugin-jest": "^23.4.0",
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-vue": "^6.1.2",
+    "express": "^4.17.1",
     "node-sass": "^4.13.0",
     "postcss-import": "^12.0.1",
     "prettier": "^1.19.1",
