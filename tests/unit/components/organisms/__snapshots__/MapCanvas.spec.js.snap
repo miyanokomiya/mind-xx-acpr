@@ -128,7 +128,7 @@ exports[`components/organisms/MapCanvas.vue snapshot can write and select nodes 
                 <ellipse
                   cx="210.5"
                   cy="-51.5"
-                  fill="#aaa"
+                  fill="#bbb"
                   rx="10"
                   ry="10"
                 />
@@ -189,7 +189,7 @@ exports[`components/organisms/MapCanvas.vue snapshot can write and select nodes 
               <ellipse
                 cx="150"
                 cy="16"
-                fill="#ddd"
+                fill="#bbb"
                 rx="55"
                 ry="17"
               />
@@ -263,7 +263,7 @@ exports[`components/organisms/MapCanvas.vue snapshot can write and select nodes 
               <ellipse
                 cx="150"
                 cy="89"
-                fill="#ddd"
+                fill="#bbb"
                 rx="55"
                 ry="17"
               />
@@ -763,7 +763,7 @@ exports[`components/organisms/MapCanvas.vue snapshot full data 1`] = `
                 <ellipse
                   cx="210.5"
                   cy="-51.5"
-                  fill="#aaa"
+                  fill="#bbb"
                   rx="10"
                   ry="10"
                 />
@@ -824,7 +824,7 @@ exports[`components/organisms/MapCanvas.vue snapshot full data 1`] = `
               <ellipse
                 cx="150"
                 cy="16"
-                fill="#ddd"
+                fill="#bbb"
                 rx="55"
                 ry="17"
               />
@@ -898,7 +898,7 @@ exports[`components/organisms/MapCanvas.vue snapshot full data 1`] = `
               <ellipse
                 cx="150"
                 cy="89"
-                fill="#ddd"
+                fill="#bbb"
                 rx="55"
                 ry="17"
               />

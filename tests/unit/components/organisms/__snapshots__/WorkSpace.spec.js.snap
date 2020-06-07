@@ -38,7 +38,8 @@ exports[`components/organisms/WorkSpace.vue snapshot default 1`] = `
                     All files
                   </div>
                   <input
-                    aria-readonly="true"
+                    aria-readonly="false"
+                    autocomplete="off"
                     bottom=""
                     id="input-4"
                     readonly="readonly"
@@ -57,14 +58,15 @@ exports[`components/organisms/WorkSpace.vue snapshot default 1`] = `
                     />
                   </div>
                 </div>
+                <input
+                  type="hidden"
+                  value="all"
+                />
               </div>
               <div
                 class="v-menu"
               >
-                <div
-                  class="v-menu__content theme--light "
-                  style="max-height: 304px; min-width: 0px; max-width: auto; top: 12px; left: 0px; transform-origin: top left; z-index: 0; display: none;"
-                />
+                <!---->
               </div>
             </div>
           </div>
@@ -182,11 +184,7 @@ exports[`components/organisms/WorkSpace.vue snapshot default 1`] = `
                    
                 </span>
               </div>
-              <div
-                class="v-menu__content theme--light v-small-dialog__menu-content"
-                role="menu"
-                style="max-height: auto; min-width: 0px; max-width: auto; top: 12px; left: 0px; transform-origin: top right; z-index: 0; display: none;"
-              />
+              <!---->
             </div>
              
             <button
@@ -306,11 +304,7 @@ exports[`components/organisms/WorkSpace.vue snapshot default 1`] = `
                    
                 </span>
               </div>
-              <div
-                class="v-menu__content theme--light v-small-dialog__menu-content"
-                role="menu"
-                style="max-height: auto; min-width: 0px; max-width: auto; top: 12px; left: 0px; transform-origin: top right; z-index: 0; display: none;"
-              />
+              <!---->
             </div>
              
             <button
@@ -430,11 +424,7 @@ exports[`components/organisms/WorkSpace.vue snapshot default 1`] = `
                    
                 </span>
               </div>
-              <div
-                class="v-menu__content theme--light v-small-dialog__menu-content"
-                role="menu"
-                style="max-height: auto; min-width: 0px; max-width: auto; top: 12px; left: 0px; transform-origin: top right; z-index: 0; display: none;"
-              />
+              <!---->
             </div>
              
             <button
@@ -500,7 +490,7 @@ exports[`components/organisms/WorkSpace.vue snapshot shared 1`] = `
             <div
               aria-expanded="false"
               aria-haspopup="listbox"
-              aria-owns="list-54"
+              aria-owns="list-46"
               class="v-input__slot"
               role="button"
             >
@@ -516,9 +506,10 @@ exports[`components/organisms/WorkSpace.vue snapshot shared 1`] = `
                     Shared files
                   </div>
                   <input
-                    aria-readonly="true"
+                    aria-readonly="false"
+                    autocomplete="off"
                     bottom=""
-                    id="input-54"
+                    id="input-46"
                     readonly="readonly"
                     type="text"
                   />
@@ -535,14 +526,15 @@ exports[`components/organisms/WorkSpace.vue snapshot shared 1`] = `
                     />
                   </div>
                 </div>
+                <input
+                  type="hidden"
+                  value="shared"
+                />
               </div>
               <div
                 class="v-menu"
               >
-                <div
-                  class="v-menu__content theme--light "
-                  style="max-height: 304px; min-width: 0px; max-width: auto; top: 12px; left: 0px; transform-origin: top left; z-index: 0; display: none;"
-                />
+                <!---->
               </div>
             </div>
           </div>
@@ -646,11 +638,7 @@ exports[`components/organisms/WorkSpace.vue snapshot shared 1`] = `
                    
                 </span>
               </div>
-              <div
-                class="v-menu__content theme--light v-small-dialog__menu-content"
-                role="menu"
-                style="max-height: auto; min-width: 0px; max-width: auto; top: 12px; left: 0px; transform-origin: top right; z-index: 0; display: none;"
-              />
+              <!---->
             </div>
              
             <button
@@ -716,7 +704,7 @@ exports[`components/organisms/WorkSpace.vue snapshot workSpace 1`] = `
             <div
               aria-expanded="false"
               aria-haspopup="listbox"
-              aria-owns="list-92"
+              aria-owns="list-78"
               class="v-input__slot"
               role="button"
             >
@@ -732,9 +720,10 @@ exports[`components/organisms/WorkSpace.vue snapshot workSpace 1`] = `
                     My files
                   </div>
                   <input
-                    aria-readonly="true"
+                    aria-readonly="false"
+                    autocomplete="off"
                     bottom=""
-                    id="input-92"
+                    id="input-78"
                     readonly="readonly"
                     type="text"
                   />
@@ -751,14 +740,15 @@ exports[`components/organisms/WorkSpace.vue snapshot workSpace 1`] = `
                     />
                   </div>
                 </div>
+                <input
+                  type="hidden"
+                  value="workSpace"
+                />
               </div>
               <div
                 class="v-menu"
               >
-                <div
-                  class="v-menu__content theme--light "
-                  style="max-height: 304px; min-width: 0px; max-width: auto; top: 12px; left: 0px; transform-origin: top left; z-index: 0; display: none;"
-                />
+                <!---->
               </div>
             </div>
           </div>
@@ -876,11 +866,7 @@ exports[`components/organisms/WorkSpace.vue snapshot workSpace 1`] = `
                    
                 </span>
               </div>
-              <div
-                class="v-menu__content theme--light v-small-dialog__menu-content"
-                role="menu"
-                style="max-height: auto; min-width: 0px; max-width: auto; top: 12px; left: 0px; transform-origin: top right; z-index: 0; display: none;"
-              />
+              <!---->
             </div>
              
             <button

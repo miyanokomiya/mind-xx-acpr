@@ -26,7 +26,9 @@
               :class="{ updated: publicReadOnly !== publicReadOnlyLocal }"
             />
             <div class="text-xs-right">
-              <v-btn v-if="canEditPublic" @click="setStatus">Update</v-btn>
+              <v-btn v-if="canEditPublic" @click="setStatus" color="primary"
+                >Update</v-btn
+              >
             </div>
           </form>
         </v-card-text>
@@ -44,7 +46,7 @@
             />
             <v-checkbox hide-details label="Read only" v-model="readOnly" />
             <div class="text-xs-right">
-              <v-btn @click="invite">Invite</v-btn>
+              <v-btn @click="invite" color="primary">Invite</v-btn>
             </div>
           </form>
         </v-card-text>
@@ -117,7 +119,7 @@
             </v-list-item>
           </v-list>
           <div class="text-xs-right">
-            <v-btn @click="update">Update</v-btn>
+            <v-btn @click="update" color="primary">Update</v-btn>
           </div>
         </v-card-text>
       </v-card>
