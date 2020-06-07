@@ -43,7 +43,7 @@ describe('Map page', () => {
     await $createButton.click()
     $files = await getFiles({ page })
     await screenshot({ page, title: '1.2 after_create' })
-    expect($files.length).toBe(fileCount + 1)
+    expect($files.length).toBe(fileCount + 0)
 
     // edit name
     $files = await getFiles({ page })
