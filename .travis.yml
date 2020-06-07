@@ -6,6 +6,7 @@ script:
   - yarn lint --no-fix
   - yarn test:unit --coverage
   - yarn storybook:build --quiet
+  - yarn test:pupp:ex
   - yarn build
   - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
 

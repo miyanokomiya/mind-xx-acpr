@@ -69,10 +69,7 @@ export default {
   [actionTypes.LOAD_COMMENTS](context, { fileKey }) {
     context.dispatch(actionTypes.DISCONNECT)
     context.commit(mutationTypes.SET_FILE_KEY, { fileKey })
-    connect(
-      context,
-      { fileKey },
-    )
+    connect(context, { fileKey })
   },
   [actionTypes.UPDATE_COMMENTS](context, { comments }) {
     // push firebase

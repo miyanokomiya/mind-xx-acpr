@@ -88,10 +88,7 @@ export default {
     context.dispatch(actionTypes.DISCONNECT)
     context.commit(mutationTypes.SET_FILE_KEY, { fileKey })
     context.commit(mutationTypes.SET_INITIAL_LOADING, { initialLoading: true })
-    connect(
-      context,
-      { fileKey },
-    )
+    connect(context, { fileKey })
   },
   [actionTypes.UPDATE_NODES](context, { nodes }) {
     // get only diff

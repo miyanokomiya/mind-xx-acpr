@@ -37,9 +37,28 @@ yarn test:unit
 ```
 
 ## Run puppeteer
-Run storybook server and
+### with storybook server
+Run storybook server
+```bash
+yarn storybook:serve
+```
+
+and run puppeteer.
 ```bash
 yarn test:pupp
+```
+
+### with express server
+Build storybook and run script.
+```bash
+yarn storybook:build
+yarn test:pupp:ex
+```
+
+### headless mode
+Run puppeteer with env: 'CI=1'.
+```bash
+CI=1 yarn test:pupp
 ```
 
 ## Deploy staging

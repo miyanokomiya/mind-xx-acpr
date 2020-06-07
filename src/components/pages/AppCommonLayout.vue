@@ -63,7 +63,7 @@
       />
     </div>
     <AuthDialog
-      :value="!authorityLoading && (_needAuth && !authenticated)"
+      :value="!authorityLoading && _needAuth && !authenticated"
       :persistent="needAuth"
       @input="val => (needAuthLocal = val)"
     />
