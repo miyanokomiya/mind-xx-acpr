@@ -101,7 +101,7 @@ describe('components/organisms/MapCanvas.vue', () => {
 
   describe('methods', () => {
     describe('selectNode', () => {
-      const getWrapper = () => {
+      const getWrapper = async () => {
         const wrapper = shallowMount(Target, {
           vuetify,
           propsData: {
@@ -123,26 +123,26 @@ describe('components/organisms/MapCanvas.vue', () => {
             moveViewToCoverSelectedNode: jest.fn(),
           },
         })
-        wrapper.setData({
+        await wrapper.setData({
           nodePositions: { c: { x: 10, y: 20 } },
           nodeSizes: { c: { x: 100, y: 200 } },
         })
         return wrapper
       }
-      it('single select', () => {
-        const wrapper = getWrapper()
+      it('single select', async () => {
+        const wrapper = await getWrapper()
         wrapper.vm.selectNode('c')
         expect(wrapper.emitted('setSelectedNodes')).toEqual([[{ c: true }]])
       })
-      it('multi select', () => {
-        const wrapper = getWrapper()
+      it('multi select', async () => {
+        const wrapper = await getWrapper()
         wrapper.vm.selectNode('c', true)
         expect(wrapper.emitted('setSelectedNodes')).toEqual([
           [{ a: true, b: true, c: true }],
         ])
       })
-      it('can not write', () => {
-        const wrapper = getWrapper()
+      it('can not write', async () => {
+        const wrapper = await getWrapper()
         wrapper.setProps({ canWrite: false })
         wrapper.vm.selectNode('c', true)
         expect(wrapper.emitted('setSelectedNodes')).toBeFalsy()

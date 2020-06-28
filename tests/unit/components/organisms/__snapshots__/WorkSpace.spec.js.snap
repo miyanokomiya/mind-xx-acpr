@@ -464,7 +464,9 @@ exports[`components/organisms/WorkSpace.vue snapshot default 1`] = `
     </div>
   </div>
    
-  <!---->
+  <transition-stub
+    name="v-snack-transition"
+  />
 </div>
 `;
 
@@ -614,31 +616,31 @@ exports[`components/organisms/WorkSpace.vue snapshot shared 1`] = `
               class="v-menu v-small-dialog theme--light"
               lazy=""
             >
-              <div
-                class="v-small-dialog__activator"
-              >
-                <span
-                  class="v-small-dialog__activator__content"
-                >
-                  <button
-                    class="file-button edit-name v-btn v-btn--contained v-btn--fab v-btn--round theme--dark v-size--small blue"
-                    type="button"
-                  >
-                    <span
-                      class="v-btn__content"
-                    >
-                      <i
-                        aria-hidden="true"
-                        class="v-icon notranslate material-icons theme--dark"
-                      >
-                        textsms
-                      </i>
-                    </span>
-                  </button>
-                   
-                </span>
-              </div>
               <!---->
+            </div>
+            <div
+              class="v-small-dialog__activator"
+            >
+              <span
+                class="v-small-dialog__activator__content"
+              >
+                <button
+                  class="file-button edit-name v-btn v-btn--contained v-btn--fab v-btn--round theme--dark v-size--small blue"
+                  type="button"
+                >
+                  <span
+                    class="v-btn__content"
+                  >
+                    <i
+                      aria-hidden="true"
+                      class="v-icon notranslate material-icons theme--dark"
+                    >
+                      textsms
+                    </i>
+                  </span>
+                </button>
+                 
+              </span>
             </div>
              
             <button
@@ -678,7 +680,9 @@ exports[`components/organisms/WorkSpace.vue snapshot shared 1`] = `
     </div>
   </div>
    
-  <!---->
+  <transition-stub
+    name="v-snack-transition"
+  />
 </div>
 `;
 
@@ -842,31 +846,31 @@ exports[`components/organisms/WorkSpace.vue snapshot workSpace 1`] = `
               class="v-menu v-small-dialog theme--light hidden"
               lazy=""
             >
-              <div
-                class="v-small-dialog__activator"
-              >
-                <span
-                  class="v-small-dialog__activator__content"
-                >
-                  <button
-                    class="file-button edit-name v-btn v-btn--contained v-btn--fab v-btn--round theme--dark v-size--small blue"
-                    type="button"
-                  >
-                    <span
-                      class="v-btn__content"
-                    >
-                      <i
-                        aria-hidden="true"
-                        class="v-icon notranslate material-icons theme--dark"
-                      >
-                        textsms
-                      </i>
-                    </span>
-                  </button>
-                   
-                </span>
-              </div>
               <!---->
+            </div>
+            <div
+              class="v-small-dialog__activator"
+            >
+              <span
+                class="v-small-dialog__activator__content"
+              >
+                <button
+                  class="file-button edit-name v-btn v-btn--contained v-btn--fab v-btn--round theme--dark v-size--small blue"
+                  type="button"
+                >
+                  <span
+                    class="v-btn__content"
+                  >
+                    <i
+                      aria-hidden="true"
+                      class="v-icon notranslate material-icons theme--dark"
+                    >
+                      textsms
+                    </i>
+                  </span>
+                </button>
+                 
+              </span>
             </div>
              
             <button
@@ -906,6 +910,8 @@ exports[`components/organisms/WorkSpace.vue snapshot workSpace 1`] = `
     </div>
   </div>
    
-  <!---->
+  <transition-stub
+    name="v-snack-transition"
+  />
 </div>
 `;

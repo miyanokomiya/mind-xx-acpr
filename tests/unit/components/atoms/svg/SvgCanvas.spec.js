@@ -15,7 +15,7 @@ describe('components/atoms/svg/SvgCanvas.vue', () => {
       })
       expect(wrapper.element).toMatchSnapshot()
     })
-    it('with selecting rectangle', () => {
+    it('with selecting rectangle', async () => {
       const wrapper = mount(Target, {
         propsData: {
           x: 1,
@@ -25,7 +25,7 @@ describe('components/atoms/svg/SvgCanvas.vue', () => {
           scale: 100,
         },
       })
-      wrapper.setData({
+      await wrapper.setData({
         rectangleSelecting: true,
         downP: { x: 3, y: 4 },
         beforeMoveP: { x: 30, y: 40 },
@@ -53,7 +53,7 @@ describe('components/atoms/svg/SvgCanvas.vue', () => {
     })
 
     describe('clearLongPress', () => {
-      it('clear timeout', () => {
+      it('clear timeout', async () => {
         const wrapper = shallowMount(Target, {
           propsData: {
             x: 1,
@@ -63,7 +63,7 @@ describe('components/atoms/svg/SvgCanvas.vue', () => {
             scale: 100,
           },
         })
-        wrapper.setData({ longPressTimer: 1 })
+        await wrapper.setData({ longPressTimer: 1 })
         wrapper.vm.clearLongPress()
         expect(wrapper.vm.longPressTimer).toBe(0)
       })
