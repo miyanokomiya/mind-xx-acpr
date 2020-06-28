@@ -1,0 +1,41 @@
+[999D[K[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mtests/unit/specs/utils/[22m[1mmodel.spec.js[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mtests/unit/components/molecules/[22m[1mEditButtons.spec.js[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mtests/unit/components/organisms/[22m[1mWorkSpace.spec.js[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mtests/unit/components/organisms/[22m[1mMapCanvas.spec.js[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mtests/unit/components/atoms/svg/[22m[1mSvgCanvas.spec.js[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mtests/unit/specs/store/user/[22m[1mgetters.spec.js[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mtests/unit/specs/utils/[22m[1mgeometry.spec.js[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mtests/unit/specs/store/files/[22m[1mmutations.spec.js[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mtests/unit/utils/[22m[1mhelper.spec.js[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mtests/unit/components/molecules/[22m[1mFloatTextInput.spec.js[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mtests/unit/specs/store/user/[22m[1mmutations.spec.js[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mtests/unit/specs/store/layouts/[22m[1mactions.spec.js[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mtests/unit/specs/store/layouts/[22m[1mmutations.spec.js[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mtests/unit/components/atoms/svg/[22m[1mSvgText.spec.js[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mtests/unit/specs/store/nodes/[22m[1mmutations.spec.js[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mtests/unit/specs/store/comments/[22m[1mactions.spec.js[22m
+(node:6818) UnhandledPromiseRejectionWarning: Error: No undo history
+(node:6818) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). To terminate the node process on unhandled promise rejection, use the CLI flag `--unhandled-rejections=strict` (see https://nodejs.org/api/cli.html#cli_unhandled_rejections_mode). (rejection id: 1)
+(node:6818) [DEP0018] DeprecationWarning: Unhandled promise rejections are deprecated. In the future, promise rejections that are not handled will terminate the Node.js process with a non-zero exit code.
+(node:6818) UnhandledPromiseRejectionWarning: Error: No redo history
+(node:6818) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). To terminate the node process on unhandled promise rejection, use the CLI flag `--unhandled-rejections=strict` (see https://nodejs.org/api/cli.html#cli_unhandled_rejections_mode). (rejection id: 2)
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mtests/unit/specs/store/nodes/[22m[1mactions.spec.js[22m ([0m[1m[41m6.497s[49m[22m[0m)
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mtests/unit/specs/store/settings/[22m[1mactions.spec.js[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mtests/unit/specs/store/users/[22m[1mmutations.spec.js[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mtests/unit/components/molecules/[22m[1mFloatContainer.spec.js[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mtests/unit/specs/store/settings/[22m[1mmutations.spec.js[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mtests/unit/specs/store/files/[22m[1mgetters.spec.js[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mtests/unit/specs/store/comments/[22m[1mmutations.spec.js[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mtests/unit/specs/store/layouts/[22m[1mgetters.spec.js[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mtests/unit/specs/store/users/[22m[1mgetters.spec.js[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mtests/unit/specs/store/nodes/[22m[1mgetters.spec.js[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mtests/unit/specs/store/files/[22m[1mactions.spec.js[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mtests/unit/specs/store/comments/[22m[1mgetters.spec.js[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mtests/unit/specs/store/settings/[22m[1mgetters.spec.js[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mtests/unit/specs/utils/[22m[1misMobile.spec.js[22m
+[999D[K
+[1mTest Suites: [22m[1m[32m30 passed[39m[22m, 30 total
+[1mTests:       [22m[1m[32m236 passed[39m[22m, 236 total
+[1mSnapshots:   [22m[1m[32m16 passed[39m[22m, 16 total
+[1mTime:[22m        [1m[33m16.185s[39m[22m
+[2mRan all test suites[22m[2m.[22m

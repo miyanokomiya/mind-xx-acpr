@@ -26,7 +26,7 @@ describe('components/organisms/WorkSpace.vue', () => {
       })
       expect(wrapper.element).toMatchSnapshot()
     })
-    it('shared', () => {
+    it('shared', async () => {
       const wrapper = mount(Target, {
         propsData: {
           user,
@@ -41,10 +41,10 @@ describe('components/organisms/WorkSpace.vue', () => {
         },
         vuetify,
       })
-      wrapper.setData({ dataKind: 'shared' })
+      await wrapper.setData({ dataKind: 'shared' })
       expect(wrapper.element).toMatchSnapshot()
     })
-    it('workSpace', () => {
+    it('workSpace', async () => {
       const wrapper = mount(Target, {
         propsData: {
           user,
@@ -55,7 +55,7 @@ describe('components/organisms/WorkSpace.vue', () => {
         },
         vuetify,
       })
-      wrapper.setData({ dataKind: 'workSpace' })
+      await wrapper.setData({ dataKind: 'workSpace' })
       expect(wrapper.element).toMatchSnapshot()
     })
   })
