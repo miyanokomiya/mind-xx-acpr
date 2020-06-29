@@ -19,7 +19,7 @@
     "firebase": "7.15.0",
     "ismobilejs": "^1.0.3",
     "register-service-worker": "^1.7.1",
-    "ress": "^2.0.3",
+    "ress": "^2.0.4",
     "vue": "^2.6.11",
     "vue-color": "^2.7.0",
     "vue-router": "^3.0.3",
