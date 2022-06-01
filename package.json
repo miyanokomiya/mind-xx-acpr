@@ -50,7 +50,7 @@
     "node-sass": "^4.13.1",
     "postcss-import": "^12.0.1",
     "prettier": "^2.0.5",
-    "puppeteer": "^5.2.1",
+    "puppeteer": "^14.1.2",
     "sass": "^1.23.7",
     "sass-loader": "^7.1.0",
     "storybook-router": "^0.3.4",
